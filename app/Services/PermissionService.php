@@ -24,6 +24,12 @@ class PermissionService
                 ],
             ],
             [
+                'group_name' => 'crm',
+                'permissions' => [
+                    'crm.settings',
+                ],
+            ],
+            [
                 'group_name' => 'blog',
                 'permissions' => [
                     'blog.create',
@@ -229,8 +235,8 @@ class PermissionService
 
             if ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', '%'.$search.'%')
-                        ->orWhere('group_name', 'like', '%'.$search.'%');
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('group_name', 'like', '%' . $search . '%');
                 });
             }
 
