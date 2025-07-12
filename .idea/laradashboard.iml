@@ -6,6 +6,14 @@
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/Modules/TaskManager/app" isTestSource="false" packagePrefix="Modules\TaskManager\" />
+      <sourceFolder url="file://$MODULE_DIR$/Modules/TaskManager/database/factories" isTestSource="false" packagePrefix="Modules\TaskManager\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/Modules/TaskManager/database/seeders" isTestSource="false" packagePrefix="Modules\TaskManager\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/Modules/TaskManager/tests" isTestSource="true" packagePrefix="Modules\TaskManager\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/Modules/UserAvatar/app" isTestSource="false" packagePrefix="Modules\UserAvatar\" />
+      <sourceFolder url="file://$MODULE_DIR$/Modules/UserAvatar/database/factories" isTestSource="false" packagePrefix="Modules\UserAvatar\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/Modules/UserAvatar/database/seeders" isTestSource="false" packagePrefix="Modules\UserAvatar\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/Modules/UserAvatar/tests" isTestSource="true" packagePrefix="Modules\UserAvatar\Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/storage/app" />
@@ -147,6 +155,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/wikimedia/composer-merge-plugin" />
+      <excludeFolder url="file://$MODULE_DIR$/Modules/UserAvatar/vendor/composer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
