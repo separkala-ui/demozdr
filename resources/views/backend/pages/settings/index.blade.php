@@ -36,18 +36,11 @@
                             ]),
                         ])
 
-                        <!-- Submit Button -->
-                        <div class="flex justify-start">
-                            <button type="submit" class="btn-primary">
-                                {{ __('Save') }}
-                            </button>
-                        </div>
+                        <x-buttons.submit-buttons  />
                     </form>
                 </div>
             </div>
-
         </div>
-
     </div>
 @endsection
 

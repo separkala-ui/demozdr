@@ -30,7 +30,7 @@ class RolesService
         $query = Role::query();
 
         if ($search) {
-            $query->where('name', 'like', '%'.$search.'%');
+            $query->where('name', 'like', '%' . $search . '%');
         }
 
         return $query->paginate($perPage);
@@ -77,14 +77,18 @@ class RolesService
         return $role;
     }
 
-    /**
-     * Find a role by ID
-     */
-    public function findRoleById(int $id): ?\Spatie\Permission\Models\Role
+    public function findRoleById(int $id): ?Role
     {
         $role = Role::findById($id);
 
-        return $role instanceof \Spatie\Permission\Models\Role ? $role : null;
+        return $role instanceof Role ? $role : null;
+    }
+
+    public function findRoleByName(string $name): ?Role
+    {
+        $role = Role::findByName($name);
+
+        return $role instanceof Role ? $role : null;
     }
 
     public function updateRole(Role $role, string $name, array $permissions = []): Role
@@ -136,7 +140,7 @@ class RolesService
             $query = \App\Models\Role::query();
 
             if ($search) {
-                $query->where('name', 'like', '%'.$search.'%');
+                $query->where('name', 'like', '%' . $search . '%');
             }
 
             $allRoles = $query->get();
@@ -240,6 +244,15 @@ class RolesService
 
         $roles['subscriber'] = $this->createRole('Subscriber', $subscriberPermissions);
 
+        $contactPermissions = [
+            'dashboard.view',
+            'profile.view',
+            'profile.edit',
+            'profile.update',
+        ];
+
+        $roles['contact'] = $this->createRole('Contact', $contactPermissions);
+
         return $roles;
     }
 
@@ -295,6 +308,15 @@ class RolesService
                 ];
 
             case 'subscriber':
+            case 'contact ':
+                return [
+                    'dashboard.view',
+                    'profile.view',
+                    'profile.edit',
+                    'profile.update',
+                    'post.view',
+                    'term.view',
+                ];
             default:
                 return [
                     'dashboard.view',

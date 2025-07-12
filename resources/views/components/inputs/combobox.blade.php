@@ -20,8 +20,8 @@
 @endphp
 
 <div x-data="{
-        allOptions: {{ json_encode($options) }},
-        options: {{ json_encode($options) }},
+        allOptions: {{ json_encode($options) }} ?? [],
+        options: {{ json_encode($options) }} ?? [],
         isOpen: false,
         openedWithKeyboard: false,
         selectedOptions: {{ json_encode($selectedValues) }},
@@ -33,18 +33,36 @@
         searchQuery: '',
         
         setLabelText() {
+            // Helper function to find option by value
+            const findOption = (value) => {
+                if (!this.allOptions) return null;
+                
+                if (Array.isArray(this.allOptions)) {
+                    // Handle array format
+                    return this.allOptions.find(opt => opt.value == value);
+                } else {
+                    // Handle object format - convert to array first
+                    const optionsArray = Object.keys(this.allOptions)
+                    .map(key => ({
+                        value: key + '',
+                        label: this.allOptions[key]?.label ?? '{{ __($placeholder) }}'
+                    }));
+                    return optionsArray.find(opt => opt.value == value);
+                }
+            };
+            
             if (this.multiple) {
                 const count = this.selectedOptions.length;
                 if (count === 0) return '{{ __($placeholder) }}';
                 if (count === 1) {
-                    const option = this.allOptions.find(opt => opt.value == this.selectedOptions[0]);
+                    const option = findOption(this.selectedOptions[0]);
                     return option ? option.label : this.selectedOptions[0];
                 }
                 return count + ' items selected';
             } else {
                 if (!this.selectedOption) return '{{ __($placeholder) }}';
-                const option = this.allOptions.find(opt => opt.value == this.selectedOption);
-                return option ? option.label : this.selectedOption;
+                const option = findOption(this.selectedOption);
+                return option?.label ?? this.selectedOption ?? '{{ __($placeholder) }}';
             }
         },
         
@@ -52,7 +70,7 @@
             if (this.multiple) {
                 return; // Handle in checkbox change
             } else {
-                this.selectedOption = option.value;
+                this.selectedOption = option.value + '';
                 this.isOpen = false;
                 this.openedWithKeyboard = false;
                 this.$refs.hiddenTextField.value = option.value;
@@ -213,7 +231,7 @@
         <div x-cloak 
             x-show="isOpen || openedWithKeyboard" 
             class="absolute z-50 left-0 top-full mt-1 w-full overflow-hidden rounded-lg border border-gray-300 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900"
-            x-on:click.outside="isOpen = false, openedWithKeyboard = false" 
+            @click.outside="isOpen = false; openedWithKeyboard = false;" 
             x-on:keydown.down.prevent="$focus.wrap().next()" 
             x-on:keydown.up.prevent="$focus.wrap().previous()" 
             x-transition 

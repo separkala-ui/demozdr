@@ -72,7 +72,7 @@ class UpdatePostRequest extends FormRequest
             /** @example null */
             'published_at' => 'nullable|date',
 
-            /** @example true */
+            /** @example null */
             'remove_featured_image' => 'nullable|boolean',
 
             /** @example "author_info" */

@@ -128,21 +128,17 @@
 
         <!-- Footer -->
         <div class="px-5 py-4 sm:px-6 sm:py-5 border-t border-gray-200 dark:border-gray-700">
-            <div class="flex justify-end space-x-3">
-                <button
-                    type="button"
-                    @click="isOpen = false"
-                    class="btn-default"
-                >
-                    {{ __("Cancel") }}
-                </button>
+            <div class="flex space-x-3">
                 <button
                     type="button"
                     @click="saveTerm"
                     class="btn-primary"
                     :disabled="isSubmitting"
                 >
-                    <span x-show="!isSubmitting">{{ __("Save") }}</span>
+                    <span x-show="!isSubmitting">
+                        <i class="bi bi-check-circle mr-2"></i>
+                        {{ __("Save") }}
+                    </span>
                     <span x-show="isSubmitting" class="flex items-center">
                         <svg
                             class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
@@ -166,6 +162,15 @@
                         </svg>
                         {{ __("Saving...") }}
                     </span>
+                </button>
+                <button
+                    type="button"
+                    @click="isOpen = false"
+                    class="btn-default"
+                >
+                    <i class="bi bi-x-circle mr-2"></i>
+
+                    {{ __("Cancel") }}
                 </button>
             </div>
         </div>

@@ -48,7 +48,7 @@
             </div>
             <!-- Modal footer -->
             <div class="flex items-center p-4 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button type="submit" form="add-language-form" class="btn-primary">
+                <button type="submit" class="btn-primary">
                     <i class="bi bi-plus-circle mr-2"></i>{{ __('Add Language') }}
                 </button>
                 <button data-modal-hide="add-language-modal" type="button" class="btn-default">

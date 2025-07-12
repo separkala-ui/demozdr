@@ -48,7 +48,7 @@ class RolePermissionSeeder extends Seeder
 
         // Assign random roles to other users
         $this->command->info('Assigning random roles to other users...');
-        $availableRoles = ['Admin', 'Editor', 'Subscriber']; // Exclude Superadmin from random assignment
+        $availableRoles = ['Admin', 'Editor', 'Subscriber', 'Contact']; // Exclude Superadmin from random assignment
         $users = User::all();
 
         foreach ($users as $user) {

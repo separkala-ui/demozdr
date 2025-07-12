@@ -21,14 +21,10 @@
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
                         {{ __('Role Details') }}
                     </h3>
-                    <div class="flex gap-4">
-                        <button type="submit" class="btn-primary">
-                            {{ __('Save') }}
-                        </button>
-                        <a href="{{ route('admin.roles.index') }}" class="btn-default">
-                            {{ __('Cancel') }}
-                        </a>
-                    </div>
+                    <x-buttons.submit-buttons
+                        :classNames="['wrapper' => 'flex gap-4']"
+                        cancelUrl="{{ route('admin.roles.index') }}"
+                    />
                 </div>
                 <div class="p-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -83,17 +79,9 @@
                     </div>
                     @php $i++; @endphp
                     @endforeach
-                </div>
-            </div>
 
-            <!-- Action Buttons -->
-            <div class="flex justify-start gap-4">
-                <button type="submit" class="btn-primary">
-                    {{ __('Save') }}
-                </button>
-                <a href="{{ route('admin.roles.index') }}" class="btn-default">
-                    {{ __('Cancel') }}
-                </a>
+                    <x-buttons.submit-buttons cancelUrl="{{ route('admin.roles.index') }}" />
+                </div>
             </div>
         </div>
     </form>
