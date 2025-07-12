@@ -151,7 +151,9 @@ class RoleController extends ApiController
         dump($request->all());
 
         $request->validate([
+            /** @example [1, 2, 3] */
             'ids' => 'required|array|min:1',
+            /** @example 1 */
             'ids.*' => 'integer|exists:roles,id',
         ]);
 

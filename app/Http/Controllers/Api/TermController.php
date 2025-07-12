@@ -147,7 +147,9 @@ class TermController extends ApiController
         $this->checkAuthorization(Auth::user(), ['term.delete']);
 
         $request->validate([
+            /** @example [1, 2, 3] */
             'ids' => 'required|array|min:1',
+            /** @example 1 */
             'ids.*' => 'integer|exists:terms,id',
         ]);
 

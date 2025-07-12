@@ -44,6 +44,7 @@ class SettingController extends ApiController
         $this->checkAuthorization(Auth::user(), ['settings.edit']);
 
         $request->validate([
+            /** @example {"site_name": "My Laravel Dashboard", "site_description": "A powerful admin dashboard"} */
             'settings' => 'required|array',
         ]);
 

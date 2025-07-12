@@ -139,7 +139,9 @@ class PostController extends ApiController
         $this->checkAuthorization(Auth::user(), ['post.delete']);
 
         $request->validate([
+            /** @example [1, 2, 3] */
             'ids' => 'required|array|min:1',
+            /** @example 1 */
             'ids.*' => 'integer|exists:posts,id',
         ]);
 

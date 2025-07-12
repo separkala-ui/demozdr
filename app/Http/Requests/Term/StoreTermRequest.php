@@ -27,11 +27,22 @@ class StoreTermRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
+            /** @example "Technology" */
             'name' => 'required|string|max:255|unique:terms,name',
+
+            /** @example "technology" */
             'slug' => 'nullable|string|max:255|unique:terms,slug',
+
+            /** @example "Articles related to technology and software development." */
             'description' => 'nullable|string',
+
+            /** @example null */
             'parent_id' => 'nullable|exists:terms,id',
+
+            /** @example "post" */
             'post_type' => 'nullable|string',
+
+            /** @example null */
             'post_id' => 'nullable|numeric',
         ];
 
@@ -40,6 +51,7 @@ class StoreTermRequest extends FormRequest
         $taxonomyModel = app(ContentService::class)->getTaxonomies()->where('name', $taxonomyName)->first();
 
         if ($taxonomyModel && $taxonomyModel->show_featured_image) {
+            /** @example null */
             $rules['featured_image'] = 'nullable|image|max:2048';
         }
 
