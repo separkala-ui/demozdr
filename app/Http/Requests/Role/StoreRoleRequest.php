@@ -25,7 +25,7 @@ class StoreRoleRequest extends FormRequest
     public function rules(): array
     {
         return ld_apply_filters('role.store.validation.rules', [
-            /** @example "Editor" */
+            /** @example "Content Writer" */
             'name' => 'required|max:100|unique:roles,name',
 
             /** @example ["post.create", "post.edit", "post.delete"] */
