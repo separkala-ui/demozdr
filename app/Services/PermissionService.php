@@ -24,12 +24,6 @@ class PermissionService
                 ],
             ],
             [
-                'group_name' => 'crm',
-                'permissions' => [
-                    'crm.settings',
-                ],
-            ],
-            [
                 'group_name' => 'blog',
                 'permissions' => [
                     'blog.create',
