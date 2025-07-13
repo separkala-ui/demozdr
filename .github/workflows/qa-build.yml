@@ -69,6 +69,8 @@ jobs:
           rm -rf node_modules
           rm -rf .git
           rm -rf .github
+          rm -rf demo-screenshots
+          rm -f CONTRIBUTING.md
       #     rm -rf tests
       #     rm -f .env.example
       #     rm -f .gitignore
@@ -83,9 +85,7 @@ jobs:
       #     rm -f rector.php
       #     rm -f phpstan.neon
       #     rm -f composer.lock
-      #     rm -rf demo-screenshots
       #     rm -f README.md
-      #     rm -f CONTRIBUTING.md
       #     rm -rf scripts
 
       - name: Generate application zip
