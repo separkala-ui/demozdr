@@ -33,7 +33,7 @@ class RolesService
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        return $query->paginate($perPage);
+        return $query->paginate(config('settings.default_pagination', $perPage));
     }
 
     public static function getPermissionsByGroupName(string $group_name): Collection
