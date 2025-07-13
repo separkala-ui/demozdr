@@ -61,6 +61,7 @@ class SettingsSeeder extends Seeder
         foreach ($options as &$option) {
             $option['created_at'] = $timestamp;
             $option['updated_at'] = $timestamp;
+            $option['autoload'] = 1;
         }
 
         DB::table('settings')->insert($options);
