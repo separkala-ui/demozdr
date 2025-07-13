@@ -52,7 +52,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
     // User management
     Route::apiResource('users', UserController::class);
-    Route::delete('users/bulk-delete', [UserController::class, 'bulkDelete'])->name('api.users.bulk-delete');
+    Route::post('users/bulk-delete', [UserController::class, 'bulkDelete'])->name('api.users.bulk-delete');
 
     // Role management
     Route::apiResource('roles', RoleController::class);
@@ -70,7 +70,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::get('/{postType}/{id}', [PostController::class, 'show'])->name('api.posts.show');
         Route::put('/{postType}/{id}', [PostController::class, 'update'])->name('api.posts.update');
         Route::delete('/{postType}/{id}', [PostController::class, 'destroy'])->name('api.posts.destroy');
-        Route::delete('/{postType}/bulk-delete', [PostController::class, 'bulkDelete'])->name('api.posts.bulk-delete');
+        Route::post('/{postType}/bulk-delete', [PostController::class, 'bulkDelete'])->name('api.posts.bulk-delete');
     });
 
     // Terms management (Categories, Tags, etc.)
@@ -80,7 +80,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::get('/{taxonomy}/{id}', [TermController::class, 'show'])->name('api.terms.show');
         Route::put('/{taxonomy}/{id}', [TermController::class, 'update'])->name('api.terms.update');
         Route::delete('/{taxonomy}/{id}', [TermController::class, 'destroy'])->name('api.terms.destroy');
-        Route::delete('/{taxonomy}/bulk-delete', [TermController::class, 'bulkDelete'])->name('api.terms.bulk-delete');
+        Route::post('/{taxonomy}/bulk-delete', [TermController::class, 'bulkDelete'])->name('api.terms.bulk-delete');
     });
 
     // Settings management

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\User\BulkDeleteUserRequest;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
@@ -126,17 +127,8 @@ class UserController extends ApiController
      *
      * @tags Users
      */
-    public function bulkDelete(Request $request): JsonResponse
+    public function bulkDelete(BulkDeleteUserRequest $request): JsonResponse
     {
-        $this->checkAuthorization(Auth::user(), ['user.delete']);
-
-        $request->validate([
-            /** @example [1, 2, 3] */
-            'ids' => 'required|array|min:1',
-            /** @example 1 */
-            'ids.*' => 'integer|exists:users,id',
-        ]);
-
         $userIds = $request->input('ids');
 
         // Prevent deletion of current user

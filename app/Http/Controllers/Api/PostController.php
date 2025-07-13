@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Post\BulkDeletePostRequest;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Resources\PostResource;
@@ -134,17 +135,8 @@ class PostController extends ApiController
      *
      * @tags Posts
      */
-    public function bulkDelete(Request $request, string $postType): JsonResponse
+    public function bulkDelete(BulkDeletePostRequest $request, string $postType): JsonResponse
     {
-        $this->checkAuthorization(Auth::user(), ['post.delete']);
-
-        $request->validate([
-            /** @example [1, 2, 3] */
-            'ids' => 'required|array|min:1',
-            /** @example 1 */
-            'ids.*' => 'integer|exists:posts,id',
-        ]);
-
         $postIds = $request->input('ids');
 
         $deletedCount = Post::where('post_type', $postType)

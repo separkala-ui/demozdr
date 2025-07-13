@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Term\BulkDeleteTermRequest;
 use App\Http\Requests\Term\StoreTermRequest;
 use App\Http\Requests\Term\UpdateTermRequest;
 use App\Http\Resources\TermResource;
@@ -142,17 +143,8 @@ class TermController extends ApiController
      *
      * @tags Terms
      */
-    public function bulkDelete(Request $request, string $taxonomy): JsonResponse
+    public function bulkDelete(BulkDeleteTermRequest $request, string $taxonomy): JsonResponse
     {
-        $this->checkAuthorization(Auth::user(), ['term.delete']);
-
-        $request->validate([
-            /** @example [1, 2, 3] */
-            'ids' => 'required|array|min:1',
-            /** @example 1 */
-            'ids.*' => 'integer|exists:terms,id',
-        ]);
-
         $termIds = $request->input('ids');
 
         // Check if any terms have posts assigned
