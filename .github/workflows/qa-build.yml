@@ -91,11 +91,11 @@ jobs:
       - name: Generate application zip
         run: |
           cd ..
-          zip -r laradashboard-qa-build.zip laradashboard/ -x "laradashboard/.env"
-          mv laradashboard-qa-build.zip laradashboard/
+          zip -r laradashboard.zip laradashboard/ -x "laradashboard/.env"
+          mv laradashboard.zip laradashboard/
 
       - name: Upload Zip
         uses: actions/upload-artifact@v4
         with:
-          name: laradashboard-qa-build
-          path: laradashboard-qa-build.zip
+          name: laradashboard
+          path: laradashboard.zip
