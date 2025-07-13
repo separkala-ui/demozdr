@@ -25,10 +25,10 @@ class BulkDeleteRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            /** @example [1, 2, 3] */
+            /** @example [2] */
             'ids' => 'required|array|min:1',
 
-            /** @example 1 */
+            /** @example 2 */
             'ids.*' => 'integer|exists:roles,id',
         ];
     }

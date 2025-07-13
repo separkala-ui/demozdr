@@ -149,8 +149,15 @@ class RoleController extends ApiController
     {
         $roleIds = $request->input('ids');
 
-        // Check if any roles have users assigned
-        $rolesWithUsers = Role::whereIn('id', $roleIds)->whereHas('users')->count();
+        $rolesWithUsers = Role::whereIn('id', $roleIds)
+            ->whereExists(function ($query) {
+                $query->select('id')
+                    ->from('model_has_roles')
+                    ->whereColumn('model_has_roles.role_id', 'roles.id')
+                    ->where('model_has_roles.model_type', config('permission.models.user', 'App\\Models\\User'));
+            })
+            ->count();
+
         if ($rolesWithUsers > 0) {
             return $this->errorResponse('Cannot delete roles with assigned users', 400);
         }

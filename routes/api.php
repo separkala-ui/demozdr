@@ -56,7 +56,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
     // Role management
     Route::apiResource('roles', RoleController::class);
-    Route::delete('roles/delete/bulk-delete', [RoleController::class, 'bulkDelete'])->name('api.roles.bulk-delete');
+    Route::post('roles/delete/bulk-delete', [RoleController::class, 'bulkDelete'])->name('api.roles.bulk-delete');
 
     // Permission management
     Route::get('permissions', [PermissionController::class, 'index'])->name('api.permissions.index');
