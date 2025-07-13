@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\ActionLogResource;
 use App\Services\ActionLogService;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,15 +18,22 @@ class ActionLogController extends ApiController
     }
 
     /**
-     * Display a listing of the action logs.
+     * Action Logs list.
      *
      * @tags Action Logs
      */
+    #[QueryParameter('per_page', description: 'Number of action logs per page.', type: 'int', default: 15, example: 20)]
+    #[QueryParameter('search', description: 'Search term for filtering by action name or description.', type: 'string', example: 'User Created')]
+    #[QueryParameter('type', description: 'Filter by specific action type.', type: 'string', example: 'Created')]
+    #[QueryParameter('user_id', description: 'Filter by user ID who performed the action.', type: 'int', example: 1)]
+    #[QueryParameter('date_from', description: 'Filter logs created from this date.', type: 'string', example: '2023-01-01')]
+    #[QueryParameter('date_to', description: 'Filter logs created until this date.', type: 'string', example: '2023-12-31')]
+    #[QueryParameter('sort', description: 'Sort logs by field (prefix with - for descending).', type: 'string', example: '-created_at')]
     public function index(Request $request): JsonResponse
     {
         $this->checkAuthorization(Auth::user(), ['actionlog.view']);
 
-        $filters = $request->only(['search', 'action_type', 'user_id', 'model_type']);
+        $filters = $request->only(['search', 'type', 'user_id', 'date_from', 'date_to', 'sort']);
         $perPage = (int) ($request->input('per_page') ?? config('settings.default_pagination', 10));
 
         $actionLogs = $this->actionLogService->getPaginatedActionLogs($filters, $perPage);
@@ -46,7 +54,7 @@ class ActionLogController extends ApiController
     }
 
     /**
-     * Display the specified action log.
+     * Show Action Log.
      *
      * @tags Action Logs
      */

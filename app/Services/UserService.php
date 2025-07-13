@@ -20,7 +20,7 @@ class UserService
         $query = User::applyFilters($filters);
 
         return $query->paginateData([
-            'per_page' => config('settings.default_pagination') ?? 10,
+            'per_page' => $filters['per_page'] ?? config('settings.default_pagination') ?? 10,
         ]);
     }
 

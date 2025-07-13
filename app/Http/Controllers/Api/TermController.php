@@ -10,6 +10,7 @@ use App\Http\Requests\Term\UpdateTermRequest;
 use App\Http\Resources\TermResource;
 use App\Models\Term;
 use App\Services\TermService;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +22,14 @@ class TermController extends ApiController
     }
 
     /**
-     * Display a listing of terms for a specific taxonomy.
+     * Terms list.
      *
      * @tags Terms
      */
+    #[QueryParameter('per_page', description: 'Number of terms per page.', type: 'int', default: 15, example: 20)]
+    #[QueryParameter('search', description: 'Search term for filtering by name or description.', type: 'string', example: 'Laravel')]
+    #[QueryParameter('parent', description: 'Filter terms by parent ID.', type: 'int', example: 1)]
+    #[QueryParameter('sort', description: 'Sort terms by field (prefix with - for descending).', type: 'string', example: 'name')]
     public function index(Request $request, string $taxonomy): JsonResponse
     {
         $this->checkAuthorization(Auth::user(), ['term.view']);
@@ -52,7 +57,7 @@ class TermController extends ApiController
     }
 
     /**
-     * Store a newly created term.
+     * Create Term.
      *
      * @tags Terms
      */
@@ -72,7 +77,7 @@ class TermController extends ApiController
     }
 
     /**
-     * Display the specified term.
+     * Show Term.
      *
      * @tags Terms
      */
@@ -93,7 +98,7 @@ class TermController extends ApiController
     }
 
     /**
-     * Update the specified term.
+     * Update Term.
      *
      * @tags Terms
      */
@@ -114,7 +119,7 @@ class TermController extends ApiController
     }
 
     /**
-     * Remove the specified term.
+     * Delete Term.
      *
      * @tags Terms
      */
@@ -139,7 +144,7 @@ class TermController extends ApiController
     }
 
     /**
-     * Bulk delete terms.
+     * Bulk Delete Terms.
      *
      * @tags Terms
      */

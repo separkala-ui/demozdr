@@ -10,6 +10,7 @@ use App\Http\Requests\Role\StoreRoleRequest;
 use App\Http\Requests\Role\UpdateRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Services\RolesService;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,10 +23,13 @@ class RoleController extends ApiController
     }
 
     /**
-     * Display a listing of the resource.
+     * Roles list.
      *
      * @tags Roles
      */
+    #[QueryParameter('per_page', description: 'Number of roles per page.', type: 'int', default: 15, example: 20)]
+    #[QueryParameter('search', description: 'Search term for filtering roles by name.', type: 'string', example: 'admin')]
+    #[QueryParameter('sort', description: 'Sort roles by field (prefix with - for descending).', type: 'string', example: '-created_at')]
     public function index(Request $request): JsonResponse
     {
         $this->checkAuthorization(Auth::user(), ['role.view']);
@@ -51,7 +55,7 @@ class RoleController extends ApiController
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create Role.
      *
      * @tags Roles
      */
@@ -72,7 +76,7 @@ class RoleController extends ApiController
     }
 
     /**
-     * Display the specified resource.
+     * Show Role.
      *
      * @tags Roles
      */
@@ -92,7 +96,7 @@ class RoleController extends ApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update Role.
      *
      * @tags Roles
      */
@@ -113,7 +117,7 @@ class RoleController extends ApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete Role.
      *
      * @tags Roles
      */
@@ -141,7 +145,7 @@ class RoleController extends ApiController
     }
 
     /**
-     * Bulk delete roles.
+     * Bulk Delete Roles.
      *
      * @tags Roles
      */

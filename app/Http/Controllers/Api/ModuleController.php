@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\ModuleResource;
-use App\Models\Module;
 use App\Services\Modules\ModuleService;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,11 +18,12 @@ class ModuleController extends ApiController
     }
 
     /**
-     * Display a listing of the modules.
+     * Modules list.
      *
      * @tags Modules
      */
-    public function index(Request $request)
+    #[QueryParameter('per_page', description: 'Number of modules per page.', type: 'int', default: 15, example: 20)]
+    public function index(Request $request): JsonResponse
     {
         $this->checkAuthorization(Auth::user(), ['module.view']);
 
@@ -34,7 +35,7 @@ class ModuleController extends ApiController
     }
 
     /**
-     * Display the specified module.
+     * Show Module.
      *
      * @tags Modules
      */
@@ -55,7 +56,7 @@ class ModuleController extends ApiController
     }
 
     /**
-     * Toggle module status.
+     * Toggle Module Status.
      *
      * @tags Modules
      */
@@ -88,7 +89,7 @@ class ModuleController extends ApiController
     }
 
     /**
-     * Remove the specified module.
+     * Delete Module.
      *
      * @tags Modules
      */

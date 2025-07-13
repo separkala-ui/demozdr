@@ -18,13 +18,10 @@ class ActionLogResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'action_type' => $this->action_type,
-            'description' => $this->description,
-            'model_type' => $this->model_type,
-            'model_id' => $this->model_id,
-            'ip_address' => $this->ip_address,
-            'user_agent' => $this->user_agent,
+            'action_by' => $this->action_by,
+            'type' => $this->type,
+            'title' => $this->title,
+            'data' => $this->data,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'user' => new UserResource($this->whenLoaded('user')),

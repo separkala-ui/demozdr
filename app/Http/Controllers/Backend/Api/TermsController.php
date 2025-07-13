@@ -8,6 +8,7 @@ use App\Http\Requests\Term\UpdateTermRequest;
 use App\Services\Content\ContentService;
 use App\Services\PostService;
 use App\Services\TermService;
+use Dedoc\Scramble\Attributes\ExcludeRouteFromDocs;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Blade;
 
@@ -23,9 +24,9 @@ class TermsController extends Controller
     /**
      * Store a new term via API
      */
+    #[ExcludeRouteFromDocs]
     public function store(StoreTermRequest $request, string $taxonomyName): JsonResponse
     {
-
         // Check if taxonomy exists
         $taxonomy = $this->termService->getTaxonomy($taxonomyName);
         if (! $taxonomy) {
@@ -75,6 +76,7 @@ class TermsController extends Controller
     /**
      * Update an existing term via API
      */
+    #[ExcludeRouteFromDocs]
     public function update(UpdateTermRequest $request, string $taxonomyName, int $id): JsonResponse
     {
         // Check if taxonomy exists
@@ -134,6 +136,7 @@ class TermsController extends Controller
     /**
      * Delete a term via API
      */
+    #[ExcludeRouteFromDocs]
     public function destroy(string $taxonomyName, int $id): JsonResponse
     {
         // Check if taxonomy exists

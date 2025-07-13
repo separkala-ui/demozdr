@@ -34,7 +34,6 @@ class StoreUserRequest extends FormRequest
             /** @example "johndoe123" */
             'username' => 'required|max:100|unique:users,username',
 
-            /** @example "securePassword123" */
             'password' => 'required|min:6|confirmed',
         ]);
     }

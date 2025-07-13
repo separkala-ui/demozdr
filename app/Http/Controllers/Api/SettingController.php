@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Setting\UpdateSettingsRequest;
 use App\Http\Resources\SettingResource;
 use App\Services\SettingService;
 use Illuminate\Http\JsonResponse;
@@ -17,16 +18,17 @@ class SettingController extends ApiController
     }
 
     /**
-     * Display a listing of the settings.
+     * Settings list.
      *
      * @tags Settings
      */
     public function index(Request $request): JsonResponse
     {
         $this->checkAuthorization(Auth::user(), ['settings.view']);
-
-        $group = $request->input('group');
-        $settings = $this->settingService->getAllSettings($group);
+        $settings = $this->settingService->getAllSettings(
+            $request->input('search'),
+            $request->integer('autoload')
+        );
 
         return $this->resourceResponse(
             SettingResource::collection($settings),
@@ -35,19 +37,33 @@ class SettingController extends ApiController
     }
 
     /**
-     * Update the specified settings.
+     * Show Setting.
      *
      * @tags Settings
      */
-    public function update(Request $request): JsonResponse
+    public function show(string $option_name): JsonResponse
     {
-        $this->checkAuthorization(Auth::user(), ['settings.edit']);
+        $this->checkAuthorization(Auth::user(), ['settings.view']);
 
-        $request->validate([
-            /** @example {"site_name": "My Laravel Dashboard", "site_description": "A powerful admin dashboard"} */
-            'settings' => 'required|array',
-        ]);
+        $setting = $this->settingService->getSettingByKey($option_name);
 
+        if (! $setting) {
+            return $this->errorResponse('Setting not found', 404);
+        }
+
+        return $this->resourceResponse(
+            new SettingResource($setting),
+            'Setting retrieved successfully'
+        );
+    }
+
+    /**
+     * Update Settings.
+     *
+     * @tags Settings
+     */
+    public function update(UpdateSettingsRequest $request): JsonResponse
+    {
         $settings = $request->input('settings', []);
         $updatedSettings = [];
 
@@ -61,27 +77,6 @@ class SettingController extends ApiController
         return $this->resourceResponse(
             SettingResource::collection(collect($updatedSettings)),
             'Settings updated successfully'
-        );
-    }
-
-    /**
-     * Get a specific setting by key.
-     *
-     * @tags Settings
-     */
-    public function show(string $key): JsonResponse
-    {
-        $this->checkAuthorization(Auth::user(), ['settings.view']);
-
-        $setting = $this->settingService->getSettingByKey($key);
-
-        if (! $setting) {
-            return $this->errorResponse('Setting not found', 404);
-        }
-
-        return $this->resourceResponse(
-            new SettingResource($setting),
-            'Setting retrieved successfully'
         );
     }
 }

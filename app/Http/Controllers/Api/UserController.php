@@ -10,6 +10,7 @@ use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\UserService;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,15 +22,20 @@ class UserController extends ApiController
     }
 
     /**
-     * Display a listing of the resource.
+     * Users list.
      *
      * @tags Users
      */
+    #[QueryParameter('per_page', description: 'Number of users per page.', type: 'int', default: 10, example: 20)]
+    #[QueryParameter('search', description: 'Search term for filtering users.', type: 'string', example: 'john')]
+    #[QueryParameter('role', description: 'Filter users by role.', type: 'string', example: 'admin')]
+    #[QueryParameter('date_from', description: 'Filter users created from this date.', type: 'string', example: '2025-01-01')]
+    #[QueryParameter('date_to', description: 'Filter users created until this date.', type: 'string', example: '2025-12-31')]
+    #[QueryParameter('sort', description: 'Sort users by field (prefix with - for descending).', type: 'string', example: '-created_at')]
     public function index(Request $request): JsonResponse
     {
         $this->checkAuthorization(Auth::user(), ['user.view']);
-
-        $filters = $request->only(['search', 'status', 'role']);
+        $filters = $request->only(['search', 'status', 'role', 'per_page', 'date_from', 'date_to', 'sort']);
         $users = $this->userService->getUsers($filters);
 
         return $this->resourceResponse(
@@ -48,7 +54,7 @@ class UserController extends ApiController
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create User.
      *
      * @tags Users
      */
@@ -66,7 +72,7 @@ class UserController extends ApiController
     }
 
     /**
-     * Display the specified resource.
+     * Show User.
      *
      * @tags Users
      */
@@ -83,7 +89,7 @@ class UserController extends ApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update User.
      *
      * @tags Users
      */
@@ -101,7 +107,7 @@ class UserController extends ApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete User.
      *
      * @tags Users
      */
@@ -123,7 +129,7 @@ class UserController extends ApiController
     }
 
     /**
-     * Bulk delete users.
+     * Bulk Delete Users.
      *
      * @tags Users
      */

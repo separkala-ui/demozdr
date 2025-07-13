@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\PermissionResource;
 use App\Services\PermissionService;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,10 +18,12 @@ class PermissionController extends ApiController
     }
 
     /**
-     * Display a listing of the permissions.
+     * Permissions list.
      *
      * @tags Permissions
      */
+    #[QueryParameter('search', description: 'Search term for filtering permissions by name or group.', type: 'string', example: 'user')]
+    #[QueryParameter('group_name', description: 'Filter permissions by group name.', type: 'string', example: 'user')]
     public function index(Request $request): JsonResponse
     {
         $this->checkAuthorization(Auth::user(), ['role.view']);
@@ -37,7 +40,7 @@ class PermissionController extends ApiController
     }
 
     /**
-     * Display the specified permission.
+     * Show Permission.
      *
      * @tags Permissions
      */
@@ -58,7 +61,7 @@ class PermissionController extends ApiController
     }
 
     /**
-     * Get permissions grouped by group name.
+     * Permission Groups.
      *
      * @tags Permissions
      */

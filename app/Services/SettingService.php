@@ -71,12 +71,16 @@ class SettingService
     /**
      * Get all settings with optional group filter
      */
-    public function getAllSettings(?string $group = null)
+    public function getAllSettings(?string $search = null, $autoload = null): \Illuminate\Database\Eloquent\Collection
     {
         $query = Setting::query();
 
-        if ($group) {
-            $query->where('group', $group);
+        if ($search) {
+            $query->where('option_name', 'like', "%{$search}%");
+        }
+
+        if ($autoload !== null) {
+            $query->where('autoload', (bool) $autoload);
         }
 
         return $query->get();

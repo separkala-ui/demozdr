@@ -10,6 +10,7 @@ use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +22,20 @@ class PostController extends ApiController
     }
 
     /**
-     * Display a listing of posts for a specific post-type.
+     * Posts list.
      *
      * @tags Posts
      */
+    #[QueryParameter('per_page', description: 'Number of posts per page.', type: 'int', default: 10, example: 20)]
+    #[QueryParameter('search', description: 'Search term for filtering posts by title, excerpt, or content.', type: 'string', example: 'Laravel')]
+    #[QueryParameter('status', description: 'Filter posts by status.', type: 'string', example: 'publish')]
+    #[QueryParameter('author', description: 'Filter posts by author ID.', type: 'int', example: 1)]
+    #[QueryParameter('term', description: 'Filter posts by term ID (category/tag).', type: 'int', example: 5)]
+    #[QueryParameter('category', description: 'Filter posts by category ID.', type: 'int', example: 3)]
+    #[QueryParameter('tag', description: 'Filter posts by tag ID.', type: 'int', example: 7)]
+    #[QueryParameter('date_from', description: 'Filter posts created from this date.', type: 'string', example: '2023-01-01')]
+    #[QueryParameter('date_to', description: 'Filter posts created until this date.', type: 'string', example: '2023-12-31')]
+    #[QueryParameter('sort', description: 'Sort posts by field (prefix with - for descending).', type: 'string', example: '-created_at')]
     public function index(Request $request, string $postType = 'post'): JsonResponse
     {
         $this->checkAuthorization(Auth::user(), ['post.view']);
@@ -52,7 +63,7 @@ class PostController extends ApiController
     }
 
     /**
-     * Store a newly created post.
+     * Create Post.
      *
      * @tags Posts
      */
@@ -74,7 +85,7 @@ class PostController extends ApiController
     }
 
     /**
-     * Display the specified post.
+     * Show Post.
      *
      * @tags Posts
      */
@@ -93,13 +104,12 @@ class PostController extends ApiController
     }
 
     /**
-     * Update the specified post.
+     * Update Post.
      *
      * @tags Posts
      */
     public function update(UpdatePostRequest $request, string $postType, int $id): JsonResponse
     {
-
         $post = Post::where('post_type', $postType)->findOrFail($id);
 
         $updatedPost = $this->postService->updatePost($post, $request->validated());
@@ -113,7 +123,7 @@ class PostController extends ApiController
     }
 
     /**
-     * Remove the specified post.
+     * Delete Post.
      *
      * @tags Posts
      */
@@ -131,7 +141,7 @@ class PostController extends ApiController
     }
 
     /**
-     * Bulk delete posts.
+     * Bulk Delete Posts.
      *
      * @tags Posts
      */
