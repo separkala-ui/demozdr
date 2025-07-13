@@ -48,6 +48,12 @@ password - 12345678
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 📝 Changelog
+**[v1.7.0] - 2025-07-13**
+
+- **Feat:** Rest API For Lara Dashboard, Scramble API documentation.
+- **Enhancement:** Cleanup class names to use more standard class names.
+- **Fix:**  Some random UI fixes.
+
 **[v1.6.0] - 2025-06-21**
 
 - **Enhancement:** Write/Update Standard Unit Tests, pint, rector, phpstan for the project.
