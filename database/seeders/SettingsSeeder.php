@@ -14,8 +14,7 @@ class SettingsSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('settings')->insert([
-            // Site title.
+        $options = [
             ['option_name' => 'app_name', 'option_value' => 'Lara Dashboard'],
 
             // theme colors.
@@ -55,6 +54,15 @@ class SettingsSeeder extends Seeder
             // Custom CSS and JS.
             ['option_name' => 'global_custom_css', 'option_value' => ''],
             ['option_name' => 'global_custom_js', 'option_value' => ''],
-        ]);
+        ];
+
+        // Add created_at and updated_at.
+        $timestamp = now();
+        foreach ($options as &$option) {
+            $option['created_at'] = $timestamp;
+            $option['updated_at'] = $timestamp;
+        }
+
+        DB::table('settings')->insert($options);
     }
 }
