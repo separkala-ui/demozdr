@@ -9,7 +9,7 @@
 
 <img width="100%" alt="Lara Dashboard" src="https://github.com/user-attachments/assets/c56009a4-718f-43dc-bd1e-caad5417b05b"  />
 
-**⚡ Lara Dashboard** CMS By Laravel (7.x - 12.x) - Manages Users, Roles, Permissions, Modules, Settings, Translations, Contents(Post, Page, Category, Tags), System logs, Monitoring and every actions of your Laravel application. A complete CMS solution for Laravel application with Tailwind CSS integrated with all starting features including modules, dark/lite mode, charts, tables, forms, lots of components and many more. By our preimium modules, you can get more features like CRM, HRM, Course Management and so on.
+**⚡ Lara Dashboard** CMS By Laravel (7.x - 12.x) - Manages Users, Roles, Permissions, Modules, Settings, Translations, Contents(Post, Page, Category, Tags), System logs, Monitoring, Rest API's and every actions of your Laravel application. A complete CMS solution for Laravel application with Tailwind CSS integrated with all starting features including modules, dark/lite mode, charts, tables, forms, lots of components and many more. By our preimium modules, you can get more features like CRM, HRM, Course Management and so on.
 
 **Demo:** https://demo.laradashboard.com/
 
@@ -220,6 +220,7 @@ git remote set-url origin git@github.com:laradashboard/laradashboard.git
 1. Admin Impersonation - Login as another user and switch back to your original account
 1. Custom Error Pages - 404, 500, 503, 403
 1. Content Management System - Add/Edit/Delete Content, Content Category, Content Tag
+1. Rest API - Rest API's for Users, Roles, Permissions, Settings, Translations, Content(Post/Page/Category/Tag) and so on.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -243,6 +244,11 @@ MAIL_FROM_NAME="${APP_NAME}"
 ## 📚 Documentation
 
 https://laradashboard.com/docs/
+
+## 🔗 Rest API Documentation
+We've used [Scramble](https://github.com/dedoc/scramble) to automatically generate the Rest API documentation for Lara Dashboard. You can find the API documentation at:
+
+http://localhost:8000/docs/api
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -489,6 +495,21 @@ composer run phpunit
     <td width="50%">
       <strong>Laravel Pulse</strong><br/>
       <img width="100%" alt="Laravel Pulse" src="/demo-screenshots/91-Laravel-Pulse-Dashboard-for-Monitoring.png"/>
+    </td>
+  </tr>
+</table>
+
+### 🧩 Rest API Management
+
+<table>
+  <tr>
+    <td width="50%">
+      <strong>Rest API</strong><br/>
+      <img width="100%" alt="Rest API" src="/demo-screenshots/120-Rest-API-Documentation.png"/>
+    </td>
+    <td width="50%">
+      <strong>Rest API Login</strong><br/>
+      <img width="100%" alt="Rest API Login" src="/demo-screenshots/121-Rest-API-Login.png"/>
     </td>
   </tr>
 </table>
