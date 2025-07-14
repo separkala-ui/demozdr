@@ -11,7 +11,7 @@
     {!! ld_apply_filters('posts_show_after_breadcrumbs', '', $postType) !!}
 
     <div class="space-y-6">
-        <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
             <div class="px-5 py-4 sm:px-6 sm:py-5 flex justify-between items-center border-b border-gray-100 dark:border-gray-800">
                 <h3 class="text-base font-medium text-gray-800 dark:text-white/90">{{ __('Post Details') }}</h3>
                 <div class="flex gap-2">
@@ -27,7 +27,7 @@
                     </a>
                 </div>
             </div>
-            
+
             <div class="px-5 py-4 sm:px-6 sm:py-5">
                 <!-- Meta Information -->
                 <div class="mb-6 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
@@ -47,8 +47,8 @@
                     @endif
                     <div class="flex items-center">
                         <i class="bi bi-tag mr-1"></i>
-                        {{ __('Status:') }} 
-                        <span class="ml-1 inline-flex items-center justify-center px-2 py-1 text-xs font-medium 
+                        {{ __('Status:') }}
+                        <span class="ml-1 inline-flex items-center justify-center px-2 py-1 text-xs font-medium
                             {{ $post->status === 'publish' ? 'text-green-800 bg-green-100 dark:bg-green-900/20 dark:text-green-400' : '' }}
                             {{ $post->status === 'draft' ? 'text-gray-800 bg-gray-100 dark:bg-gray-700 dark:text-gray-300' : '' }}
                             {{ $post->status === 'pending' ? 'text-orange-800 bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400' : '' }}
@@ -63,7 +63,7 @@
                 <!-- Featured Image -->
                 @if($post->featured_image)
                     <div class="mb-6">
-                        <img src="{{ $post->featured_image }}" alt="{{ $post->title }}" class="max-h-64 rounded-lg">
+                        <img src="{{ $post->featured_image }}" alt="{{ $post->title }}" class="max-h-64 rounded-md">
                     </div>
                 @endif
 
@@ -71,7 +71,7 @@
                 @if($post->excerpt)
                     <div class="mb-6">
                         <h4 class="text-lg font-medium text-gray-800 dark:text-white/90 mb-2">{{ __('Excerpt') }}</h4>
-                        <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300">
+                        <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-md text-gray-700 dark:text-gray-300">
                             {{ $post->excerpt }}
                         </div>
                     </div>

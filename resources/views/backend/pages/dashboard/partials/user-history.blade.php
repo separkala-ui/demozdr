@@ -1,5 +1,5 @@
 <!-- filepath: g:\Development\Maniruzzaman Akash\laradashboard\resources\views\backend\pages\dashboard\user-pie-chart.blade.php -->
-<div class="w-full bg-white rounded-xl shadow-sm dark:bg-slate-800 p-4 ">
+<div class="w-full bg-white border border-gray-200 rounded-md shadow-sm dark:bg-slate-800 p-4 ">
     <div class="flex justify-between">
         <div class="flex justify-center items-center">
             <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1">
@@ -9,7 +9,7 @@
         <div>
             <button type="button" data-tooltip-target="data-tooltip" data-tooltip-placement="bottom"
                 onclick="window.location.href='{{ route('admin.users.index') }}'"
-                class="hidden sm:inline-flex items-center justify-center text-gray-500 w-8 h-8 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm">
+                class="hidden sm:inline-flex items-center justify-center text-gray-500 w-8 h-8 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-md text-sm">
                 <img src="{{ asset('/images/icons/move.svg') }}" class="dark:invert">
             </button>
         </div>

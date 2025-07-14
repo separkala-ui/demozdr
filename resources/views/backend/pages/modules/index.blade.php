@@ -44,7 +44,7 @@
                             </li>
                         </ul>
                         @if(config('app.demo_mode', false))
-                        <div class="bg-yellow-50 text-yellow-700 rounded-lg mt-4 p-3">
+                        <div class="bg-yellow-50 text-yellow-700 rounded-md mt-4 p-3">
                             <i class="bi bi-exclamation-triangle-fill"></i> &nbsp;
                             {{ __('Note: Module uploads are disabled in demo mode.') }}
                         </div>
@@ -58,7 +58,7 @@
     {!! ld_apply_filters('modules_after_breadcrumbs', '') !!}
 
     @if (!empty($modules))
-    <div x-show="showUploadArea" class="mb-6 p-6 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
+    <div x-show="showUploadArea" class="mb-6 p-6 border-2 border-dashed border-gray-300 rounded-md bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
             @dragover.prevent
             @drop.prevent="$refs.uploadModule.files = $event.dataTransfer.files; $refs.uploadModule.dispatchEvent(new Event('change'))">
         <p class="text-center text-gray-600 dark:text-gray-400">
@@ -80,7 +80,7 @@
 
     <div class="space-y-6">
         @if (empty($modules))
-        <div class="flex flex-col items-center justify-center h-64 bg-gray-100 dark:bg-gray-800 rounded-lg border-2 border-dashed border-gray-300"
+        <div class="flex flex-col items-center justify-center h-64 bg-gray-100 dark:bg-gray-800 rounded-md border-2 border-dashed border-gray-300"
                 @dragover.prevent
                 @drop.prevent="$refs.uploadModule.files = $event.dataTransfer.files; $refs.uploadModule.dispatchEvent(new Event('change'))">
             <svg class="w-16 h-16 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -102,7 +102,7 @@
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($modules as $module)
-                    <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                    <div class="rounded-md border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
                         <div class="flex justify-between" x-data="{ deleteModalOpen: false, errorModalOpen: false, errorMessage: '' }">
                             <div class="py-3">
                                 <h2>
@@ -113,11 +113,11 @@
                                 </h3>
                             </div>
 
-                            <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownMore-{{ $module['name'] }}" class="inline-flex items-right h-9 p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+                            <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownMore-{{ $module['name'] }}" class="inline-flex items-right h-9 p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-md hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
 
-                            <div id="dropdownMore-{{ $module['name'] }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
+                            <div id="dropdownMore-{{ $module['name'] }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-md shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
                                     <li>
                                         <div>
@@ -181,7 +181,7 @@
     function toggleModuleStatus(moduleName, event) {
         const moduleElement = event.target.closest('[x-data]');
         const Alpine = window.Alpine;
-        
+
         fetch(`/admin/modules/toggle-status/${moduleName}`, {
             method: 'POST',
             headers: {
@@ -194,7 +194,7 @@
             if (data.success) {
                 const button = event.target;
                 button.textContent = data.status ? '{{ __("Disable") }}' : '{{ __("Enable") }}';
-                
+
                 // Refresh the page to show updated status
                 window.location.reload();
             } else {

@@ -11,7 +11,7 @@
     {!! ld_apply_filters('permissions_after_breadcrumbs', '') !!}
 
     <div class="space-y-6">
-        <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
             <div class="px-5 py-4 sm:px-6 sm:py-5 flex justify-between items-center">
                 <h3 class="text-base font-medium text-gray-800 dark:text-white/90">{{ __('Permissions') }}</h3>
 
@@ -97,10 +97,10 @@
                                 </td>
                                 <td class="px-5 py-4 sm:px-6 flex justify-center">
                                     <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
-                                        <x-buttons.action-item 
-                                            :href="route('admin.permissions.show', $permission->id)" 
-                                            icon="eye" 
-                                            :label="__('View Details')" 
+                                        <x-buttons.action-item
+                                            :href="route('admin.permissions.show', $permission->id)"
+                                            icon="eye"
+                                            :label="__('View Details')"
                                         />
                                     </x-buttons.action-buttons>
                                 </td>

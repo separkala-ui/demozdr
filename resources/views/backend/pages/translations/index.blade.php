@@ -10,7 +10,7 @@
 
         {!! ld_apply_filters('translation_after_breadcrumbs', '') !!}
 
-        <div class="bg-white p-6 rounded-lg shadow-md mb-6 dark:bg-gray-800">
+        <div class="bg-white p-6 rounded-md shadow-md mb-6 dark:bg-gray-800">
             <div class="flex flex-col sm:flex-row mb-6 gap-4 justify-between">
                 <div class="flex items-start sm:items-center gap-4">
                     <div class="flex items-center">
@@ -18,7 +18,7 @@
                             {{ __('Language:') }}
                         </label>
                         <select id="language-select"
-                                class="h-11 rounded-lg border border-gray-300 bg-transparent px-4 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                                class="h-11 rounded-md border border-gray-300 bg-transparent px-4 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
                                 onchange="updateLocation()">
                             @foreach($languages as $code => $language)
                                 <option value="{{ $code }}" {{ $selectedLang === $code ? 'selected' : '' }}>{{ $language['name'] }}</option>
@@ -31,7 +31,7 @@
                             {{ __('Translation Group') }}:
                         </label>
                         <select id="group-select"
-                                class="h-11 rounded-lg border border-gray-300 bg-transparent px-4 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                                class="h-11 rounded-md border border-gray-300 bg-transparent px-4 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
                                 onchange="updateLocation()">
                             @foreach($availableGroups as $group)
                                 <option value="{{ $group }}" {{ $selectedGroup === $group ? 'selected' : '' }}>

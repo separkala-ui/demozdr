@@ -11,7 +11,7 @@ if (!empty($post)) {
 }
 @endphp
 <div id="taxonomy-{{ $taxonomy->name }}">
-    <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+    <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
         <div class="px-4 py-3 sm:px-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
             <h3 class="text-base font-medium text-gray-800 dark:text-white">{{ __($taxonomy->label) }}</h3>
             <x-term-drawer :taxonomy="$taxonomy" :taxonomyName="$taxonomy->name" :post_id="$post->id ?? null" :post_type="$post_type" />

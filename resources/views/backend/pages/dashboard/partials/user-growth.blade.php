@@ -1,6 +1,6 @@
 @php $currentFilter = request()->get('chart_filter_period', 'last_12_months'); @endphp
 
-<div class="rounded-xl shadow-sm p-4 py-6 z-1 dark:bg-slate-800">
+<div class="rounded-md shadow-sm border border-gray-200 p-4 py-6 z-1 dark:bg-slate-800">
     <!-- Header Section -->
     <div class="flex justify-between items-center">
         <h3 class="text-lg font-medium text-gray-900 dark:text-white">
@@ -22,7 +22,7 @@
 
                 <!-- Dropdown menu -->
                 <div id="dropdown"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-md shadow-sm w-44 dark:bg-gray-700">
                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                         <li>
                             <a href="{{ route('admin.dashboard') }}?chart_filter_period=last_12_Months"
@@ -230,7 +230,7 @@
                         const value = series[seriesIndex][dataPointIndex];
                         return `<div class="relative px-3 py-1 bg-indigo-50 text-indigo-600 font-medium">
                             ${value}
-     
+
                         </div>`;
                     },
                     intersect: false,

@@ -20,7 +20,7 @@
     {!! ld_apply_filters('posts_list_after_breadcrumbs', '', $postType) !!}
 
     <div class="space-y-6">
-        <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
             <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h3 class="text-base font-medium text-gray-800 dark:text-white/90">{{ __($postTypeModel->label) }}</h3>
 
@@ -40,7 +40,7 @@
                         </button>
 
                         <!-- Bulk Actions dropdown menu -->
-                        <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                        <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-md shadow dark:bg-gray-700">
                             <h6 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Bulk Actions') }}</h6>
                             <ul class="space-y-2">
                                 <li class="cursor-pointer text-sm text-red-600 dark:text-red-400 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
@@ -65,7 +65,7 @@
                         </button>
 
                         <!-- Status dropdown menu -->
-                        <div id="statusDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                        <div id="statusDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-md shadow dark:bg-gray-700">
                             <h6 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Filter by Status') }}</h6>
                             <ul class="space-y-2">
                                 <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ !request('status') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
@@ -97,7 +97,7 @@
                             </button>
 
                             <!-- Category dropdown menu -->
-                            <div id="categoryDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <div id="categoryDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-md shadow dark:bg-gray-700">
                                 <h6 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Filter by Category') }}</h6>
                                 <ul class="space-y-2 max-h-48 overflow-y-auto">
                                     <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ !request('category') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
@@ -130,7 +130,7 @@
                             </button>
 
                             <!-- Tags dropdown menu -->
-                            <div id="tagDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <div id="tagDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-md shadow dark:bg-gray-700">
                                 <h6 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Filter by Tags') }}</h6>
                                 <ul class="space-y-2 max-h-48 overflow-y-auto">
                                     <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ !request('tag') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
@@ -158,14 +158,14 @@
                             <tr class="border-b border-gray-100 dark:border-gray-800">
                                 <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
                                     <div class="flex items-center">
-                                        <input 
-                                            type="checkbox" 
-                                            class="form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
+                                        <input
+                                            type="checkbox"
+                                            class="form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                             x-model="selectAll"
                                             @click="
                                                 selectAll = !selectAll;
-                                                selectedPosts = selectAll ? 
-                                                    [...document.querySelectorAll('.post-checkbox')].map(cb => cb.value) : 
+                                                selectedPosts = selectAll ?
+                                                    [...document.querySelectorAll('.post-checkbox')].map(cb => cb.value) :
                                                     [];
                                             "
                                         >
@@ -224,9 +224,9 @@
                             @forelse ($posts as $post)
                                 <tr class="{{ $loop->index + 1 != count($posts) ?  'border-b border-gray-100 dark:border-gray-800' : '' }}">
                                     <td class="px-5 py-4 sm:px-6">
-                                        <input 
-                                            type="checkbox" 
-                                            class="post-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
+                                        <input
+                                            type="checkbox"
+                                            class="post-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                             value="{{ $post->id }}"
                                             x-model="selectedPosts"
                                         >
@@ -262,7 +262,7 @@
                                         </td>
                                     @endif
                                     <td class="px-5 py-4 sm:px-6">
-                                        <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium 
+                                        <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium
                                             {{ $post->status === 'publish' ? 'text-green-800 bg-green-100 dark:bg-green-900/20 dark:text-green-400' : '' }}
                                             {{ $post->status === 'draft' ? 'text-gray-800 bg-gray-100 dark:bg-gray-700 dark:text-gray-300' : '' }}
                                             {{ $post->status === 'pending' ? 'text-orange-800 bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400' : '' }}
@@ -274,15 +274,15 @@
                                     </td>
                                     <td class="px-5 py-4 sm:px-6">
                                         @if($post->published_at)
-                                            <span 
-                                                class="cursor-help" 
+                                            <span
+                                                class="cursor-help"
                                                 title="{{ $post->published_at->format('F d, Y \a\t g:i A') }}"
                                             >
                                                 {{ $post->published_at->format('M d, Y') }}
                                             </span>
                                         @else
-                                            <span 
-                                                class="cursor-help" 
+                                            <span
+                                                class="cursor-help"
                                                 title="{{ $post->created_at->format('F d, Y \a\t g:i A') }}"
                                             >
                                                 {{ $post->created_at->format('M d, Y') }}
@@ -292,33 +292,33 @@
                                     <td class="px-5 py-4 sm:px-6 flex justify-center">
                                         <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
                                             @if (auth()->user()->can('post.edit'))
-                                                <x-buttons.action-item 
-                                                    :href="route('admin.posts.edit', [$postType, $post->id])" 
-                                                    icon="pencil" 
-                                                    :label="__('Edit')" 
+                                                <x-buttons.action-item
+                                                    :href="route('admin.posts.edit', [$postType, $post->id])"
+                                                    icon="pencil"
+                                                    :label="__('Edit')"
                                                 />
                                             @endif
                                             {!! ld_apply_filters('admin_post_actions_after_edit', '', $post) !!}
-                                            
+
                                             @if (auth()->user()->can('post.view'))
-                                                <x-buttons.action-item 
-                                                    :href="route('admin.posts.show', [$postType, $post->id])" 
-                                                    icon="eye" 
-                                                    :label="__('View')" 
+                                                <x-buttons.action-item
+                                                    :href="route('admin.posts.show', [$postType, $post->id])"
+                                                    icon="eye"
+                                                    :label="__('View')"
                                                 />
                                             @endif
                                             {!! ld_apply_filters('admin_post_actions_after_view', '', $post) !!}
 
                                             @if (auth()->user()->can('post.delete'))
                                                 <div x-data="{ deleteModalOpen: false }">
-                                                    <x-buttons.action-item 
+                                                    <x-buttons.action-item
                                                         type="modal-trigger"
                                                         modal-target="deleteModalOpen"
-                                                        icon="trash" 
-                                                        :label="__('Delete')" 
+                                                        icon="trash"
+                                                        :label="__('Delete')"
                                                         class="text-red-600 dark:text-red-400"
                                                     />
-                                                    
+
                                                     <x-modals.confirm-delete
                                                         id="delete-modal-{{ $post->id }}"
                                                         title="{{ __('Delete') }} {{ strtolower($postTypeModel->label_singular) }}"
@@ -354,24 +354,24 @@
     </div>
 
     <!-- Bulk Delete Confirmation Modal -->
-    <div 
-        x-cloak 
-        x-show="bulkDeleteModalOpen" 
-        x-transition.opacity.duration.200ms 
-        x-trap.inert.noscroll="bulkDeleteModalOpen" 
-        x-on:keydown.esc.window="bulkDeleteModalOpen = false" 
-        x-on:click.self="bulkDeleteModalOpen = false" 
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4 backdrop-blur-md" 
-        role="dialog" 
-        aria-modal="true" 
+    <div
+        x-cloak
+        x-show="bulkDeleteModalOpen"
+        x-transition.opacity.duration.200ms
+        x-trap.inert.noscroll="bulkDeleteModalOpen"
+        x-on:keydown.esc.window="bulkDeleteModalOpen = false"
+        x-on:click.self="bulkDeleteModalOpen = false"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4 backdrop-blur-md"
+        role="dialog"
+        aria-modal="true"
         aria-labelledby="bulk-delete-modal-title"
     >
-        <div 
-            x-show="bulkDeleteModalOpen" 
-            x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity" 
-            x-transition:enter-start="opacity-0 scale-50" 
-            x-transition:enter-end="opacity-100 scale-100" 
-            class="flex max-w-md flex-col gap-4 overflow-hidden rounded-lg border border-outline border-gray-100 dark:border-gray-800 bg-white text-on-surface dark:border-outline-dark dark:bg-gray-700 dark:text-gray-400"
+        <div
+            x-show="bulkDeleteModalOpen"
+            x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
+            x-transition:enter-start="opacity-0 scale-50"
+            x-transition:enter-end="opacity-100 scale-100"
+            class="flex max-w-md flex-col gap-4 overflow-hidden rounded-md border border-outline border-gray-100 dark:border-gray-800 bg-white text-on-surface dark:border-outline-dark dark:bg-gray-700 dark:text-gray-400"
         >
             <div class="flex items-center justify-between border-b border-gray-100 px-4 py-2 dark:border-gray-800">
                 <div class="flex items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 p-1">
@@ -382,10 +382,10 @@
                 <h3 id="bulk-delete-modal-title" class="font-semibold tracking-wide text-gray-800 dark:text-white">
                     {{ __('Delete Selected') }} {{ $postTypeModel->label }}
                 </h3>
-                <button 
-                    x-on:click="bulkDeleteModalOpen = false" 
-                    aria-label="close modal" 
-                    class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg p-1 dark:hover:bg-gray-600 dark:hover:text-white"
+                <button
+                    x-on:click="bulkDeleteModalOpen = false"
+                    aria-label="close modal"
+                    class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-md p-1 dark:hover:bg-gray-600 dark:hover:text-white"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.4" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
@@ -394,7 +394,7 @@
             </div>
             <div class="px-4 text-center">
                 <p class="text-gray-500 dark:text-gray-400">
-                    {{ __('Are you sure you want to delete the selected') }} {{ strtolower($postTypeModel->label) }}? 
+                    {{ __('Are you sure you want to delete the selected') }} {{ strtolower($postTypeModel->label) }}?
                     {{ __('This action cannot be undone.') }}
                 </p>
             </div>
@@ -402,22 +402,22 @@
                 <form id="bulk-delete-form" action="{{ route('admin.posts.bulk-delete', $postType) }}" method="POST">
                     @method('DELETE')
                     @csrf
-                    
+
                     <template x-for="id in selectedPosts" :key="id">
                         <input type="hidden" name="ids[]" :value="id">
                     </template>
 
-                    <button 
-                        type="button" 
-                        x-on:click="bulkDeleteModalOpen = false" 
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+                    <button
+                        type="button"
+                        x-on:click="bulkDeleteModalOpen = false"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
                     >
                         {{ __('No, Cancel') }}
                     </button>
 
-                    <button 
-                        type="submit" 
-                        class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-300 dark:focus:ring-red-800"
+                    <button
+                        type="submit"
+                        class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-300 dark:focus:ring-red-800"
                     >
                         {{ __('Yes, Delete') }}
                     </button>

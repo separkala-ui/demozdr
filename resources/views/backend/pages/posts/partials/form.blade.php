@@ -6,7 +6,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
     <!-- Main Content Area -->
     <div class="lg:col-span-3 space-y-6">
-        <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+        <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
             <div class="p-5 space-y-4 sm:p-6">
                 <!-- Title and Slug with Alpine.js -->
                 <div x-data="slugGenerator('{{ old('title', $post->title ?? '') }}', '{{ old('slug', $post->slug ?? '') }}')">
@@ -62,7 +62,7 @@
                         <label for="excerpt"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Excerpt') }}</label>
                         <textarea name="excerpt" id="excerpt" rows="3"
-                            class="w-full rounded-lg border border-gray-300 bg-transparent p-4 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
+                            class="w-full rounded-md border border-gray-300 bg-transparent p-4 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                             {{ __('A short summary of the content') }}.
                             {{ __('Leave empty to auto-generate from content') }}</p>
@@ -71,9 +71,9 @@
                 {!! ld_apply_filters('post_form_after_excerpt', '') !!}
 
                 @if ($postTypeModel->supports_thumbnail)
-                    <x-inputs.file-input 
-                        name="featured_image" 
-                        id="featured_image" 
+                    <x-inputs.file-input
+                        name="featured_image"
+                        id="featured_image"
                         accept="image/*"
                         label="{{ __('Featured Image') }}"
                         :existingAttachment="isset($post) && $post->featured_image ? $post->featured_image : null"
@@ -96,7 +96,7 @@
     <!-- Sidebar Area -->
     <div class="lg:col-span-1 space-y-6">
         <!-- Status and Visibility -->
-        <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+        <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
             <div class="px-4 py-3 sm:px-6 border-b border-gray-100 dark:border-gray-800">
                 <h3 class="text-base font-medium text-gray-800 dark:text-white">{{ __('Status & Visibility') }}</h3>
             </div>
@@ -157,7 +157,7 @@
 
         @if ($postTypeModel->hierarchical)
             <!-- Parent -->
-            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+            <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                 <div class="px-4 py-3 sm:px-6 sm:py-3 border-b border-gray-100 dark:border-gray-800">
                     <h3 class="text-base font-medium text-gray-800 dark:text-white">{{ __('Parent') }}</h3>
                 </div>
@@ -172,10 +172,10 @@
                         }
                     @endphp
 
-                    <x-inputs.combobox name="parent_id" 
-                    :label="__('Parent ' . $postTypeModel->label_singular)" 
+                    <x-inputs.combobox name="parent_id"
+                    :label="__('Parent ' . $postTypeModel->label_singular)"
                     :placeholder="__('Select Parent')" :options="$parentOptions"
-                    :selected="old('parent_id', $post->parent_id ?? '')" 
+                    :selected="old('parent_id', $post->parent_id ?? '')"
                     :searchable="false" />
                 </div>
             </div>

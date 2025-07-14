@@ -14,7 +14,7 @@
         {!! ld_apply_filters('action_logs_after_breadcrumbs', '') !!}
 
         <div class="space-y-6">
-            <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+            <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                 <div class="px-5 py-4 sm:px-6 sm:py-5 flex justify-between items-center">
                     <h3 class="text-base font-medium text-gray-800 dark:text-white/90">{{ __('Action Logs') }}</h3>
                     @include('backend.partials.search-form', [
@@ -29,7 +29,7 @@
                         </button>
 
                         <!-- Dropdown menu -->
-                        <div id="dropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                        <div id="dropdown" class="z-10 hidden w-56 p-3 bg-white rounded-md shadow dark:bg-gray-700">
                             <ul class="space-y-2">
                                 <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600    px-2 py-1 rounded"
                                  onclick="handleSelect('')">

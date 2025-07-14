@@ -25,7 +25,7 @@
     </svg>
 </button>
 
-<div id="dropdownLocales" class="z-10 hidden bg-white rounded-lg shadow-sm dark:bg-gray-700 max-h-[300px] overflow-y-auto w-24">
+<div id="dropdownLocales" class="z-10 hidden bg-white rounded-md shadow-sm dark:bg-gray-700 max-h-[300px] overflow-y-auto w-24">
     <ul class="text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLocalesButton">
         @foreach (get_languages() as $code => $lang)
             <li>
@@ -43,3 +43,4 @@
         @endforeach
     </ul>
 </div>
+
