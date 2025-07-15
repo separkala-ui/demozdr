@@ -16,18 +16,18 @@
     @if($label)
         <label for="{{ $inputId }}" class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ $label }}</label>
     @endif
-    
+
     <div x-data="{ showPassword: false }" class="relative">
-        <input 
+        <input
             :type="showPassword ? 'text' : 'password'"
-            name="{{ $name }}" 
+            name="{{ $name }}"
             id="{{ $inputId }}"
             value="{{ $value }}"
             placeholder="{{ $placeholder }}"
             @if($required) required @endif
             class="form-control {{ $class }}" />
-        
-        <button 
+
+        <button
             type="button"
             class="absolute inset-y-0 right-0 flex items-center justify-center w-10 h-full text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
             x-on:click="showPassword = !showPassword">

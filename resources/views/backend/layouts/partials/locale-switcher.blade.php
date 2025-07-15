@@ -8,13 +8,17 @@
 @endphp
 
 <button id="dropdownLocalesButton" data-dropdown-toggle="dropdownLocales" data-dropdown-placement="bottom"
-    class="hover:text-dark-900 relative flex h-11 px-3 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+    class="hover:text-dark-900 relative flex p-2 items-center justify-center rounded-full bg-white text-gray-700 hover:bg-brand-50 hover:text-brand-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
     type="button">
     @php
         $iconPath = public_path(ltrim($lang['icon'], '/'));
         $iconSrc = file_exists($iconPath) ? asset($lang['icon']) : '/images/flags/default.svg';
     @endphp
-    <img src="{{ $iconSrc }}" alt="{{ $lang['name'] }} flag" height="20" width="20"/>
+    <iconify-icon icon="prime:language" width="24" height="24" class="dark:invert"></iconify-icon>
+    {{-- <img src="{{ $iconSrc }}" alt="{{ $lang['name'] }} flag" height="20" width="20" class="mr-2" /> --}}
+    {{-- {{ $lang['name'] }} --}}
+    {{-- {{ $lang['code'] }} --}}
+    {{-- <img src="{{ $iconSrc }}" alt="{{ $lang['name'] }} flag" height="20" width="20"/> --}}
     {{-- {{ $lang['code'] }} --}}
 
     {{-- <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -24,7 +28,7 @@
     </svg> --}}
 </button>
 
-<div id="dropdownLocales" class="z-10 absolute right-0 hidden bg-white rounded-md shadow-sm dark:bg-gray-700 max-h-[300px] overflow-y-auto w-[180px]">
+<div id="dropdownLocales" class="z-10 absolute right-0 hidden bg-white rounded-md shadow-sm dark:bg-gray-700 max-h-[300px] overflow-y-auto w-[200px]">
     <ul class="text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLocalesButton">
         @foreach (get_languages() as $code => $lang)
             <li>
@@ -38,6 +42,8 @@
                         width="20" class="mr-2" />
                         {{ $lang['name'] }}
                     {{-- ({{ $lang['code'] }}) --}}
+                    <iconify-icon icon="lucide:check" width="16" height="16"
+                        class="ml-auto {{ $code === $currentLocale ? 'block' : 'hidden' }}"></iconify-icon>
                 </a>
             </li>
         @endforeach

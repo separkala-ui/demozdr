@@ -30,7 +30,7 @@
                     </x-slot>
 
                     <div class="w-[300px] p-4 font-normal">
-                        <h3 class="font-medium text-gray-900 dark:text-white mb-2">{{ __('Module Requirements') }}</h3>
+                        <h3 class="font-medium text-gray-700 dark:text-white mb-2">{{ __('Module Requirements') }}</h3>
                         <p class="mb-2">{{ __('You can upload custom modules to extend functionality.') }}</p>
                         <ul class="list-disc pl-5 space-y-1 text-sm">
                             <li>{{ __('Modules must be in .zip format') }}</li>
@@ -108,13 +108,13 @@
                                 <h2>
                                     <i class="bi {{ $module->icon }} text-3xl text-gray-500 dark:text-gray-400"></i>
                                 </h2>
-                                <h3 class="text-lg font-medium text-gray-800 dark:text-white">
+                                <h3 class="text-lg font-medium text-gray-700 dark:text-white">
                                     {{ $module->title }}
                                 </h3>
                             </div>
 
 
-                            <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownMore-{{ $module->name }}" class="inline-flex items-right h-9 p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+                            <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownMore-{{ $module->name }}" class="inline-flex items-right h-9 p-2 text-sm font-medium text-center text-gray-700 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
 

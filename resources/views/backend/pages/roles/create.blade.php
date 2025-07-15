@@ -16,7 +16,7 @@
                 <!-- Role Details Section -->
                 <div class="rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-800 dark:bg-gray-900">
                     <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+                        <h3 class="text-lg font-semibold text-gray-700 dark:text-white">
                             {{ __('Role Details') }}
                         </h3>
                         <x-buttons.submit-buttons :classNames="['wrapper' => 'flex gap-4']" cancelUrl="{{ route('admin.roles.index') }}" />
@@ -38,7 +38,7 @@
                 <!-- Permissions Section -->
                 <div class="rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-800 dark:bg-gray-900">
                     <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+                        <h3 class="text-lg font-semibold text-gray-700 dark:text-white">
                             {{ __('Permissions') }}
                         </h3>
                     </div>

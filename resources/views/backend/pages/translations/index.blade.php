@@ -18,7 +18,7 @@
                             {{ __('Language:') }}
                         </label>
                         <select id="language-select"
-                                class="h-11 rounded-md border border-gray-300 bg-transparent px-4 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                                class="h-11 rounded-md border border-gray-300 bg-transparent px-4 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
                                 onchange="updateLocation()">
                             @foreach($languages as $code => $language)
                                 <option value="{{ $code }}" {{ $selectedLang === $code ? 'selected' : '' }}>{{ $language['name'] }}</option>
@@ -31,7 +31,7 @@
                             {{ __('Translation Group') }}:
                         </label>
                         <select id="group-select"
-                                class="h-11 rounded-md border border-gray-300 bg-transparent px-4 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                                class="h-11 rounded-md border border-gray-300 bg-transparent px-4 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
                                 onchange="updateLocation()">
                             @foreach($availableGroups as $group)
                                 <option value="{{ $group }}" {{ $selectedGroup === $group ? 'selected' : '' }}>
@@ -93,13 +93,13 @@
                                 @foreach($enTranslations as $key => $value)
                                     @if(!is_array($value))
                                         <tr class="{{ !isset($translations[$key]) ? 'bg-yellow-50 dark:bg-yellow-900/20' : '' }}">
-                                            <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
+                                            <td class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-white">
                                                 {{ $key }}
                                             </td>
-                                            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-400">
+                                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-400">
                                                 {{ $value }}
                                             </td>
-                                            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-400">
+                                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-400">
                                                 <textarea name="translations[{{ $key }}]" rows="1"
                                                     class="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
                                                     placeholder="">{{ $translations[$key] ?? '' }}</textarea>
@@ -107,14 +107,14 @@
                                         </tr>
                                     @else
                                         <tr class="bg-gray-100 dark:bg-gray-800">
-                                            <td colspan="3" class="px-6 py-2 text-sm font-medium text-gray-900 dark:text-white">
+                                            <td colspan="3" class="px-6 py-2 text-sm font-medium text-gray-700 dark:text-white">
                                                 <strong>{{ $key }}</strong>
                                             </td>
                                         </tr>
                                         @foreach($value as $nestedKey => $nestedValue)
                                             @if(!is_array($nestedValue))
                                                 <tr class="{{ !isset($translations[$key][$nestedKey]) ? 'bg-yellow-50 dark:bg-yellow-900/20' : '' }}">
-                                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white pl-12">
+                                                    <td class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-white pl-12">
                                                         {{ $nestedKey }}
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
@@ -128,13 +128,13 @@
                                                 </tr>
                                             @else
                                                 <tr class="bg-gray-50 dark:bg-gray-700">
-                                                    <td colspan="3" class="px-6 py-1 text-sm font-medium text-gray-900 dark:text-white pl-12">
+                                                    <td colspan="3" class="px-6 py-1 text-sm font-medium text-gray-700 dark:text-white pl-12">
                                                         <strong>{{ $key }}.{{ $nestedKey }}</strong>
                                                     </td>
                                                 </tr>
                                                 @foreach($nestedValue as $deepKey => $deepValue)
                                                     <tr class="{{ !isset($translations[$key][$nestedKey][$deepKey]) ? 'bg-yellow-50 dark:bg-yellow-900/20' : '' }}">
-                                                        <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white pl-16">
+                                                        <td class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-white pl-16">
                                                             {{ $deepKey }}
                                                         </td>
                                                         <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">

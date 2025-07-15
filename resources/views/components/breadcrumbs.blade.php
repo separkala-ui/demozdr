@@ -15,7 +15,7 @@
 @if (!$disabled)
 <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
     @if(!empty($title))
-    <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
+    <h2 class="text-xl font-semibold text-gray-700 dark:text-white/90">
         {{ __($title) }}
 
         {!! $title_after !!}
@@ -50,7 +50,7 @@
             @endforeach
 
             @if($show_current)
-                <li class="text-sm text-gray-800 dark:text-white/90">
+                <li class="text-sm text-gray-700 dark:text-white/90">
                     {{ __($title) }}
                 </li>
             @endif

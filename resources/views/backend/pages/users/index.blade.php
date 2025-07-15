@@ -16,7 +16,7 @@
                 </a>
             @endif
             @if (request('role'))
-                <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">{{ ucfirst(request('role')) }}</span>
+                <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">{{ ucfirst(request('role')) }}</span>
             @endif
         </x-slot>
     </x-breadcrumbs>
@@ -26,7 +26,7 @@
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
           <div class="px-5 py-4 sm:px-6 sm:py-5 flex gap-3 md:gap-1 flex-col md:flex-row justify-between items-center">
-                <h3 class="text-base font-medium text-gray-800 dark:text-white/90 hidden md:block">{{ __('Users') }}</h3>
+                <h3 class="text-base font-medium text-gray-700 dark:text-white/90 hidden md:block">{{ __('Users') }}</h3>
 
                 @include('backend.partials.search-form', [
                     'placeholder' => __('Search by name or email'),
@@ -43,7 +43,7 @@
 
                         <!-- Bulk Actions dropdown menu -->
                         <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-md shadow dark:bg-gray-700">
-                            <h6 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Bulk Actions') }}</h6>
+                            <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white">{{ __('Bulk Actions') }}</h6>
                             <ul class="space-y-2">
                                 <li class="cursor-pointer text-sm text-red-600 dark:text-red-400 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
                                     @click="bulkDeleteModalOpen = true">
@@ -161,7 +161,7 @@
                                 <td class="px-5 py-4 sm:px-6">{{ $user->email }}</td>
                                 <td class="px-5 py-4 sm:px-6">
                                     @foreach ($user->roles as $role)
-                                        <span class="capitalize inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
+                                        <span class="capitalize inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
                                             @if (auth()->user()->can('role.edit'))
                                                 <a href="{{ route('admin.roles.edit', $role->id) }}" data-tooltip-target="tooltip-role-{{ $role->id }}-{{ $user->id }}" class="hover:text-primary">
                                                     {{ $role->name }}
@@ -264,13 +264,13 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                     </svg>
                 </div>
-                <h3 id="bulk-delete-modal-title" class="font-semibold tracking-wide text-gray-800 dark:text-white">
+                <h3 id="bulk-delete-modal-title" class="font-semibold tracking-wide text-gray-700 dark:text-white">
                     {{ __('Delete Selected Users') }}
                 </h3>
                 <button
                     x-on:click="bulkDeleteModalOpen = false"
                     aria-label="close modal"
-                    class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-md p-1 dark:hover:bg-gray-600 dark:hover:text-white"
+                    class="text-gray-400 hover:bg-gray-200 hover:text-gray-700 rounded-md p-1 dark:hover:bg-gray-600 dark:hover:text-white"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.4" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>

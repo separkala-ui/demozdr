@@ -7,7 +7,7 @@
     <button type="button"
             @click="open = !open"
             class="flex w-full items-center justify-between p-5 text-left">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('Advanced Fields') }}</h3>
+        <h3 class="text-lg font-medium text-gray-700 dark:text-white">{{ __('Advanced Fields') }}</h3>
         <svg class="h-5 w-5 transform transition-transform duration-200 dark:text-gray-400"
              :class="{ 'rotate-180': open }"
              fill="none"
@@ -55,14 +55,14 @@
                                                x-model="field.key"
                                                :name="`meta_keys[${index}]`"
                                                placeholder="{{ __('Meta Key') }}"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                     </div>
 
                                     <!-- Field Type -->
                                     <div>
                                         <select x-model="field.type"
                                                :name="`meta_types[${index}]`"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                             @foreach($fieldTypes as $type)
                                                 <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
                                             @endforeach
@@ -78,7 +78,7 @@
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
                                                :placeholder="field.default_value || '{{ __('Meta Value') }}'"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                     </template>
 
                                     <!-- Textarea Type -->
@@ -87,7 +87,7 @@
                                                  :name="`meta_values[${index}]`"
                                                  :placeholder="field.default_value || '{{ __('Meta Value') }}'"
                                                  rows="3"
-                                                 class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"></textarea>
+                                                 class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"></textarea>
                                     </template>
 
                                     <!-- Number Type -->
@@ -96,7 +96,7 @@
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
                                                :placeholder="field.default_value || '{{ __('Meta Value') }}'"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                     </template>
 
                                     <!-- Email Type -->
@@ -105,7 +105,7 @@
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
                                                :placeholder="field.default_value || '{{ __('Meta Value') }}'"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                     </template>
 
                                     <!-- URL Type -->
@@ -114,7 +114,7 @@
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
                                                :placeholder="field.default_value || '{{ __('Meta Value') }}'"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                     </template>
 
                                     <!-- Date Type -->
@@ -122,7 +122,7 @@
                                         <input type="date"
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                     </template>
 
                                     <!-- Checkbox Type -->
@@ -142,7 +142,7 @@
                                         <div class="space-y-2">
                                             <select x-model="field.value"
                                                    :name="`meta_values[${index}]`"
-                                                   class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                                   class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                                 <option value="">{{ __('Select an option') }}</option>
                                                 <template x-for="option in (field.options || [])" :key="option">
                                                     <option :value="option" x-text="option"></option>

@@ -17,14 +17,14 @@
     <li class="menu-item-{{ $item->id }}" style="{!! $item->itemStyles !!}">
         <button :style="`color: ${textColor}`" class="menu-item group w-full text-left {{ $isActive }}" type="button" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.menu-item-arrow').classList.toggle('rotate-180')">
             @if (!empty($item->icon))
-                <img src="{{ asset('images/icons/' . $item->icon) }}" alt="{!! $item->label !!}" class="menu-item-icon dark:invert w-5">
+                <iconify-icon icon="{{ $item->icon }}" class="menu-item-icon dark:invert" width="16" height="16"></iconify-icon>
             @elseif (!empty($item->iconClass))
                 <i class="{{ $item->iconClass }} menu-item-icon"></i>
             @endif
             <span class="menu-item-text">{!! $item->label !!}</span>
-            <img src="{{ asset('images/icons/chevron-down.svg') }}" alt="Arrow" class="menu-item-arrow dark:invert transition-transform duration-300 {{ $rotateClass }}">
+            <iconify-icon icon="lucide:chevron-down" class="menu-item-arrow dark:invert transition-transform duration-300 {{ $rotateClass }} w-4 h-4"></iconify-icon>
         </button>
-        <ul id="{{ $submenuId }}" class="submenu mt-2 overflow-hidden {{ $showSubmenu ? '' : 'hidden' }}">
+        <ul id="{{ $submenuId }}" class="submenu space-y-1 mt-1 overflow-hidden {{ $showSubmenu ? '' : 'hidden' }}">
             @foreach($item->children as $child)
                 @include('backend.layouts.partials.menu-item', ['item' => $child])
             @endforeach
@@ -39,7 +39,7 @@
     <li class="menu-item-{{ $item->id }}" style="{!! $item->itemStyles !!}">
         <a :style="`color: ${textColor}`" href="{{ $item->route ?? '#' }}" class="menu-item group {{ $isActive }}" {!! $target !!}>
             @if (!empty($item->icon))
-                <img src="{{ asset('images/icons/' . $item->icon) }}" alt="{!! $item->label !!}" class="menu-item-icon dark:invert">
+                <iconify-icon icon="{{ $item->icon }}" class="menu-item-icon dark:invert" width="16" height="16"></iconify-icon>
             @elseif (!empty($item->iconClass))
                 <i class="{{ $item->iconClass }} menu-item-icon"></i>
             @endif

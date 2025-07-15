@@ -34,11 +34,11 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                 </svg>
             </div>
-            <h3 id="{{ $id }}-title" class="font-semibold tracking-wide text-gray-800 dark:text-white">{{ $title }}</h3>
+            <h3 id="{{ $id }}-title" class="font-semibold tracking-wide text-gray-700 dark:text-white">{{ $title }}</h3>
             <button
                 x-on:click="{{ $modalTrigger }} = false"
                 aria-label="close modal"
-                class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-md p-1 dark:hover:bg-gray-600 dark:hover:text-white"
+                class="text-gray-400 hover:bg-gray-200 hover:text-gray-700 rounded-md p-1 dark:hover:bg-gray-600 dark:hover:text-white"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.4" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>

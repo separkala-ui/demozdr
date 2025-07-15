@@ -8,7 +8,7 @@
     @endif
 >
     <div class="flex justify-between">
-        <p class="text-[#090909] dark:text-gray-100 text-sm font-medium">{{ $label }}</p>
+        <p class="text-gray-700 dark:text-gray-100 text-sm font-medium">{{ $label }}</p>
 
         <div class="">
             <button type="button" data-tooltip-target="tooltip-card-{{ Str::slug($label) }}" data-tooltip-placement="bottom"
@@ -32,7 +32,7 @@
             @endif
         </div>
 
-        <div class="text-[#090909] dark:text-gray-100 text-xl md:text-3xl font-medium">
+        <div class="text-gray-700 dark:text-gray-100 text-xl md:text-3xl font-medium">
             {!! $value ?? 0 !!}
         </div>
     </div>

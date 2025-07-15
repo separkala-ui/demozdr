@@ -13,7 +13,7 @@
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
             <div class="px-5 py-4 sm:px-6 sm:py-5 flex justify-between items-center">
-                <h3 class="text-base font-medium text-gray-800 dark:text-white/90">{{ __('Permissions') }}</h3>
+                <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __('Permissions') }}</h3>
 
                 @include('backend.partials.search-form', [
                     'placeholder' => __('Search by name or group'),
@@ -77,7 +77,7 @@
                                     {{ ucfirst($permission->name) }}
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
+                                    <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
                                         {{ ucfirst($permission->group_name) }}
                                     </span>
                                 </td>
@@ -85,7 +85,7 @@
                                     @if ($permission->role_count > 0)
                                         <div class="flex items-center">
                                             <a href="{{ route('admin.permissions.show', $permission->id) }}" class="text-primary hover:underline">
-                                                <span class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
+                                                <span class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
                                                     {{ $permission->role_count }}
                                                 </span>
                                                 {{ $permission->roles_list }}

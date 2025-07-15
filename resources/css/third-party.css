@@ -26,7 +26,7 @@
     @apply p-0!;
 }
 .apexcharts-tooltip-title {
-    @apply mb-0! border-b-0! bg-transparent! p-0! text-[10px]! leading-4! text-gray-800! dark:text-white/90!;
+    @apply mb-0! border-b-0! bg-transparent! p-0! text-[10px]! leading-4! text-gray-700! dark:text-white/90!;
 }
 .apexcharts-tooltip-text {
     @apply text-theme-xs! text-gray-700! dark:text-white/90!;
@@ -148,7 +148,7 @@
 }
 .flatpickr-current-month .cur-month,
 .flatpickr-current-month input.cur-year {
-    @apply h-auto! pt-0! text-lg! font-medium! text-gray-800! dark:text-white/90!;
+    @apply h-auto! pt-0! text-lg! font-medium! text-gray-700! dark:text-white/90!;
 }
 
 .flatpickr-prev-month,
@@ -165,7 +165,7 @@
 }
 
 .flatpickr-day {
-    @apply text-theme-sm! flex! items-center! font-medium! text-gray-800! dark:text-white/90! dark:hover:border-gray-300! dark:hover:bg-gray-900!;
+    @apply text-theme-sm! flex! items-center! font-medium! text-gray-700! dark:text-white/90! dark:hover:border-gray-300! dark:hover:bg-gray-900!;
 }
 .flatpickr-day.nextMonthDay,
 .flatpickr-day.prevMonthDay {
@@ -298,7 +298,7 @@ span.flatpickr-weekday,
     @apply bg-brand-500! hover:bg-brand-600! rounded-md! border-0! px-4! py-2.5! text-sm! font-medium! focus:shadow-none!;
 }
 .fc-toolbar-title {
-    @apply text-lg! font-medium! text-gray-800 dark:text-white/90;
+    @apply text-lg! font-medium! text-gray-700 dark:text-white/90;
 }
 .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child {
     @apply rounded-md bg-gray-100 p-0.5 dark:bg-gray-900;
@@ -309,7 +309,7 @@ span.flatpickr-weekday,
 .fc-header-toolbar.fc-toolbar
     .fc-toolbar-chunk:last-child
     .fc-button.fc-button-active {
-    @apply text-gray-900 bg-white dark:bg-gray-800 dark:text-white;
+    @apply text-gray-700 bg-white dark:bg-gray-800 dark:text-white;
 }
 .fc-theme-standard th {
     @apply border-x-0! border-t border-gray-200! bg-gray-50 text-left! dark:border-gray-800! dark:bg-gray-900;

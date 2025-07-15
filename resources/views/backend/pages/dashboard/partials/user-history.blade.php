@@ -2,7 +2,7 @@
 <div class="w-full bg-white border border-gray-200 rounded-md shadow-sm dark:bg-slate-800 p-4 ">
     <div class="flex justify-between">
         <div class="flex justify-center items-center">
-            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1">
+            <h5 class="text-xl font-bold leading-none text-gray-700 dark:text-white pe-1">
                 {{ __('Users History') }}
             </h5>
         </div>

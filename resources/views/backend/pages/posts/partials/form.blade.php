@@ -28,7 +28,7 @@
                         </span>
                         <div class="flex-1" x-show="showSlugEdit">
                             <input type="text" name="slug" id="slug" x-model="slug" maxlength="200"
-                                class="h-7 w-full rounded border border-gray-300 bg-transparent px-2 py-1 text-xs text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                                class="h-7 w-full rounded border border-gray-300 bg-transparent px-2 py-1 text-xs text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
                                 placeholder="{{ __('Leave empty to auto-generate') }}">
                         </div>
                         <div class="ml-2 flex space-x-1">
@@ -62,7 +62,7 @@
                         <label for="excerpt"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Excerpt') }}</label>
                         <textarea name="excerpt" id="excerpt" rows="3"
-                            class="w-full rounded-md border border-gray-300 bg-transparent p-4 text-sm text-gray-800 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
+                            class="w-full rounded-md border border-gray-300 bg-transparent p-4 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                             {{ __('A short summary of the content') }}.
                             {{ __('Leave empty to auto-generate from content') }}</p>
@@ -98,7 +98,7 @@
         <!-- Status and Visibility -->
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
             <div class="px-4 py-3 sm:px-6 border-b border-gray-100 dark:border-gray-800">
-                <h3 class="text-base font-medium text-gray-800 dark:text-white">{{ __('Status & Visibility') }}</h3>
+                <h3 class="text-base font-medium text-gray-700 dark:text-white">{{ __('Status & Visibility') }}</h3>
             </div>
             <div class="p-3 space-y-2 sm:p-4">
                 <!-- Status with Combobox -->
@@ -159,7 +159,7 @@
             <!-- Parent -->
             <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                 <div class="px-4 py-3 sm:px-6 sm:py-3 border-b border-gray-100 dark:border-gray-800">
-                    <h3 class="text-base font-medium text-gray-800 dark:text-white">{{ __('Parent') }}</h3>
+                    <h3 class="text-base font-medium text-gray-700 dark:text-white">{{ __('Parent') }}</h3>
                 </div>
                 <div class="p-3 space-y-2 sm:p-4">
                     @php

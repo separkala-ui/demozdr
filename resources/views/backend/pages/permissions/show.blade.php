@@ -17,12 +17,12 @@
                     <div>
                         <div class="mb-4">
                             <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Permission Name') }}</h4>
-                            <p class="mt-1 text-lg font-medium text-gray-800 dark:text-white">{{ $permission->name }}</p>
+                            <p class="mt-1 text-lg font-medium text-gray-700 dark:text-white">{{ $permission->name }}</p>
                         </div>
                         <div>
                             <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Permission Group') }}</h4>
                             <p class="mt-1">
-                                <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
+                                <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
                                     {{ $permission->group_name }}
                                 </span>
                             </p>
@@ -35,7 +35,7 @@
                                 @foreach($roles as $role)
                                     <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-md">
                                         <div class="flex items-center">
-                                            <span class="text-gray-800 dark:text-white">{{ $role->name }}</span>
+                                            <span class="text-gray-700 dark:text-white">{{ $role->name }}</span>
                                         </div>
                                         <a href="{{ route('admin.roles.edit', $role->id) }}" class="text-primary hover:underline text-sm">
                                             <i class="bi bi-eye mr-1"></i> {{ __('View Role') }}

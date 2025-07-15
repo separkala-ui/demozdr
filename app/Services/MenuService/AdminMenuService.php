@@ -96,7 +96,7 @@ class AdminMenuService
     {
         $this->addMenuItem([
             'label' => __('Dashboard'),
-            'icon' => 'dashboard.svg',
+            'icon' => 'lucide:layout-dashboard',
             'route' => route('admin.dashboard'),
             'active' => Route::is('admin.dashboard'),
             'id' => 'dashboard',
@@ -113,7 +113,7 @@ class AdminMenuService
 
         $this->addMenuItem([
             'label' => __('Roles & Permissions'),
-            'icon' => 'key.svg',
+            'icon' => 'lucide:key',
             'id' => 'roles-submenu',
             'active' => Route::is('admin.roles.*') || Route::is('admin.permissions.*'),
             'priority' => 20,
@@ -144,8 +144,8 @@ class AdminMenuService
         ]);
 
         $this->addMenuItem([
-            'label' => __('User'),
-            'icon' => 'user.svg',
+            'label' => __('Users'),
+            'icon' => 'feather:users',
             'id' => 'users-submenu',
             'active' => Route::is('admin.users.*'),
             'priority' => 20,
@@ -170,7 +170,7 @@ class AdminMenuService
 
         $this->addMenuItem([
             'label' => __('Modules'),
-            'icon' => 'three-dice.svg',
+            'icon' => 'lucide:boxes',
             'route' => route('admin.modules.index'),
             'active' => Route::is('admin.modules.index'),
             'id' => 'modules',
@@ -180,7 +180,7 @@ class AdminMenuService
 
         $this->addMenuItem([
             'label' => __('Monitoring'),
-            'icon' => 'tv.svg',
+            'icon' => 'lucide:monitor',
             'id' => 'monitoring-submenu',
             'active' => Route::is('admin.actionlog.*'),
             'priority' => 40,
@@ -206,7 +206,7 @@ class AdminMenuService
 
         $this->addMenuItem([
             'label' => __('Settings'),
-            'icon' => 'settings.svg',
+            'icon' => 'lucide:settings',
             'id' => 'settings-submenu',
             'active' => Route::is('admin.settings.*') || Route::is('admin.translations.*'),
             'priority' => 1,
@@ -231,7 +231,7 @@ class AdminMenuService
 
         $this->addMenuItem([
             'label' => __('Logout'),
-            'icon' => 'logout.svg',
+            'icon' => 'lucide:log-out',
             'route' => route('admin.dashboard'),
             'active' => false,
             'id' => 'logout',
@@ -240,8 +240,8 @@ class AdminMenuService
                 <li>
                     <form method="POST" action="' . route('logout') . '">
                         ' . csrf_field() . '
-                        <button type="submit" class="menu-item group w-full text-left menu-item-inactive text-black dark:text-white hover:text-black">
-                            <img src="' . asset('images/icons/logout.svg') . '" alt="Logout" class="menu-item-icon dark:invert">
+                        <button type="submit" class="menu-item group w-full text-left menu-item-inactive text-gray-700 dark:text-white hover:text-gray-700">
+                            <iconify-icon icon="lucide:log-out" class="menu-item-icon dark:invert" width="16" height="16"></iconify-icon>
                             <span class="menu-item-text">' . __('Logout') . '</span>
                         </button>
                     </form>

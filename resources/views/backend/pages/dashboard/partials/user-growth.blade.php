@@ -3,7 +3,7 @@
 <div class="rounded-md shadow-sm border border-gray-200 p-4 py-6 z-1 dark:bg-slate-800">
     <!-- Header Section -->
     <div class="flex justify-between items-center">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+        <h3 class="text-lg font-medium text-gray-700 dark:text-white">
             {{ __('User Growth') }}
         </h3>
         <div class="flex gap-2 items-center">

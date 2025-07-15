@@ -13,7 +13,7 @@
         <div class="space-y-6">
             <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                 <div class="px-5 py-2.5 sm:px-6 sm:py-5">
-                    <h3 class="text-base font-medium text-gray-800 dark:text-white">{{ __('Edit Profile') }} -
+                    <h3 class="text-base font-medium text-gray-700 dark:text-white">{{ __('Edit Profile') }} -
                         {{ $user->name }}</h3>
                 </div>
                 <div class="p-5 space-y-6 border-t border-gray-100 dark:border-gray-800 sm:p-6">

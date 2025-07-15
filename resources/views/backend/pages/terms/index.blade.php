@@ -15,7 +15,7 @@
         <div class="lg:col-span-1 space-y-6">
             <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                 <div class="px-5 py-4 sm:px-6 sm:py-5 border-b border-gray-100 dark:border-gray-800">
-                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                    <h3 class="text-base font-medium text-gray-700 dark:text-white/90">
                         {{ $term ? __("Edit {$taxonomyModel->label_singular}") : __("Add New {$taxonomyModel->label_singular}") }}
                     </h3>
                 </div>
@@ -31,7 +31,7 @@
         <div class="lg:col-span-2 space-y-6">
             <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                 <div class="px-5 py-4 sm:px-6 sm:py-5 flex justify-between items-center border-b border-gray-100 dark:border-gray-800">
-                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">{{ __($taxonomyModel->label) }}</h3>
+                    <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __($taxonomyModel->label) }}</h3>
                     <div class="flex items-center gap-2">
                         <!-- Bulk Actions dropdown -->
                         <div class="flex items-center justify-center" x-show="selectedTerms.length > 0">
@@ -43,7 +43,7 @@
 
                             <!-- Bulk Actions dropdown menu -->
                             <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-md shadow dark:bg-gray-700">
-                                <h6 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Bulk Actions') }}</h6>
+                                <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white">{{ __('Bulk Actions') }}</h6>
                                 <ul class="space-y-2">
                                     <li class="cursor-pointer text-sm text-red-600 dark:text-red-400 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
                                         @click="bulkDeleteModalOpen = true">
@@ -242,13 +242,13 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                     </svg>
                 </div>
-                <h3 id="bulk-delete-modal-title" class="font-semibold tracking-wide text-gray-800 dark:text-white">
+                <h3 id="bulk-delete-modal-title" class="font-semibold tracking-wide text-gray-700 dark:text-white">
                     {{ __('Delete Selected') }} {{ $taxonomyModel->label }}
                 </h3>
                 <button
                     x-on:click="bulkDeleteModalOpen = false"
                     aria-label="close modal"
-                    class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-md p-1 dark:hover:bg-gray-600 dark:hover:text-white"
+                    class="text-gray-400 hover:bg-gray-200 hover:text-gray-700 rounded-md p-1 dark:hover:bg-gray-600 dark:hover:text-white"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.4" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>

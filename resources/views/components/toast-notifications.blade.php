@@ -49,7 +49,7 @@
                 <div x-data="{ isVisible: false, timeout: null }"
                      x-cloak
                      x-show="isVisible"
-                     class="pointer-events-auto relative rounded-md border border-success-200 bg-white text-gray-800 dark:border-success-800 dark:bg-gray-800 dark:text-gray-200 shadow-lg"
+                     class="pointer-events-auto relative rounded-md border border-success-200 bg-white text-gray-700 dark:border-success-800 dark:bg-gray-800 dark:text-gray-200 shadow-lg"
                      role="alert"
                      x-on:pause-auto-dismiss.window="clearTimeout(timeout)"
                      x-on:resume-auto-dismiss.window="timeout = setTimeout(() => {(isVisible = false), removeNotification(notification.id) }, displayDuration)"
@@ -92,7 +92,7 @@
                 <div x-data="{ isVisible: false, timeout: null }"
                      x-cloak
                      x-show="isVisible"
-                     class="pointer-events-auto relative rounded-md border border-error-200 bg-white text-gray-800 dark:border-error-800 dark:bg-gray-800 dark:text-gray-200 shadow-lg"
+                     class="pointer-events-auto relative rounded-md border border-error-200 bg-white text-gray-700 dark:border-error-800 dark:bg-gray-800 dark:text-gray-200 shadow-lg"
                      role="alert"
                      x-on:pause-auto-dismiss.window="clearTimeout(timeout)"
                      x-on:resume-auto-dismiss.window="timeout = setTimeout(() => {(isVisible = false), removeNotification(notification.id) }, displayDuration)"
@@ -135,7 +135,7 @@
                 <div x-data="{ isVisible: false, timeout: null }"
                      x-cloak
                      x-show="isVisible"
-                     class="pointer-events-auto relative rounded-md border border-warning-200 bg-white text-gray-800 dark:border-warning-800 dark:bg-gray-800 dark:text-gray-200 shadow-lg"
+                     class="pointer-events-auto relative rounded-md border border-warning-200 bg-white text-gray-700 dark:border-warning-800 dark:bg-gray-800 dark:text-gray-200 shadow-lg"
                      role="alert"
                      x-on:pause-auto-dismiss.window="clearTimeout(timeout)"
                      x-on:resume-auto-dismiss.window="timeout = setTimeout(() => {(isVisible = false), removeNotification(notification.id) }, displayDuration)"
@@ -178,7 +178,7 @@
                 <div x-data="{ isVisible: false, timeout: null }"
                      x-cloak
                      x-show="isVisible"
-                     class="pointer-events-auto relative rounded-md border border-blue-light-200 bg-white text-gray-800 dark:border-blue-light-800 dark:bg-gray-800 dark:text-gray-200 shadow-lg"
+                     class="pointer-events-auto relative rounded-md border border-blue-light-200 bg-white text-gray-700 dark:border-blue-light-800 dark:bg-gray-800 dark:text-gray-200 shadow-lg"
                      role="alert"
                      x-on:pause-auto-dismiss.window="clearTimeout(timeout)"
                      x-on:resume-auto-dismiss.window="timeout = setTimeout(() => {(isVisible = false), removeNotification(notification.id) }, displayDuration)"

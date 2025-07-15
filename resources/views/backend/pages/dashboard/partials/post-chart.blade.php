@@ -2,7 +2,7 @@
     <div class="rounded-md border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
         <div class="mb-4 flex items-center justify-between">
             <div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('Post Activity') }}</h3>
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-white">{{ __('Post Activity') }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('Posts created over time') }}</p>
             </div>
         </div>

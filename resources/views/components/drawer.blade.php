@@ -64,7 +64,7 @@
         <div
             class="px-5 py-4 sm:px-6 sm:py-5 flex justify-between items-center border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
             <div class="flex items-center">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white">
+                <h3 class="text-base font-medium text-gray-700 dark:text-white">
                     {{ $title ?? $btn }}
                 </h3>
                 @if ($headerBtn)

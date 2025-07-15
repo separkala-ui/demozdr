@@ -31,7 +31,7 @@
         {!! ld_apply_filters('sidebar_menu_group_before_' . Str::slug($groupName), '') !!}
         <div>
             {!! ld_apply_filters('sidebar_menu_group_heading_before_' . Str::slug($groupName), '') !!}
-            <h3 class="menu-group-heading mb-4 text-xs uppercase leading-[20px] text-gray-400 px-5">
+            <h3 class="menu-group-heading mb-4 text-xs uppercase leading-[20px] text-gray-500 font-medium dark:text-gray-400 px-5">
                 {{ __($groupName) }}
             </h3>
             {!! ld_apply_filters('sidebar_menu_group_heading_after_' . Str::slug($groupName), '') !!}

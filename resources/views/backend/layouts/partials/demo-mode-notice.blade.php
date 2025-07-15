@@ -8,7 +8,7 @@
     </x-slot>
 
     <div class="w-[300px] p-4 font-normal">
-        <h3 class="font-medium text-gray-900 dark:text-white mb-2">
+        <h3 class="font-medium text-gray-700 dark:text-white mb-2">
             {{ __("Demo Mode Active") }}
         </h3>
         <p class="mb-2">

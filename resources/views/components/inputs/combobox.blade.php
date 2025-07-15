@@ -198,7 +198,7 @@
         <!-- Trigger button -->
         <button type="button"
             role="combobox"
-            class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-800 transition hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 rounded-md"
+            class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 rounded-md"
             x-on:click="isOpen = !isOpen"
             x-on:keydown.down.prevent="openedWithKeyboard = true"
             x-on:keydown.enter.prevent="openedWithKeyboard = true"
@@ -241,7 +241,7 @@
             <!-- Search input -->
             <div class="border-b border-gray-200 dark:border-gray-700 p-2">
                 <input type="text"
-                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
                     placeholder="{{ __('Search...') }}"
                     x-on:input="getFilteredOptions($el.value)"
                     x-ref="searchField" />
@@ -253,7 +253,7 @@
                 <template x-for="(item, index) in options" x-bind:key="item.value">
                     @if($multiple)
                     <li role="option">
-                        <label class="flex items-center gap-3 px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 dark:text-white/90 dark:hover:bg-gray-800 cursor-pointer"
+                        <label class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white/90 dark:hover:bg-gray-800 cursor-pointer"
                             x-bind:for="'option_' + index">
                             <input type="checkbox"
                                 class="combobox-option h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:border-gray-700 dark:bg-gray-900"
@@ -266,7 +266,7 @@
                         </label>
                     </li>
                     @else
-                    <li class="combobox-option px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 dark:text-white/90 dark:hover:bg-gray-800 cursor-pointer flex items-center justify-between"
+                    <li class="combobox-option px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white/90 dark:hover:bg-gray-800 cursor-pointer flex items-center justify-between"
                         role="option"
                         x-on:click="setSelectedOption(item)"
                         x-on:keydown.enter="setSelectedOption(item)"
