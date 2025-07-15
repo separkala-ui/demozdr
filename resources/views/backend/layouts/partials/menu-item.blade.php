@@ -9,7 +9,7 @@
 @elseif (!empty($item->children))
     @php
         $submenuId = $item->id ?? \Str::slug($item->label) . '-submenu';
-        $isActive = $item->active ? 'menu-item-active' : 'menu-item-inactive';
+        $isActive = $item->active ? 'menu-item-active' : '';
         $showSubmenu = app(\App\Services\MenuService\AdminMenuService::class)->shouldExpandSubmenu($item);
         $rotateClass = $showSubmenu ? 'rotate-180' : '';
     @endphp
