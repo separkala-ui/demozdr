@@ -7,11 +7,10 @@
     <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="refactor: add examples in request classes for better clarity">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Modules/Crm/resources/views/layouts/master.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/resources/views/layouts/master.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Crm/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/vite.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Modules/TaskManager/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/TaskManager/vite.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/MenuService/AdminMenuService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/MenuService/AdminMenuService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/css/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/menu-item.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/menu-item.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/sidebar-menu.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/sidebar-menu.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/header.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/header.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/locale-switcher.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/locale-switcher.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -223,7 +222,8 @@
       <workItem from="1752462369107" duration="1928000" />
       <workItem from="1752487029257" duration="5618000" />
       <workItem from="1752503074649" duration="186000" />
-      <workItem from="1752503357010" duration="3349000" />
+      <workItem from="1752503357010" duration="5187000" />
+      <workItem from="1752564227235" duration="2275000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />

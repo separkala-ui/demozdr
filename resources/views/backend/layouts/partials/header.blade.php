@@ -48,10 +48,11 @@ x-init="init()"
         <div :class="menuToggle ? 'flex' : 'hidden'"
             class="w-full items-center justify-between gap-4 px-5 py-1 shadow-theme-md lg:flex lg:justify-end lg:px-0 lg:shadow-none">
             <div class="flex items-center gap-2 2xsm:gap-3">
+                @include('backend.layouts.partials.locale-switcher')
                 <!-- Dark Mode Toggler -->
-                <div class="w-[100px]">
+                {{-- <div class="w-[100px]"> --}}
                     @include('backend.layouts.partials.demo-mode-notice')
-                </div>
+                {{-- </div> --}}
                 @php echo ld_apply_filters('dark_mode_toggler_before_button', ''); @endphp
                 <button id="darkModeToggle"
                     class="hover:text-dark-900 relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
@@ -79,7 +80,7 @@ x-init="init()"
                 @endif
             </div>
 
-            @include('backend.layouts.partials.locale-switcher')
+            {{-- @include('backend.layouts.partials.locale-switcher') --}}
 
             <div class="relative" x-data="{ dropdownOpen: false }" @click.outside="dropdownOpen = false">
                 <a class="flex items-center text-gray-700 dark:text-gray-400" href="#"
@@ -88,32 +89,32 @@ x-init="init()"
                         <img src="{{ auth()->user()->getGravatarUrl() }}" alt="User" />
                     </span>
 
-                    <span class="mr-1 block font-medium w-[100px]" :style="`color: ${textColor}`">
+                    {{-- <span class="mr-1 block font-medium w-[100px]" :style="`color: ${textColor}`">
                         {{ auth()->user()->name }}
-                    </span>
+                    </span> --}}
 
-                    <svg :class="dropdownOpen && 'rotate-180'" class="stroke-gray-500 dark:stroke-gray-400"
+                    {{-- <svg :class="dropdownOpen && 'rotate-180'" class="stroke-gray-500 dark:stroke-gray-400"
                         width="18" height="20" viewBox="0 0 18 20" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path d="M4.3125 8.65625L9 13.3437L13.6875 8.65625" stroke="" stroke-width="1.5"
                             stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
+                    </svg> --}}
                 </a>
 
                 <!-- Dropdown Start -->
                 <div x-show="dropdownOpen"
                     class="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-md border bg-white dark:bg-slate-800 border-gray-200  p-3 shadow-theme-lg dark:border-gray-800 z-100"
                     style="display: none">
-                    <div>
-                        <span class="block text-theme-sm font-medium text-gray-700 dark:text-gray-400">
+                    <div class="border-b border-gray-200 pb-2 dark:border-gray-800 mb-2">
+                        <span class="block font-medium text-gray-700 dark:text-gray-400">
                             {{ auth()->user()->name }}
                         </span>
-                        <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
+                        <span class="mt-0.5 block text-theme-sm text-gray-500 dark:text-gray-400">
                             {{ auth()->user()->email }}
                         </span>
                     </div>
 
-                    <ul class="flex flex-col gap-1 border-b border-gray-200 pb-3 pt-4 dark:border-gray-800">
+                    <ul class="flex flex-col gap-1 border-b border-gray-200 pb-2 dark:border-gray-800">
                         <li>
                             <a href="{{ route('profile.edit') }}"
                                 class="group flex items-center gap-3 rounded-md px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
@@ -131,7 +132,7 @@ x-init="init()"
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button type="submit"
-                            class="group flex items-center gap-3 rounded-md px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300 mt-1 w-full">
+                            class="group flex items-center gap-3 rounded-md px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300 mt-2 w-full">
                             <svg class="fill-gray-500 group-hover:fill-gray-700 dark:group-hover:fill-gray-300"
                                 width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
