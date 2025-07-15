@@ -75,7 +75,9 @@ x-init="init()"
                 @if (env('GITHUB_LINK') )
                     <a href="{{ env('GITHUB_LINK') }}" target="_blank"
                         class="hover:text-dark-900 relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
-                        <img src="{{ asset('images/icons/github.svg') }}" alt="GitHub" class="dark:invert" />
+{{--                        <img src="{{ asset('images/icons/github.svg') }}" alt="GitHub" class="dark:invert" />--}}
+                        <iconify-icon icon="lucide:github" width="24" height="24"
+                            class="dark:invert"></iconify-icon>
                     </a>
                 @endif
             </div>

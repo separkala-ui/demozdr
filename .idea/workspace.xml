@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="refactor: add examples in request classes for better clarity">
+    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="refactor: project structure and improve config logic&#10;&#10;Updated Vite configurations for CRM and TaskManager modules to ensure better reliability and clarity. Refactored Laravel Blade templates to improve readability and maintainability, including adjustments to locale switcher and header partials. Removed unnecessary styles and optimized the use of dynamic asset paths.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/resources/views/layouts/master.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/resources/views/layouts/master.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/vite.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/TaskManager/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/TaskManager/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/header.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/header.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/locale-switcher.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/locale-switcher.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,6 +222,7 @@
       <workItem from="1752503074649" duration="186000" />
       <workItem from="1752503357010" duration="5187000" />
       <workItem from="1752564227235" duration="2275000" />
+      <workItem from="1752582108269" duration="1069000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />
@@ -265,7 +264,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752322316227</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="refactor: project structure and improve config logic&#10;&#10;Updated Vite configurations for CRM and TaskManager modules to ensure better reliability and clarity. Refactored Laravel Blade templates to improve readability and maintainability, including adjustments to locale switcher and header partials. Removed unnecessary styles and optimized the use of dynamic asset paths.">
+      <option name="closed" value="true" />
+      <created>1752582202150</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1752582202150</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -278,6 +285,7 @@
     <MESSAGE value="refactor: improve attribute setting, parameterize filters, and add type hint in services" />
     <MESSAGE value="Refactor UserAvatar module and update project configurations&#10;&#10;Adjust UserAvatar module by fixing syntax inconsistencies and refining code structure in service providers and migrations. Update IDE configuration files to include UserAvatar and TaskManager modules with proper directory mappings and module settings." />
     <MESSAGE value="refactor: add examples in request classes for better clarity" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: add examples in request classes for better clarity" />
+    <MESSAGE value="refactor: project structure and improve config logic&#10;&#10;Updated Vite configurations for CRM and TaskManager modules to ensure better reliability and clarity. Refactored Laravel Blade templates to improve readability and maintainability, including adjustments to locale switcher and header partials. Removed unnecessary styles and optimized the use of dynamic asset paths." />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: project structure and improve config logic&#10;&#10;Updated Vite configurations for CRM and TaskManager modules to ensure better reliability and clarity. Refactored Laravel Blade templates to improve readability and maintainability, including adjustments to locale switcher and header partials. Removed unnecessary styles and optimized the use of dynamic asset paths." />
   </component>
 </project>
