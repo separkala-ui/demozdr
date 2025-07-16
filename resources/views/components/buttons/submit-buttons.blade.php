@@ -4,9 +4,9 @@
     'cancelLabel' => __('Cancel'),
     'cancelUrl' => null,
     'id' => null,
-    'showIcon' => true,
+    'showIcon' => false,
     'classNames' => [
-        'wrapper' => 'flex justify-start gap-4',
+        'wrapper' => 'flex justify-start gap-3',
         'primary' => 'btn-primary',
         'cancel' => 'btn-default',
     ],

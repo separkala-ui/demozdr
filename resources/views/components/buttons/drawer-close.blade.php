@@ -1,6 +1,6 @@
 @props([
     'text' => __('Cancel'),
-    'icon' => 'lucide:x-circle',
+    'icon' => null,
     'event' => 'close-drawer',
     'class' => 'btn-default dark:text-gray-300 dark:hover:bg-gray-700',
 ])
