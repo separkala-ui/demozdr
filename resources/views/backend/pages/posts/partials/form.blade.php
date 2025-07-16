@@ -133,7 +133,7 @@
                     <div class="mb-2">
                         <input type="checkbox" id="schedule_post" name="schedule_post" x-model="showSchedule"
                             x-on:change="if(showSchedule && status !== 'future') status = 'future'; $dispatch('input', status)"
-                            class="mr-2">
+                            class="form-checkbox mr-2">
                         <label for="schedule_post"
                             class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Schedule this post') }}</label>
                     </div>

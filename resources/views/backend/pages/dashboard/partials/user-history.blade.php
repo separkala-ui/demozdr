@@ -2,7 +2,7 @@
 <div class="w-full bg-white border border-gray-200 dark:border-gray-700 rounded-md shadow-sm dark:bg-gray-800 p-4 ">
     <div class="flex justify-between">
         <div class="flex justify-center items-center">
-            <h5 class="text-xl font-bold leading-none text-gray-700 dark:text-white pe-1">
+            <h5 class="text-lg font-semibold leading-none text-gray-700 dark:text-white pe-1">
                 {{ __('Users History') }}
             </h5>
         </div>
@@ -10,7 +10,7 @@
             <button type="button" data-tooltip-target="data-tooltip" data-tooltip-placement="bottom"
                 onclick="window.location.href='{{ route('admin.users.index') }}'"
                 class="hidden sm:inline-flex items-center justify-center text-gray-500 w-8 h-8 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-md text-sm">
-                <img src="{{ asset('/images/icons/move.svg') }}" class="">
+                {{-- <img src="{{ asset('/images/icons/move.svg') }}" class=""> --}}
             </button>
         </div>
     </div>

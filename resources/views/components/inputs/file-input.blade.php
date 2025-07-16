@@ -24,7 +24,7 @@
                 <div class="mt-2">
                     <label class="flex items-center">
                         <input type="checkbox" name="{{ $removeCheckboxName }}" id="{{ $removeCheckboxName }}"
-                            class="mr-2">
+                            class="form-checkbox mr-2">
                         <span
                             class="text-sm text-gray-700 dark:text-gray-300">{{ $removeCheckboxLabel }}</span>
                     </label>

@@ -132,7 +132,7 @@
                                                    x-model="field.value"
                                                    :name="`meta_values[${index}]`"
                                                    value="1"
-                                                   class="h-4 w-4 text-brand-500 border-gray-300 rounded focus:ring-brand-400 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-brand-500">
+                                                   class="form-checkbox h-4 w-4 text-brand-500 border-gray-300 rounded focus:ring-brand-400 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-brand-500">
                                             <label class="text-sm text-gray-700 dark:text-gray-300">{{ __('Check to enable') }}</label>
                                         </div>
                                     </template>

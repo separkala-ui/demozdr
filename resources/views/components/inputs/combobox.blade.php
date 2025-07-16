@@ -256,7 +256,7 @@
                         <label class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white/90 dark:hover:bg-gray-800 cursor-pointer"
                             x-bind:for="'option_' + index">
                             <input type="checkbox"
-                                class="combobox-option h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:border-gray-700 dark:bg-gray-900"
+                                class="form-checkbox combobox-option h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:border-gray-700 dark:bg-gray-900"
                                 x-bind:value="item.value"
                                 x-bind:id="'option_' + index"
                                 x-bind:checked="selectedOptions.includes(item.value)"

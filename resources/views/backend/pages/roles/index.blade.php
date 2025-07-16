@@ -58,7 +58,7 @@
                                 <div class="flex items-center">
                                     <input
                                         type="checkbox"
-                                        class="form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        class="form-checkbox"
                                         x-model="selectAll"
                                         @click="
                                             selectAll = !selectAll;
@@ -107,7 +107,7 @@
                                 <td class="px-5 py-4 sm:px-6">
                                     <input
                                         type="checkbox"
-                                        class="role-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        class="role-checkbox form-checkbox"
                                         value="{{ $role->id }}"
                                         x-model="selectedRoles"
                                         {{ $role->name === 'superadmin' ? 'disabled' : '' }}

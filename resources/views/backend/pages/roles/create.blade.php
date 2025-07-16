@@ -44,7 +44,7 @@
                     </div>
                     <div class="p-4">
                         <div class="mb-4">
-                            <input type="checkbox" id="checkPermissionAll" class="mr-2">
+                            <input type="checkbox" id="checkPermissionAll" class="form-checkbox mr-2">
                             <label for="checkPermissionAll" class="text-sm text-gray-700 dark:text-gray-300">
                                 {{ __('Select All') }}
                             </label>
@@ -54,7 +54,7 @@
                         @foreach ($permission_groups as $group)
                             <div class="mb-6">
                                 <div class="flex items-center mb-2">
-                                    <input type="checkbox" id="group{{ $i }}Management" class="mr-2">
+                                    <input type="checkbox" id="group{{ $i }}Management" class="form-checkbox mr-2">
                                     <label for="group{{ $i }}Management"
                                         class="capitalize text-sm font-medium text-gray-700 dark:text-gray-300">
                                         {{ ucfirst($group->name) }}
@@ -68,7 +68,7 @@
                                     @foreach ($permissions as $permission)
                                         <div>
                                             <input type="checkbox" id="checkPermission{{ $permission->id }}"
-                                                name="permissions[]" value="{{ $permission->name }}" class="mr-2">
+                                                name="permissions[]" value="{{ $permission->name }}" class="form-checkbox mr-2">
                                             <label for="checkPermission{{ $permission->id }}"
                                                 class="capitalize text-sm text-gray-700 dark:text-gray-300">
                                                 {{ $permission->name }}
