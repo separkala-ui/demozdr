@@ -66,7 +66,7 @@
           <div>
             <button type="submit" class="btn-primary w-full ">
               {{ __('Sign In') }}
-              <i class="bi bi-box-arrow-in-right ml-2"></i>
+              <iconify-icon icon="lucide:log-in" class="ml-2"></iconify-icon>
             </button>
           </div>
           @if (config('app.demo_mode', false))
@@ -77,10 +77,10 @@
               class="flex justify-between items-center w-full px-4 py-3 text-sm font-medium text-left text-brand-600 dark:text-brand-400 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <span>
-                <i class="bi bi-info-circle mr-2"></i>
+                <iconify-icon icon="lucide:info" class="mr-2"></iconify-icon>
                 {{ __('Demo Credentials') }}
               </span>
-              <i :class="showDemoCredentials ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"></i>
+              <iconify-icon :icon="showDemoCredentials ? 'lucide:chevron-up' : 'lucide:chevron-down'"></iconify-icon>
             </button>
 
             <div x-show="showDemoCredentials" x-transition class="px-4 py-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
@@ -103,7 +103,7 @@
                 class="!text-xs btn-default"
               >
                 {{ __('Login Now') }}
-                <i class="bi bi-box-arrow-in-right ml-1"></i>
+                <iconify-icon icon="lucide:log-in" class="ml-1"></iconify-icon>
               </button>
             </div>
           </div>

@@ -2,7 +2,7 @@
 <x-popover position="bottom" width="w-[300px]">
     <x-slot name="trigger">
         <span class="rounded-radius border border-warning bg-warning px-2 py-1 text-xs font-medium text-warning-500 dark:border-slate-900 dark:bg-slate-800 dark:text-warning-500 p-3 block">
-            <i class="bi bi-exclamation-triangle-fill"></i>
+            <iconify-icon icon="lucide:alert-triangle"></iconify-icon>
             {{ __("Demo Mode") }}
         </span>
     </x-slot>

@@ -55,7 +55,7 @@
                     <button type="submit"
                         class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-md bg-brand-500 shadow-theme-xs hover:bg-brand-600">
                         Reset Password
-                        <i class="bi bi-box-arrow-in-right ml-2"></i>
+                        <iconify-icon icon="lucide:log-in" class="ml-2"></iconify-icon>
                     </button>
                 </div>
             </div>

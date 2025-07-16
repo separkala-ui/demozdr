@@ -20,13 +20,13 @@
                     @click="showUploadArea = !showUploadArea"
                     class="ml-4 btn-primary btn-upload-module"
                 >
-                    <i class="bi bi-cloud-upload mr-2"></i>
+                    <iconify-icon icon="lucide:upload-cloud" class="mr-2"></iconify-icon>
                     {{ __('Upload Module') }}
                 </button>
 
                 <x-popover position="bottom" width="w-[300px]">
                     <x-slot name="trigger">
-                        <i class="bi bi-info-circle text-lg ml-3" title="{{ __('Module Requirements') }}"></i>
+                        <iconify-icon icon="lucide:info" class="text-lg ml-3" title="{{ __('Module Requirements') }}"></iconify-icon>
                     </x-slot>
 
                     <div class="w-[300px] p-4 font-normal">
@@ -39,13 +39,13 @@
                                 {{ __('Must follow guidelines.') }}&nbsp;
                                 <a href="https://laradashboard.com/docs/how-to-create-a-module-in-lara-dashboard/" class="text-primary hover:underline" target="_blank">
                                     {{ __('Learn more') }}
-                                    <i class="bi bi-arrow-up-right-square text-sm"></i>
+                                    <iconify-icon icon="lucide:external-link" class="text-sm"></iconify-icon>
                                 </a>
                             </li>
                         </ul>
                         @if(config('app.demo_mode', false))
                         <div class="bg-yellow-50 text-yellow-700 rounded-md mt-4 p-3">
-                            <i class="bi bi-exclamation-triangle-fill"></i> &nbsp;
+                            <iconify-icon icon="lucide:alert-triangle"></iconify-icon> &nbsp;
                             {{ __('Note: Module uploads are disabled in demo mode.') }}
                         </div>
                         @endif
@@ -91,7 +91,7 @@
                 @click="$refs.uploadModule.click()"
                 class="mt-4 btn-primary"
             >
-                <i class="bi bi-cloud-upload mr-2"></i>
+                <iconify-icon icon="lucide:upload-cloud" class="mr-2"></iconify-icon>
                 {{ __('Upload') }}
             </button>
             <form action="{{ route('admin.modules.store') }}" method="POST" enctype="multipart/form-data" class="hidden">
@@ -114,11 +114,11 @@
                             </div>
 
 
-                            <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownMore-{{ $module->name }}" class="inline-flex items-right h-9 p-2 text-sm font-medium text-center text-gray-700 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
-                                <i class="bi bi-three-dots-vertical"></i>
+                            <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownMore-{{ $module->name }}" class="inline-flex items-right h-9 p-2 text-sm font-medium text-center text-gray-700 bg-white rounded-md hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+                                <iconify-icon icon="lucide:more-vertical"></iconify-icon>
                             </button>
 
-                            <div id="dropdownMore-{{ $module->name }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
+                            <div id="dropdownMore-{{ $module->name }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-md shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
                                     <li>
                                         <div>

@@ -32,14 +32,14 @@
                     <button type="submit"
                         class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-md bg-brand-500 shadow-theme-xs hover:bg-brand-600">
                         {{ __('Send Reset Link') }}
-                        <i class="bi bi-box-arrow-in-right ml-2"></i>
+                        <iconify-icon icon="lucide:log-in" class="ml-2"></iconify-icon>
                     </button>
                 </div>
             </div>
         </form>
         <div class="flex justify-center items-center mt-5 text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
             <a href="{{ route('admin.login') }}" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">
-                <i class="bi bi-chevron-left mr-2"></i>
+                <iconify-icon icon="lucide:chevron-left" class="mr-2"></iconify-icon>
                 {{ __('Back to Login') }}
             </a>
         </div>

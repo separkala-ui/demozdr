@@ -11,7 +11,7 @@
         <x-slot name="title_after">
             @if (auth()->user()->can('user.edit'))
                 <a href="{{ route('admin.users.create') }}" class="btn-primary ml-2">
-                    <i class="bi bi-plus-circle mr-2"></i>
+                    <iconify-icon icon="lucide:plus-circle" class="mr-2"></iconify-icon>
                     {{ __('New User') }}
                 </a>
             @endif
@@ -36,9 +36,9 @@
                     <!-- Bulk Actions dropdown -->
                     <div class="flex items-center justify-center" x-show="selectedUsers.length > 0">
                         <button id="bulkActionsButton" data-dropdown-toggle="bulkActionsDropdown" class="btn-danger flex items-center justify-center gap-2 text-sm" type="button">
-                            <i class="bi bi-trash"></i>
+                            <iconify-icon icon="lucide:trash"></iconify-icon>
                             <span>{{ __('Bulk Actions') }} (<span x-text="selectedUsers.length"></span>)</span>
-                            <i class="bi bi-chevron-down"></i>
+                            <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                         </button>
 
                         <!-- Bulk Actions dropdown menu -->
@@ -47,7 +47,7 @@
                             <ul class="space-y-2">
                                 <li class="cursor-pointer text-sm text-red-600 dark:text-red-400 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
                                     @click="bulkDeleteModalOpen = true">
-                                    <i class="bi bi-trash mr-1"></i> {{ __('Delete Selected') }}
+                                    <iconify-icon icon="lucide:trash" class="mr-1"></iconify-icon> {{ __('Delete Selected') }}
                                 </li>
                             </ul>
                         </div>
@@ -55,9 +55,9 @@
 
                     <div class="flex items-center justify-center">
                         <button id="roleDropdownButton" data-dropdown-toggle="roleDropdown" class="btn-default flex items-center justify-center gap-2" type="button">
-                            <i class="bi bi-sliders"></i>
+                            <iconify-icon icon="lucide:sliders"></iconify-icon>
                             {{ __('Filter by Role') }}
-                            <i class="bi bi-chevron-down"></i>
+                            <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                         </button>
 
                         <!-- Dropdown menu -->
@@ -102,11 +102,11 @@
                                     {{ __('Name') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'name' ? '-name' : 'name']) }}" class="ml-1">
                                         @if(request()->sort === 'name')
-                                            <i class="bi bi-sort-alpha-down text-primary"></i>
+                                            <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
                                         @elseif(request()->sort === '-name')
-                                            <i class="bi bi-sort-alpha-up text-primary"></i>
+                                            <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
                                         @else
-                                            <i class="bi bi-arrow-down-up text-gray-400"></i>
+                                            <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
                                         @endif
                                     </a>
                                 </div>
@@ -116,11 +116,11 @@
                                     {{ __('Email') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'email' ? '-email' : 'email']) }}" class="ml-1">
                                         @if(request()->sort === 'email')
-                                            <i class="bi bi-sort-alpha-down text-primary"></i>
+                                            <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
                                         @elseif(request()->sort === '-email')
-                                            <i class="bi bi-sort-alpha-up text-primary"></i>
+                                            <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
                                         @else
-                                            <i class="bi bi-arrow-down-up text-gray-400"></i>
+                                            <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
                                         @endif
                                     </a>
                                 </div>

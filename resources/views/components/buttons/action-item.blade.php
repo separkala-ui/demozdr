@@ -15,7 +15,7 @@
         role="menuitem"
     >
         @if($icon)
-            <i class="bi bi-{{ $icon }} text-base"></i>
+            <iconify-icon icon="{{ $icon }}" class="text-base"></iconify-icon>
         @endif
         {{ $label }}
     </a>
@@ -28,7 +28,7 @@
         role="menuitem"
     >
         @if($icon)
-            <i class="bi bi-{{ $icon }} text-base"></i>
+            <iconify-icon icon="{{ $icon }}" class="text-base"></iconify-icon>
         @endif
         {{ $label }}
     </button>
@@ -41,7 +41,7 @@
         role="menuitem"
     >
         @if($icon)
-            <i class="bi bi-{{ $icon }} text-base"></i>
+            <iconify-icon icon="{{ $icon }}" class="text-base"></iconify-icon>
         @endif
         {{ $label }}
     </button>

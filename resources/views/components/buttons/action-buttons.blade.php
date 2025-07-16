@@ -54,7 +54,7 @@
         x-on:keydown.down.prevent="openedWithKeyboard = true; $nextTick(() => updatePosition())"
         x-bind:aria-expanded="isOpen || openedWithKeyboard"
     >
-        <i class="bi bi-three-dots-vertical text-lg"></i>
+        <iconify-icon icon="lucide:more-vertical" class="text-lg"></iconify-icon>
         @if($showLabel)
             <span class="hidden sm:inline">{{ $label }}</span>
         @endif

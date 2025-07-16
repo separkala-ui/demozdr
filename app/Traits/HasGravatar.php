@@ -12,9 +12,10 @@ trait HasGravatar
     public function getGravatarUrl(int $size = 80): string
     {
         $email = strtolower(trim($this->email));
-        $hash = md5($email);
-        $fallback = 'mp'; // Options: 'mp', 'identicon', 'monsterid', 'wavatar', 'retro', 'robohash', 'blank'
+        // $hash = md5($email);
+        // $fallback = 'mp'; // Options: 'mp', 'identicon', 'monsterid', 'wavatar', 'retro', 'robohash', 'blank'
 
-        return "https://www.gravatar.com/avatar/{$hash}?s={$size}&d={$fallback}";
+        // // return "https://www.gravatar.com/avatar/{$hash}?s={$size}&d={$fallback}";
+        return "https://ui-avatars.com/api/?name={$this->name}&size={$size}&background=635bff&color=fff&rounded=true";
     }
 }

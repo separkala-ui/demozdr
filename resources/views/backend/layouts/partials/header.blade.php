@@ -35,7 +35,9 @@ x-init="init()"
                 :class="sidebarToggle ? 'lg:bg-transparent dark:lg:bg-transparent bg-gray-100 dark:bg-gray-800' : ''"
                 class="z-99999 flex h-10 w-10 items-center justify-center rounded-md border-gray-200 text-gray-700 lg:h-11 lg:w-11 dark:border-gray-800 dark:text-gray-400 transition-all duration-300"
                 @click.stop="sidebarToggle = !sidebarToggle; localStorage.setItem('sidebarToggle', sidebarToggle);">
-                <iconify-icon icon="lucide:menu" width="24" height="24" class="dark:invert"></iconify-icon>
+                <iconify-icon
+                 :icon="sidebarToggle ? 'mdi:menu-close' : 'mdi:menu-open'"
+                width="26" height="26" class="dark:invert"></iconify-icon>
             </button>
 
             <a href="{{ route('admin.dashboard') }}" class="lg:hidden">

@@ -17,12 +17,12 @@
                 <div class="flex gap-2">
                     @if (auth()->user()->can('post.edit'))
                         <a href="{{ route('admin.posts.edit', [$postType, $post->id]) }}" class="btn-primary">
-                            <i class="bi bi-pencil mr-2"></i>
+                            <iconify-icon icon="lucide:pencil" class="mr-2"></iconify-icon>
                             {{ __('Edit') }}
                         </a>
                     @endif
                     <a href="{{ route('admin.posts.index', $postType) }}" class="btn-default">
-                        <i class="bi bi-arrow-left mr-2"></i>
+                        <iconify-icon icon="lucide:arrow-left" class="mr-2"></iconify-icon>
                         {{ __('Back') }}
                     </a>
                 </div>
@@ -32,21 +32,21 @@
                 <!-- Meta Information -->
                 <div class="mb-6 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
                     <div class="flex items-center">
-                        <i class="bi bi-person mr-1"></i>
+                        <iconify-icon icon="lucide:user" class="mr-1"></iconify-icon>
                         {{ __('Author:') }} {{ $post->user->name }}
                     </div>
                     <div class="flex items-center">
-                        <i class="bi bi-calendar mr-1"></i>
+                        <iconify-icon icon="lucide:calendar" class="mr-1"></iconify-icon>
                         {{ __('Created:') }} {{ $post->created_at->format('M d, Y h:i A') }}
                     </div>
                     @if($post->created_at != $post->updated_at)
                         <div class="flex items-center">
-                            <i class="bi bi-clock-history mr-1"></i>
+                            <iconify-icon icon="lucide:clock" class="mr-1"></iconify-icon>
                             {{ __('Updated:') }} {{ $post->updated_at->format('M d, Y h:i A') }}
                         </div>
                     @endif
                     <div class="flex items-center">
-                        <i class="bi bi-tag mr-1"></i>
+                        <iconify-icon icon="lucide:tag" class="mr-1"></iconify-icon>
                         {{ __('Status:') }}
                         <span class="ml-1 inline-flex items-center justify-center px-2 py-1 text-xs font-medium
                             {{ $post->status === 'publish' ? 'text-green-800 bg-green-100 dark:bg-green-900/20 dark:text-green-400' : '' }}

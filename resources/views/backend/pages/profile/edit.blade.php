@@ -53,7 +53,7 @@
                                 class="px-4 py-2 text-sm font-medium text-white bg-brand-500 rounded-md hover:bg-brand-600">{{ __('Save') }}</button>
                             <a href="{{ route('admin.dashboard') }}"
                                 class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-white">
-                                <i class="bi bi-x-circle mr-1"></i>
+                                <iconify-icon icon="lucide:x-circle" class="mr-1"></iconify-icon>
                                 {{ __('Cancel') }}</a>
                         </div>
                         {!! ld_apply_filters('profile_edit_fields', '', $user) !!}

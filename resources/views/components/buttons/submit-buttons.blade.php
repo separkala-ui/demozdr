@@ -17,7 +17,7 @@
         <button type="submit" @if (!empty($id)) id="{{ $id }}" @endif
             class="{{ $classNames['primary'] ?? 'btn-primary' }}">
             @if ($showIcon)
-                <i class="bi bi-check-circle mr-2"></i>
+                <iconify-icon icon="lucide:check-circle" class="mr-2"></iconify-icon>
             @endif
 
             @if (!empty($submitLabel))
@@ -34,7 +34,7 @@
     @if (!empty($cancelLabel) && !empty($cancelUrl))
         <a href="{{ $cancelUrl }}" class="{{ $classNames['cancel'] ?? 'btn-default' }}">
             @if ($showIcon)
-                <i class="bi bi-x-circle mr-2"></i>
+                <iconify-icon icon="lucide:x-circle" class="mr-2"></iconify-icon>
             @endif
 
             {{ $cancelLabel }}

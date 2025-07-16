@@ -68,7 +68,7 @@
 
     <div class="relative">
         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <i class="bi bi-calendar text-gray-400 dark:text-gray-500 z-1"></i>
+            <iconify-icon icon="lucide:calendar" class="text-gray-400 dark:text-gray-500 z-1"></iconify-icon>
         </div>
         <input x-ref="datetimePicker" type="text" id="{{ $id }}" name="{{ $name }}"
             value="{{ $value ?: now()->format($dateFormat) }}" placeholder="{{ $placeholder }}"

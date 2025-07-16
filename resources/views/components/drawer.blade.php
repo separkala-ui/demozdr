@@ -3,7 +3,7 @@
     'isOpen' => false,
     'title' => null,
     'btnClass' => 'btn-primary',
-    'btnIcon' => 'bi bi-plus-circle',
+    'btnIcon' => 'lucide:plus-circle',
     'width' => 'sm:w-120',
     'drawerId' => null,
     'headerBtn' => null,
@@ -40,7 +40,7 @@
     @if ($btn)
         <button type="button" @click="open = true" class="{{ $btnClass }}">
             @if ($btnIcon)
-                <i class="{{ $btnIcon }} mr-2"></i>
+                <iconify-icon icon="{{ $btnIcon }}" class="mr-2"></iconify-icon>
             @endif
             {{ $btn }}
         </button>
@@ -101,7 +101,7 @@
                     @endif
                     <div class="ml-auto">
                         <button type="button" @click="close()" class="btn-default mr-2">
-                            <i class="bi bi-x-circle mr-1"></i>
+                            <iconify-icon icon="lucide:x-circle" class="mr-1"></iconify-icon>
                             {{ __('Cancel') }}
                         </button>
                         @if ($footerBtn)

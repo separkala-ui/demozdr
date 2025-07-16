@@ -10,7 +10,7 @@
         <x-slot name="title_after">
             @if (auth()->user()->can('post.create'))
                 <a href="{{ route('admin.posts.create', $postType) }}" class="btn-primary ml-2">
-                    <i class="bi bi-plus-circle mr-2"></i>
+                    <iconify-icon icon="lucide:plus-circle" class="mr-2"></iconify-icon>
                     {{ __("New {$postTypeModel->label_singular}") }}
                 </a>
             @endif
@@ -34,9 +34,9 @@
                     <!-- Bulk Actions dropdown -->
                     <div class="flex items-center justify-center" x-show="selectedPosts.length > 0">
                         <button id="bulkActionsButton" data-dropdown-toggle="bulkActionsDropdown" class="btn-danger flex items-center justify-center gap-2 text-sm" type="button">
-                            <i class="bi bi-trash"></i>
+                            <iconify-icon icon="lucide:trash"></iconify-icon>
                             <span>{{ __('Bulk Actions') }} (<span x-text="selectedPosts.length"></span>)</span>
-                            <i class="bi bi-chevron-down"></i>
+                            <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                         </button>
 
                         <!-- Bulk Actions dropdown menu -->
@@ -45,7 +45,7 @@
                             <ul class="space-y-2">
                                 <li class="cursor-pointer text-sm text-red-600 dark:text-red-400 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
                                     @click="bulkDeleteModalOpen = true">
-                                    <i class="bi bi-trash mr-1"></i> {{ __('Delete Selected') }}
+                                    <iconify-icon icon="lucide:trash" class="mr-1"></iconify-icon> {{ __('Delete Selected') }}
                                 </li>
                             </ul>
                         </div>
@@ -54,14 +54,14 @@
                     <!-- Status Filter dropdown -->
                     <div class="flex items-center justify-center">
                         <button id="statusDropdownButton" data-dropdown-toggle="statusDropdown" class="btn-default flex items-center justify-center gap-2 text-sm" type="button">
-                            <i class="bi bi-funnel"></i>
+                            <iconify-icon icon="lucide:filter"></iconify-icon>
                             <span class="hidden sm:inline">{{ __('Status') }}</span>
                             @if(request('status'))
                                 <span class="px-2 py-0.5 text-xs bg-red-100 text-red-800 rounded-full dark:bg-red-900/20 dark:text-red-400">
                                     {{ ucfirst(request('status')) }}
                                 </span>
                             @endif
-                            <i class="bi bi-chevron-down"></i>
+                            <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                         </button>
 
                         <!-- Status dropdown menu -->
@@ -86,14 +86,14 @@
                         <!-- Category Filter dropdown -->
                         <div class="flex items-center justify-center">
                             <button id="categoryDropdownButton" data-dropdown-toggle="categoryDropdown" class="btn-default flex items-center justify-center gap-2 text-sm" type="button">
-                                <i class="bi bi-grid"></i>
+                                <iconify-icon icon="lucide:grid"></iconify-icon>
                                 <span class="hidden sm:inline">{{ __('Category') }}</span>
                                 @if(request('category'))
                                     <span class="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full dark:bg-blue-900/20 dark:text-blue-400">
                                         {{ $categories->where('id', request('category'))->first()?->name }}
                                     </span>
                                 @endif
-                                <i class="bi bi-chevron-down"></i>
+                                <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                             </button>
 
                             <!-- Category dropdown menu -->
@@ -119,14 +119,14 @@
                     @if($postType === 'post' && isset($tags) && count($tags) > 0)
                         <div class="flex items-center justify-center">
                             <button id="tagDropdownButton" data-dropdown-toggle="tagDropdown" class="btn-default flex items-center justify-center gap-2 text-sm" type="button">
-                                <i class="bi bi-tags"></i>
+                                <iconify-icon icon="lucide:tags"></iconify-icon>
                                 <span class="hidden sm:inline">{{ __('Tags') }}</span>
                                 @if(request('tag'))
                                     <span class="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full dark:bg-green-900/20 dark:text-green-400">
                                         {{ $tags->where('id', request('tag'))->first()?->name }}
                                     </span>
                                 @endif
-                                <i class="bi bi-chevron-down"></i>
+                                <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                             </button>
 
                             <!-- Tags dropdown menu -->
@@ -176,11 +176,11 @@
                                         {{ __('Title') }}
                                         <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'title' ? '-title' : 'title']) }}" class="ml-1">
                                             @if(request()->sort === 'title')
-                                                <i class="bi bi-sort-alpha-down text-primary"></i>
+                                                <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
                                             @elseif(request()->sort === '-title')
-                                                <i class="bi bi-sort-alpha-up text-primary"></i>
+                                                <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
                                             @else
-                                                <i class="bi bi-arrow-down-up text-gray-400"></i>
+                                                <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
                                             @endif
                                         </a>
                                     </div>
@@ -194,11 +194,11 @@
                                         {{ __('Status') }}
                                         <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'status' ? '-status' : 'status']) }}" class="ml-1">
                                             @if(request()->sort === 'status')
-                                                <i class="bi bi-sort-alpha-down text-primary"></i>
+                                                <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
                                             @elseif(request()->sort === '-status')
-                                                <i class="bi bi-sort-alpha-up text-primary"></i>
+                                                <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
                                             @else
-                                                <i class="bi bi-arrow-down-up text-gray-400"></i>
+                                                <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
                                             @endif
                                         </a>
                                     </div>
@@ -208,11 +208,11 @@
                                         {{ __('Date') }}
                                         <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'created_at' ? '-created_at' : 'created_at']) }}" class="ml-1">
                                             @if(request()->sort === 'created_at')
-                                                <i class="bi bi-sort-numeric-down text-primary"></i>
+                                                <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
                                             @elseif(request()->sort === '-created_at')
-                                                <i class="bi bi-sort-numeric-up text-primary"></i>
+                                                <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
                                             @else
-                                                <i class="bi bi-arrow-down-up text-gray-400"></i>
+                                                <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
                                             @endif
                                         </a>
                                     </div>
@@ -237,7 +237,7 @@
                                                 <img src="{{ asset($post->featured_image) }}" alt="{{ $post->title }}" class="w-12 object-cover rounded mr-3">
                                             @else
                                                 <div class="bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center mr-3">
-                                                    <i class="w-12 text-center bi bi-image text-gray-400"></i>
+                                                    <iconify-icon icon="lucide:image" class="w-12 text-center text-gray-400"></iconify-icon>
                                                 </div>
                                             @endif
                                             @if (auth()->user()->can('post.edit'))

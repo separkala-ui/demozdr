@@ -29,11 +29,11 @@
                                     {{ __('Name') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'name' ? '-name' : 'name']) }}" class="ml-1">
                                         @if(request()->sort === 'name')
-                                            <i class="bi bi-sort-alpha-down text-primary"></i>
+                                            <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
                                         @elseif(request()->sort === '-name')
-                                            <i class="bi bi-sort-alpha-up text-primary"></i>
+                                            <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
                                         @else
-                                            <i class="bi bi-arrow-down-up text-gray-400"></i>
+                                            <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
                                         @endif
                                     </a>
                                 </div>
@@ -43,11 +43,11 @@
                                     {{ __('Group') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'group_name' ? '-group_name' : 'group_name']) }}" class="ml-1">
                                         @if(request()->sort === 'group_name')
-                                            <i class="bi bi-sort-alpha-down text-primary"></i>
+                                            <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
                                         @elseif(request()->sort === '-group_name')
-                                            <i class="bi bi-sort-alpha-up text-primary"></i>
+                                            <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
                                         @else
-                                            <i class="bi bi-arrow-down-up text-gray-400"></i>
+                                            <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
                                         @endif
                                     </a>
                                 </div>
@@ -57,11 +57,11 @@
                                     {{ __('Roles') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'role_count' ? '-role_count' : 'role_count']) }}" class="ml-1">
                                         @if(request()->sort === 'role_count')
-                                            <i class="bi bi-sort-numeric-down text-primary"></i>
+                                            <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
                                         @elseif(request()->sort === '-role_count')
-                                            <i class="bi bi-sort-numeric-up text-primary"></i>
+                                            <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
                                         @else
-                                            <i class="bi bi-arrow-down-up text-gray-400"></i>
+                                            <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
                                         @endif
                                     </a>
                                 </div>

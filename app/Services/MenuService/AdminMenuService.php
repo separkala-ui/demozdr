@@ -315,7 +315,7 @@ class AdminMenuService
             // Set up menu item with all children.
             $menuItem = [
                 'title' => __($type->label),
-                'iconClass' => get_post_type_icon($typeName),
+                'icon' => get_post_type_icon($typeName),
                 'id' => 'post-type-' . $typeName,
                 'active' => request()->is('admin/posts/' . $typeName . '*') ||
                     (! empty($type->taxonomies) && $this->isCurrentTermBelongsToPostType($type->taxonomies)),

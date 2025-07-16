@@ -11,9 +11,9 @@
         class="btn-primary flex items-center justify-center gap-2"
         type="button"
     >
-        <i class="bi bi-sliders"></i>
+        <iconify-icon icon="lucide:sliders"></iconify-icon>
         {{ __('Filter') }}
-        <i class="bi bi-chevron-down"></i>
+        <iconify-icon icon="lucide:chevron-down"></iconify-icon>
     </button>
 
     <div

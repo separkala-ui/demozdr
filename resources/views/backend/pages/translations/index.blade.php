@@ -45,7 +45,7 @@
                 <div class="place-items-end mt-4 sm:mt-0">
                     @if(auth()->user()->can('translations.edit'))
                         <button data-modal-target="add-language-modal" data-modal-toggle="add-language-modal" class="btn-primary">
-                            <i class="bi bi-plus-circle mr-2"></i>{{ __('New Language') }}
+                            <iconify-icon icon="lucide:plus-circle" class="mr-2"></iconify-icon>{{ __('New Language') }}
                         </button>
                     @endif
                 </div>
@@ -70,7 +70,7 @@
 
                     <div class="mb-4 flex justify-end">
                         <button type="submit" class="btn-primary">
-                            <i class="bi bi-save mr-2"></i> {{ __('Save Translations') }}
+                            <iconify-icon icon="lucide:save" class="mr-2"></iconify-icon> {{ __('Save Translations') }}
                         </button>
                     </div>
 
@@ -157,7 +157,7 @@
 
                     <div class="mt-6 flex justify-end">
                         <button type="submit" class="btn-primary">
-                            <i class="bi bi-save mr-2"></i> {{ __('Save Translations') }}
+                            <iconify-icon icon="lucide:save" class="mr-2"></iconify-icon> {{ __('Save Translations') }}
                         </button>
                     </div>
                 </form>
@@ -165,7 +165,7 @@
                 <div class="bg-blue-50 p-4 rounded-md dark:bg-blue-900/20">
                     <div class="flex">
                         <div class="flex-shrink-0">
-                            <i class="bi bi-info-circle text-blue-500"></i>
+                            <iconify-icon icon="lucide:info" class="text-blue-500"></iconify-icon>
                         </div>
                         <div class="ml-3">
                             <p class="text-sm text-blue-700 dark:text-blue-300">

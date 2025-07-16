@@ -32,7 +32,7 @@
                         href="{{ route('admin.dashboard') }}"
                     >
                         {{ __("Home") }}
-                        <i class="bi bi-chevron-right"></i>
+                        <iconify-icon icon="lucide:chevron-right"></iconify-icon>
                     </a>
                 </li>
             @endif
@@ -44,7 +44,7 @@
                         href="{{ $item['url'] }}"
                     >
                         {{ __($item['label']) }}
-                        <i class="bi bi-chevron-right"></i>
+                        <iconify-icon icon="lucide:chevron-right"></iconify-icon>
                     </a>
                 </li>
             @endforeach

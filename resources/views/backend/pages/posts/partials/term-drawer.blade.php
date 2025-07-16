@@ -8,7 +8,7 @@
         @click="openDrawer"
         class="btn-default !p-0 !w-8 !h-8 !bg-transparent"
     >
-        <i class="bi bi-plus-circle"></i>
+        <iconify-icon icon="lucide:plus-circle"></iconify-icon>
     </button>
 
     <!-- Overlay Background -->
@@ -136,7 +136,7 @@
                     :disabled="isSubmitting"
                 >
                     <span x-show="!isSubmitting">
-                        <i class="bi bi-check-circle mr-2"></i>
+                        <iconify-icon icon="lucide:check-circle" class="mr-2"></iconify-icon>
                         {{ __("Save") }}
                     </span>
                     <span x-show="isSubmitting" class="flex items-center">
@@ -168,7 +168,7 @@
                     @click="isOpen = false"
                     class="btn-default"
                 >
-                    <i class="bi bi-x-circle mr-2"></i>
+                    <iconify-icon icon="lucide:x-circle" class="mr-2"></iconify-icon>
 
                     {{ __("Cancel") }}
                 </button>

@@ -17,9 +17,9 @@
     <li class="menu-item-{{ $item->id }}" style="{!! $item->itemStyles !!}">
         <button :style="`color: ${textColor}`" class="menu-item group w-full text-left {{ $isActive }}" type="button" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.menu-item-arrow').classList.toggle('rotate-180')">
             @if (!empty($item->icon))
-                <iconify-icon icon="{{ $item->icon }}" class="menu-item-icon dark:invert" width="16" height="16"></iconify-icon>
+                <iconify-icon icon="{{ $item->icon }}" class="menu-item-icon dark:invert" width="18" height="18"></iconify-icon>
             @elseif (!empty($item->iconClass))
-                <i class="{{ $item->iconClass }} menu-item-icon"></i>
+                <iconify-icon icon="lucide:circle" class="menu-item-icon dark:invert" width="18" height="18"></iconify-icon>
             @endif
             <span class="menu-item-text">{!! $item->label !!}</span>
             <iconify-icon icon="lucide:chevron-down" class="menu-item-arrow dark:invert transition-transform duration-300 {{ $rotateClass }} w-4 h-4"></iconify-icon>
@@ -39,9 +39,9 @@
     <li class="menu-item-{{ $item->id }}" style="{!! $item->itemStyles !!}">
         <a :style="`color: ${textColor}`" href="{{ $item->route ?? '#' }}" class="menu-item group {{ $isActive }}" {!! $target !!}>
             @if (!empty($item->icon))
-                <iconify-icon icon="{{ $item->icon }}" class="menu-item-icon dark:invert" width="16" height="16"></iconify-icon>
+                <iconify-icon icon="{{ $item->icon }}" class="menu-item-icon dark:invert" width="18" height="18"></iconify-icon>
             @elseif (!empty($item->iconClass))
-                <i class="{{ $item->iconClass }} menu-item-icon"></i>
+                <iconify-icon icon="lucide:circle" class="menu-item-icon dark:invert" width="18" height="18"></iconify-icon>
             @endif
             <span class="menu-item-text">{!! $item->label !!}</span>
         </a>
