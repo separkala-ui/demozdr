@@ -82,7 +82,7 @@
                 <table id="dataTable" class="w-full dark:text-gray-300">
                     <thead class="bg-light text-capitalize">
                         <tr class="border-b border-gray-100 dark:border-gray-800">
-                            <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+                            <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5 sm:px-6">
                                 <div class="flex items-center">
                                     <input
                                         type="checkbox"

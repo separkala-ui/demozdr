@@ -8,12 +8,12 @@
 <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6" x-data="{ selectedRoles: [], selectAll: false, bulkDeleteModalOpen: false }">
     <x-breadcrumbs :breadcrumbs="$breadcrumbs">
         <x-slot name="title_after">
-            @if (auth()->user()->can('role.create'))
+            {{-- @if (auth()->user()->can('role.create'))
                 <a href="{{ route('admin.roles.create') }}" class="btn-primary ml-2">
                     <iconify-icon icon="lucide:plus-circle" class="mr-2"></iconify-icon>
                     {{ __('New Role') }}
                 </a>
-            @endif
+            @endif --}}
         </x-slot>
     </x-breadcrumbs>
 
@@ -22,39 +22,51 @@
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
             <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-1">
-                <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __('Roles') }}</h3>
+                {{-- <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __('Roles') }}</h3> --}}
 
-                <div class="flex items-center gap-2">
+                  @include('backend.partials.search-form', [
+                    'placeholder' => __('Search by role name'),
+                ])
+               <div class="flex items-center gap-2 ms-auto">
+                 <div class="flex items-center gap-2">
                     <!-- Bulk Actions dropdown -->
                     <div class="flex items-center justify-center" x-show="selectedRoles.length > 0">
-                        <button id="bulkActionsButton" data-dropdown-toggle="bulkActionsDropdown" class="btn-danger flex items-center justify-center gap-2 text-sm" type="button">
-                            <iconify-icon icon="lucide:trash"></iconify-icon>
+                        <button id="bulkActionsButton" data-dropdown-toggle="bulkActionsDropdown" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
+                            <iconify-icon icon="lucide:more-vertical"></iconify-icon>
                             <span>{{ __('Bulk Actions') }} (<span x-text="selectedRoles.length"></span>)</span>
                             <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                         </button>
 
                         <!-- Bulk Actions dropdown menu -->
-                        <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-md shadow dark:bg-gray-700">
-                            <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white">{{ __('Bulk Actions') }}</h6>
+                        <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
+                            {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Actions') }}</h6> --}}
                             <ul class="space-y-2">
-                                <li class="cursor-pointer text-sm text-red-600 dark:text-red-400 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
+                                <li class="cursor-pointer flex items-center gap-1 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500 dark:hover:text-red-50 px-2 py-1.5 rounded transition-colors duration-300"
                                     @click="bulkDeleteModalOpen = true">
-                                    <iconify-icon icon="lucide:trash" class="mr-1"></iconify-icon> {{ __('Delete Selected') }}
+                                    <iconify-icon icon="lucide:trash" ></iconify-icon> {{ __('Delete Selected') }}
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                @include('backend.partials.search-form', [
+                {{-- @include('backend.partials.search-form', [
                     'placeholder' => __('Search by role name'),
-                ])
+                ]) --}}
+
+                 @if (auth()->user()->can('role.create'))
+                <a href="{{ route('admin.roles.create') }}" class="btn-primary flex items-center gap-2 ml-2">
+                    <iconify-icon icon="feather:plus" height="16" ></iconify-icon>
+                    {{ __('New Role') }}
+                </a>
+               </div>
+            @endif
             </div>
             <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">
                 <table id="dataTable" class="w-full dark:text-gray-300">
                     <thead class="bg-light text-capitalize">
                         <tr class="border-b border-gray-100 dark:border-gray-800">
-                            <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+                            <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5 sm:px-6">
                                 <div class="flex items-center">
                                     <input
                                         type="checkbox"

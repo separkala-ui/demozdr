@@ -47,14 +47,14 @@
         x-ref="button"
         type="button"
         x-on:click="isOpen = !isOpen; $nextTick(() => updatePosition())"
-        class="inline-flex items-center gap-2 whitespace-nowrap rounded-md border border-gray-200 bg-white py-1 px-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 {{ $buttonClass }}"
+        class="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-white p-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 {{ $buttonClass }}"
         aria-haspopup="true"
         x-on:keydown.space.prevent="openedWithKeyboard = true; $nextTick(() => updatePosition())"
         x-on:keydown.enter.prevent="openedWithKeyboard = true; $nextTick(() => updatePosition())"
         x-on:keydown.down.prevent="openedWithKeyboard = true; $nextTick(() => updatePosition())"
         x-bind:aria-expanded="isOpen || openedWithKeyboard"
     >
-        <iconify-icon icon="lucide:more-vertical" class="text-lg"></iconify-icon>
+        <iconify-icon icon="lucide:more-horizontal" width="20"></iconify-icon>
         @if($showLabel)
             <span class="hidden sm:inline">{{ $label }}</span>
         @endif
