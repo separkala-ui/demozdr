@@ -11,7 +11,7 @@
                 <!-- Title and Slug with Alpine.js -->
                 <div x-data="slugGenerator('{{ old('title', $post->title ?? '') }}', '{{ old('slug', $post->slug ?? '') }}')">
                     <!-- Title -->
-                    <div>
+                    <div class="space-y-1">
                         <label for="title"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Title') }}</label>
                         <input type="text" name="title" id="title" required x-model="title" maxlength="255"
@@ -49,16 +49,18 @@
                 </div>
 
                 @if ($postTypeModel->supports_editor)
-                    <div class="mt-1">
+                    <div class="space-y-1">
                         <label for="content"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Content') }}</label>
-                        <textarea name="content" id="content" rows="10">{!! old('content', $post->content ?? '') !!}</textarea>
+<div>
+                            <textarea name="content" id="content" rows="10">{!! old('content', $post->content ?? '') !!}</textarea>
+</div>
                     </div>
                 @endif
                 {!! ld_apply_filters('post_form_after_content', '') !!}
 
                 @if ($postTypeModel->supports_excerpt)
-                    <div class="mt-1">
+                    <div class="space-y-1">
                         <label for="excerpt"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Excerpt') }}</label>
                         <textarea name="excerpt" id="excerpt" rows="3"

@@ -8,12 +8,12 @@
 <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6" x-data="{ selectedPosts: [], selectAll: false, bulkDeleteModalOpen: false }">
     <x-breadcrumbs :breadcrumbs="$breadcrumbs">
         <x-slot name="title_after">
-            @if (auth()->user()->can('post.create'))
+            {{-- @if (auth()->user()->can('post.create'))
                 <a href="{{ route('admin.posts.create', $postType) }}" class="btn-primary ml-2">
                     <iconify-icon icon="lucide:plus-circle" class="mr-2"></iconify-icon>
                     {{ __("New {$postTypeModel->label_singular}") }}
                 </a>
-            @endif
+            @endif --}}
         </x-slot>
     </x-breadcrumbs>
 
@@ -21,31 +21,29 @@
 
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-            <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __($postTypeModel->label) }}</h3>
+            <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
+                {{-- <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __($postTypeModel->label) }}</h3> --}}
 
-                <div class="w-full sm:w-auto">
-                    @include('backend.partials.search-form', [
-                        'placeholder' => __('Search by title'),
-                    ])
-                </div>
+                @include('backend.partials.search-form', [
+                    'placeholder' => __('Search by title'),
+                ])
 
-                <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                <div class="flex items-center gap-3">
                     <!-- Bulk Actions dropdown -->
                     <div class="flex items-center justify-center" x-show="selectedPosts.length > 0">
-                        <button id="bulkActionsButton" data-dropdown-toggle="bulkActionsDropdown" class="btn-danger flex items-center justify-center gap-2 text-sm" type="button">
-                            <iconify-icon icon="lucide:trash"></iconify-icon>
+                        <button id="bulkActionsButton" data-dropdown-toggle="bulkActionsDropdown" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
+                            <iconify-icon icon="lucide:more-vertical"></iconify-icon>
                             <span>{{ __('Bulk Actions') }} (<span x-text="selectedPosts.length"></span>)</span>
                             <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                         </button>
 
                         <!-- Bulk Actions dropdown menu -->
-                        <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-md shadow dark:bg-gray-700">
-                            <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white">{{ __('Bulk Actions') }}</h6>
+                        <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
+                            {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Actions') }}</h6> --}}
                             <ul class="space-y-2">
-                                <li class="cursor-pointer text-sm text-red-600 dark:text-red-400 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
+                                <li class="cursor-pointer flex items-center gap-1 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500 dark:hover:text-red-50 px-2 py-1.5 rounded transition-colors duration-300"
                                     @click="bulkDeleteModalOpen = true">
-                                    <iconify-icon icon="lucide:trash" class="mr-1"></iconify-icon> {{ __('Delete Selected') }}
+                                    <iconify-icon icon="lucide:trash"></iconify-icon> {{ __('Delete Selected') }}
                                 </li>
                             </ul>
                         </div>
@@ -53,7 +51,7 @@
 
                     <!-- Status Filter dropdown -->
                     <div class="flex items-center justify-center">
-                        <button id="statusDropdownButton" data-dropdown-toggle="statusDropdown" class="btn-default flex items-center justify-center gap-2 text-sm" type="button">
+                        <button id="statusDropdownButton" data-dropdown-toggle="statusDropdown" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
                             <iconify-icon icon="lucide:filter"></iconify-icon>
                             <span class="hidden sm:inline">{{ __('Status') }}</span>
                             @if(request('status'))
@@ -65,15 +63,15 @@
                         </button>
 
                         <!-- Status dropdown menu -->
-                        <div id="statusDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-md shadow dark:bg-gray-700">
-                            <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white">{{ __('Filter by Status') }}</h6>
+                        <div id="statusDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
+                            {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Filter by Status') }}</h6> --}}
                             <ul class="space-y-2">
-                                <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ !request('status') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
+                                <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ !request('status') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
                                     onclick="window.location.href='{{ route('admin.posts.index', ['postType' => $postType, 'search' => request('search'), 'category' => request('category'), 'tag' => request('tag')]) }}'">
                                     {{ __('All Status') }}
                                 </li>
                                 @foreach (['draft', 'publish', 'pending', 'future', 'private'] as $status)
-                                    <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ $status === request('status') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
+                                    <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ $status === request('status') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
                                         onclick="window.location.href='{{ route('admin.posts.index', ['postType' => $postType, 'status' => $status, 'search' => request('search'), 'category' => request('category'), 'tag' => request('tag')]) }}'">
                                         {{ ucfirst($status) }}
                                     </li>
@@ -85,7 +83,7 @@
                     @if($postType === 'post' && count($categories) > 0)
                         <!-- Category Filter dropdown -->
                         <div class="flex items-center justify-center">
-                            <button id="categoryDropdownButton" data-dropdown-toggle="categoryDropdown" class="btn-default flex items-center justify-center gap-2 text-sm" type="button">
+                            <button id="categoryDropdownButton" data-dropdown-toggle="categoryDropdown" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
                                 <iconify-icon icon="lucide:grid"></iconify-icon>
                                 <span class="hidden sm:inline">{{ __('Category') }}</span>
                                 @if(request('category'))
@@ -97,15 +95,15 @@
                             </button>
 
                             <!-- Category dropdown menu -->
-                            <div id="categoryDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-md shadow dark:bg-gray-700">
-                                <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white">{{ __('Filter by Category') }}</h6>
+                            <div id="categoryDropdown" class="z-10 hidden w-56 p-2 bg-white rounded-md shadow dark:bg-gray-700">
+                                {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Filter by Category') }}</h6> --}}
                                 <ul class="space-y-2 max-h-48 overflow-y-auto">
-                                    <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ !request('category') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
+                                    <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ !request('category') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
                                         onclick="window.location.href='{{ route('admin.posts.index', ['postType' => $postType, 'status' => request('status'), 'search' => request('search'), 'tag' => request('tag')]) }}'">
                                         {{ __('All Categories') }}
                                     </li>
                                     @foreach ($categories as $category)
-                                        <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ $category->id == request('category') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
+                                        <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ $category->id == request('category') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
                                             onclick="window.location.href='{{ route('admin.posts.index', ['postType' => $postType, 'status' => request('status'), 'search' => request('search'), 'category' => $category->id, 'tag' => request('tag')]) }}'">
                                             {{ $category->name }}
                                             <span class="text-xs text-gray-500 dark:text-gray-300">({{ $category->posts->count() ?? 0 }})</span>
@@ -118,7 +116,7 @@
 
                     @if($postType === 'post' && isset($tags) && count($tags) > 0)
                         <div class="flex items-center justify-center">
-                            <button id="tagDropdownButton" data-dropdown-toggle="tagDropdown" class="btn-default flex items-center justify-center gap-2 text-sm" type="button">
+                            <button id="tagDropdownButton" data-dropdown-toggle="tagDropdown" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
                                 <iconify-icon icon="lucide:tags"></iconify-icon>
                                 <span class="hidden sm:inline">{{ __('Tags') }}</span>
                                 @if(request('tag'))
@@ -147,6 +145,13 @@
                                 </ul>
                             </div>
                         </div>
+                    @endif
+
+                    @if (auth()->user()->can('post.create'))
+                    <a href="{{ route('admin.posts.create', $postType) }}" class="btn-primary flex items-center gap-2">
+                        <iconify-icon icon="feather:plus" height="16"></iconify-icon>
+                        {{ __("New {$postTypeModel->label_singular}") }}
+                    </a>
                     @endif
                 </div>
             </div>
@@ -236,8 +241,8 @@
                                             @if($post->featured_image)
                                                 <img src="{{ asset($post->featured_image) }}" alt="{{ $post->title }}" class="w-12 object-cover rounded mr-3">
                                             @else
-                                                <div class="bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center mr-3">
-                                                    <iconify-icon icon="lucide:image" class="w-12 text-center text-gray-400"></iconify-icon>
+                                                <div class="bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center mr-2 h-10 w-10">
+                                                    <iconify-icon icon="lucide:image" class=" text-center text-gray-400"></iconify-icon>
                                                 </div>
                                             @endif
                                             @if (auth()->user()->can('post.edit'))

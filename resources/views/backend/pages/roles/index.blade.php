@@ -21,13 +21,13 @@
 
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-            <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-1">
+            <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
                 {{-- <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __('Roles') }}</h3> --}}
 
                   @include('backend.partials.search-form', [
                     'placeholder' => __('Search by role name'),
                 ])
-               <div class="flex items-center gap-2 ms-auto">
+               <div class="flex items-center gap-3">
                  <div class="flex items-center gap-2">
                     <!-- Bulk Actions dropdown -->
                     <div class="flex items-center justify-center" x-show="selectedRoles.length > 0">
@@ -55,7 +55,7 @@
                 ]) --}}
 
                  @if (auth()->user()->can('role.create'))
-                <a href="{{ route('admin.roles.create') }}" class="btn-primary flex items-center gap-2 ml-2">
+                <a href="{{ route('admin.roles.create') }}" class="btn-primary flex items-center gap-2">
                     <iconify-icon icon="feather:plus" height="16" ></iconify-icon>
                     {{ __('New Role') }}
                 </a>

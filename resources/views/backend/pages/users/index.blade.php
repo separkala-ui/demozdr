@@ -9,12 +9,12 @@
 <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6" x-data="{ selectedUsers: [], selectAll: false, bulkDeleteModalOpen: false }">
     <x-breadcrumbs :breadcrumbs="$breadcrumbs">
         <x-slot name="title_after">
-            @if (auth()->user()->can('user.edit'))
+            {{-- @if (auth()->user()->can('user.edit'))
                 <a href="{{ route('admin.users.create') }}" class="btn-primary ml-2">
                     <iconify-icon icon="lucide:plus-circle" class="mr-2"></iconify-icon>
                     {{ __('New User') }}
                 </a>
-            @endif
+            @endif --}}
             @if (request('role'))
                 <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">{{ ucfirst(request('role')) }}</span>
             @endif
@@ -25,36 +25,37 @@
 
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-          <div class="px-5 py-4 sm:px-6 sm:py-5 flex gap-3 md:gap-1 flex-col md:flex-row justify-between items-center">
-                <h3 class="text-base font-medium text-gray-700 dark:text-white/90 hidden md:block">{{ __('Users') }}</h3>
+          <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
+                {{-- <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __('Users') }}</h3> --}}
 
                 @include('backend.partials.search-form', [
                     'placeholder' => __('Search by name or email'),
                 ])
-
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-2">
                     <!-- Bulk Actions dropdown -->
                     <div class="flex items-center justify-center" x-show="selectedUsers.length > 0">
-                        <button id="bulkActionsButton" data-dropdown-toggle="bulkActionsDropdown" class="btn-danger flex items-center justify-center gap-2 text-sm" type="button">
-                            <iconify-icon icon="lucide:trash"></iconify-icon>
+                        <button id="bulkActionsButton" data-dropdown-toggle="bulkActionsDropdown" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
+                            <iconify-icon icon="lucide:more-vertical"></iconify-icon>
                             <span>{{ __('Bulk Actions') }} (<span x-text="selectedUsers.length"></span>)</span>
                             <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                         </button>
 
                         <!-- Bulk Actions dropdown menu -->
-                        <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-md shadow dark:bg-gray-700">
-                            <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white">{{ __('Bulk Actions') }}</h6>
+                        <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
+                            {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Actions') }}</h6> --}}
                             <ul class="space-y-2">
-                                <li class="cursor-pointer text-sm text-red-600 dark:text-red-400 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
+                                <li class="cursor-pointer flex items-center gap-1 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500 dark:hover:text-red-50 px-2 py-1.5 rounded transition-colors duration-300"
                                     @click="bulkDeleteModalOpen = true">
-                                    <iconify-icon icon="lucide:trash" class="mr-1"></iconify-icon> {{ __('Delete Selected') }}
+                                    <iconify-icon icon="lucide:trash"></iconify-icon> {{ __('Delete Selected') }}
                                 </li>
                             </ul>
                         </div>
                     </div>
+                  </div>
 
                     <div class="flex items-center justify-center">
-                        <button id="roleDropdownButton" data-dropdown-toggle="roleDropdown" class="btn-default flex items-center justify-center gap-2" type="button">
+                        <button id="roleDropdownButton" data-dropdown-toggle="roleDropdown" class="btn-secondary flex items-center justify-center gap-2" type="button">
                             <iconify-icon icon="lucide:sliders"></iconify-icon>
                             {{ __('Filter by Role') }}
                             <iconify-icon icon="lucide:chevron-down"></iconify-icon>
@@ -63,12 +64,12 @@
                         <!-- Dropdown menu -->
                         <div id="roleDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-md shadow dark:bg-gray-700">
                             <ul class="space-y-2">
-                                <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
+                                <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded"
                                     onclick="handleRoleFilter('')">
                                     {{ __('All Roles') }}
                                 </li>
                                 @foreach ($roles as $id => $name)
-                                    <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ request('role') === $name ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
+                                    <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ request('role') === $name ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
                                         onclick="handleRoleFilter('{{ $name }}')">
                                         {{ ucfirst($name) }}
                                     </li>
@@ -76,6 +77,13 @@
                             </ul>
                         </div>
                     </div>
+
+                    @if (auth()->user()->can('user.edit'))
+                    <a href="{{ route('admin.users.create') }}" class="btn-primary flex items-center gap-2">
+                        <iconify-icon icon="feather:plus" height="16"></iconify-icon>
+                        {{ __('New User') }}
+                    </a>
+                    @endif
                 </div>
             </div>
             <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">

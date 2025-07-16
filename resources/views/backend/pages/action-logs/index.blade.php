@@ -15,28 +15,29 @@
 
         <div class="space-y-6">
             <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-                <div class="px-5 py-4 sm:px-6 sm:py-5 flex justify-between items-center">
-                    <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __('Action Logs') }}</h3>
+                <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
+                    {{-- <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __('Action Logs') }}</h3> --}}
                     @include('backend.partials.search-form', [
                         'placeholder' => __('Search by title or type'),
                     ])
 
-                    <div class="flex items-center justify-center">
-                        <button id="dropdownDefault" data-dropdown-toggle="dropdown" class="btn-primary flex items-center justify-center gap-2" type="button ">
-                            <iconify-icon icon="lucide:sliders"></iconify-icon>
-                            {{ __('Filter') }}
-                            <iconify-icon icon="lucide:chevron-down"></iconify-icon>
-                        </button>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center justify-center">
+                            <button id="dropdownDefault" data-dropdown-toggle="dropdown" class="btn-secondary flex items-center justify-center gap-2" type="button">
+                                <iconify-icon icon="lucide:sliders"></iconify-icon>
+                                {{ __('Filter') }}
+                                <iconify-icon icon="lucide:chevron-down"></iconify-icon>
+                            </button>
 
                         <!-- Dropdown menu -->
-                        <div id="dropdown" class="z-10 hidden w-56 p-3 bg-white rounded-md shadow dark:bg-gray-700">
+                        <div id="dropdown" class="z-10 hidden w-56 p-2 bg-white rounded-md shadow dark:bg-gray-700">
                             <ul class="space-y-2">
-                                <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600    px-2 py-1 rounded"
+                                <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded"
                                  onclick="handleSelect('')">
                                     {{ __('All') }}
                                 </li>
                                 @foreach (\App\Enums\ActionType::cases() as $type)
-                                    <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ $type->value === request('type') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
+                                    <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ $type->value === request('type') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
                                         onclick="handleSelect('{{ $type->value }}')">
                                         {{ __(ucfirst($type->value)) }}
                                     </li>

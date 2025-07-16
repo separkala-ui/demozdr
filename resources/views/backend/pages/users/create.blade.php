@@ -16,14 +16,14 @@
                     <form action="{{ route('admin.users.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                            <div>
+                            <div class="space-y-1">
                                 <label for="name"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Full Name') }}</label>
                                 <input type="text" name="name" id="name" required autofocus
                                     value="{{ old('name') }}" placeholder="{{ __('Enter Full Name') }}"
                                     class="form-control">
                             </div>
-                            <div>
+                            <div class="space-y-1">
                                 <label for="email"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('User Email') }}</label>
                                 <input type="email" name="email" id="email" required value="{{ old('email') }}"
@@ -45,7 +45,7 @@
                                         ->toArray()" :selected="old('roles', [])"
                                     :multiple="true" :searchable="false" />
                             </div>
-                            <div>
+                            <div class="space-y-1">
                                 <label for="username"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Username') }}</label>
 

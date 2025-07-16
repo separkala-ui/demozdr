@@ -18,13 +18,13 @@
                         @method('PUT')
                         @csrf
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                            <div>
+                            <div class="space-y-1">
                                 <label for="name"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Full Name') }}</label>
                                 <input type="text" name="name" id="name" required value="{{ $user->name }}"
                                     placeholder="{{ __('Enter Full Name') }}" class="form-control">
                             </div>
-                            <div>
+                            <div class="space-y-1">
                                 <label for="email"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('User Email') }}</label>
                                 <input type="email" name="email" id="email" required value="{{ $user->email }}"
@@ -47,7 +47,7 @@
                                         ->toArray()" :selected="$user->roles->pluck('name')->toArray()"
                                     :multiple="true" :searchable="false" />
                             </div>
-                            <div>
+                            <div class="space-y-1">
                                 <label for="username"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Username') }}</label>
 

@@ -13,7 +13,7 @@
     $id = $id ?? $name;
 @endphp
 
-<div {{ $attributes->merge(['class' => 'mb-4']) }}>
+<div {{ $attributes->merge(['class' => 'mb-4 space-y-1']) }}>
     <label for="{{ $id }}"
         class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $label }}</label>
     @if ($existingAttachment)
