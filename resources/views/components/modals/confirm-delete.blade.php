@@ -26,7 +26,7 @@
         x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
         x-transition:enter-start="opacity-0 scale-50"
         x-transition:enter-end="opacity-100 scale-100"
-        class="flex max-w-md flex-col gap-4 overflow-hidden rounded-md border border-outline border-gray-100 dark:border-gray-800 bg-white text-on-surface dark:border-outline-dark dark:bg-gray-700 dark:text-gray-400"
+        class="flex max-w-md flex-col gap-4 overflow-hidden rounded-md border border-outline border-gray-100 dark:border-gray-800 bg-white text-on-surface dark:border-outline-dark dark:bg-gray-700 dark:text-gray-300"
     >
         <div class="flex items-center justify-between border-b border-gray-100 px-4 py-2 dark:border-gray-800">
             <div class="flex items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 p-1">
@@ -46,7 +46,7 @@
             </button>
         </div>
         <div class="px-4 text-center">
-            <p class="text-gray-500 dark:text-gray-400">{{ $content }}</p>
+            <p class="text-gray-500 dark:text-gray-300">{{ $content }}</p>
         </div>
         <div class="flex items-center justify-end gap-3 border-t border-gray-100 p-4 dark:border-gray-800">
             <form id="{{ $formId }}" action="{{ $formAction }}" method="POST">
@@ -56,7 +56,7 @@
                 <button
                     type="button"
                     x-on:click="{{ $modalTrigger }} = false"
-                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
                 >
                     {{ $cancelButtonText }}
                 </button>

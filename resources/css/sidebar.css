@@ -1,9 +1,9 @@
 @utility menu-item {
-    @apply relative flex items-center gap-3 px-4 py-2 rounded-md font-medium text-theme-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 ease-in-out;
+    @apply relative flex items-center gap-3 px-4 py-2 rounded-md font-medium text-theme-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 ease-in-out;
 }
 
 @utility menu-item-active {
-    @apply bg-brand-100 text-brand-500 hover:bg-brand-100 hover:text-brand-500;
+    @apply bg-brand-100 text-brand-500 hover:bg-brand-100 hover:text-brand-500 dark:bg-brand-500 dark:text-brand-25 dark:hover:bg-brand-500;
 }
 
 /* @utility menu-item-inactive {
@@ -113,7 +113,7 @@
 } */
 
 .submenu a.menu-item-active {
-    @apply text-brand-500 bg-transparent hover:bg-brand-100;
+    @apply text-brand-500 bg-transparent hover:bg-brand-100 dark:hover:bg-brand-500/20;
 }
 
 /* .submenu li:hover a:hover,

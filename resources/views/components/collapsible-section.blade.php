@@ -12,7 +12,7 @@
             @click="open = !open"
             class="flex w-full items-center justify-between p-5 text-left {{ $headerClass ?? '' }}">
         <h3 class="text-lg font-medium text-gray-700 dark:text-white">{{ $title ?? __('Advanced Fields') }}</h3>
-        <svg class="h-5 w-5 transform transition-transform duration-200 dark:text-gray-400"
+        <svg class="h-5 w-5 transform transition-transform duration-200 dark:text-gray-300"
              :class="{ 'rotate-180': open }"
              fill="none"
              stroke="currentColor"

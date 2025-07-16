@@ -18,7 +18,7 @@ if (!empty($post)) {
         </div>
         <div class="p-3 space-y-2 sm:p-4" data-taxonomy="{{ $taxonomy->name }}">
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __("Select " . strtolower($taxonomy->label)) . ":" }}</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __("Select " . strtolower($taxonomy->label)) . ":" }}</label>
                 <div class="mt-2 max-h-60 overflow-y-auto terms-list">
                     @php
                         if ($taxonomy->hierarchical) {
@@ -58,14 +58,14 @@ if (!empty($post)) {
                                     <input type="checkbox" name="taxonomy_{{ $taxonomy->name }}[]" id="term_{{ $term->id }}" value="{{ $term->id }}"
                                         class="mt-1 h-4 w-4 text-brand-500 border-gray-300 rounded focus:ring-brand-400 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-brand-500"
                                         {{ in_array($term->id, old('taxonomy_' . $taxonomy->name, $selectedTerms[$taxonomy->name] ?? [])) ? 'checked' : '' }}>
-                                    <label for="term_{{ $term->id }}" class="ml-2 block text-sm text-gray-700 dark:text-gray-400">
+                                    <label for="term_{{ $term->id }}" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                                         {{ __($term->name) }}
                                     </label>
                                 </div>
                             @endforeach
                         @endif
                     @else
-                        <p class="text-sm text-gray-500 dark:text-gray-400 no-terms-message">{{ __('No') }} {{ strtolower($taxonomy->label) }} {{ __('found.') }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-300 no-terms-message">{{ __('No') }} {{ strtolower($taxonomy->label) }} {{ __('found.') }}</p>
                     @endif
                 </div>
             </div>

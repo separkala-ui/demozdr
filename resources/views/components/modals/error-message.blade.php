@@ -23,7 +23,7 @@
         x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
         x-transition:enter-start="opacity-0 scale-50"
         x-transition:enter-end="opacity-100 scale-100"
-        class="flex max-w-md flex-col gap-4 overflow-hidden rounded-md border border-outline bg-white text-on-surface dark:border-outline-dark dark:bg-gray-700 dark:text-gray-400"
+        class="flex max-w-md flex-col gap-4 overflow-hidden rounded-md border border-outline bg-white text-on-surface dark:border-outline-dark dark:bg-gray-700 dark:text-gray-300"
     >
         <div class="flex items-center justify-between border-b border-gray-100 px-4 py-2 dark:border-gray-800">
             <div class="flex items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 p-1">
@@ -43,7 +43,7 @@
             </button>
         </div>
         <div class="px-4 text-center">
-            <p x-text="errorMessage" class="text-gray-500 dark:text-gray-400"></p>
+            <p x-text="errorMessage" class="text-gray-500 dark:text-gray-300"></p>
         </div>
         <div class="flex items-center justify-end gap-3 border-t border-gray-100 p-4 dark:border-gray-800">
             <button

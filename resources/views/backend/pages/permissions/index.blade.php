@@ -20,7 +20,7 @@
                 ])
             </div>
             <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">
-                <table id="dataTable" class="w-full dark:text-gray-400">
+                <table id="dataTable" class="w-full dark:text-gray-300">
                     <thead class="bg-light text-capitalize">
                         <tr class="border-b border-gray-100 dark:border-gray-800">
                             <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">{{ __('Sl') }}</th>
@@ -108,7 +108,7 @@
                         @empty
                             <tr class="border-b border-gray-100 dark:border-gray-800">
                                 <td colspan="5" class="px-5 py-4 sm:px-6 text-center">
-                                    <span class="text-gray-500 dark:text-gray-400">{{ __('No permissions found') }}</span>
+                                    <span class="text-gray-500 dark:text-gray-300">{{ __('No permissions found') }}</span>
                                 </td>
                             </tr>
                         @endforelse

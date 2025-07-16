@@ -9,7 +9,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     {{ __('Theme Primary Color') }}
                 </label>
                 <div class="flex gap-2 items-center">
@@ -33,7 +33,7 @@
 
             <!-- Theme Secondary Color -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     {{ __('Theme Secondary Color') }}
                 </label>
                 <div class="flex gap-2 items-center">
@@ -58,7 +58,7 @@
 
         <div class="flex">
             <div class="md:basis-1/2">
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {{ __('Default Mode') }}
                 </label>
                 <select name="default_mode"
@@ -76,11 +76,11 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <!-- Lite Mode Colors -->
             <div>
-                <h4 class="text-sm font-medium text-gray-700 dark:text-gray-400 mb-4">{{ __('Lite Mode Colors') }}</h4>
+                <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">{{ __('Lite Mode Colors') }}</h4>
 
                 <!-- Navbar Background Color (Lite Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Navbar Background Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -104,7 +104,7 @@
 
                 <!-- Sidebar Background Color (Lite Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Sidebar Background Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -128,7 +128,7 @@
 
                 <!-- Navbar Text Color (Lite Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Navbar Text Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -152,7 +152,7 @@
 
                 <!-- Sidebar Text Color (Lite Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Sidebar Text Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -177,11 +177,11 @@
 
             <!-- Dark Mode Colors -->
             <div>
-                <h4 class="text-sm font-medium text-gray-700 dark:text-gray-400 mb-4">{{ __('Dark Mode Colors') }}</h4>
+                <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">{{ __('Dark Mode Colors') }}</h4>
 
                 <!-- Navbar Background Color (Dark Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Navbar Background Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -205,7 +205,7 @@
 
                 <!-- Sidebar Background Color (Dark Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Sidebar Background Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -229,7 +229,7 @@
 
                 <!-- Navbar Text Color (Dark Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Navbar Text Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -253,7 +253,7 @@
 
                 <!-- Sidebar Text Color (Dark Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Sidebar Text Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -291,26 +291,26 @@
     <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
         <!-- Custom CSS -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {{ __('Global Custom CSS') }}
             </label>
             <textarea name="global_custom_css" rows="6"
                 class="w-full rounded-md border border-gray-300 bg-transparent p-4 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
                 placeholder=".my-class { color: red; }">{{ config('settings.global_custom_css') }}</textarea>
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">
                 {{ __('Add custom CSS that will be applied to all pages') }}
             </p>
         </div>
 
         <!-- Custom JavaScript -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {{ __('Global Custom JavaScript') }}
             </label>
             <textarea name="global_custom_js" rows="6"
                 class="w-full rounded-md border border-gray-300 bg-transparent p-4 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
                 placeholder="document.addEventListener('DOMContentLoaded', function() { /* Your code */ });">{{ config('settings.global_custom_js') }}</textarea>
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">
                 {{ __('Add custom JavaScript that will be loaded on all pages') }}
             </p>
         </div>

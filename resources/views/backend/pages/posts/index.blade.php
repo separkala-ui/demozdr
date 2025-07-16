@@ -108,7 +108,7 @@
                                         <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ $category->id == request('category') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
                                             onclick="window.location.href='{{ route('admin.posts.index', ['postType' => $postType, 'status' => request('status'), 'search' => request('search'), 'category' => $category->id, 'tag' => request('tag')]) }}'">
                                             {{ $category->name }}
-                                            <span class="text-xs text-gray-500 dark:text-gray-400">({{ $category->posts->count() ?? 0 }})</span>
+                                            <span class="text-xs text-gray-500 dark:text-gray-300">({{ $category->posts->count() ?? 0 }})</span>
                                         </li>
                                     @endforeach
                                 </ul>
@@ -141,7 +141,7 @@
                                         <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ $tag->id == request('tag') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
                                             onclick="window.location.href='{{ route('admin.posts.index', ['postType' => $postType, 'status' => request('status'), 'search' => request('search'), 'category' => request('category'), 'tag' => $tag->id]) }}'">
                                             {{ $tag->name }}
-                                            <span class="text-xs text-gray-500 dark:text-gray-400">({{ $tag->posts->count() ?? 0 }})</span>
+                                            <span class="text-xs text-gray-500 dark:text-gray-300">({{ $tag->posts->count() ?? 0 }})</span>
                                         </li>
                                     @endforeach
                                 </ul>
@@ -153,7 +153,7 @@
 
             <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">
                 <div class="overflow-x-auto">
-                    <table id="dataTable" class="w-full dark:text-gray-400 min-w-full">
+                    <table id="dataTable" class="w-full dark:text-gray-300 min-w-full">
                         <thead class="bg-light text-capitalize">
                             <tr class="border-b border-gray-100 dark:border-gray-800">
                                 <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
@@ -338,7 +338,7 @@
                             @empty
                                 <tr class="border-b border-gray-100 dark:border-gray-800">
                                     <td colspan="7" class="px-5 py-4 sm:px-6 text-center">
-                                        <span class="text-gray-500 dark:text-gray-400">{{ __('No') }} {{ strtolower($postTypeModel->label) }} {{ __('found') }}</span>
+                                        <span class="text-gray-500 dark:text-gray-300">{{ __('No') }} {{ strtolower($postTypeModel->label) }} {{ __('found') }}</span>
                                     </td>
                                 </tr>
                             @endforelse
@@ -371,7 +371,7 @@
             x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
             x-transition:enter-start="opacity-0 scale-50"
             x-transition:enter-end="opacity-100 scale-100"
-            class="flex max-w-md flex-col gap-4 overflow-hidden rounded-md border border-outline border-gray-100 dark:border-gray-800 bg-white text-on-surface dark:border-outline-dark dark:bg-gray-700 dark:text-gray-400"
+            class="flex max-w-md flex-col gap-4 overflow-hidden rounded-md border border-outline border-gray-100 dark:border-gray-800 bg-white text-on-surface dark:border-outline-dark dark:bg-gray-700 dark:text-gray-300"
         >
             <div class="flex items-center justify-between border-b border-gray-100 px-4 py-2 dark:border-gray-800">
                 <div class="flex items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 p-1">
@@ -393,7 +393,7 @@
                 </button>
             </div>
             <div class="px-4 text-center">
-                <p class="text-gray-500 dark:text-gray-400">
+                <p class="text-gray-500 dark:text-gray-300">
                     {{ __('Are you sure you want to delete the selected') }} {{ strtolower($postTypeModel->label) }}?
                     {{ __('This action cannot be undone.') }}
                 </p>
@@ -410,7 +410,7 @@
                     <button
                         type="button"
                         x-on:click="bulkDeleteModalOpen = false"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
                     >
                         {{ __('No, Cancel') }}
                     </button>

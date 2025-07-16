@@ -46,7 +46,7 @@
             <button
                 type="button"
                 @click="isOpen = false"
-                class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
             >
                 <svg
                     class="w-5 h-5"
@@ -70,7 +70,7 @@
             <div>
                 <label
                     for="term_name"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >{{ __("Name") }} <span class="text-red-500">*</span></label
                 >
                 <input
@@ -90,7 +90,7 @@
             <div>
                 <label
                     for="term_description"
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >{{ __("Description") }}</label
                 >
                 <textarea

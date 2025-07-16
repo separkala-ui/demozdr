@@ -8,7 +8,7 @@
             @click="open = !open"
             class="flex w-full items-center justify-between p-5 text-left">
         <h3 class="text-lg font-medium text-gray-700 dark:text-white">{{ __('Advanced Fields') }}</h3>
-        <svg class="h-5 w-5 transform transition-transform duration-200 dark:text-gray-400"
+        <svg class="h-5 w-5 transform transition-transform duration-200 dark:text-gray-300"
              :class="{ 'rotate-180': open }"
              fill="none"
              stroke="currentColor"
@@ -133,7 +133,7 @@
                                                    :name="`meta_values[${index}]`"
                                                    value="1"
                                                    class="h-4 w-4 text-brand-500 border-gray-300 rounded focus:ring-brand-400 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-brand-500">
-                                            <label class="text-sm text-gray-700 dark:text-gray-400">{{ __('Check to enable') }}</label>
+                                            <label class="text-sm text-gray-700 dark:text-gray-300">{{ __('Check to enable') }}</label>
                                         </div>
                                     </template>
 
@@ -152,7 +152,7 @@
                                                    x-model="field.optionsText"
                                                    placeholder="{{ __('Options (comma separated): Option 1, Option 2, Option 3') }}"
                                                    @input="field.options = $el.value.split(',').map(opt => opt.trim()).filter(opt => opt)"
-                                                   class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-xs text-gray-600 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
+                                                   class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-xs text-gray-600 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
                                         </div>
                                     </template>
 

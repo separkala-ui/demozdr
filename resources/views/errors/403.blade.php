@@ -19,7 +19,7 @@
             {{ $exception->getMessage() }}
         </p>
 
-        <p class="mb-6 mt-10 text-base text-gray-700 dark:text-gray-400 sm:text-lg">
+        <p class="mb-6 mt-10 text-base text-gray-700 dark:text-gray-300 sm:text-lg">
             {{ __('Access to this resource on the server is denied') }}
         </p>
 

@@ -14,7 +14,7 @@
 
 <div class="w-full flex flex-col gap-1">
     @if($label)
-        <label for="{{ $inputId }}" class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ $label }}</label>
+        <label for="{{ $inputId }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $label }}</label>
     @endif
 
     <div x-data="{ showPassword: false }" class="relative">

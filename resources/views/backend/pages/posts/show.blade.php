@@ -30,7 +30,7 @@
 
             <div class="px-5 py-4 sm:px-6 sm:py-5">
                 <!-- Meta Information -->
-                <div class="mb-6 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
+                <div class="mb-6 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-300">
                     <div class="flex items-center">
                         <iconify-icon icon="lucide:user" class="mr-1"></iconify-icon>
                         {{ __('Author:') }} {{ $post->user->name }}
@@ -96,7 +96,7 @@
 
                             @foreach($groupedTerms as $taxonomy => $terms)
                                 <div>
-                                    <h5 class="text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">{{ ucfirst($taxonomy) }}</h5>
+                                    <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ ucfirst($taxonomy) }}</h5>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($terms as $term)
                                             <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">

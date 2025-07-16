@@ -2,7 +2,7 @@
     $enable_full_div_click = $enable_full_div_click ?? true;
 @endphp
 
-<div class="relative overflow-hidden border border-gray-200 rounded-lg bg-white px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6 dark:bg-slate-800 {{ $enable_full_div_click ? 'cursor-pointer hover:shadow-lg transition-shadow duration-300' : '' }}"
+<div class="relative overflow-hidden border border-gray-200 dark:border-gray-700 rounded-lg bg-white px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6 dark:bg-gray-800 {{ $enable_full_div_click ? 'cursor-pointer hover:shadow-lg transition-shadow duration-300' : '' }}"
     @if($enable_full_div_click)
         onclick="window.location.href='{{ $url ?? '#' }}'"
     @endif
@@ -22,9 +22,9 @@
         <p class="ml-16 truncate text-sm font-medium text-gray-500 dark:text-gray-300">{{ $label }}</p>
     </dt>
     <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-        <p class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{!! $value ?? 0 !!}</p>
+        <p class="text-2xl font-semibold text-gray-800 dark:text-gray-100">{!! $value ?? 0 !!}</p>
 
-        <div class="absolute inset-x-0 bottom-0 bg-gray-50 dark:bg-slate-700 px-4 py-4 sm:px-6">
+        <div class="absolute inset-x-0 bottom-0 bg-gray-50 dark:bg-gray-700 px-4 py-4 sm:px-6">
             <div class="text-sm">
                 <a href="{{ $url ?? '#' }}" class="font-medium flex items-center text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">View all
                     <iconify-icon icon="heroicons:arrow-right" class="inline-block ml-1" width="16" height="16"></iconify-icon>

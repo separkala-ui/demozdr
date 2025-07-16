@@ -24,24 +24,24 @@
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div>
                                 <label for="name"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Name') }}</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Name') }}</label>
                                 <input type="text" name="name" id="name" required value="{{ $user->name }}"
                                     class="form-control">
                             </div>
                             <div>
                                 <label for="email"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Email') }}</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Email') }}</label>
                                 <input type="email" name="email" id="email" required value="{{ $user->email }}"
                                     class="form-control">
                             </div>
                             <div>
                                 <label for="password"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Password (Optional)') }}</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Password (Optional)') }}</label>
                                 <input type="password" name="password" id="password" class="form-control">
                             </div>
                             <div>
                                 <label for="password_confirmation"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Confirm Password (Optional)') }}</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Confirm Password (Optional)') }}</label>
                                 <input type="password" name="password_confirmation" id="password_confirmation"
                                     class="form-control">
                             </div>

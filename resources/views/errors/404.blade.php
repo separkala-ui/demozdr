@@ -18,7 +18,7 @@
             {{ __('Sorry! Page Not Found!') }}
         </p>
 
-        <p class="mb-6 mt-10 text-base text-gray-700 dark:text-gray-400 sm:text-lg">
+        <p class="mb-6 mt-10 text-base text-gray-700 dark:text-gray-300 sm:text-lg">
             {{ __('The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.') }}
         </p>
 

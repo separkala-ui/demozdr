@@ -13,7 +13,7 @@
         <div class="flex">
             <div class="md:basis-1/2">
                 <label
-                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                     {{ __("Default Pagination") }}
                 </label>

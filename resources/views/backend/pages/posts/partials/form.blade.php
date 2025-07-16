@@ -13,14 +13,14 @@
                     <!-- Title -->
                     <div>
                         <label for="title"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Title') }}</label>
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Title') }}</label>
                         <input type="text" name="title" id="title" required x-model="title" maxlength="255"
                             class="form-control">
                     </div>
                     {!! ld_apply_filters('post_form_after_title', '') !!}
 
                     <!-- Compact Slug UI -->
-                    <div class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <div class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
                         <span class="mr-1">{{ __('Permalink') }}:</span>
                         <span class="flex-1 truncate" x-show="!showSlugEdit">
                             <span class="text-gray-400">{{ url('/') }}/</span><span
@@ -51,7 +51,7 @@
                 @if ($postTypeModel->supports_editor)
                     <div class="mt-1">
                         <label for="content"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Content') }}</label>
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Content') }}</label>
                         <textarea name="content" id="content" rows="10">{!! old('content', $post->content ?? '') !!}</textarea>
                     </div>
                 @endif
@@ -60,10 +60,10 @@
                 @if ($postTypeModel->supports_excerpt)
                     <div class="mt-1">
                         <label for="excerpt"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Excerpt') }}</label>
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Excerpt') }}</label>
                         <textarea name="excerpt" id="excerpt" rows="3"
                             class="w-full rounded-md border border-gray-300 bg-transparent p-4 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">
                             {{ __('A short summary of the content') }}.
                             {{ __('Leave empty to auto-generate from content') }}</p>
                     </div>
@@ -81,7 +81,7 @@
                         :removeCheckboxLabel="__('Remove featured image')"
                         class="mt-1"
                     >
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">
                             {{ __('Select an image to represent this post') }}
                         </p>
                     </x-inputs.file-input>
@@ -135,7 +135,7 @@
                             x-on:change="if(showSchedule && status !== 'future') status = 'future'; $dispatch('input', status)"
                             class="mr-2">
                         <label for="schedule_post"
-                            class="text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Schedule this post') }}</label>
+                            class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Schedule this post') }}</label>
                     </div>
                     <div x-show="showSchedule" class="mt-2">
                         <x-inputs.datetime-picker id="published_at" name="published_at" :label="__('Publish Date')"

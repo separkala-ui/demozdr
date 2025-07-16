@@ -8,13 +8,13 @@
 @endphp
 
 <button id="dropdownLocalesButton" data-dropdown-toggle="dropdownLocales" data-dropdown-placement="bottom"
-    class="hover:text-dark-900 relative flex p-2 items-center justify-center rounded-full bg-white text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+    class="hover:text-dark-900 relative flex p-2 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
     type="button">
     @php
         $iconPath = public_path(ltrim($lang['icon'], '/'));
         $iconSrc = file_exists($iconPath) ? asset($lang['icon']) : '/images/flags/default.svg';
     @endphp
-    <iconify-icon icon="prime:language" width="24" height="24" class="dark:invert"></iconify-icon>
+    <iconify-icon icon="prime:language" width="24" height="24" class=""></iconify-icon>
     {{-- <img src="{{ $iconSrc }}" alt="{{ $lang['name'] }} flag" height="20" width="20" class="mr-2" /> --}}
     {{-- {{ $lang['name'] }} --}}
     {{-- {{ $lang['code'] }} --}}

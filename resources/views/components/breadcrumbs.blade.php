@@ -28,7 +28,7 @@
             @if($show_home)
                 <li>
                     <a
-                        class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
+                        class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-300"
                         href="{{ route('admin.dashboard') }}"
                     >
                         {{ __("Home") }}
@@ -40,7 +40,7 @@
             @foreach($items as $item)
                 <li>
                     <a
-                        class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
+                        class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-300"
                         href="{{ $item['url'] }}"
                     >
                         {{ __($item['label']) }}

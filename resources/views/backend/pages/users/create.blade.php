@@ -18,14 +18,14 @@
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div>
                                 <label for="name"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Full Name') }}</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Full Name') }}</label>
                                 <input type="text" name="name" id="name" required autofocus
                                     value="{{ old('name') }}" placeholder="{{ __('Enter Full Name') }}"
                                     class="form-control">
                             </div>
                             <div>
                                 <label for="email"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('User Email') }}</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('User Email') }}</label>
                                 <input type="email" name="email" id="email" required value="{{ old('email') }}"
                                     placeholder="{{ __('Enter Email') }}" class="form-control">
                             </div>
@@ -47,7 +47,7 @@
                             </div>
                             <div>
                                 <label for="username"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Username') }}</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Username') }}</label>
 
                                 <input type="text" name="username" id="username" required value="{{ old('username') }}"
                                     placeholder="{{ __('Enter Username') }}" class="form-control">

@@ -3,7 +3,7 @@
     'position' => 'bottom',
     'width' => 'max-w-xs',
     'trigger' => 'click', // 'hover' or 'click'
-    'triggerClass' => 'text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors',
+    'triggerClass' => 'text-gray-500 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors',
     'contentClass' => '',
 ])
 

@@ -18,7 +18,7 @@
             {{ __('Internal Server Error!') }}
         </p>
 
-        <p class="mb-6 mt-10 text-base text-gray-700 dark:text-gray-400 sm:text-lg">
+        <p class="mb-6 mt-10 text-base text-gray-700 dark:text-gray-300 sm:text-lg">
             {{ __('Something went wrong on our end. Please try again later.') }}
         </p>
 

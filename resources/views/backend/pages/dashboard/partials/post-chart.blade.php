@@ -3,7 +3,7 @@
         <div class="mb-4 flex items-center justify-between">
             <div>
                 <h3 class="text-lg font-semibold text-gray-700 dark:text-white">{{ __('Post Activity') }}</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('Posts created over time') }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-300">{{ __('Posts created over time') }}</p>
             </div>
         </div>
         <div id="post-activity-chart" class="h-80"></div>
@@ -32,6 +32,7 @@
                 type: 'bar',
                 height: 320,
                 stacked: true,
+                fontFamily: 'var(--font-sans)',
                 toolbar: {
                     show: true,
                     tools: {
@@ -79,7 +80,8 @@
                 },
                 labels: {
                     style: {
-                        colors: '#64748b'
+                        colors: '#64748b',
+                        fontFamily: 'var(--font-sans)'
                     }
                 }
             },
@@ -87,12 +89,14 @@
                 title: {
                     text: '{{ __("Number of Posts") }}',
                     style: {
-                        color: '#64748b'
+                        color: '#64748b',
+                        fontFamily: 'var(--font-sans)'
                     }
                 },
                 labels: {
                     style: {
-                        colors: '#64748b'
+                        colors: '#64748b',
+                        fontFamily: 'var(--font-sans)'
                     }
                 }
             },
@@ -105,12 +109,16 @@
                     formatter: function (val) {
                         return val + " {{ __('posts') }}"
                     }
+                },
+                style: {
+                    fontFamily: 'var(--font-sans)'
                 }
             },
             legend: {
                 position: 'top',
                 horizontalAlign: 'right',
                 offsetY: -30,
+                fontFamily: 'var(--font-sans)',
                 markers: {
                     width: 12,
                     height: 12,

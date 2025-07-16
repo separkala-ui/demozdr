@@ -6,16 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="chore: add i18n-ally configuration for locales paths">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Helper/common.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helper/common.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Backend/DashboardController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Backend/DashboardController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/ContentServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/ContentServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/Content/PostType.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/Content/PostType.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Services/MenuService/AdminMenuService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/MenuService/AdminMenuService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/HasGravatar.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/HasGravatar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logo/lara-dashboard-dark.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/logo/lara-dashboard.png" beforeDir="false" afterPath="$PROJECT_DIR$/public/images/logo/lara-dashboard.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/css/base.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/css/components.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/css/components.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/css/sidebar.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/css/sidebar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/css/third-party.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/css/third-party.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/auth/login.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/auth/passwords/email.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/auth/passwords/email.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/auth/passwords/reset.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/auth/passwords/reset.blade.php" afterDir="false" />
@@ -23,33 +18,51 @@
       <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/header.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/header.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/locale-switcher.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/locale-switcher.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/menu-item.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/menu-item.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/sidebar-logo.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/sidebar-logo.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/layouts/partials/sidebar-menu.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/layouts/partials/sidebar-menu.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/action-logs/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/action-logs/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/dashboard/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/dashboard/index.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/dashboard/partials/card.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/dashboard/partials/card.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/dashboard/partials/post-chart.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/dashboard/partials/post-chart.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/dashboard/partials/user-growth.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/dashboard/partials/user-growth.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/dashboard/partials/user-history.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/dashboard/partials/user-history.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/modules/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/modules/index.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/permissions/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/permissions/index.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/permissions/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/permissions/show.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/posts/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/posts/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/posts/partials/form.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/posts/partials/form.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/posts/partials/hierarchical-terms.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/posts/partials/hierarchical-terms.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/posts/partials/post-taxonomy-chooser.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/posts/partials/post-taxonomy-chooser.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/posts/partials/term-drawer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/posts/partials/term-drawer.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/posts/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/posts/show.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/profile/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/profile/edit.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/roles/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/roles/create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/roles/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/roles/edit.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/roles/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/roles/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/settings/appearance-tab.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/settings/appearance-tab.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/settings/content-settings.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/settings/content-settings.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/settings/general-tab.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/settings/general-tab.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/settings/integration-settings.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/settings/integration-settings.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/settings/tabs.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/settings/tabs.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/terms/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/terms/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/translations/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/translations/create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/terms/partials/form.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/terms/partials/form.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/translations/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/translations/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/users/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/users/create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/users/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/users/edit.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/users/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/users/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/partials/search-form.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/partials/search-form.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/components/advanced-fields.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/advanced-fields.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/components/breadcrumbs.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/breadcrumbs.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/components/buttons/action-buttons.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/buttons/action-buttons.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/components/buttons/action-item.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/buttons/action-item.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/components/buttons/drawer-close.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/buttons/drawer-close.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/components/buttons/submit-buttons.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/buttons/submit-buttons.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/components/collapsible-section.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/collapsible-section.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/components/drawer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/drawer.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/components/filters/date-filter.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/filters/date-filter.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/components/inputs/combobox.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/inputs/combobox.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/components/inputs/datetime-picker.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/inputs/datetime-picker.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/components/inputs/file-input.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/inputs/file-input.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/components/inputs/password.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/inputs/password.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/components/modals/confirm-delete.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/modals/confirm-delete.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/components/modals/error-message.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/modals/error-message.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/components/popover.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/popover.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/errors/403.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/errors/403.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/errors/404.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/errors/404.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/errors/500.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/errors/500.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/errors/partials/links.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/errors/partials/links.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -269,7 +282,7 @@
       <workItem from="1752503357010" duration="5187000" />
       <workItem from="1752564227235" duration="2275000" />
       <workItem from="1752582108269" duration="1665000" />
-      <workItem from="1752585885648" duration="9413000" />
+      <workItem from="1752585885648" duration="12185000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />

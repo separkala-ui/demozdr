@@ -190,7 +190,7 @@
     {{ $attributes->whereStartsWith('x-on:') }}>
 
     @if($label)
-        <label for="{{ $name }}" class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __($label) }} @if($required) <span class="crm:text-red-500">*</span> @endif</label>
+        <label for="{{ $name }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __($label) }} @if($required) <span class="crm:text-red-500">*</span> @endif</label>
 
     @endif
 
@@ -280,7 +280,7 @@
                     @endif
                 </template>
 
-                <li x-show="options.length === 0" class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">
+                <li x-show="options.length === 0" class="px-4 py-2 text-sm text-gray-500 dark:text-gray-300">
                     {{ __('No options found') }}
                 </li>
             </ul>

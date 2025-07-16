@@ -52,7 +52,7 @@
             </div>
 
             <div class="mb-4">
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
                     {{ __('Total Keys:') }} <span class="font-medium">{{ $translationStats['totalKeys'] }}</span> |
                     {{ __('Translated') }}: <span class="font-medium">{{ $translationStats['translated'] }}</span> |
                     {{ __('Missing:') }} <span class="font-medium">{{ $translationStats['missing'] }}</span>
@@ -78,13 +78,13 @@
                         <table class="min-w-full border divide-y divide-gray-200 dark:divide-gray-700 dark:border-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-800">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                                         {{ __('Key') }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                                         {{ __('English Text') }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                                         {{ $languages[$selectedLang]['name'] ?? ucfirst($selectedLang) }} {{ __('Translation') }}
                                     </th>
                                 </tr>
@@ -96,10 +96,10 @@
                                             <td class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-white">
                                                 {{ $key }}
                                             </td>
-                                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-400">
+                                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
                                                 {{ $value }}
                                             </td>
-                                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-400">
+                                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
                                                 <textarea name="translations[{{ $key }}]" rows="1"
                                                     class="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
                                                     placeholder="">{{ $translations[$key] ?? '' }}</textarea>
@@ -117,10 +117,10 @@
                                                     <td class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-white pl-12">
                                                         {{ $nestedKey }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                                    <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                                                         {{ $nestedValue }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                                    <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                                                         <textarea name="translations[{{ $key }}][{{ $nestedKey }}]" rows="1"
                                                             class="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
                                                             placeholder="">{{ $translations[$key][$nestedKey] ?? '' }}</textarea>
@@ -137,10 +137,10 @@
                                                         <td class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-white pl-16">
                                                             {{ $deepKey }}
                                                         </td>
-                                                        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                                        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                                                             {{ $deepValue }}
                                                         </td>
-                                                        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                                        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                                                             <textarea name="translations[{{ $key }}][{{ $nestedKey }}][{{ $deepKey }}]" rows="1"
                                                                 class="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
                                                                 placeholder="">{{ $translations[$key][$nestedKey][$deepKey] ?? '' }}</textarea>

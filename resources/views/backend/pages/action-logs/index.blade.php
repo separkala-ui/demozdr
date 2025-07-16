@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto">
-                    <table id="actionLogsTable" class="w-full dark:text-gray-400">
+                    <table id="actionLogsTable" class="w-full dark:text-gray-300">
                         <thead class="bg-light text-capitalize">
                             <tr class="border-b border-gray-100 dark:border-gray-800">
                                 <th class="bg-gray-50 dark:bg-gray-800 dark:text-white px-5 p-2 sm:px-6 text-left">
@@ -94,7 +94,7 @@
                                 @endphp
                                 <tr>
                                     <td colspan="5" class="text-center py-4">
-                                        <p class="text-gray-500 dark:text-gray-400">{{ __('No action logs found') }}</p>
+                                        <p class="text-gray-500 dark:text-gray-300">{{ __('No action logs found') }}</p>
                                     </td>
                                 </tr>
                             @endforelse

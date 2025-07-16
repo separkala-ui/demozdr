@@ -61,7 +61,7 @@
     <div x-show="showUploadArea" class="mb-6 p-6 border-2 border-dashed border-gray-300 rounded-md bg-gray-50 dark:bg-gray-800 dark:border-gray-600"
             @dragover.prevent
             @drop.prevent="$refs.uploadModule.files = $event.dataTransfer.files; $refs.uploadModule.dispatchEvent(new Event('change'))">
-        <p class="text-center text-gray-600 dark:text-gray-400">
+        <p class="text-center text-gray-600 dark:text-gray-300">
             {{ __('Drag and drop your module file here, or') }}
             <button
                 @click="$refs.uploadModule.click()"
@@ -86,7 +86,7 @@
             <svg class="w-16 h-16 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
-            <p class="mt-4 text-gray-600 dark:text-gray-400">{{ __('Drag and drop your module file here, or') }}</p>
+            <p class="mt-4 text-gray-600 dark:text-gray-300">{{ __('Drag and drop your module file here, or') }}</p>
             <button
                 @click="$refs.uploadModule.click()"
                 class="mt-4 btn-primary"
@@ -106,7 +106,7 @@
                         <div class="flex justify-between" x-data="{ deleteModalOpen: false, errorModalOpen: false, errorMessage: '' }">
                             <div class="py-3">
                                 <h2>
-                                    <i class="bi {{ $module->icon }} text-3xl text-gray-500 dark:text-gray-400"></i>
+                                    <i class="bi {{ $module->icon }} text-3xl text-gray-500 dark:text-gray-300"></i>
                                 </h2>
                                 <h3 class="text-lg font-medium text-gray-700 dark:text-white">
                                     {{ $module->title }}
@@ -158,8 +158,8 @@
                                 modalTrigger="errorModalOpen"
                             />
                         </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $module->description }}</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <p class="text-sm text-gray-600 dark:text-gray-300">{{ $module->description }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-300">
                             {{ __('Tags:') }}
                             @foreach ($module->tags as $tag)
                                 <span class="inline-block px-2 py-1 text-xs font-medium text-white bg-gray-400 rounded-full mr-1 mb-1">{{ $tag }}</span>

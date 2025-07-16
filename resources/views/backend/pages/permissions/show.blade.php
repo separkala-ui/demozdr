@@ -16,11 +16,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <div class="mb-4">
-                            <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Permission Name') }}</h4>
+                            <h4 class="text-sm font-medium text-gray-500 dark:text-gray-300">{{ __('Permission Name') }}</h4>
                             <p class="mt-1 text-lg font-medium text-gray-700 dark:text-white">{{ $permission->name }}</p>
                         </div>
                         <div>
-                            <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Permission Group') }}</h4>
+                            <h4 class="text-sm font-medium text-gray-500 dark:text-gray-300">{{ __('Permission Group') }}</h4>
                             <p class="mt-1">
                                 <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
                                     {{ $permission->group_name }}
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{{ __('Assigned Roles') }}</h4>
+                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">{{ __('Assigned Roles') }}</h4>
                         @if($roles->count() > 0)
                             <div class="space-y-2">
                                 @foreach($roles as $role)
@@ -45,7 +45,7 @@
                             </div>
                         @else
                             <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-md text-center">
-                                <span class="text-gray-500 dark:text-gray-400">{{ __('No roles have this permission') }}</span>
+                                <span class="text-gray-500 dark:text-gray-300">{{ __('No roles have this permission') }}</span>
                             </div>
                         @endif
                     </div>

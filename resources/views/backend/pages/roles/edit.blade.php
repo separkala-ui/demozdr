@@ -29,7 +29,7 @@
                 <div class="p-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-400">
+                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 {{ __('Role Name') }}
                             </label>
                             <input required autofocus name="name" value="{{ $role->name }}" type="text" placeholder="{{ __('Enter a Role Name') }}" class="mt-2 form-control">
@@ -48,7 +48,7 @@
                 <div class="p-4">
                     <div class="mb-4">
                         <input type="checkbox" id="checkPermissionAll" class="mr-2" {{ $roleService->roleHasPermissions($role, $all_permissions) ? 'checked' : '' }}>
-                        <label for="checkPermissionAll" class="text-sm text-gray-700 dark:text-gray-400">
+                        <label for="checkPermissionAll" class="text-sm text-gray-700 dark:text-gray-300">
                             {{ __('Select All') }}
                         </label>
                     </div>
@@ -58,7 +58,7 @@
                     <div class="mb-6">
                         <div class="flex items-center mb-2">
                             <input type="checkbox" id="group{{ $i }}Management" class="mr-2" {{ $roleService->roleHasPermissions($role, $roleService->getPermissionsByGroupName($group->name)) ? 'checked' : '' }}>
-                            <label for="group{{ $i }}Management" class="capitalize text-sm font-medium text-gray-700 dark:text-gray-400">
+                            <label for="group{{ $i }}Management" class="capitalize text-sm font-medium text-gray-700 dark:text-gray-300">
                                 {{ ucfirst($group->name) }}
                             </label>
                         </div>
@@ -70,7 +70,7 @@
                             <div>
                                 <input type="checkbox" id="checkPermission{{ $permission->id }}" name="permissions[]" value="{{ $permission->name }}" class="mr-2"
                                        {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }}>
-                                <label for="checkPermission{{ $permission->id }}" class="capitalize text-sm text-gray-700 dark:text-gray-400">
+                                <label for="checkPermission{{ $permission->id }}" class="capitalize text-sm text-gray-700 dark:text-gray-300">
                                     {{ $permission->name }}
                                 </label>
                             </div>

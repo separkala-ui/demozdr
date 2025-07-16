@@ -7,7 +7,7 @@
     </div>
     <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
         <div class="relative">
-            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {{ __('Google Analytics') }}
             </label>
             <textarea name="google_analytics_script" rows="6" placeholder="{{ __('Paste your Google Analytics script here') }}"
@@ -22,7 +22,7 @@
             </div>
             @endif
 
-            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
                 {{ __('Learn more about Google Analytics and how to set it up:') }}
                 <a href="https://analytics.google.com/" target="_blank" class="text-blue-500 hover:underline">
                     {{ __('Google Analytics') }}

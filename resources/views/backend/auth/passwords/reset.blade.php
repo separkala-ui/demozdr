@@ -19,7 +19,7 @@
                 <x-messages />
                 <!-- Email -->
                 <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ __('E-Mail Address') }}<span class="text-error-500">*</span>
                     </label>
                     <input autofocus type="text" id="email" name="email" autocomplete="username"
@@ -29,7 +29,7 @@
                 </div>
                 <!-- Password -->
                 <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ __('Password') }}<span class="text-error-500">*</span>
                     </label>
                     <input type="password" name="password" autocomplete="new-password" required
@@ -43,7 +43,7 @@
 
                 <!-- Confirm Password -->
                 <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ __('Confirm Password') }}<span class="text-error-500">*</span>
                     </label>
                     <input type="password" name="password_confirmation" autocomplete="new-password" required

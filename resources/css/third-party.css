@@ -2,7 +2,7 @@
 
 /* ApexCharts */
 .apexcharts-legend-text {
-    @apply text-gray-700! dark:text-gray-400!;
+    @apply text-gray-700! dark:text-gray-300!;
 }
 
 .apexcharts-text {
@@ -17,7 +17,7 @@
     @apply mr-1.5! h-1.5! w-1.5!;
 }
 .apexcharts-legend-text {
-    @apply pl-5! text-gray-700! dark:text-gray-400!;
+    @apply pl-5! text-gray-700! dark:text-gray-300!;
 }
 .apexcharts-tooltip-series-group {
     @apply p-0!;
@@ -68,7 +68,7 @@
 
 .stocks-slider-outer .swiper-button-next,
 .stocks-slider-outer .swiper-button-prev {
-    @apply static! mt-0 h-8 w-9 rounded-full border border-gray-200 text-gray-700! transition hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400!;
+    @apply static! mt-0 h-8 w-9 rounded-full border border-gray-200 text-gray-700! transition hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300!;
 }
 
 .stocks-slider-outer .swiper-button-next.swiper-button-disabled,
@@ -135,7 +135,7 @@
     @apply w-full;
 }
 .flatpickr-calendar {
-    @apply dark:bg-gray-dark! dark:shadow-theme-xl! 2xsm:w-auto! mt-2 rounded-md! p-5! text-gray-500! dark:text-gray-400!;
+    @apply dark:bg-gray-dark! dark:shadow-theme-xl! 2xsm:w-auto! mt-2 rounded-md! p-5! text-gray-500! dark:text-gray-300!;
 }
 
 .flatpickr-months .flatpickr-prev-month:hover svg,
@@ -161,7 +161,7 @@
 }
 
 .flatpickr-weekday {
-    @apply text-theme-sm! font-medium! text-gray-500! dark:text-gray-400!;
+    @apply text-theme-sm! font-medium! text-gray-500! dark:text-gray-300!;
 }
 
 .flatpickr-day {
@@ -304,7 +304,7 @@ span.flatpickr-weekday,
     @apply rounded-md bg-gray-100 p-0.5 dark:bg-gray-900;
 }
 .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child .fc-button {
-    @apply h-auto! w-auto! rounded-md border-0! bg-transparent px-5! py-2! text-sm font-medium text-gray-500 hover:text-gray-700 focus:shadow-none! dark:text-gray-400;
+    @apply h-auto! w-auto! rounded-md border-0! bg-transparent px-5! py-2! text-sm font-medium text-gray-500 hover:text-gray-700 focus:shadow-none! dark:text-gray-300;
 }
 .fc-header-toolbar.fc-toolbar
     .fc-toolbar-chunk:last-child
@@ -331,7 +331,7 @@ span.flatpickr-weekday,
     @apply rounded-sm bg-gray-100 dark:bg-white/[0.03];
 }
 .fc .fc-daygrid-day-number {
-    @apply p-3! text-sm font-medium text-gray-700 dark:text-gray-400;
+    @apply p-3! text-sm font-medium text-gray-700 dark:text-gray-300;
 }
 .fc .fc-daygrid-day-top {
     @apply flex-row!;
@@ -382,8 +382,8 @@ span.flatpickr-weekday,
     @apply bg-orange-500;
 }
 .fc-direction-ltr .fc-timegrid-slot-label-frame {
-    @apply px-3 py-1.5 text-left text-sm font-medium text-gray-500 dark:text-gray-400;
+    @apply px-3 py-1.5 text-left text-sm font-medium text-gray-500 dark:text-gray-300;
 }
 .fc .fc-timegrid-axis-cushion {
-    @apply text-sm font-medium text-gray-500 dark:text-gray-400;
+    @apply text-sm font-medium text-gray-500 dark:text-gray-300;
 }

@@ -1,6 +1,6 @@
 @php $currentFilter = request()->get('chart_filter_period', 'last_12_months'); @endphp
 
-<div class="rounded-md shadow-sm border border-gray-200 p-4 py-6 z-1 dark:bg-slate-800">
+<div class="rounded-md shadow-sm border border-gray-200 dark:border-gray-700 p-4 py-6 z-1 dark:bg-gray-800">
     <!-- Header Section -->
     <div class="flex justify-between items-center">
         <h3 class="text-lg font-medium text-gray-700 dark:text-white">
@@ -177,7 +177,7 @@
                     height: "100%",
                     maxWidth: "100%",
                     type: "area",
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "var(--font-sans)",
                     dropShadow: {
                         enabled: false,
                     },
@@ -216,7 +216,7 @@
                     theme: 'light',
                     style: {
                         fontSize: '14px',
-                        fontFamily: 'Inter, sans-serif'
+                        fontFamily: 'var(--font-sans)'
                     },
                     marker: {
                         show: false,
@@ -298,7 +298,7 @@
                         style: {
                             colors: '#64748b',
                             fontSize: '12px',
-                            fontFamily: 'Inter, sans-serif',
+                            fontFamily: 'var(--font-sans)',
                             fontWeight: 500,
                         },
                     },
@@ -321,7 +321,7 @@
                         style: {
                             colors: '#64748b',
                             fontSize: '12px',
-                            fontFamily: 'Inter, sans-serif',
+                            fontFamily: 'var(--font-sans)',
                             fontWeight: 500
                         },
                         formatter: function(value) {

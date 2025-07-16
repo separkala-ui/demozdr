@@ -2,7 +2,8 @@
 
 @theme {
     --font-*: initial;
-    --font-outfit: Outfit, sans-serif;
+    /*--font-outfit: Outfit, sans-serif;*/
+    --font-sans: Outfit, sans-serif;
 
     --breakpoint-*: initial;
     --breakpoint-2xsm: 375px;
@@ -178,12 +179,20 @@
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
     }
+
+    .dark *,
+    .dark ::after,
+    .dark ::before,
+    .dark ::backdrop,
+    .dark ::file-selector-button {
+        border-color: var(--color-gray-700, currentColor);
+    }
     button:not(:disabled),
     [role="button"]:not(:disabled) {
         cursor: pointer;
     }
 
     body {
-        @apply relative text-base font-normal font-outfit z-1 bg-gray-500 text-gray-700 dark:text-gray-300;
+        @apply relative text-base font-normal z-1 bg-gray-500 text-gray-700 dark:text-gray-300;
     }
 }

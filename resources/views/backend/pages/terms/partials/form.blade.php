@@ -2,7 +2,7 @@
 
 <div x-data="slugGenerator('{{ old('name', $term ? $term->name : '') }}', '{{ old('slug', $term ? $term->slug : '') }}')">
     <div>
-        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-400">
+        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             {{ __('Name') }}
             <span class="text-red-500">*</span>
         </label>
@@ -10,10 +10,10 @@
     </div>
 
     <div class="mt-2">
-        <label for="slug" class="block text-sm font-medium text-gray-700 dark:text-gray-400">
+        <label for="slug" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             {{ __('Slug') }}
             <button type="button" @click="toggleSlugEdit"
-                class="ml-2 text-xs text-gray-500 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400">
+                class="ml-2 text-xs text-gray-500 dark:text-gray-300 hover:text-brand-500 dark:hover:text-brand-400">
                 <span x-show="!showSlugEdit">{{ __('Edit') }}</span>
                 <span x-show="showSlugEdit">{{ __('Hide') }}</span>
             </button>
@@ -32,7 +32,7 @@
     <!-- Description -->
     <div class="mt-2">
         <label for="description"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Description') }}</label>
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Description') }}</label>
         <textarea name="description" id="description" rows="3" class="form-control !h-30">{{ old('description', $term ? $term->description : '') }}</textarea>
     </div>
     @if ($taxonomyModel->show_featured_image)

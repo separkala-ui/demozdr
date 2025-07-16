@@ -10,7 +10,7 @@
         <h1 class="mb-2 font-semibold text-gray-700 text-title-sm dark:text-white/90 sm:text-title-md">
             {{ __('Forgot Password') }}
         </h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400">
+        <p class="text-sm text-gray-500 dark:text-gray-300">
             {{ __('Enter your email address and we will send you a link to reset your password.') }}
         </p>
     </div>
@@ -21,7 +21,7 @@
                 <x-messages />
                 <!-- Email -->
                 <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ __('Email') }}<span class="text-error-500">*</span>
                     </label>
                     <input autofocus type="text" id="email" name="email" autocomplete="username"
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </form>
-        <div class="flex justify-center items-center mt-5 text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
+        <div class="flex justify-center items-center mt-5 text-sm font-normal text-center text-gray-700 dark:text-gray-300 sm:text-start">
             <a href="{{ route('admin.login') }}" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">
                 <iconify-icon icon="lucide:chevron-left" class="mr-2"></iconify-icon>
                 {{ __('Back to Login') }}

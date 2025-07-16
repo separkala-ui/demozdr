@@ -8,7 +8,7 @@
     <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
         <div class="flex">
             <div class="md:basis-1/2 relative">
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {{ __('Site Name') }}
                 </label>
                 <input type="text" name="app_name" placeholder="{{ __('Enter site name') }}"
