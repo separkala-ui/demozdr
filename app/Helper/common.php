@@ -329,7 +329,6 @@ if (! function_exists('svg_icon')) {
     }
 }
 
-
 if (! function_exists('generate_unique_slug')) {
     /**
      * Generate a unique slug for a given string

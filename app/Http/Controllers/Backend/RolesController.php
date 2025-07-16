@@ -20,7 +20,8 @@ class RolesController extends Controller
     public function __construct(
         private readonly RolesService $rolesService,
         private readonly PermissionService $permissionService
-    ) {}
+    ) {
+    }
 
     public function index(): Renderable
     {

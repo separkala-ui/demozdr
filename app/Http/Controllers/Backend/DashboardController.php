@@ -18,7 +18,8 @@ class DashboardController extends Controller
         private readonly UserChartService $userChartService,
         private readonly LanguageService $languageService,
         private readonly PostChartService $postChartService
-    ) {}
+    ) {
+    }
 
     public function index()
     {
