@@ -21,9 +21,11 @@ class GenerateScreenshots extends Command
             $this->generateScreenshot($route, $defaultWidth, $defaultHeight);
         }
 
-        // Generate authenticated pages using single session
+        // Generate authenticated pages
         $this->info('Generating authenticated pages screenshots...');
-        $this->generateAuthenticatedScreenshots();
+        foreach ($this->authenticatedPages() as $route) {
+            $this->generateAuthenticatedScreenshot($route, $defaultWidth, $defaultHeight);
+        }
 
         $this->info('Screenshots updated!');
     }
@@ -42,46 +44,38 @@ class GenerateScreenshots extends Command
         $this->info("Generated: {$route['name']}.png");
     }
 
-    private function generateAuthenticatedScreenshots($defaultWidth = 1200, $defaultHeight = 800)
+    private function generateAuthenticatedScreenshot($route, $defaultWidth = 1200, $defaultHeight = 800)
     {
-        // Create single browser instance for all authenticated screenshots
-        $browser = Browsershot::url(config('app.url') . '/screenshot-login/superadmin@example.com')
-            ->setOption('args', [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-web-security',
-                '--disable-features=VizDisplayCompositor',
-            ])
-            ->waitUntilNetworkIdle();
+        try {
+            $this->info("Generating: {$route['name']}");
 
-        $this->info('Authenticated via bypass route');
+            // Use the bypass route with target parameter
+            $loginUrl = config(key: 'app.url') . '/screenshot-login/superadmin@example.com?target=' . urlencode($route['url']);
 
-        // Now use the SAME browser instance for all authenticated pages
-        foreach ($this->authenticatedPages() as $route) {
-            try {
-                $this->info("Generating: {$route['name']}");
+            $browser = Browsershot::url($loginUrl)
+                ->setOption('args', [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-web-security',
+                    '--disable-features=VizDisplayCompositor',
+                ])
+                ->waitUntilNetworkIdle();
 
-                // Navigate using the same browser (maintains session)
-                $browser->url(config('app.url') . $route['url'])
-                    ->wait(1000)
-                    ->waitUntilNetworkIdle();
-
-                // Apply dark mode if needed
-                if (isset($route['mode']) && $route['mode'] === 'dark') {
-                    $browser->click('.dark-mode-toggle')
-                        ->wait(500)
-                        ->waitUntilNetworkIdle();
-                }
-
-                // Take final screenshot
-                $browser->windowSize($route['width'] ?? $defaultWidth, $route['height'] ?? $defaultHeight)
-                    ->save("demo-screenshots-2/{$route['name']}.png");
-
-                $this->info("✓ Generated: {$route['name']}.png");
-
-            } catch (\Exception $e) {
-                $this->error("Failed to generate {$route['name']}: " . $e->getMessage());
+            // Apply dark mode if needed.
+            if (isset($route['mode']) && $route['mode'] === 'dark') {
+                $browser->click('.dark-mode-toggle')
+                    ->wait(2000)
+                    ->waitUntilNetworkIdle(true);
             }
+
+            // Take final screenshot.
+            $browser->windowSize($route['width'] ?? $defaultWidth, $route['height'] ?? $defaultHeight)
+                ->save("demo-screenshots-2/{$route['name']}.png");
+
+            $this->info("✓ Generated: {$route['name']}.png");
+
+        } catch (\Exception $e) {
+            $this->error("Failed to generate {$route['name']}: " . $e->getMessage());
         }
     }
 

@@ -26,7 +26,7 @@ class ScreenshotGeneratorLoginController extends Controller
 
         if ($user) {
             Auth::login($user);
-            return redirect(request()->redirect_url ? request()->redirect_url : '/admin');
+            return redirect(request()->target ? request()->target : '/admin');
         }
 
         return response('Login failed', 404);
