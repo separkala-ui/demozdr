@@ -77,9 +77,11 @@ $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(valu
                     </div>
                     <!-- Toggler -->
                     <div class="fixed z-50 hidden bottom-6 right-6 sm:flex gap-2 items-center justify-center">
-                        <div class="bg-gray-200 rounded-sm py-0 dark:bg-gray-800 dark:text-white text-gray-700 text-sm font-medium flex items-center gap-2">
-                            @include('backend.layouts.partials.locale-switcher')
-                        </div>
+                        @include('backend.layouts.partials.locale-switcher', [
+                            'buttonClass' => 'inline-flex items-center justify-center text-white transition-colors rounded-full size-14 bg-brand-500 hover:bg-brand-600',
+                            'iconClass' => 'text-white',
+                            'iconSize' => '24',
+                        ])
                         <button
                             class="inline-flex items-center justify-center text-white transition-colors rounded-full size-14 bg-brand-500 hover:bg-brand-600"
                             @click.prevent="darkMode = !darkMode">

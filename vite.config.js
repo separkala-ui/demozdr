@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import collectModuleAssetsPaths from "./vite-module-loader";
 
-let paths = ["resources/css/app.css", "resources/js/app.js"];
+const paths = ["resources/css/app.css", "resources/js/app.js"];
 
 // Use top-level await to properly load module assets
 let allPaths = await collectModuleAssetsPaths(paths, "Modules");
