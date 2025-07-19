@@ -3,8 +3,6 @@ layer(base);
 
 @import "tailwindcss";
 
-@import "bootstrap-icons/font/bootstrap-icons.css";
-
 /* Import base styles */
 @import "./base.css";
 
