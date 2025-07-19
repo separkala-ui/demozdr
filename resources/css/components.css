@@ -5,31 +5,31 @@
     }
 
     .btn-primary {
-        @apply text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-primary focus:ring-primary/20 dark:focus:ring-blue-800 hover:scale-105;
+        @apply text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-primary focus:ring-primary/20 dark:focus:ring-blue-800 hover:scale-101;
     }
 
     .btn-secondary {
-        @apply text-gray-800 hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-gray-100 hover:bg-gray-200 focus:ring-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-500 hover:scale-105;
+        @apply text-gray-800 hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-gray-100 hover:bg-gray-200 focus:ring-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-500 hover:scale-101;
     }
 
     .btn-danger {
-        @apply text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-red-500 focus:ring-red-300 dark:focus:ring-red-800 hover:scale-105;
+        @apply text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-red-500 focus:ring-red-300 dark:focus:ring-red-800 hover:scale-101;
     }
 
     .btn-success {
-        @apply text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-green-500 focus:ring-green-300 dark:focus:ring-green-800 hover:scale-105;
+        @apply text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-green-500 focus:ring-green-300 dark:focus:ring-green-800 hover:scale-101;
     }
 
     .btn-default {
-        @apply hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 focus:ring-gray-100 dark:focus:ring-green-800 hover:scale-105;
+        @apply hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 focus:ring-gray-100 dark:focus:ring-green-800 hover:scale-101;
     }
 
     .btn-warning {
-        @apply text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-orange-500 focus:ring-orange-300 dark:focus:ring-orange-800 hover:scale-105;
+        @apply text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-orange-500 focus:ring-orange-300 dark:focus:ring-orange-800 hover:scale-101;
     }
 
     .btn-info {
-        @apply text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-blue-500 focus:ring-blue-300 dark:focus:ring-blue-800 hover:scale-105;
+        @apply text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-blue-500 focus:ring-blue-300 dark:focus:ring-blue-800 hover:scale-101;
     }
 
     /* Inputs */
