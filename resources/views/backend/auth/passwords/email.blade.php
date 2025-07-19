@@ -15,7 +15,7 @@
         </p>
     </div>
     <div>
-        <form action="{{ route('admin.password.update') }}" method="POST">
+        <form action="{{ route('admin.password.email') }}" method="POST">
             @csrf
             <div class="space-y-5">
                 <x-messages />
