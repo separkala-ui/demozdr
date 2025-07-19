@@ -1,5 +1,5 @@
 import './bootstrap';
-import 'iconify-icon';
+import 'iconify-icon/dist/iconify-icon.min.js';
 import "jsvectormap/dist/jsvectormap.min.css";
 import "flatpickr/dist/flatpickr.min.css";
 import "dropzone/dist/dropzone.css";
