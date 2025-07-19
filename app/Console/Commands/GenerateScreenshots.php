@@ -113,6 +113,11 @@ class GenerateScreenshots extends Command
                 'url' => '/admin/roles',
                 'mode' => 'dark',
             ],
+            [
+                'name' => '11-User-List-Dark-Mode',
+                'url' => '/admin/users',
+                'mode' => 'dark',
+            ],
         ];
     }
 }
