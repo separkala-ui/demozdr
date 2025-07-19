@@ -49,11 +49,6 @@ $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(valu
             <main>
                 <div class="relative flex flex-col justify-center w-full h-screen dark:bg-gray-900 sm:p-0 lg:flex-row">
                     <div class="flex flex-col flex-1 w-full lg:w-1/2">
-                        <div class="w-full max-w-md pt-2 mx-auto">
-                            {{-- <div class="mt-3 mx-3 flex items-center justify-end">
-                                @include('backend.layouts.partials.locale-switcher')
-                            </div> --}}
-                        </div>
                         <div class="flex flex-col justify-center flex-1 w-full max-w-md mx-auto px-10">
                             @yield('admin-content')
                         </div>
@@ -82,6 +77,9 @@ $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(valu
                     </div>
                     <!-- Toggler -->
                     <div class="fixed z-50 hidden bottom-6 right-6 sm:flex gap-2 items-center justify-center">
+                        <div class="bg-gray-200 rounded-sm py-0 dark:bg-gray-800 dark:text-white text-gray-700 text-sm font-medium flex items-center gap-2">
+                            @include('backend.layouts.partials.locale-switcher')
+                        </div>
                         <button
                             class="inline-flex items-center justify-center text-white transition-colors rounded-full size-14 bg-brand-500 hover:bg-brand-600"
                             @click.prevent="darkMode = !darkMode">

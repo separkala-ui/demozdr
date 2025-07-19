@@ -67,14 +67,11 @@ x-init="init()"
                 @if (env('GITHUB_LINK') )
                     <a href="{{ env('GITHUB_LINK') }}" target="_blank"
                         class="hover:text-dark-900 relative flex p-2 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
-{{--                        <img src="{{ asset('images/icons/github.svg') }}" alt="GitHub" class="" />--}}
                         <iconify-icon icon="lucide:github" width="22" height="22"
                             class=""></iconify-icon>
                     </a>
                 @endif
             </div>
-
-            {{-- @include('backend.layouts.partials.locale-switcher') --}}
 
             <div class="relative" x-data="{ dropdownOpen: false }" @click.outside="dropdownOpen = false">
                 <a class="flex items-center text-gray-700 dark:text-gray-300" href="#"
