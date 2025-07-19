@@ -34,17 +34,8 @@
                                 <input type="email" name="email" id="email" required value="{{ $user->email }}"
                                     class="form-control">
                             </div>
-                            <div class="space-y-1">
-                                <label for="password"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Password (Optional)') }}</label>
-                                <input type="password" name="password" id="password" class="form-control">
-                            </div>
-                            <div class="space-y-1">
-                                <label for="password_confirmation"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Confirm Password (Optional)') }}</label>
-                                <input type="password" name="password_confirmation" id="password_confirmation"
-                                    class="form-control">
-                            </div>
+                            <x-inputs.password name="password" label="{{ __('Password (Optional)') }}" />
+                            <x-inputs.password name="password_confirmation" label="{{ __('Confirm Password (Optional)') }}" />
                             {!! ld_apply_filters('profile_edit_fields', '', $user) !!}
                         </div>
                         {!! ld_apply_filters('profile_edit_after_fields', '', $user) !!}

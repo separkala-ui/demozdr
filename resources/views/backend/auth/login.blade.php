@@ -21,24 +21,17 @@
           <x-messages />
 
           <div>
-            <label class="form-label">
-              {{ __('Email') }} <span class="text-error-500">*</span>
-            </label>
+            <label class="form-label">{{ __('Email') }}</label>
             <input autofocus type="text" id="email" name="email" autocomplete="username" placeholder="{{ __('Enter your email') }}" class="dark:bg-dark-900 h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" value="{{ old('email') ?? config('app.demo_mode', false) ? 'superadmin@example.com' : '' }}" required>
           </div>
 
-          <div>
-            <label class="form-label">
-              {{ __('Password') }} <span class="text-error-500">*</span>
-            </label>
-            <div x-data="{ showPassword: false }" class="relative">
-              <input :type="showPassword ? 'text' : 'password'" autocomplete="current-password" name="password" placeholder="{{ __('Enter your password') }}" class="dark:bg-dark-900 h-11 w-full rounded-md border border-gray-300 bg-transparent py-2.5 pl-4 pr-11 text-sm text-gray-700 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" type="password" value="{{ (config('app.demo_mode', false) ? '12345678' : '') }}" required>
-              <button type="button" @click="showPassword = !showPassword" class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-300 flex items-center justify-center w-6 h-6 hover:text-gray-700 dark:hover:text-gray-100">
-                <iconify-icon x-show="!showPassword" icon="lucide:eye" width="20" height="20" class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100"></iconify-icon>
-                <iconify-icon x-show="showPassword" icon="lucide:eye-off" width="20" height="20" class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100" style="display: none;"></iconify-icon>
-              </button>
-            </div>
-          </div>
+          <x-inputs.password 
+            name="password" 
+            label="{{ __('Password') }}"
+            placeholder="{{ __('Enter your password') }}" 
+            value="{{ (config('app.demo_mode', false) ? '12345678' : '') }}" 
+            required
+          />
 
           <div class="flex items-center justify-between">
             <label for="remember" class="flex items-center justify-center gap-2 text-sm font-medium has-checked:text-gray-900 dark:has-checked:text-white has-disabled:cursor-not-allowed">
