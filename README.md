@@ -232,18 +232,21 @@ git remote set-url origin git@github.com:laradashboard/laradashboard.git
 
 ## 📧 Email setup
 
-You can use mailtrap to test emails easily - https://mailtrap.io/ (first need to create mailtrap account and can )
+You can use Mailpit to test emails easily - https://mailpit.axllent.org/
+
+Installation link - https://mailpit.axllent.org/docs/install/
 
 ```bash
 MAIL_MAILER=smtp
-MAIL_HOST=sandbox.smtp.mailtrap.io
-MAIL_PORT=587
-MAIL_USERNAME=mailtrap-username
-MAIL_PASSWORD=mailtrap-password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=youremail@example.com
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=dev@example.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
+Browse Emails - http://localhost:8025
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
