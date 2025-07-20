@@ -9,12 +9,6 @@
 <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6" x-data="{ selectedUsers: [], selectAll: false, bulkDeleteModalOpen: false }">
     <x-breadcrumbs :breadcrumbs="$breadcrumbs">
         <x-slot name="title_after">
-            {{-- @if (auth()->user()->can('user.edit'))
-                <a href="{{ route('admin.users.create') }}" class="btn-primary ml-2">
-                    <iconify-icon icon="lucide:plus-circle" class="mr-2"></iconify-icon>
-                    {{ __('New User') }}
-                </a>
-            @endif --}}
             @if (request('role'))
                 <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">{{ ucfirst(request('role')) }}</span>
             @endif
@@ -26,8 +20,6 @@
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
           <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
-                {{-- <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __('Users') }}</h3> --}}
-
                 @include('backend.partials.search-form', [
                     'placeholder' => __('Search by name or email'),
                 ])
@@ -43,7 +35,6 @@
 
                         <!-- Bulk Actions dropdown menu -->
                         <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
-                            {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Actions') }}</h6> --}}
                             <ul class="space-y-2">
                                 <li class="cursor-pointer flex items-center gap-1 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500 dark:hover:text-red-50 px-2 py-1.5 rounded transition-colors duration-300"
                                     @click="bulkDeleteModalOpen = true">

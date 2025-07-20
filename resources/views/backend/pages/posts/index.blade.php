@@ -6,24 +6,13 @@
 
 @section('admin-content')
 <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6" x-data="{ selectedPosts: [], selectAll: false, bulkDeleteModalOpen: false }">
-    <x-breadcrumbs :breadcrumbs="$breadcrumbs">
-        <x-slot name="title_after">
-            {{-- @if (auth()->user()->can('post.create'))
-                <a href="{{ route('admin.posts.create', $postType) }}" class="btn-primary ml-2">
-                    <iconify-icon icon="lucide:plus-circle" class="mr-2"></iconify-icon>
-                    {{ __("New {$postTypeModel->label_singular}") }}
-                </a>
-            @endif --}}
-        </x-slot>
-    </x-breadcrumbs>
+    <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
 
     {!! ld_apply_filters('posts_list_after_breadcrumbs', '', $postType) !!}
 
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
             <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
-                {{-- <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __($postTypeModel->label) }}</h3> --}}
-
                 @include('backend.partials.search-form', [
                     'placeholder' => __('Search by title'),
                 ])
@@ -39,7 +28,6 @@
 
                         <!-- Bulk Actions dropdown menu -->
                         <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
-                            {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Actions') }}</h6> --}}
                             <ul class="space-y-2">
                                 <li class="cursor-pointer flex items-center gap-1 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500 dark:hover:text-red-50 px-2 py-1.5 rounded transition-colors duration-300"
                                     @click="bulkDeleteModalOpen = true">
@@ -64,7 +52,6 @@
 
                         <!-- Status dropdown menu -->
                         <div id="statusDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
-                            {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Filter by Status') }}</h6> --}}
                             <ul class="space-y-2">
                                 <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ !request('status') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
                                     onclick="window.location.href='{{ route('admin.posts.index', ['postType' => $postType, 'search' => request('search'), 'category' => request('category'), 'tag' => request('tag')]) }}'">
@@ -96,7 +83,6 @@
 
                             <!-- Category dropdown menu -->
                             <div id="categoryDropdown" class="z-10 hidden w-56 p-2 bg-white rounded-md shadow dark:bg-gray-700">
-                                {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Filter by Category') }}</h6> --}}
                                 <ul class="space-y-2 max-h-48 overflow-y-auto">
                                     <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ !request('category') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
                                         onclick="window.location.href='{{ route('admin.posts.index', ['postType' => $postType, 'status' => request('status'), 'search' => request('search'), 'tag' => request('tag')]) }}'">

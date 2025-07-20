@@ -6,16 +6,7 @@
 
 @section('admin-content')
 <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6" x-data="{ selectedRoles: [], selectAll: false, bulkDeleteModalOpen: false }">
-    <x-breadcrumbs :breadcrumbs="$breadcrumbs">
-        <x-slot name="title_after">
-            {{-- @if (auth()->user()->can('role.create'))
-                <a href="{{ route('admin.roles.create') }}" class="btn-primary ml-2">
-                    <iconify-icon icon="feather:plus" class="mr-2"></iconify-icon>
-                    {{ __('New Role') }}
-                </a>
-            @endif --}}
-        </x-slot>
-    </x-breadcrumbs>
+    <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
 
     {!! ld_apply_filters('roles_after_breadcrumbs', '') !!}
 
@@ -37,7 +28,6 @@
 
                         <!-- Bulk Actions dropdown menu -->
                         <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
-                            {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Actions') }}</h6> --}}
                             <ul class="space-y-2">
                                 <li class="cursor-pointer flex items-center gap-1 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500 dark:hover:text-red-50 px-2 py-1.5 rounded transition-colors duration-300"
                                     @click="bulkDeleteModalOpen = true">
