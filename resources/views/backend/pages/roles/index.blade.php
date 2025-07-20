@@ -10,7 +10,7 @@
         <x-slot name="title_after">
             {{-- @if (auth()->user()->can('role.create'))
                 <a href="{{ route('admin.roles.create') }}" class="btn-primary ml-2">
-                    <iconify-icon icon="lucide:plus-circle" class="mr-2"></iconify-icon>
+                    <iconify-icon icon="feather:plus" class="mr-2"></iconify-icon>
                     {{ __('New Role') }}
                 </a>
             @endif --}}
@@ -22,9 +22,7 @@
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
             <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
-                {{-- <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __('Roles') }}</h3> --}}
-
-                  @include('backend.partials.search-form', [
+                @include('backend.partials.search-form', [
                     'placeholder' => __('Search by role name'),
                 ])
                <div class="flex items-center gap-3">
@@ -50,17 +48,13 @@
                     </div>
                 </div>
 
-                {{-- @include('backend.partials.search-form', [
-                    'placeholder' => __('Search by role name'),
-                ]) --}}
-
-                 @if (auth()->user()->can('role.create'))
+                @if (auth()->user()->can('role.create'))
                 <a href="{{ route('admin.roles.create') }}" class="btn-primary flex items-center gap-2">
                     <iconify-icon icon="feather:plus" height="16" ></iconify-icon>
                     {{ __('New Role') }}
                 </a>
+                @endif
                </div>
-            @endif
             </div>
             <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">
                 <table id="dataTable" class="w-full dark:text-gray-300">

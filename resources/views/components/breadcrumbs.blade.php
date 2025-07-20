@@ -15,7 +15,8 @@
 @if (!$disabled)
 <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
     @if(!empty($title))
-    <h2 class="text-xl font-semibold text-gray-700 dark:text-white/90">
+    <h2 class="text-xl font-semibold text-gray-700 dark:text-white/90 flex justify-center items-center gap-2">
+        {!! $title_before ?? '' !!}
         {{ __($title) }}
 
         {!! $title_after !!}
