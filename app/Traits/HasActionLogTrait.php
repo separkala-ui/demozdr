@@ -6,7 +6,7 @@ namespace App\Traits;
 
 use App\Enums\ActionType;
 use App\Models\ActionLog;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 trait HasActionLogTrait
 {
@@ -75,10 +75,15 @@ trait HasActionLogTrait
                 $title = ucfirst($dataKey).' '.$type->value.' by '.$name;
             }
 
+            // If CLI, set default action_by=1.
+            if (app()->runningInConsole()) {
+                $data['action_by'] = 1;
+            }
+
             $actionLog = ActionLog::create([
                 'type' => $type->value,
                 'title' => $title,
-                'action_by' => auth()->id(), // Store the user's ID who triggered the action
+                'action_by' => $data['action_by'] ?? Auth::id(), // Store the user's ID who triggered the action
                 'data' => json_encode($data), // Store the action data as JSON
             ]);
 

@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ActionType;
 use App\Models\Post;
 use App\Models\Term;
 use App\Services\Content\ContentService;
+use App\Traits\HasActionLogTrait;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
@@ -12,6 +14,8 @@ use Illuminate\Support\Facades\Storage;
 
 class ContentSeeder extends Seeder
 {
+    use HasActionLogTrait;
+
     public function __construct(private readonly ContentService $contentService)
     {
     }
@@ -108,7 +112,7 @@ class ContentSeeder extends Seeder
                 // Generate a placeholder image instead of trying to copy
                 $this->generatePlaceholderImage('public/'.$category['featured_image'], pathinfo($category['featured_image'], PATHINFO_BASENAME));
 
-                Term::firstOrCreate([
+                $category = Term::firstOrCreate([
                     'name' => $category['name'],
                     'taxonomy' => 'category',
                     'slug' => \Illuminate\Support\Str::slug($category['name']),
@@ -116,6 +120,7 @@ class ContentSeeder extends Seeder
                     'description' => $category['description'],
                     'featured_image' => $category['featured_image'],
                 ]);
+                $this->logAction(ActionType::CREATED->value, Term::class, $category->toArray());
 
                 $this->command->info("Created category: {$category['name']}");
             } catch (\Exception $e) {
@@ -147,7 +152,7 @@ class ContentSeeder extends Seeder
                 // Generate a placeholder image instead of trying to copy
                 $this->generatePlaceholderImage('public/'.$tag['featured_image'], pathinfo($tag['featured_image'], PATHINFO_BASENAME));
 
-                Term::firstOrCreate([
+                $tag = Term::firstOrCreate([
                     'name' => $tag['name'],
                     'taxonomy' => 'tag',
                     'slug' => \Illuminate\Support\Str::slug($tag['name']),
@@ -155,6 +160,8 @@ class ContentSeeder extends Seeder
                     'description' => $tag['description'],
                     'featured_image' => $tag['featured_image'],
                 ]);
+
+                $this->logAction(ActionType::CREATED->value, Term::class, $tag->toArray());
 
                 $this->command->info("Created tag: {$tag['name']}");
             } catch (\Exception $e) {
@@ -265,6 +272,8 @@ class ContentSeeder extends Seeder
                 'published_at' => now()->subDays(rand(0, 30)),
             ]);
 
+            $this->logAction(ActionType::CREATED->value, Post::class, $post->toArray());
+
             // Attach categories.
             $categoryIds = [];
             if (! empty($postData['categories'])) {
@@ -301,7 +310,7 @@ class ContentSeeder extends Seeder
         ];
 
         foreach ($pages as $pageData) {
-            Post::firstOrCreate([
+            $page = Post::firstOrCreate([
                 'title' => $pageData['title'],
                 'post_type' => 'page',
             ], [
@@ -311,6 +320,8 @@ class ContentSeeder extends Seeder
                 'user_id' => 1, // Assuming user ID 1 exists
                 'published_at' => now(),
             ]);
+
+            $this->logAction(ActionType::CREATED->value, Post::class, $page->toArray());
         }
     }
 }

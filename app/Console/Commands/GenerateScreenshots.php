@@ -12,8 +12,8 @@ class GenerateScreenshots extends Command
 
     public function handle()
     {
-        $defaultWidth = 1024;
-        $defaultHeight = 600;
+        $defaultWidth = 1280;
+        $defaultHeight = 800;
 
         // Generate guest pages
         $this->info('Generating guest pages screenshots...');
@@ -24,7 +24,7 @@ class GenerateScreenshots extends Command
         // Generate authenticated pages
         $this->info('Generating authenticated pages screenshots...');
         foreach ($this->authenticatedPages() as $route) {
-            $this->generateAuthenticatedScreenshot($route);
+            $this->generateAuthenticatedScreenshot($route, $defaultWidth, $defaultHeight);
         }
 
         $this->info('Screenshots updated!');
@@ -44,7 +44,7 @@ class GenerateScreenshots extends Command
         $this->info("Generated: {$route['name']}.png");
     }
 
-    private function generateAuthenticatedScreenshot($route, $defaultWidth = 1280, $defaultHeight = 800)
+    private function generateAuthenticatedScreenshot($route, $defaultWidth, $defaultHeight)
     {
         try {
             // Use the bypass route with target parameter
