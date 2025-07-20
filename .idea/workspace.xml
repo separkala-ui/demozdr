@@ -4,38 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="chore: add i18n-ally configuration for locales paths">
+    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: implement screenshot generation with user session handling">
+      <change beforePath="$PROJECT_DIR$/.idea/laradashboard.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/laradashboard.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Helpers/crm_helpers.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Helpers/crm_helpers.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/ContactActivitiesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/ContactActivitiesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/ContactGroupsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/ContactGroupsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/ContactTagsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/ContactTagsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/ContactsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/ContactsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/DealActivitiesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/DealActivitiesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/DealsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/DealsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/PipelinesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/PipelinesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/SettingsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/SettingsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/StagesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/StagesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/TicketsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/TicketsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Requests/ContactActivityRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Requests/ContactActivityRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Requests/CrmSettingRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Requests/CrmSettingRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Models/CrmSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Models/CrmSetting.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Providers/CrmServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Providers/CrmServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Providers/CrmSettingsServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Providers/CrmSettingsServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Services/ContactActivityService.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Services/ContactActivityService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Services/ContactService.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Services/ContactService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Services/CrmPipelineService.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Services/CrmPipelineService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Services/CrmService.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Services/CrmService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Services/CrmStageService.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Services/CrmStageService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Services/DealActivityService.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Services/DealActivityService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/database/migrations/2025_07_01_000001_create_crm_settings_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/database/migrations/2025_07_01_000001_create_crm_settings_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/database/migrations/2025_07_15_000001_drop_crm_settings_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/database/migrations/2025_07_15_000001_drop_crm_settings_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/database/seeders/CrmSettingsSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/database/seeders/CrmSettingsSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/activities/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/activities/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/activities/partials/activities-table.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/activities/partials/activities-table.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/activities/partials/activity-edit-drawer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/activities/partials/activity-edit-drawer.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/deals/partials/preview/deal-task-modal.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/deals/partials/preview/deal-task-modal.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Commands/GenerateScreenshots.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/GenerateScreenshots.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo-screenshots-2/00-Login-Page-Lite-Mode.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo-screenshots-2/01-Forget-password.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo-screenshots-2/03-Dashboard-Page-lite-Mode.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo-screenshots-2/05-Role-List-Lite.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo-screenshots-2/06-Role-List-Dark.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo-screenshots-2/11-User-List-Dark-Mode.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,6 +175,8 @@
       <path value="$PROJECT_DIR$/vendor/laravel/telescope" />
       <path value="$PROJECT_DIR$/Modules/TaskManager/vendor/composer" />
       <path value="$PROJECT_DIR$/Modules/UserAvatar/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/spatie/temporary-directory" />
+      <path value="$PROJECT_DIR$/vendor/spatie/browsershot" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
@@ -207,22 +188,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;fix/api-ready&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/mostafizur/Code/projects/laradashboard&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "fix/api-ready",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/mostafizur/Code/projects/laradashboard",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner configuration_file="$PROJECT_DIR$/phpunit.xml" scope="XML" use_alternative_configuration_file="true" />
@@ -256,6 +238,8 @@
       <workItem from="1752582108269" duration="1665000" />
       <workItem from="1752585885648" duration="22853000" />
       <workItem from="1752721552055" duration="304000" />
+      <workItem from="1752979964542" duration="2824000" />
+      <workItem from="1752996350224" duration="2634000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />
@@ -321,7 +305,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752583328099</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feat: implement screenshot generation with user session handling">
+      <option name="closed" value="true" />
+      <created>1752981432425</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1752981432425</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -337,6 +329,7 @@
     <MESSAGE value="refactor: project structure and improve config logic&#10;&#10;Updated Vite configurations for CRM and TaskManager modules to ensure better reliability and clarity. Refactored Laravel Blade templates to improve readability and maintainability, including adjustments to locale switcher and header partials. Removed unnecessary styles and optimized the use of dynamic asset paths." />
     <MESSAGE value="refactor: enhance UI components and integrate iconify for improved visuals" />
     <MESSAGE value="chore: add i18n-ally configuration for locales paths" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: add i18n-ally configuration for locales paths" />
+    <MESSAGE value="feat: implement screenshot generation with user session handling" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: implement screenshot generation with user session handling" />
   </component>
 </project>

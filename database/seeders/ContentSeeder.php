@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ActionType;
 use App\Models\Post;
 use App\Models\Term;
 use App\Services\Content\ContentService;
+use App\Traits\HasActionLogTrait;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
@@ -12,6 +14,8 @@ use Illuminate\Support\Facades\Storage;
 
 class ContentSeeder extends Seeder
 {
+    use HasActionLogTrait;
+
     public function __construct(private readonly ContentService $contentService)
     {
     }
@@ -95,6 +99,7 @@ class ContentSeeder extends Seeder
 
         $categories = [
             [
+                'id' => 1,
                 'name' => 'Uncategorized',
                 'slug' => 'uncategorized',
                 'description' => 'Default category for posts that do not belong to any other category.',
@@ -107,7 +112,7 @@ class ContentSeeder extends Seeder
                 // Generate a placeholder image instead of trying to copy
                 $this->generatePlaceholderImage('public/'.$category['featured_image'], pathinfo($category['featured_image'], PATHINFO_BASENAME));
 
-                Term::firstOrCreate([
+                $category = Term::firstOrCreate([
                     'name' => $category['name'],
                     'taxonomy' => 'category',
                     'slug' => \Illuminate\Support\Str::slug($category['name']),
@@ -115,6 +120,7 @@ class ContentSeeder extends Seeder
                     'description' => $category['description'],
                     'featured_image' => $category['featured_image'],
                 ]);
+                $this->logAction(ActionType::CREATED->value, Term::class, $category->toArray());
 
                 $this->command->info("Created category: {$category['name']}");
             } catch (\Exception $e) {
@@ -133,6 +139,7 @@ class ContentSeeder extends Seeder
 
         $tags = [
             [
+                'id' => 2,
                 'name' => 'Sample Tag',
                 'slug' => 'sample-tag',
                 'description' => 'A sample tag for demonstration purposes.',
@@ -145,7 +152,7 @@ class ContentSeeder extends Seeder
                 // Generate a placeholder image instead of trying to copy
                 $this->generatePlaceholderImage('public/'.$tag['featured_image'], pathinfo($tag['featured_image'], PATHINFO_BASENAME));
 
-                Term::firstOrCreate([
+                $tag = Term::firstOrCreate([
                     'name' => $tag['name'],
                     'taxonomy' => 'tag',
                     'slug' => \Illuminate\Support\Str::slug($tag['name']),
@@ -153,6 +160,8 @@ class ContentSeeder extends Seeder
                     'description' => $tag['description'],
                     'featured_image' => $tag['featured_image'],
                 ]);
+
+                $this->logAction(ActionType::CREATED->value, Term::class, $tag->toArray());
 
                 $this->command->info("Created tag: {$tag['name']}");
             } catch (\Exception $e) {
@@ -238,6 +247,7 @@ class ContentSeeder extends Seeder
     {
         $posts = [
             [
+                'id' => 1,
                 'title' => 'Welcome to Our Blog',
                 'content' => '<p>This is the first post on our new blog. We\'re excited to share our thoughts with you!</p><p>Stay tuned for more updates.</p>',
                 'excerpt' => 'Welcome to our new blog! We\'re excited to share our thoughts with you.',
@@ -261,6 +271,8 @@ class ContentSeeder extends Seeder
                 'user_id' => 1, // Assuming user ID 1 exists
                 'published_at' => now()->subDays(rand(0, 30)),
             ]);
+
+            $this->logAction(ActionType::CREATED->value, Post::class, $post->toArray());
 
             // Attach categories.
             $categoryIds = [];
@@ -290,6 +302,7 @@ class ContentSeeder extends Seeder
     {
         $pages = [
             [
+                'id' => 2,
                 'title' => 'Sample Page',
                 'content' => '<p>This is a sample page created to demonstrate the page functionality.</p><p>Feel free to edit this content in the admin panel.</p>',
                 'status' => 'publish',
@@ -297,7 +310,7 @@ class ContentSeeder extends Seeder
         ];
 
         foreach ($pages as $pageData) {
-            Post::firstOrCreate([
+            $page = Post::firstOrCreate([
                 'title' => $pageData['title'],
                 'post_type' => 'page',
             ], [
@@ -307,6 +320,8 @@ class ContentSeeder extends Seeder
                 'user_id' => 1, // Assuming user ID 1 exists
                 'published_at' => now(),
             ]);
+
+            $this->logAction(ActionType::CREATED->value, Post::class, $page->toArray());
         }
     }
 }

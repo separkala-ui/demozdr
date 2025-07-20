@@ -13,7 +13,7 @@
     $iconSize = $iconSize ?? '24';
 @endphp
 
-<button id="dropdownLocalesButton" data-dropdown-toggle="dropdownLocales" data-dropdown-placement="bottom"
+<button id="language-switcher" data-dropdown-toggle="dropdownLocales" data-dropdown-placement="bottom"
     class="{{ $buttonClass }}"
     type="button">
     @php
@@ -24,7 +24,7 @@
 </button>
 
 <div id="dropdownLocales" class="z-10 absolute right-0 hidden bg-white rounded-md shadow-sm dark:bg-gray-700 max-h-[300px] overflow-y-auto w-[200px]">
-    <ul class="text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLocalesButton">
+    <ul class="text-gray-700 dark:text-gray-200" aria-labelledby="language-switcher">
         @foreach (get_languages() as $code => $lang)
             <li>
                 <a href="{{ route('locale.switch', $code) }}"

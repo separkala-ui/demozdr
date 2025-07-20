@@ -22,7 +22,7 @@
         <p class="ml-16 truncate text-sm font-medium text-gray-500 dark:text-gray-300">{{ $label }}</p>
     </dt>
     <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-        <p class="text-2xl font-semibold text-gray-800 dark:text-gray-100">{!! $value ?? 0 !!}</p>
+        <p class="text-xl font-semibold text-gray-800 dark:text-gray-100">{!! $value ?? 0 !!}</p>
 
         <div class="absolute inset-x-0 bottom-0 bg-gray-50 dark:bg-gray-700 px-4 py-4 sm:px-6">
             <div class="text-sm">
