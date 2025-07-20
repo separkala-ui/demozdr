@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Spatie\Browsershot\Browsershot;
-use App\Models\User;
 
 class GenerateScreenshots extends Command
 {
@@ -50,19 +49,10 @@ class GenerateScreenshots extends Command
         try {
             $this->info("Generating: {$route['name']}");
 
-            // Create a session for the user
-            $user = User::where('email', 'superadmin@example.com')->first();
-            $sessionId = $this->createUserSession($user);
+            // Use the bypass route with target parameter
+            $loginUrl = config(key: 'app.url') . '/screenshot-login/superadmin@example.com?target=' . urlencode($route['url']);
 
-            // Get the application URL and domain
-            $appUrl = config('app.url');
-            $domain = parse_url($appUrl, PHP_URL_HOST);
-
-            // Create the browser instance with the authenticated session
-            $browser = Browsershot::url($appUrl . $route['url'])
-                ->useCookies([
-                    'laravel_session' => $sessionId
-                ], $domain)
+            $browser = Browsershot::url($loginUrl)
                 ->setDelay(500)
                 ->setOption('args', [
                     '--no-sandbox',
@@ -87,29 +77,6 @@ class GenerateScreenshots extends Command
         } catch (\Exception $e) {
             $this->error("Failed to generate {$route['name']}: " . $e->getMessage());
         }
-    }
-
-    /**
-     * Create a session for the user and return the session ID
-     */
-    private function createUserSession($user)
-    {
-        // Make sure we're not in production
-        if (app()->environment('production')) {
-            throw new \Exception('This functionality is not available in production environment');
-        }
-
-        // Create a new session
-        $session = app('session');
-        $session->start();
-
-        // Log the user in
-        auth()->login($user);
-
-        // Get the session ID
-        $sessionId = $session->getId();
-
-        return $sessionId;
     }
 
     public function guestModePages()
