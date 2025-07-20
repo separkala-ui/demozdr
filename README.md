@@ -48,6 +48,12 @@ password - 12345678
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 📝 Changelog
+**[v2.0] - 2025-07-20**
+
+- **Feat:** Refactor Lara Dashboard whole Admin UI - Icons, Accessibility, Components, Pages, Layouts and so on.
+- **Enhancement:** Improve components, reusibility, and code quality.
+- **Fix:**  Some random UI fixes.
+
 **[v1.7.0] - 2025-07-13**
 
 - **Feat:** Rest API For Lara Dashboard, Scramble API documentation.
@@ -106,7 +112,7 @@ password - 12345678
 
 ## 🔄 Versions:
 
-Latest version `v1.5.0` - https://github.com/ManiruzzamanAkash/laravel-role/releases/tag/v1.5.0
+Latest version `v2.0` - https://github.com/ManiruzzamanAkash/laravel-role/releases/tag/v2.0
 
 <details>
 <summary>View Old versions</summary>
@@ -142,6 +148,9 @@ Latest version `v1.5.0` - https://github.com/ManiruzzamanAkash/laravel-role/rele
     -   Tag - https://github.com/ManiruzzamanAkash/laravel-role/releases/tag/v1.2.0
 -   v1.3.0 - Admin Menu architecture, Permission List and detail page
     -   Tag - https://github.com/ManiruzzamanAkash/laravel-role/releases/tag/v1.3.0
+-   v1.5.0 - https://github.com/ManiruzzamanAkash/laravel-role/releases/tag/v1.5.0
+-   v1.6.0 - https://github.com/ManiruzzamanAkash/laravel-role/releases/tag/v1.6.0
+-   v1.7.0 - https://github.com/ManiruzzamanAkash/laravel-role/releases/tag/v1.7.0
 
 More release tags - https://github.com/laradashboard/laradashboard/releases
 
@@ -403,7 +412,7 @@ composer run phpunit
       <img width="100%" alt="Users List (Light mode)" src="/demo-screenshots/38-Pages-List-Lite-Mode.png"/>
     </td>
     <td width="50%">
-      <strong>Page Delete</strong><br/>
+      <strong>Page Edit</strong><br/>
       <img width="100%" alt="Users List (Dark mode)" src="/demo-screenshots/39-Pages-Edit-Dark-Mode.png" />
     </td>
   </tr>
