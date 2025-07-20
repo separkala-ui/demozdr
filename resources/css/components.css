@@ -1,44 +1,48 @@
 @layer components {
     /* Buttons */
     .btn {
-        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center focus:ring-blue-300 dark:focus:ring-blue-800;
+        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center focus:ring-blue-300 dark:focus:ring-blue-800;
     }
 
     .btn-primary {
-        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-primary focus:ring-primary/20 dark:focus:ring-blue-800;
+        @apply flex justify-center items-center text-white hover:opacity-90 transition-all font-medium rounded-md text-sm px-5 py-2.5 text-center bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 dark:focus:ring-blue-800;
     }
 
     .btn-secondary {
-        @apply flex justify-center items-center text-gray-800 hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-gray-100 hover:bg-gray-200 focus:ring-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-500;
+        @apply flex justify-center items-center text-gray-800 hover:opacity-90 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-gray-100 hover:bg-gray-200 focus:ring-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-500;
     }
 
     .btn-danger {
-        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-red-500 focus:ring-red-300 dark:focus:ring-red-800;
+        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-red-500 focus:ring-red-300 dark:focus:ring-red-800;
     }
 
     .btn-success {
-        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-green-500 focus:ring-green-300 dark:focus:ring-green-800;
+        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-green-500 focus:ring-green-300 dark:focus:ring-green-800;
     }
 
     .btn-default {
-        @apply flex justify-center items-center hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 focus:ring-gray-100 dark:focus:ring-green-800;
+        @apply flex justify-center items-center hover:opacity-90 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-800 focus:ring-gray-100 dark:focus:ring-green-800;
     }
 
     .btn-warning {
-        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-orange-500 focus:ring-orange-300 dark:focus:ring-orange-800;
+        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-orange-500 focus:ring-orange-300 dark:focus:ring-orange-800;
     }
 
     .btn-info {
-        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-blue-500 focus:ring-blue-300 dark:focus:ring-blue-800;
+        @apply flex justify-center items-center text-white hover:opacity-90 transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center bg-blue-500 focus:ring-blue-300 dark:focus:ring-blue-800;
     }
 
     /* Inputs */
     .form-control {
-        @apply shadow-xs focus:border-primary focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 focus:outline-primary;
+        @apply rounded border-0 px-4 py-2.5 text-sm leading-5 text-gray-800 ring-1 ring-gray-200 h-10 w-full placeholder:text-gray-400 focus:ring-2 focus:ring-brand-600 disabled:cursor-not-allowed disabled:opacity-50 dark:ring-gray-700 dark:focus:border-brand-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30;
     }
 
     .form-control-file {
         @apply cursor-pointer focus:file:ring-brand-300 w-full overflow-hidden rounded-md border border-gray-300 bg-transparent text-sm text-gray-500 transition-colors file:mr-5 file:border-collapse file:cursor-pointer file:rounded-l-lg file:border-0 file:border-r file:border-solid file:border-gray-200 file:bg-gray-50 file:py-3 file:px-4 file:text-sm file:text-gray-700 placeholder:text-gray-400 hover:file:bg-gray-100 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:file:border-gray-800 dark:file:bg-white/[0.03] dark:file:text-gray-400 px-4;
+    }
+
+    .form-control-textarea {
+        @apply rounded border-0 px-4 py-2.5 text-sm leading-5 text-gray-800 ring-1 ring-gray-200 w-full placeholder:text-gray-400 focus:ring-2 focus:ring-brand-600 disabled:cursor-not-allowed disabled:opacity-50 dark:ring-gray-700 dark:focus:border-brand-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30;
     }
 
     .form-label {
@@ -47,6 +51,10 @@
 
     .form-checkbox {
         @apply h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
+    }
+
+    .form-control-combobox {
+        @apply h-10 inline-flex w-full items-center justify-between gap-2 whitespace-nowrap border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:opacity-75 focus-visible:outline-2 focus-visible:outline-primary dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 rounded-md;
     }
 
     /* Checkbox styles */

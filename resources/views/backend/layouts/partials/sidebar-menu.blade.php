@@ -16,7 +16,6 @@
         },
         updateColor() {
             this.isDark = document.documentElement.classList.contains('dark');
-            {{-- this.textColor = this.isDark ? '{{ $sidebarTextDark }}' : '{{ $sidebarTextLite }}'; --}}
         },
         openDrawer(drawerId) {
             if (typeof window.openDrawer === 'function') {

@@ -51,10 +51,7 @@ x-init="init()"
             class="w-full items-center justify-between gap-4 px-5 py-1 shadow-theme-md lg:flex lg:justify-end lg:px-0 lg:shadow-none">
             <div class="flex items-center gap-1">
                 @include('backend.layouts.partials.locale-switcher')
-                <!-- Dark Mode Toggler -->
-                {{-- <div class="w-[100px]"> --}}
-                    @include('backend.layouts.partials.demo-mode-notice')
-                {{-- </div> --}}
+                @include('backend.layouts.partials.demo-mode-notice')
                 @php echo ld_apply_filters('dark_mode_toggler_before_button', ''); @endphp
                 <button id="darkModeToggle"
                     class="hover:text-dark-900 relative flex items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white p-2 dark-mode-toggle"
@@ -79,17 +76,6 @@ x-init="init()"
                     <span class="mr-3 h-8 w-8 overflow-hidden rounded-full">
                         <img src="{{ auth()->user()->getGravatarUrl() }}" alt="User" />
                     </span>
-
-                    {{-- <span class="mr-1 block font-medium w-[100px]" :style="`color: ${textColor}`">
-                        {{ auth()->user()->name }}
-                    </span> --}}
-
-                    {{-- <svg :class="dropdownOpen && 'rotate-180'" class="stroke-gray-500 dark:stroke-gray-400"
-                        width="18" height="20" viewBox="0 0 18 20" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4.3125 8.65625L9 13.3437L13.6875 8.65625" stroke="" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg> --}}
                 </a>
 
                 <!-- Dropdown Start -->

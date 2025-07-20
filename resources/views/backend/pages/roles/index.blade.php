@@ -6,25 +6,14 @@
 
 @section('admin-content')
 <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6" x-data="{ selectedRoles: [], selectAll: false, bulkDeleteModalOpen: false }">
-    <x-breadcrumbs :breadcrumbs="$breadcrumbs">
-        <x-slot name="title_after">
-            {{-- @if (auth()->user()->can('role.create'))
-                <a href="{{ route('admin.roles.create') }}" class="btn-primary ml-2">
-                    <iconify-icon icon="lucide:plus-circle" class="mr-2"></iconify-icon>
-                    {{ __('New Role') }}
-                </a>
-            @endif --}}
-        </x-slot>
-    </x-breadcrumbs>
+    <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
 
     {!! ld_apply_filters('roles_after_breadcrumbs', '') !!}
 
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
             <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
-                {{-- <h3 class="text-base font-medium text-gray-700 dark:text-white/90">{{ __('Roles') }}</h3> --}}
-
-                  @include('backend.partials.search-form', [
+                @include('backend.partials.search-form', [
                     'placeholder' => __('Search by role name'),
                 ])
                <div class="flex items-center gap-3">
@@ -39,7 +28,6 @@
 
                         <!-- Bulk Actions dropdown menu -->
                         <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
-                            {{-- <h6 class="mb-2 text-sm font-medium text-gray-700 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">{{ __('Actions') }}</h6> --}}
                             <ul class="space-y-2">
                                 <li class="cursor-pointer flex items-center gap-1 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500 dark:hover:text-red-50 px-2 py-1.5 rounded transition-colors duration-300"
                                     @click="bulkDeleteModalOpen = true">
@@ -50,17 +38,13 @@
                     </div>
                 </div>
 
-                {{-- @include('backend.partials.search-form', [
-                    'placeholder' => __('Search by role name'),
-                ]) --}}
-
-                 @if (auth()->user()->can('role.create'))
+                @if (auth()->user()->can('role.create'))
                 <a href="{{ route('admin.roles.create') }}" class="btn-primary flex items-center gap-2">
                     <iconify-icon icon="feather:plus" height="16" ></iconify-icon>
                     {{ __('New Role') }}
                 </a>
+                @endif
                </div>
-            @endif
             </div>
             <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">
                 <table id="dataTable" class="w-full dark:text-gray-300">

@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
 @section('title')
-    {{ __('Modules') }} | {{ config('app.name') }}
+    {{ $breadcrumbs['title'] . ' | ' . config('app.name') }}
 @endsection
 
 @section('admin-content')
@@ -102,7 +102,7 @@
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($modules as $module)
-                    <div class="rounded-md border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                    <div tabindex="0" class="rounded-md border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-brand-800 transition-all duration-200 hover:shadow-md">
                         <div class="flex justify-between" x-data="{ deleteModalOpen: false, errorModalOpen: false, errorMessage: '' }">
                             <div class="py-3">
                                 <h2>

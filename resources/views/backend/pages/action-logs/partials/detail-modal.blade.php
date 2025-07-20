@@ -1,7 +1,6 @@
 <!-- resources/views/components/json-modal.blade.php -->
 <div id="json-modal-{{ $log->id }}"
-    class="fixed inset-0 z-50 flex items-center justify-center hidden bg-opacity-50"
-    style="background-color: #11182775">
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-opacity-50">
     <div class="relative p-4 w-full max-w-4xl bg-white rounded-md shadow-lg dark:bg-gray-700 z-60">
         <!-- Modal Close Button -->
         <button type="button"
@@ -19,10 +18,8 @@
         <h3 class="text-lg font-semibold text-gray-700 dark:text-white mb-4">{{ __('Action Log Data') }}</h3>
 
         <!-- Display pretty-printed JSON data -->
-        <div class="space-y-3">
-            <pre class="bg-gray-100 p-4 rounded-md text-gray-700 dark:text-white dark:bg-gray-800">
-                {{ json_encode(json_decode($log->data), JSON_PRETTY_PRINT) }}
-            </pre>
+        <div class="space-y-3 overflow-auto max-h-120">
+            <pre class="bg-gray-100 p-4 rounded-md text-gray-700 dark:text-white dark:bg-gray-800">{{ json_encode(json_decode($log->data), JSON_PRETTY_PRINT) }}</pre>
         </div>
     </div>
 </div>

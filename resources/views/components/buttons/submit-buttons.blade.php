@@ -24,7 +24,6 @@
                 {{ $submitLabel }}
             @endif
 
-            {{-- Fallback for when submitLabel and icon both are empty --}}
             @if (empty($submitLabel) && $showIcon)
                 {{ __('Save') }}
             @endif

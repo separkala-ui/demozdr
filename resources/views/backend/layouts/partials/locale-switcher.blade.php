@@ -21,11 +21,6 @@
         $iconSrc = file_exists($iconPath) ? asset($lang['icon']) : '/images/flags/default.svg';
     @endphp
     <iconify-icon icon="prime:language" width="{{ $iconSize }}" height="{{ $iconSize }}" class="{{ $iconClass }}"></iconify-icon>
-    {{-- <img src="{{ $iconSrc }}" alt="{{ $lang['name'] }} flag" height="20" width="20" class="mr-2" /> --}}
-    {{-- {{ $lang['name'] }} --}}
-    {{-- {{ $lang['code'] }} --}}
-    {{-- <img src="{{ $iconSrc }}" alt="{{ $lang['name'] }} flag" height="20" width="20"/> --}}
-    {{-- {{ $lang['code'] }} --}}
 </button>
 
 <div id="dropdownLocales" class="z-10 absolute right-0 hidden bg-white rounded-md shadow-sm dark:bg-gray-700 max-h-[300px] overflow-y-auto w-[200px]">
@@ -41,7 +36,6 @@
                     <img src="{{ $iconSrc }}" alt="{{ $lang['name'] }} flag" height="20"
                         width="20" class="mr-2" />
                         {{ $lang['name'] }}
-                    {{-- ({{ $lang['code'] }}) --}}
                     <iconify-icon icon="lucide:check" width="16" height="16"
                         class="ml-auto {{ $code === $currentLocale ? 'block' : 'hidden' }}"></iconify-icon>
                 </a>
