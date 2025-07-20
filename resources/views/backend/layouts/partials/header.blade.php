@@ -34,6 +34,7 @@ x-init="init()"
             <button
                 :class="sidebarToggle ? 'lg:bg-transparent dark:lg:bg-transparent bg-gray-100 dark:bg-gray-800' : ''"
                 class="z-99999 flex h-10 w-10 items-center justify-center rounded-md border-gray-200 text-gray-700 lg:h-11 lg:w-11 dark:border-gray-800 dark:text-gray-300 transition-all duration-300"
+                id="sidebar-toggle-button"
                 @click.stop="sidebarToggle = !sidebarToggle; localStorage.setItem('sidebarToggle', sidebarToggle);">
                 <iconify-icon
                  :icon="sidebarToggle ? 'mdi:menu-close' : 'mdi:menu-open'"

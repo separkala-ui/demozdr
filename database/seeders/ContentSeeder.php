@@ -95,6 +95,7 @@ class ContentSeeder extends Seeder
 
         $categories = [
             [
+                'id' => 1,
                 'name' => 'Uncategorized',
                 'slug' => 'uncategorized',
                 'description' => 'Default category for posts that do not belong to any other category.',
@@ -133,6 +134,7 @@ class ContentSeeder extends Seeder
 
         $tags = [
             [
+                'id' => 2,
                 'name' => 'Sample Tag',
                 'slug' => 'sample-tag',
                 'description' => 'A sample tag for demonstration purposes.',
@@ -238,6 +240,7 @@ class ContentSeeder extends Seeder
     {
         $posts = [
             [
+                'id' => 1,
                 'title' => 'Welcome to Our Blog',
                 'content' => '<p>This is the first post on our new blog. We\'re excited to share our thoughts with you!</p><p>Stay tuned for more updates.</p>',
                 'excerpt' => 'Welcome to our new blog! We\'re excited to share our thoughts with you.',
@@ -290,6 +293,7 @@ class ContentSeeder extends Seeder
     {
         $pages = [
             [
+                'id' => 2,
                 'title' => 'Sample Page',
                 'content' => '<p>This is a sample page created to demonstrate the page functionality.</p><p>Feel free to edit this content in the admin panel.</p>',
                 'status' => 'publish',
