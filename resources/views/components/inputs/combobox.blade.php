@@ -198,7 +198,7 @@
         <!-- Trigger button -->
         <button type="button"
             role="combobox"
-            class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 rounded-md"
+            class="form-control-combobox"
             x-on:click="isOpen = !isOpen"
             x-on:keydown.down.prevent="openedWithKeyboard = true"
             x-on:keydown.enter.prevent="openedWithKeyboard = true"

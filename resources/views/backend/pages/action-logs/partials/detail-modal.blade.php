@@ -1,7 +1,6 @@
 <!-- resources/views/components/json-modal.blade.php -->
 <div id="json-modal-{{ $log->id }}"
-    class="fixed inset-0 z-50 flex items-center justify-center hidden bg-opacity-50"
-    style="background-color: #11182775">
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-opacity-50">
     <div class="relative p-4 w-full max-w-4xl bg-white rounded-md shadow-lg dark:bg-gray-700 z-60">
         <!-- Modal Close Button -->
         <button type="button"
