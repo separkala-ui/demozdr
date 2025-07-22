@@ -586,6 +586,10 @@ Please be sure to read our [Contribution Guide](CONTRIBUTING.md) before submitti
   <img src="https://contrib.rocks/image?repo=laradashboard/laradashboard" alt="contrib.rocks image" />
 </a>
 
+### ✩ Growth Story
+
+[![Star History Chart](https://api.star-history.com/svg?repos=laradashboard/laradashboard&type=Date)](https://www.star-history.com/#laradashboard/laradashboard&Date)
+
 ## 💖 Support
 
 If you like my work you may consider buying me a ☕ / 🍕
