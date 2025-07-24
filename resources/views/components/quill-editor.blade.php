@@ -112,6 +112,8 @@
             }
         });
 
+        window['quill_' + editorId] = quill;
+
         // Set initial content from textarea
         if (initialContent) {
             quill.clipboard.dangerouslyPasteHTML(initialContent);
