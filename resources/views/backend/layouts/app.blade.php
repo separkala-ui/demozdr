@@ -140,11 +140,8 @@ x-init="
     <script>
         // Define the global drawer opener function
         window.openDrawer = function(drawerId) {
-            console.log('Opening drawer:', drawerId);
-            
             // Method 1: Try using the LaraDrawers registry if available
             if (window.LaraDrawers && window.LaraDrawers[drawerId]) {
-                console.log('Opening drawer via registry');
                 window.LaraDrawers[drawerId].open = true;
                 return;
             }
