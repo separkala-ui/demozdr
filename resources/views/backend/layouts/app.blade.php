@@ -149,7 +149,6 @@ x-init="
             // Method 2: Try using Alpine.js directly
             const drawerEl = document.querySelector(`[data-drawer-id="${drawerId}"]`);
             if (drawerEl && window.Alpine) {
-                console.log('Opening drawer via Alpine');
                 try {
                     const alpineInstance = Alpine.getComponent(drawerEl);
                     if (alpineInstance) {
