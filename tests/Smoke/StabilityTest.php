@@ -41,6 +41,11 @@ class StabilityTest extends TestCase
         $user = User::where('username', 'superadmin')->first();
 
         $response = $this->actingAs($user)->{$method}($route);
+
+        if ($response->getStatusCode() !== 200) {
+            fwrite(STDERR, "\nRoute: $route\nResponse:\n" . $response->getContent() . "\n");
+        }
+
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotEmpty($response->getContent());
     }
