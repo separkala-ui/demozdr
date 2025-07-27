@@ -27,7 +27,6 @@ This document outlines the coding standards and best practices for contributing 
        $this->storeCacheForTaxonomy($taxonomy, $postTypes);
     }
 
-    // Handle cache.
     function storeCacheForTaxonomy(string $taxonomy, array $postTypes) {
        // logic to store cache for taxonomy ...
     }
@@ -155,8 +154,14 @@ This document outlines the coding standards and best practices for contributing 
    }
    ```
 
+1. **Testing**
+   - Write unit tests for your code where applicable.
+      - Use PHPUnit for writing tests and follow the naming conventions for test classes and methods.
+      - Use the `php artisan test` command to run your tests.
+
 1. **Code Reviews**
-    - Provide constructive feedback and be open to receiving it.
+   - Provide constructive feedback and be open to receiving it.
+   - When reviewing code, focus on the code's functionality, readability, and adherence to coding standards.
 
 ## Coding Standards
 
