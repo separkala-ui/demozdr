@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 trait HasUniqueSlug
@@ -13,7 +14,7 @@ trait HasUniqueSlug
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model
      */
-    public function generateUniqueSlug($model, string $columnName = 'slug', string $separator = '-', ?string $baseSlug = null, int $counter = 0): string
+    public function generateUniqueSlug(Model $model, string $columnName = 'slug', string $separator = '-', ?string $baseSlug = null, int $counter = 0): string
     {
         // If no base slug provided, generate from the title/name field
         if ($baseSlug === null) {
@@ -22,7 +23,7 @@ trait HasUniqueSlug
         }
 
         // Generate the slug with counter if needed
-        $slug = $counter === 0 ? $baseSlug : $baseSlug.$separator.$counter;
+        $slug = $counter === 0 ? $baseSlug : $baseSlug . $separator . $counter;
 
         // Check if slug exists (excluding current model if updating)
         $query = $model->newQuery()->where($columnName, $slug);
@@ -44,9 +45,9 @@ trait HasUniqueSlug
      * Get the source field for slug generation
      * Override this method in your model if needed
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param Model $model
      */
-    protected function getSlugSourceField($model): string
+    protected function getSlugSourceField(Model $model): string
     {
         // Check common field names in order of preference
         $possibleFields = ['title', 'name', 'label'];
@@ -76,12 +77,12 @@ trait HasUniqueSlug
     }
 
     /**
-     * Generate unique slug for a specific string
+     * Generate unique slug for a specific label/string.
      */
-    public function generateSlugFromString(string $string, string $columnName = 'slug', string $separator = '-'): string
+    public function generateSlugFromString(string $label, string $columnName = 'slug', string $separator = '-', $model = null): string
     {
-        $baseSlug = Str::slug($string, $separator);
+        $baseSlug = Str::slug($label, $separator);
 
-        return $this->generateUniqueSlug($this, $columnName, $separator, $baseSlug);
+        return $this->generateUniqueSlug($model ?? $this, $columnName, $separator, $baseSlug);
     }
 }

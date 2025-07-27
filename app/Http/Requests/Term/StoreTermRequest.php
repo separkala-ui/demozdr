@@ -44,6 +44,9 @@ class StoreTermRequest extends FormRequest
 
             /** @example null */
             'post_id' => 'nullable|numeric',
+
+            /** @example null */
+            'remove_featured_image' => 'nullable',
         ];
 
         // Add featured image validation if taxonomy supports it

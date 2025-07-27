@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\Term;
 use App\Services\Content\ContentService;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -17,12 +18,7 @@ class TermService
     ) {
     }
 
-    /**
-     * Get terms with filters.
-     *
-     * @return \Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function getTerms(array $filters = [])
+    public function getTerms(array $filters = []): LengthAwarePaginator
     {
         // Set default taxonomy if not provided.
         if (! isset($filters['taxonomy'])) {
@@ -38,23 +34,23 @@ class TermService
         ]);
     }
 
-    /**
-     * Get a term by ID.
-     */
-    public function getTermById(int $id, ?string $taxonomy = null): ?Term
+    public function getTermById(int|string $id, ?string $taxonomy = null): ?Term
     {
         $query = Term::query();
+
+        if (is_numeric($id)) {
+            $query->where('id', (int) $id);
+        } else {
+            $query->where('slug', $id);
+        }
 
         if ($taxonomy) {
             $query->where('taxonomy', $taxonomy);
         }
 
-        return $query->findOrFail($id);
+        return $query->first();
     }
 
-    /**
-     * Get terms for dropdown.
-     */
     public function getTermsDropdown(string $taxonomy)
     {
         return Term::where('taxonomy', $taxonomy)
@@ -62,17 +58,11 @@ class TermService
             ->get();
     }
 
-    /**
-     * Get taxonomy model by name.
-     */
     public function getTaxonomy(string $taxonomy)
     {
         return $this->contentService->getTaxonomies()->where('name', $taxonomy)->first();
     }
 
-    /**
-     * Create a new term.
-     */
     public function createTerm(array $data, string $taxonomy): Term
     {
         $term = new Term();
@@ -92,9 +82,6 @@ class TermService
         return $term;
     }
 
-    /**
-     * Update an existing term.
-     */
     public function updateTerm(Term $term, array $data): Term
     {
         $term->name = $data['name'];
@@ -129,22 +116,19 @@ class TermService
         return $term;
     }
 
-    /**
-     * Delete a term.
-     */
     public function deleteTerm(Term $term): bool
     {
-        // Check if term has posts
+        // Check if term has posts.
         if ($term->posts()->count() > 0) {
             return false;
         }
 
-        // Check if term has children
+        // Check if term has children.
         if ($term->children()->count() > 0) {
             return false;
         }
 
-        // Delete featured image if exists
+        // Delete featured image if exists.
         if ($term->featured_image) {
             Storage::disk('public')->delete($term->featured_image);
         }
@@ -152,9 +136,6 @@ class TermService
         return $term->delete();
     }
 
-    /**
-     * Check if term can be deleted.
-     */
     public function canDeleteTerm(Term $term): array
     {
         $errors = [];
@@ -170,31 +151,11 @@ class TermService
         return $errors;
     }
 
-    /**
-     * Check if slug exists.
-     */
-    private function slugExists(string $slug, ?int $excludeId = null): bool
-    {
-        $query = Term::where('slug', $slug);
-
-        if ($excludeId) {
-            $query->where('id', '!=', $excludeId);
-        }
-
-        return $query->exists();
-    }
-
-    /**
-     * Handle image upload.
-     */
     private function handleImageUpload(UploadedFile $file): string
     {
         return $file->store('terms', 'public');
     }
 
-    /**
-     * Get taxonomy label for messages.
-     */
     public function getTaxonomyLabel(string $taxonomy, bool $singular = false): string
     {
         $taxonomyModel = $this->getTaxonomy($taxonomy);
@@ -208,9 +169,6 @@ class TermService
         return Str::title($taxonomy);
     }
 
-    /**
-     * Get paginated terms with filters
-     */
     public function getPaginatedTerms(array $filters = [], int $perPage = 10)
     {
         // Set default taxonomy if not provided.

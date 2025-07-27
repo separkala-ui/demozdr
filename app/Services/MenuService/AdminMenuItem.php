@@ -133,9 +133,9 @@ class AdminMenuItem
             return true;
         }
 
-        // Check if any children are active
+        // Check if any children are active.
         foreach ($this->children as $child) {
-            if ($child instanceof self && $child->isActive()) {
+            if ($child->isActive()) {
                 return true;
             }
         }

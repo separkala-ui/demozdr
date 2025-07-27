@@ -18,7 +18,7 @@ trait AuthorizationChecker
      * @param  array|string  $permissions
      * @param  bool  $ownPermissionCheck
      */
-    public function checkAuthorization($user, $permissions, $ownPermissionCheck = false): bool
+    public function checkAuthorization($user = null, $permissions = null, $ownPermissionCheck = false): bool
     {
         if (empty($user) || ! $user->can($permissions)) {
             abort(403, 'Sorry !! You are unauthorized to perform this action.');
@@ -31,25 +31,9 @@ trait AuthorizationChecker
         return true;
     }
 
-    /**
-     * Get the user ID safely from any user object.
-     *
-     * @param  Authenticatable|User  $user
-     * @return int|string|null
-     */
-    protected function getUserId($user)
+    protected function getUserId($user): ?int
     {
-        // For User model, access id directly
-        if ($user instanceof User) {
-            return $user->id;
-        }
-
-        // For other Authenticatable implementations, use getAuthIdentifier()
-        if ($user instanceof Authenticatable) {
-            return $user->getAuthIdentifier();
-        }
-
-        return null;
+        return $user instanceof User ? $user->id : null;
     }
 
     /**

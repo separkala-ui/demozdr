@@ -394,7 +394,7 @@ class AdminMenuService
     {
         $html = '';
         foreach ($groupItems as $menuItem) {
-            $filterKey = $menuItem->id ?? Str::slug($menuItem->label) ?? '';
+            $filterKey = $menuItem->id ?? Str::slug($menuItem->label) ?: '';
             $html .= ld_apply_filters('sidebar_menu_before_' . $filterKey, '');
 
             $html .= view('backend.layouts.partials.menu-item', [

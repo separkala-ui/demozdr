@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Backend\Auth;
 
 use App\Http\Controllers\Controller;
@@ -7,7 +9,9 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use App\Services\DemoAppService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends Controller
 {
@@ -35,11 +39,6 @@ class LoginController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::ADMIN_DASHBOARD;
 
-    /**
-     * show login form for admin guard
-     *
-     * @return \Illuminate\Contracts\Support\Renderable|\Illuminate\Http\RedirectResponse
-     */
     public function showLoginForm()
     {
         if (Auth::guard('web')->check()) {
@@ -54,12 +53,7 @@ class LoginController extends Controller
         return view('backend.auth.login')->with(compact('email', 'password'));
     }
 
-    /**
-     * Login admin.
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): RedirectResponse|Response
     {
         if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             $this->demoAppService->maybeSetDemoLocaleToEnByDefault();
@@ -75,17 +69,10 @@ class LoginController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        session()->flash('error', __('auth.failed'));
-
-        return back();
+        return $this->sendFailedLoginResponse($request);
     }
 
-    /**
-     * logout admin guard
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function logout()
+    public function logout(): RedirectResponse
     {
         Auth::guard('web')->logout();
 
