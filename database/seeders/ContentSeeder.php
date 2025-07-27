@@ -223,8 +223,8 @@ class ContentSeeder extends Seeder
             $fontSize = 5;
             $textWidth = imagefontwidth($fontSize) * strlen($textToDisplay);
             $textHeight = imagefontheight($fontSize);
-            $x = (300 - $textWidth) / 2;
-            $y = (200 - $textHeight) / 2;
+            $x = (int)((300 - $textWidth) / 2);
+            $y = (int)((200 - $textHeight) / 2);
 
             // Draw text
             imagestring($image, $fontSize, $x, $y, $textToDisplay, $textColor);
