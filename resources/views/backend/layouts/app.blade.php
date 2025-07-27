@@ -187,7 +187,6 @@ x-init="
     
     <x-toast-notifications />
 
-    @livewireScripts
     @livewireScriptConfig
     {!! ld_apply_filters('admin_footer_after', '') !!}
 </body>
