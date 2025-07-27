@@ -6,7 +6,6 @@ import "dropzone/dist/dropzone.css";
 
 import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
 
-import persist from "@alpinejs/persist";
 import focus from '@alpinejs/focus'
 import flatpickr from "flatpickr";
 import Dropzone from "dropzone";
@@ -91,11 +90,9 @@ Alpine.data('advancedFields', (initialMeta = {}) => {
     };
 });
 
-// Alpine plugins
-Alpine.plugin(persist);
+// Alpine plugins.
 Alpine.plugin(focus);
 window.Alpine = Alpine;
-Alpine.start();
 
 // Init flatpickr
 flatpickr(".datepicker", {
