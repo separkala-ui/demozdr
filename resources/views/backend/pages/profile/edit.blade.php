@@ -39,14 +39,8 @@
                             {!! ld_apply_filters('profile_edit_fields', '', $user) !!}
                         </div>
                         {!! ld_apply_filters('profile_edit_after_fields', '', $user) !!}
-                        <div class="mt-6 flex justify-start gap-4">
-                            <button type="submit"
-                                class="px-4 py-2 text-sm font-medium text-white bg-brand-500 rounded-md hover:bg-brand-600">{{ __('Save') }}</button>
-                            <a href="{{ route('admin.dashboard') }}"
-                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-white">
-                                <iconify-icon icon="lucide:x-circle" class="mr-1"></iconify-icon>
-                                {{ __('Cancel') }}</a>
-                        </div>
+
+                        <x-buttons.submit-buttons cancelUrl="{{ route('admin.dashboard') }}" />
                         {!! ld_apply_filters('profile_edit_fields', '', $user) !!}
                     </div>
                     {!! ld_apply_filters('profile_edit_after_fields', '', $user) !!}
