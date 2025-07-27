@@ -48,6 +48,17 @@ password - 12345678
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 📝 Changelog
+**[v2.0.1] - 2025-07-27**
+
+- **Feat:** Refactor Lara Dashboard whole Admin UI - Icons, Accessibility, Components, Pages, Layouts and so on.
+- **Enhancement:** Keep search form design consistent as `form-control` height.
+- **Enhancement:** Global variable for editor script to handle from any module.
+- **Enhancement:** Cleanup many codes to separate service to keep business logics separated.
+- **Enhancement:** Fixed several unit tests.
+- **Fix:** User chart data with SQLite supported.
+- **Fix:** Remove some unnecessary console logs.
+- **Doc:** Added Coding standard docs.
+
 **[v2.0] - 2025-07-20**
 
 - **Feat:** Refactor Lara Dashboard whole Admin UI - Icons, Accessibility, Components, Pages, Layouts and so on.
