@@ -582,7 +582,7 @@ Please be sure to read our [Contribution Guide](CONTRIBUTING.md) before submitti
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## 👥 Coding Standards
+## ➶ Coding Standards
 
 ✨ Following a consistent coding standard ensures code quality, readability, and easier collaboration for everyone.  
 📏 Please be sure to read our [Contribution Guide](Coding-Standard.md) before submitting your PR.
