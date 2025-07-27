@@ -37,7 +37,8 @@
     </div>
     @if ($taxonomyModel->show_featured_image)
         <div class="mt-2">
-            <x-inputs.file-input name="featured_image" :existingAttachment="$term ? $term->featured_image : null"
+            <x-inputs.file-input name="featured_image"
+                :existingAttachment="($term && $term->featured_image) ? Storage::url($term->featured_image) : null"
                 :existingAltText="$term ? $term->featured_image_alt_text : ''" removeCheckboxName="remove_featured_image"
                 removeCheckboxLabel="{{ __('Remove featured image') }}" />
         </div>
