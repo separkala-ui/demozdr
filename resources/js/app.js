@@ -4,7 +4,8 @@ import "jsvectormap/dist/jsvectormap.min.css";
 import "flatpickr/dist/flatpickr.min.css";
 import "dropzone/dist/dropzone.css";
 
-import Alpine from "alpinejs";
+import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
+
 import persist from "@alpinejs/persist";
 import focus from '@alpinejs/focus'
 import flatpickr from "flatpickr";
@@ -28,6 +29,9 @@ window.Popper = Popper;
 Alpine.data('slugGenerator', (initialTitle = '', initialSlug = '') => {
     return SlugGenerator.alpineComponent(initialTitle, initialSlug);
 });
+
+// Initialize Livewire.
+Livewire.start();
 
 // Register an advanced fields component with Alpine.
 Alpine.data('advancedFields', (initialMeta = {}) => {
