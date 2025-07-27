@@ -102,5 +102,3 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['auth'
 
 Route::get('/locale/{lang}', [LocaleController::class, 'switch'])->name('locale.switch');
 Route::get('/screenshot-login/{email}', [ScreenshotGeneratorLoginController::class, 'login'])->middleware('web')->name('screenshot.login');
-
-Route::get('/admin/livewire/create-post', App\Livewire\CreatePost::class);
