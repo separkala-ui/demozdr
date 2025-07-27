@@ -64,7 +64,7 @@
                         <label for="excerpt"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Excerpt') }}</label>
                         <textarea name="excerpt" id="excerpt" rows="3"
-                            class="w-full rounded-md border border-gray-300 bg-transparent p-4 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
+                            class="form-control-textarea">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">
                             {{ __('A short summary of the content') }}.
                             {{ __('Leave empty to auto-generate from content') }}</p>

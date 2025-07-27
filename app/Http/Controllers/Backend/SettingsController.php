@@ -8,6 +8,7 @@ use App\Enums\ActionType;
 use App\Http\Controllers\Controller;
 use App\Services\CacheService;
 use App\Services\EnvWriter;
+use App\Services\ImageService;
 use App\Services\SettingService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -18,9 +19,9 @@ class SettingsController extends Controller
     public function __construct(
         private readonly SettingService $settingService,
         private readonly EnvWriter $envWriter,
-        private readonly CacheService $cacheService
+        private readonly CacheService $cacheService,
+        private readonly ImageService $imageService,
     ) {
-        // The cacheService is used in the EnvWriter for cache clearing operations
     }
 
     public function index($tab = null): Renderable
@@ -53,8 +54,8 @@ class SettingsController extends Controller
 
         foreach ($fields as $fieldName => $fieldValue) {
             if ($request->hasFile($fieldName)) {
-                deleteImageFromPublic((string) config($fieldName));
-                $fileUrl = storeImageAndGetUrl($request, $fieldName, $uploadPath);
+                $this->imageService->deleteImageFromPublic((string) config($fieldName));
+                $fileUrl = $this->imageService->storeImageAndGetUrl($request, $fieldName, $uploadPath);
                 $this->settingService->addSetting($fieldName, $fileUrl);
             } else {
                 $this->settingService->addSetting($fieldName, $fieldValue);

@@ -75,17 +75,13 @@
                                     {{ ucfirst($permission->name) }}
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
-                                        {{ ucfirst($permission->group_name) }}
-                                    </span>
+                                    <span class="badge">{{ ucfirst($permission->group_name) }}</span>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
                                     @if ($permission->role_count > 0)
                                         <div class="flex items-center">
                                             <a href="{{ route('admin.permissions.show', $permission->id) }}" class="text-primary hover:underline">
-                                                <span class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
-                                                    {{ $permission->role_count }}
-                                                </span>
+                                                <span class="badge">{{ $permission->role_count }}</span>
                                                 {{ $permission->roles_list }}
                                             </a>
                                         </div>

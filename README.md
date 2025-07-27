@@ -580,6 +580,15 @@ Want to contribute? Fork the project, make your changes, and submit a pull reque
 
 Please be sure to read our [Contribution Guide](CONTRIBUTING.md) before submitting your PR.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 👥 Coding Standards
+
+✨ Following a consistent coding standard ensures code quality, readability, and easier collaboration for everyone.  
+📏 Please be sure to read our [Contribution Guide](Coding-Standard.md) before submitting your PR.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### 🌟 Top contributors:
 
 <a href="https://github.com/laradashboard/laradashboard/graphs/contributors">

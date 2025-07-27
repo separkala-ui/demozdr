@@ -48,15 +48,7 @@
                     <div class="flex items-center">
                         <iconify-icon icon="lucide:tag" class="mr-1"></iconify-icon>
                         {{ __('Status:') }}
-                        <span class="ml-1 inline-flex items-center justify-center px-2 py-1 text-xs font-medium
-                            {{ $post->status === 'publish' ? 'text-green-800 bg-green-100 dark:bg-green-900/20 dark:text-green-400' : '' }}
-                            {{ $post->status === 'draft' ? 'text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-300' : '' }}
-                            {{ $post->status === 'pending' ? 'text-orange-800 bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400' : '' }}
-                            {{ $post->status === 'future' ? 'text-blue-800 bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400' : '' }}
-                            {{ $post->status === 'private' ? 'text-purple-800 bg-purple-100 dark:bg-purple-900/20 dark:text-purple-400' : '' }}
-                            rounded-full">
-                            {{ ucfirst($post->status) }}
-                        </span>
+                        <span class="ml-1 {{ get_post_status_class($post->status) }}">{{ ucfirst($post->status) }}</span>
                     </div>
                 </div>
 
@@ -99,9 +91,7 @@
                                     <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ ucfirst($taxonomy) }}</h5>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($terms as $term)
-                                            <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
-                                                {{ $term->name }}
-                                            </span>
+                                            <span class="badge">{{ $term->name }}</span>
                                         @endforeach
                                     </div>
                                 </div>
