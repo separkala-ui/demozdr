@@ -13,6 +13,7 @@
     @include('backend.layouts.partials.theme-colors')
     @yield('before_vite_build')
 
+    @livewireStyles
     @viteReactRefresh
     @vite(['resources/js/app.js', 'resources/css/app.css'], 'build')
     @stack('styles')
@@ -66,6 +67,10 @@ x-init="
             <!-- Main Content -->
             <main>
                 @yield('admin-content')
+
+                @isset($slot)
+                    {{ $slot }}
+                @endisset
             </main>
             <!-- End Main Content -->
         </div>
@@ -182,6 +187,7 @@ x-init="
     
     <x-toast-notifications />
 
+    @livewireScriptConfig
     {!! ld_apply_filters('admin_footer_after', '') !!}
 </body>
 </html>
