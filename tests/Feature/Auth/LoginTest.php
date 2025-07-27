@@ -14,43 +14,39 @@ class LoginTest extends TestCase
     #[Test]
     public function user_can_view_login_form(): void
     {
-        $response = $this->get('/login');
+        $response = $this->get('/admin/login');
 
         $response->assertStatus(200);
-        $response->assertViewIs('auth.login');
+        $response->assertViewIs('backend.auth.login');
     }
 
     #[Test]
     public function user_can_login_with_correct_credentials(): void
     {
         $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => bcrypt('password123'),
+            'email' => 'superadmin@example.com',
+            'password' => bcrypt('12345678'),
         ]);
 
-        $response = $this->post('/login', [
-            'email' => 'test@example.com',
-            'password' => 'password123',
+        $response = $this->post('/admin/login', [
+            'email' => 'superadmin@example.com',
+            'password' => '12345678',
         ]);
 
-        $response->assertRedirect('/home');
+        $response->assertRedirect('/admin');
         $this->assertAuthenticatedAs($user);
     }
 
     #[Test]
     public function user_cannot_login_with_incorrect_password(): void
     {
-        $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => bcrypt('password123'),
-        ]);
+        $response = $this->from('/admin/login')
+            ->post('/admin/login', [
+                'email' => 'superadmin@example.com',
+                'password' => 'wrong-password',
+            ]);
 
-        $response = $this->from('/login')->post('/login', [
-            'email' => 'test@example.com',
-            'password' => 'wrong-password',
-        ]);
-
-        $response->assertRedirect('/login');
+        $response->assertRedirect('/admin/login');
         $response->assertSessionHasErrors('email');
         $this->assertGuest();
     }
@@ -58,12 +54,12 @@ class LoginTest extends TestCase
     #[Test]
     public function user_cannot_login_with_email_that_does_not_exist(): void
     {
-        $response = $this->from('/login')->post('/login', [
+        $response = $this->from('/admin/login')->post('/admin/login', [
             'email' => 'nobody@example.com',
             'password' => 'password',
         ]);
 
-        $response->assertRedirect('/login');
+        $response->assertRedirect('/admin/login');
         $response->assertSessionHasErrors('email');
         $this->assertGuest();
     }
@@ -72,17 +68,17 @@ class LoginTest extends TestCase
     public function remember_me_functionality_works(): void
     {
         $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => bcrypt('password123'),
+            'email' => 'superadmin@example.com',
+            'password' => bcrypt('12345678'),
         ]);
 
-        $response = $this->post('/login', [
-            'email' => 'test@example.com',
-            'password' => 'password123',
+        $response = $this->post('/admin/login', [
+            'email' => 'superadmin@example.com',
+            'password' => '12345678',
             'remember' => 'on',
         ]);
 
-        $response->assertRedirect('/home');
+        $response->assertRedirect('/admin');
         $this->assertAuthenticatedAs($user);
 
         // Check for the remember cookie

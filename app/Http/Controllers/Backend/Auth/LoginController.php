@@ -75,9 +75,7 @@ class LoginController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        session()->flash('error', __('auth.failed'));
-
-        return back();
+        return $this->sendFailedLoginResponse($request);
     }
 
     /**

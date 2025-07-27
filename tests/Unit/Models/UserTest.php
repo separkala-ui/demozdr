@@ -71,7 +71,7 @@ class UserTest extends TestCase
         $user = User::factory()->create();
 
         // Mock the request to be a non-admin route
-        $this->app['request']->headers->set('referer', 'http://localhost/login');
+        $this->app['request']->headers->set('referer', 'http://localhost:8000/login');
         $this->app['request']->server->set('REQUEST_URI', '/password/reset');
 
         $user->sendPasswordResetNotification('token');
