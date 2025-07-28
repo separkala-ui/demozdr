@@ -52,7 +52,7 @@
                             {{ $post->status === 'publish' ? 'text-green-800 bg-green-100 dark:bg-green-900/20 dark:text-green-400' : '' }}
                             {{ $post->status === 'draft' ? 'text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-300' : '' }}
                             {{ $post->status === 'pending' ? 'text-orange-800 bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400' : '' }}
-                            {{ $post->status === 'future' ? 'text-blue-800 bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400' : '' }}
+                            {{ $post->status === 'future' ? 'text-blue-800 bg-blue-100 dark:bg-blue-900/20 dark:text-primary' : '' }}
                             {{ $post->status === 'private' ? 'text-purple-800 bg-purple-100 dark:bg-purple-900/20 dark:text-purple-400' : '' }}
                             rounded-full">
                             {{ ucfirst($post->status) }}
