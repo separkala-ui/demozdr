@@ -7,10 +7,25 @@ use Illuminate\View\Component;
 
 class MediaImage extends Component
 {
+    /**
+     * @var \App\Contacts\MediaInterface
+     */
     public $model;
+    /**
+     * @var string
+     */
     public $collection;
+    /**
+     * @var string
+     */
     public $conversion;
+    /**
+     * @var string|null
+     */
     public $url;
+    /**
+     * @var string
+     */
     public $alt;
 
     public function __construct(

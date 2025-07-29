@@ -2,9 +2,7 @@
 
 namespace App\Contacts;
 
-use Spatie\MediaLibrary\HasMedia;
-
-interface MediaInterface extends HasMedia
+interface MediaInterface extends HasMediaInterface
 {
     /**
      * Get the URL of the media in the specified collection

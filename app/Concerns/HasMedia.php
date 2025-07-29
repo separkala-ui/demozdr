@@ -2,10 +2,9 @@
 
 namespace App\Concerns;
 
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\Media;
 
-trait HasMediaLibrary
+trait HasMedia
 {
     use InteractsWithMedia;
 
@@ -45,7 +44,7 @@ trait HasMediaLibrary
     {
         $media = $this->getFirstMedia($collection);
 
-        if (!$media) {
+        if (! $media) {
             return null;
         }
 
