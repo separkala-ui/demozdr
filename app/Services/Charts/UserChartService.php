@@ -7,6 +7,7 @@ namespace App\Services\Charts;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class UserChartService extends ChartService
 {
@@ -56,11 +57,20 @@ class UserChartService extends ChartService
 
     private function fetchUserGrowthData(Carbon $startDate, Carbon $endDate, bool $isLessThanMonth): \Illuminate\Support\Collection
     {
-        $selectRaw = $isLessThanMonth
-            ? 'DATE(created_at) as day, COUNT(id) as total'
-            : 'DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(id) as total';
+        $connection = DB::connection();
+        $driver = $connection->getDriverName();
 
-        $groupBy = $isLessThanMonth ? 'day' : 'month';
+        if ($isLessThanMonth) {
+            $selectRaw = 'DATE(created_at) as day, COUNT(id) as total';
+            $groupBy = 'day';
+        } else {
+            if ($driver === 'sqlite') {
+                $selectRaw = "strftime('%Y-%m', created_at) as month, COUNT(id) as total";
+            } else {
+                $selectRaw = "DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(id) as total";
+            }
+            $groupBy = 'month';
+        }
 
         return User::selectRaw($selectRaw)
             ->whereBetween('created_at', [$startDate, $endDate])

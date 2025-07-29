@@ -20,7 +20,7 @@ Auth::routes();
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'guest'], function () {
     // Login Routes.
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login/submit', [LoginController::class, 'login'])->name('login.submit');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 
     // Reset Password Routes.
     Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');

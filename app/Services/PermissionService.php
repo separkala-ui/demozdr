@@ -232,7 +232,7 @@ class PermissionService
         // For role count sorting, we need to handle it separately
         if ($isRoleCountSort) {
             // Get all permissions matching the search criteria without any sorting
-            $query = \App\Models\Permission::query();
+            $query = Permission::query();
 
             if ($search) {
                 $query->where(function ($q) use ($search) {
@@ -287,7 +287,7 @@ class PermissionService
             'sort_direction' => 'asc',
         ];
 
-        $query = \App\Models\Permission::applyFilters($filters);
+        $query = Permission::applyFilters($filters);
         $permissions = $query->paginateData(['per_page' => $perPage ?? config('settings.default_pagination')]);
 
         // Add role count and roles information to each permission.

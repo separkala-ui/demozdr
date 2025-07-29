@@ -57,7 +57,7 @@ class ContentService
         $postTypes[$postType->name] = $postType;
 
         // Store in cache (using serialized array format).
-        $postTypesArray = collect($postTypes)->map->toArray()->all();
+        $postTypesArray = collect($postTypes)->map->toArray();
         Cache::put('post_types', $postTypesArray, now()->addDay());
 
         return $postType;
@@ -119,16 +119,16 @@ class ContentService
         return $taxonomy;
     }
 
-    protected function addTaxonomyToPostTypes(string $taxonomyName, array $postTypeNames): void
+    protected function addTaxonomyToPostTypes(string $taxonomy, array $postTypeNames): void
     {
         $postTypes = $this->getPostTypes();
         $updated = false;
 
-        foreach ($postTypeNames as $postTypeName) {
-            if (isset($postTypes[$postTypeName])) {
-                $postType = $postTypes[$postTypeName];
-                if (! in_array($taxonomyName, $postType->taxonomies)) {
-                    $postType->taxonomies[] = $taxonomyName;
+        foreach ($postTypeNames as $name) {
+            if (isset($postTypes[$name])) {
+                $postType = $postTypes[$name];
+                if (! in_array($taxonomy, $postType->taxonomies)) {
+                    $postType->taxonomies[] = $taxonomy;
                     $updated = true;
                 }
             }
@@ -136,7 +136,7 @@ class ContentService
 
         if ($updated) {
             // Store updated post types in cache.
-            $postTypesArray = $postTypes->map->toArray()->all();
+            $postTypesArray = collect($postTypes)->map->toArray();
             Cache::put('post_types', $postTypesArray, now()->addDay());
         }
     }

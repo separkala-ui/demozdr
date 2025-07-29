@@ -128,9 +128,7 @@
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
                                     <a href="{{ route('admin.users.index', ['role' => $role->name]) }}" class="inline-flex items-center gap-1 text-sm text-primary hover:underline" data-tooltip-target="tooltip-users-role-{{ $role->id }}">
-                                        <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
-                                            {{ $role->user_count }}
-                                        </span>
+                                        <span class="badge">{{ $role->user_count }}</span>
                                     </a>
                                     <div id="tooltip-users-role-{{ $role->id }}" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-md shadow-xs opacity-0 tooltip dark:bg-gray-700">
                                         {{ __('View') }} {{ $role->name }} {{ __('Users') }}
@@ -141,14 +139,12 @@
                                     <div x-data="{ showAll: false }">
                                         <div>
                                             @foreach ($role->permissions->take(7) as $permission)
-                                                <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
-                                                    {{ $permission->name }}
-                                                </span>
+                                                <span class="badge">{{ $permission->name }}</span>
                                             @endforeach
                                             <template x-if="showAll">
                                                 <div>
                                                     @foreach ($role->permissions->skip(7) as $permission)
-                                                        <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white">
+                                                        <span class="badge">{{ $permission->name }}</span>
                                                             {{ $permission->name }}
                                                         </span>
                                                     @endforeach

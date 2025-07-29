@@ -22,6 +22,8 @@ public/images/.DS_Store
 
 # Exclude anything from /Modules folder.
 /Modules/*
+# Keep the Modules directory structure
+!/Modules/.gitkeep
 
 # Exclude release builds
 /releases

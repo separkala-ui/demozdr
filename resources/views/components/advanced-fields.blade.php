@@ -8,13 +8,10 @@
             @click="open = !open"
             class="flex w-full items-center justify-between p-5 text-left">
         <h3 class="text-lg font-medium text-gray-700 dark:text-white">{{ __('Advanced Fields') }}</h3>
-        <svg class="h-5 w-5 transform transition-transform duration-200 dark:text-gray-300"
-             :class="{ 'rotate-180': open }"
-             fill="none"
-             stroke="currentColor"
-             viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
+        <iconify-icon icon="heroicons:chevron-down"
+            class="h-5 w-5 transform transition-transform duration-200 dark:text-gray-300"
+            :class="{ 'rotate-180': open }"></iconify-icon>
+        <span class="sr-only">{{ __('Toggle Advanced Fields') }}</span>
     </button>
 
     <div x-show="open"
@@ -55,14 +52,14 @@
                                                x-model="field.key"
                                                :name="`meta_keys[${index}]`"
                                                placeholder="{{ __('Meta Key') }}"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="form-control">
                                     </div>
 
                                     <!-- Field Type -->
                                     <div>
                                         <select x-model="field.type"
                                                :name="`meta_types[${index}]`"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="form-control">
                                             @foreach($fieldTypes as $type)
                                                 <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
                                             @endforeach
@@ -78,7 +75,7 @@
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
                                                :placeholder="field.default_value || '{{ __('Meta Value') }}'"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="form-control">
                                     </template>
 
                                     <!-- Textarea Type -->
@@ -87,7 +84,7 @@
                                                  :name="`meta_values[${index}]`"
                                                  :placeholder="field.default_value || '{{ __('Meta Value') }}'"
                                                  rows="3"
-                                                 class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"></textarea>
+                                                 class="form-control"></textarea>
                                     </template>
 
                                     <!-- Number Type -->
@@ -96,7 +93,7 @@
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
                                                :placeholder="field.default_value || '{{ __('Meta Value') }}'"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="form-control">
                                     </template>
 
                                     <!-- Email Type -->
@@ -105,7 +102,7 @@
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
                                                :placeholder="field.default_value || '{{ __('Meta Value') }}'"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="form-control">
                                     </template>
 
                                     <!-- URL Type -->
@@ -114,7 +111,7 @@
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
                                                :placeholder="field.default_value || '{{ __('Meta Value') }}'"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="form-control">
                                     </template>
 
                                     <!-- Date Type -->
@@ -122,7 +119,7 @@
                                         <input type="date"
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
-                                               class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                               class="form-control">
                                     </template>
 
                                     <!-- Checkbox Type -->
@@ -142,7 +139,7 @@
                                         <div class="space-y-2">
                                             <select x-model="field.value"
                                                    :name="`meta_values[${index}]`"
-                                                   class="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                                   class="form-control">
                                                 <option value="">{{ __('Select an option') }}</option>
                                                 <template x-for="option in (field.options || [])" :key="option">
                                                     <option :value="option" x-text="option"></option>
@@ -163,23 +160,19 @@
 
                             <!-- Actions -->
                             <div class="flex items-center gap-2 pt-2">
-                                <!-- Add Button -->
                                 <button type="button"
                                         @click="addField()"
-                                        class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-brand-500 text-white hover:bg-brand-600 transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
+                                        class="btn-primary !w-8 !h-8 p-0 rounded-full">
+                                    <iconify-icon icon="heroicons:plus" class="w-4 h-4"></iconify-icon>
+                                    <span class="sr-only">{{ __('Add Field') }}</span>
                                 </button>
 
-                                <!-- Remove Button -->
                                 <button type="button"
                                         @click="removeField(index)"
                                         x-show="fields.length > 1"
-                                        class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
+                                        class="btn-danger !w-8 !h-8 p-0 rounded-full">
+                                    <iconify-icon icon="heroicons:minus" class="w-4 h-4"></iconify-icon>
+                                    <span class="sr-only">{{ __('Remove Field') }}</span>
                                 </button>
                             </div>
                         </div>

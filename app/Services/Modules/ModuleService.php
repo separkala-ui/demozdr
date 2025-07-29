@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use Nwidart\Modules\Facades\Module as ModuleFacade;
 use Nwidart\Modules\Module;
 use App\Models\Module as ModuleModel;
+use Illuminate\Support\Facades\Vite;
+use Illuminate\Foundation\Vite as ViteFoundation;
 
 class ModuleService
 {
@@ -198,5 +200,29 @@ class ModuleService
 
         // Clear the cache.
         Artisan::call('cache:clear');
+    }
+
+    public function getModuleAssetPath(): array
+    {
+        $paths = [];
+        if (file_exists('build/manifest.json')) {
+            $files = json_decode(file_get_contents('build/manifest.json'), true);
+            foreach ($files as $file) {
+                $paths[] = $file['src'];
+            }
+        }
+
+        return $paths;
+    }
+
+    /**
+     * Support for Vite hot reload overriding manifest file.
+     */
+    public function moduleViteCompile(string $module, string $asset, ?string $hotFilePath = null, $manifestFile = '.vite/manifest.json'): ViteFoundation
+    {
+        return Vite::useHotFile($hotFilePath ?: storage_path('vite.hot'))
+            ->useBuildDirectory($module)
+            ->useManifestFilename($manifestFile)
+            ->withEntryPoints([$asset]);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Enums\ActionType;
@@ -37,8 +39,8 @@ class ContentSeeder extends Seeder
         $this->registerPostTypesAndTaxonomies();
         $this->createSampleCategories();
         $this->createSampleTags();
-        $this->createSamplePosts();
         $this->createSamplePages();
+        $this->createSamplePosts();
 
         $this->command->info('Content seeded successfully!');
     }
@@ -113,6 +115,7 @@ class ContentSeeder extends Seeder
                 $this->generatePlaceholderImage('public/'.$category['featured_image'], pathinfo($category['featured_image'], PATHINFO_BASENAME));
 
                 $category = Term::firstOrCreate([
+                    'id' => $category['id'],
                     'name' => $category['name'],
                     'taxonomy' => 'category',
                     'slug' => \Illuminate\Support\Str::slug($category['name']),
@@ -153,6 +156,7 @@ class ContentSeeder extends Seeder
                 $this->generatePlaceholderImage('public/'.$tag['featured_image'], pathinfo($tag['featured_image'], PATHINFO_BASENAME));
 
                 $tag = Term::firstOrCreate([
+                    'id' => $tag['id'],
                     'name' => $tag['name'],
                     'taxonomy' => 'tag',
                     'slug' => \Illuminate\Support\Str::slug($tag['name']),
@@ -219,8 +223,8 @@ class ContentSeeder extends Seeder
             $fontSize = 5;
             $textWidth = imagefontwidth($fontSize) * strlen($textToDisplay);
             $textHeight = imagefontheight($fontSize);
-            $x = (300 - $textWidth) / 2;
-            $y = (200 - $textHeight) / 2;
+            $x = (int)((300 - $textWidth) / 2);
+            $y = (int)((200 - $textHeight) / 2);
 
             // Draw text
             imagestring($image, $fontSize, $x, $y, $textToDisplay, $textColor);
@@ -257,10 +261,10 @@ class ContentSeeder extends Seeder
             ],
         ];
 
-        Post::factory()->count(50)->create();
         foreach ($posts as $postData) {
             // Create post.
             $post = Post::firstOrCreate([
+                'id' => $postData['id'],
                 'title' => $postData['title'],
                 'post_type' => 'post',
             ], [
@@ -296,6 +300,8 @@ class ContentSeeder extends Seeder
                 $post->terms()->syncWithoutDetaching($tagIds);
             }
         }
+
+        Post::factory()->count(50)->create();
     }
 
     protected function createSamplePages(): void
@@ -311,6 +317,7 @@ class ContentSeeder extends Seeder
 
         foreach ($pages as $pageData) {
             $page = Post::firstOrCreate([
+                'id' => $pageData['id'],
                 'title' => $pageData['title'],
                 'post_type' => 'page',
             ], [
