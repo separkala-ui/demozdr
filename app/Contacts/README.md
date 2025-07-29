@@ -25,7 +25,7 @@ The media library feature consists of the following components:
 namespace Modules\YourModule\Models;
 
 use App\Contacts\MediaInterface;
-use App\Traits\HasMediaLibrary;
+use App\Concerns\HasMediaLibrary;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 

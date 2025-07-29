@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Contacts\MediaInterface;
 use App\Services\MediaLibraryService;
-use App\Traits\HasMediaLibrary;
+use App\Concerns\HasMediaLibrary;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
