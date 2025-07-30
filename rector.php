@@ -22,6 +22,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(AddVoidReturnTypeWhereNoReturnRector::class);
     $rectorConfig->rule(TypedPropertyFromStrictConstructorRector::class);
     $rectorConfig->rule(AddReturnTypeDeclarationRector::class);
+    $rectorConfig->rule(AddVoidReturnTypeWhereNoReturnRector::class);
 
     // Skip certain paths that might cause issues
     $rectorConfig->skip([

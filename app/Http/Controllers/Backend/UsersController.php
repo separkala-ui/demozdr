@@ -176,7 +176,6 @@ class UsersController extends Controller
         return back();
     }
 
-
     public function bulkDelete(Request $request): RedirectResponse
     {
         $this->checkAuthorization(Auth::user(), ['user.delete']);

@@ -48,6 +48,17 @@ password - 12345678
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 📝 Changelog
+**[v2.0.1] - 2025-07-27**
+
+- **Feat:** Refactor Lara Dashboard whole Admin UI - Icons, Accessibility, Components, Pages, Layouts and so on.
+- **Enhancement:** Keep search form design consistent as `form-control` height.
+- **Enhancement:** Global variable for editor script to handle from any module.
+- **Enhancement:** Cleanup many codes to separate service to keep business logics separated.
+- **Enhancement:** Fixed several unit tests.
+- **Fix:** User chart data with SQLite supported.
+- **Fix:** Remove some unnecessary console logs.
+- **Doc:** Added Coding standard docs.
+
 **[v2.0] - 2025-07-20**
 
 - **Feat:** Refactor Lara Dashboard whole Admin UI - Icons, Accessibility, Components, Pages, Layouts and so on.
@@ -580,11 +591,24 @@ Want to contribute? Fork the project, make your changes, and submit a pull reque
 
 Please be sure to read our [Contribution Guide](CONTRIBUTING.md) before submitting your PR.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## ➶ Coding Standards
+
+✨ Following a consistent coding standard ensures code quality, readability, and easier collaboration for everyone.  
+📏 Please be sure to read our [Contribution Guide](Coding-Standard.md) before submitting your PR.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### 🌟 Top contributors:
 
 <a href="https://github.com/laradashboard/laradashboard/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=laradashboard/laradashboard" alt="contrib.rocks image" />
 </a>
+
+### ✩ Growth Story
+
+[![Star History Chart](https://api.star-history.com/svg?repos=laradashboard/laradashboard&type=Date)](https://www.star-history.com/#laradashboard/laradashboard&Date)
 
 ## 💖 Support
 

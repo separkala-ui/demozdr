@@ -162,4 +162,48 @@ class PostService
 
         return $post->load(['author', 'terms']);
     }
+
+    public function getPostPermalink(Post|int|null $post): ?string
+    {
+        if (is_numeric($post)) {
+            $post = $this->getPostById($post);
+        }
+
+        if (! $post) {
+            return null;
+        }
+
+        return route('post.show', ['post_type' => $post->post_type, 'slug' => $post->slug]);
+    }
+
+    public function getPostDate(Post|int|null $post, string $format = 'M d, Y'): ?string
+    {
+        if (is_numeric($post)) {
+            $post = $this->getPostById($post);
+        }
+
+        if (! $post) {
+            return null;
+        }
+
+        return $post->published_at ?
+            $post->published_at->format($format) : $post->created_at->format($format);
+    }
+
+    public function getPostTerms(Post|int|null $post, string $taxonomy)
+    {
+        if (is_numeric($post)) {
+            $post = $this->getPostById($post);
+        }
+
+        if (! $post) {
+            return collect();
+        }
+
+        if ($taxonomy) {
+            return $post->terms()->where('taxonomy', $taxonomy)->get();
+        }
+
+        return $post->terms;
+    }
 }

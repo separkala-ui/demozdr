@@ -25,6 +25,8 @@
         "laravel/telescope": "^5.10",
         "laravel/tinker": "^2.10",
         "laravel/ui": "^4.5",
+        "livewire/livewire": "^3.6",
+        "mhmiton/laravel-modules-livewire": "^5.1",
         "nwidart/laravel-modules": "^12.0",
         "spatie/browsershot": "^5.0",
         "spatie/laravel-permission": "^6.4",
@@ -72,8 +74,8 @@
         },
         "files": [
             "app/Helper/common.php",
-            "app/Helper/database.php",
-            "app/Helper/hooks.php"
+            "app/Helper/hooks.php",
+            "app/Helper/content.php"
         ]
     },
     "autoload-dev": {
@@ -87,7 +89,8 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan vendor:publish --tag=livewire:assets --ansi --force"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

@@ -73,7 +73,7 @@ class UpdatePostRequest extends FormRequest
             'published_at' => 'nullable|date',
 
             /** @example null */
-            'remove_featured_image' => 'nullable|boolean',
+            'remove_featured_image' => 'nullable',
 
             /** @example "author_info" */
             'meta_keys.*' => 'nullable|string|max:255|regex:/^[a-z0-9_]+$/',

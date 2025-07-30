@@ -22,9 +22,7 @@
                         <div>
                             <h4 class="text-sm font-medium text-gray-500 dark:text-gray-300">{{ __('Permission Group') }}</h4>
                             <p class="mt-1">
-                                <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-white">
-                                    {{ $permission->group_name }}
-                                </span>
+                                <span class="badge">{{ $permission->group_name }}</span>
                             </p>
                         </div>
                     </div>

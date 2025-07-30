@@ -246,22 +246,12 @@
                                     @if($postType === 'post')
                                         <td class="px-5 py-4 sm:px-6">
                                             @foreach($post->categories as $category)
-                                                <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full mr-1 mb-1 dark:bg-gray-700 dark:text-white">
-                                                    {{ $category->name }}
-                                                </span>
+                                                <span class="badge">{{ $category->name }}</span>
                                             @endforeach
                                         </td>
                                     @endif
                                     <td class="px-5 py-4 sm:px-6">
-                                        <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium
-                                            {{ $post->status === 'publish' ? 'text-green-800 bg-green-100 dark:bg-green-900/20 dark:text-green-400' : '' }}
-                                            {{ $post->status === 'draft' ? 'text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-300' : '' }}
-                                            {{ $post->status === 'pending' ? 'text-orange-800 bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400' : '' }}
-                                            {{ $post->status === 'future' ? 'text-blue-800 bg-blue-100 dark:bg-blue-900/20 dark:text-primary' : '' }}
-                                            {{ $post->status === 'private' ? 'text-purple-800 bg-purple-100 dark:bg-purple-900/20 dark:text-purple-400' : '' }}
-                                            rounded-full">
-                                            {{ ucfirst($post->status) }}
-                                        </span>
+                                        <span class="{{ get_post_status_class($post->status) }}">{{ ucfirst($post->status) }}</span>
                                     </td>
                                     <td class="px-5 py-4 sm:px-6">
                                         @if($post->published_at)

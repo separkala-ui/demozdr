@@ -1,9 +1,6 @@
 (function() {
     window.openDrawer = function(drawerId) {
-        console.log('Opening drawer:', drawerId);
-        
         if (window.LaraDrawers && window.LaraDrawers[drawerId]) {
-            console.log('Opening drawer via registry');
             window.LaraDrawers[drawerId].open = true;
             return;
         }

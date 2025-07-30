@@ -39,6 +39,9 @@ class UpdateTermRequest extends FormRequest
 
             /** @example null */
             'parent_id' => 'nullable|exists:terms,id',
+
+            /** @example null */
+            'remove_featured_image' => 'nullable',
         ];
 
         // Add featured image validation if taxonomy supports it.
