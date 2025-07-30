@@ -6,7 +6,7 @@
     'actionLabel' => __('Create'),
 ])
 
-<div class="bg-white rounded-lg p-6 flex flex-col items-center justify-center text-center">
+<div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center justify-center text-center">
 
     <iconify-icon icon="bi:megaphone" class="text-gray-300 dark:text-gray-600 text-6xl mb-4"></iconify-icon>
 
