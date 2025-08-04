@@ -1,6 +1,6 @@
 @props([
     'editorId' => 'editor',
-    'height' => '200px',
+    'height' => '100px',
     'maxHeight' => '500px',
     'type' => 'full', // Options: 'full', 'basic', 'minimal'
     'customToolbar' => null, // For custom toolbar configuration
@@ -10,15 +10,15 @@
 <link rel="stylesheet" href="{{ asset('vendor/quill/quill.min.css') }}" />
 <style>
     .ql-editor {
-        min-height: 200px;
-        max-height: 500px;
+        min-height: {{ $height }};
+        max-height: {{ $maxHeight }};
         overflow-y: auto;
     }
     .ql-toolbar.ql-snow {
         border-radius: 10px 10px 0px 0px;
     }
     .ql-container {
-        min-height: 200px;
+        height: {{ $height }};
     }
     /* Create a container for Quill to target */
     .quill-container {
