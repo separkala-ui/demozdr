@@ -1,5 +1,5 @@
 @props([
-    'title' => __('No Datas found'),
+    'title' => __('No data found'),
     'description' => __('Get started by creating new data.'),
     'action' => null,
     'actionId' => null,
