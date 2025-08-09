@@ -98,7 +98,7 @@ class MediaController extends Controller
 
     public function store(MediaUploadRequest $request)
     {
-        $this->checkAuthorization(Auth::user(), ['media.upload']);
+        $this->checkAuthorization(Auth::user(), ['media.create']);
 
         $uploadedFiles = [];
 

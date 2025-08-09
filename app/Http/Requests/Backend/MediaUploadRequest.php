@@ -11,7 +11,7 @@ class MediaUploadRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return Auth::user()->can('media.upload');
+        return Auth::user()->can(abilities: 'media.create');
     }
 
     public function rules(): array
