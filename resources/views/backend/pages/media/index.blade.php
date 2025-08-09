@@ -301,11 +301,6 @@
                                 <iconify-icon icon="lucide:image"
                                     class="text-6xl text-gray-300 dark:text-gray-600 mb-4 mx-auto"></iconify-icon>
                                 <p class="text-gray-500 dark:text-gray-400 mb-4">{{ __('No media files found') }}</p>
-                                <button @click="uploadModalOpen = true"
-                                    class="btn-primary inline-flex items-center gap-2">
-                                    <iconify-icon icon="lucide:upload" height="16"></iconify-icon>
-                                    {{ __('Upload Your First Media File') }}
-                                </button>
                             </div>
                         @endif
                     </div>
@@ -422,11 +417,6 @@
                                 <iconify-icon icon="lucide:image"
                                     class="text-6xl text-gray-300 dark:text-gray-600 mb-4 mx-auto"></iconify-icon>
                                 <p class="text-gray-500 dark:text-gray-400 mb-4">{{ __('No media files found') }}</p>
-                                <button @click="uploadModalOpen = true"
-                                    class="btn-primary inline-flex items-center gap-2">
-                                    <iconify-icon icon="lucide:upload" height="16"></iconify-icon>
-                                    {{ __('Upload Your First Media File') }}
-                                </button>
                             </div>
                         @endif
                     </div>
