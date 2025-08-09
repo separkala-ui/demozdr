@@ -195,4 +195,23 @@
     body {
         @apply relative text-base font-normal z-1 bg-gray-50 text-gray-700 dark:text-gray-300;
     }
+
+    /* Ensure minimum heights to prevent layout shift */
+    .main-content {
+        min-height: calc(100vh - 4rem);
+    }
+
+    /* Optimize image loading */
+    img {
+        height: auto;
+        max-width: 100%;
+    }
+
+    /* Reduce animation duration for faster perceived loading */
+    *, *::before, *::after {
+        animation-duration: 0.15s !important;
+        animation-delay: 0s !important;
+        transition-duration: 0.15s !important;
+        transition-delay: 0s !important;
+    }
 }

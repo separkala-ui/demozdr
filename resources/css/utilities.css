@@ -7,6 +7,21 @@
         display: none;
         -webkit-appearance: none;
     }
+
+    /* Prevent layout shifts */
+    .prevent-layout-shift {
+        contain: layout style paint;
+    }
+
+    /* Smooth transitions for route changes */
+    .page-transition {
+        transition: opacity 0.15s ease-in-out;
+    }
+
+    /* Optimize fonts loading */
+    .font-display-swap {
+        font-display: swap;
+    }
 }
 
 /* Input date icon utilities */

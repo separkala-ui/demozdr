@@ -1,3 +1,8 @@
+/* Ensure minimum heights to prevent layout shift */
+.sidebar {
+    min-height: 100vh;
+}
+
 @utility menu-item {
     @apply relative flex items-center gap-3 px-4 py-2 rounded-md font-medium text-theme-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 ease-in-out;
 }
