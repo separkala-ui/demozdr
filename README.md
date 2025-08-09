@@ -189,6 +189,9 @@ npm install
 
 -   Create database called - `laradashboard`
 -   Create `.env` file by copying `.env.example` file
+```bash
+cp .env.example .env
+```
 
 **Generate Artisan Key or necessary linkings**
 
@@ -206,8 +209,7 @@ php artisan migrate:fresh --seed && php artisan module:seed
 **Run Project**
 
 ```php
-php artisan serve
-npm run dev
+composer run dev
 ```
 
 So, You've got the project of Lara Dashboard on your local machine - http://localhost:8000
