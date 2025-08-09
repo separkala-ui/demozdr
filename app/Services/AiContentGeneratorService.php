@@ -70,16 +70,19 @@ class AiContentGeneratorService
 IMPORTANT: Return the response in JSON format with keys: "title", "excerpt", and "content". 
 
 For the content field:
+- Generate comprehensive, detailed content that matches the requested length (if specified)
 - Use double line breaks (\\n\\n) to separate paragraphs
-- Make each paragraph 2-3 sentences long
+- Make each paragraph 3-5 sentences long for longer content
 - Create engaging, SEO-friendly content with proper structure
 - Use simple HTML formatting when appropriate (like <strong>, <em>)
+- Include relevant subheadings and detailed explanations
+- Ensure the content is informative, well-researched, and valuable to readers
 
 Example format:
 {
   "title": "Your Title Here",
   "excerpt": "A brief summary of the content",
-  "content": "First paragraph with 2-3 sentences.\\n\\nSecond paragraph with more details.\\n\\nThird paragraph with conclusion."
+  "content": "First paragraph with 3-5 sentences introducing the topic.\\n\\nSecond paragraph with detailed information and examples.\\n\\nThird paragraph expanding on key points.\\n\\nContinue with more paragraphs to reach the desired length."
 }',
             'page_content' => 'You are a web page content creation assistant. Generate professional page content including title, excerpt, and main content based on the user\'s requirements. Return the response in JSON format with keys: "title", "excerpt", and "content". Use double line breaks (\\n\\n) to separate paragraphs and make the content informative, professional, and well-structured.',
             default => 'You are a helpful content creation assistant. Generate content based on the user\'s requirements and return it in JSON format with appropriate keys. Use proper paragraph breaks with \\n\\n.'
@@ -110,7 +113,7 @@ Example format:
                         ['role' => 'user', 'content' => $userPrompt],
                     ],
                     'temperature' => 0.7,
-                    'max_tokens' => 1500,
+                    'max_tokens' => $this->getMaxTokens(),
                 ]
             );
     }
@@ -126,7 +129,7 @@ Example format:
                 'https://api.anthropic.com/v1/messages',
                 [
                     'model' => 'claude-3-haiku-20240307',
-                    'max_tokens' => 1500,
+                    'max_tokens' => $this->getMaxTokens(),
                     'system' => $systemPrompt,
                     'messages' => [
                         ['role' => 'user', 'content' => $userPrompt],
@@ -211,5 +214,15 @@ Example format:
     public function isConfigured(): bool
     {
         return ! empty($this->getAvailableProviders());
+    }
+
+    public function getDefaultProvider(): string
+    {
+        return config('settings.ai_default_provider', 'openai');
+    }
+
+    public function getMaxTokens(): int
+    {
+        return (int) config('settings.ai_max_tokens', 4096);
     }
 }

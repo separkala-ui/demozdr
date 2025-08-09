@@ -2,7 +2,7 @@
     $aiService = app(\App\Services\AiContentGeneratorService::class);
     $isConfigured = $aiService->isConfigured();
     $providers = $aiService->getAvailableProviders();
-    $defaultProvider = config('settings.ai_default_provider', '');
+    $defaultProvider = $aiService->getDefaultProvider();
 @endphp
 
 <div class="inline-flex items-center">
@@ -180,7 +180,7 @@
 <script>
     function aiContentGenerator() {
         return {
-            provider: '',
+            provider: '{{ $defaultProvider }}',
             prompt: '',
             loading: false,
             generatedContent: {},

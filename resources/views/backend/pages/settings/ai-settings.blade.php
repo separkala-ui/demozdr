@@ -7,24 +7,40 @@
     </div>
     <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
         <div class="space-y-4">
-            <!-- Default AI Provider -->
-            <div class="relative">
-                <label for="ai_default_provider" class="form-label">
-                    {{ __('Default AI Provider') }}
-                </label>
-                <select name="ai_default_provider"
-                    id="ai_default_provider"
-                    class="form-control">
-                    <option value="openai" {{ (config('settings.ai_default_provider', 'openai') == 'openai') ? 'selected' : '' }}>
-                        {{ __('OpenAI') }}
-                    </option>
-                    <option value="claude" {{ (config('settings.ai_default_provider', 'openai') == 'claude') ? 'selected' : '' }}>
-                        {{ __('Claude (Anthropic)') }}
-                    </option>
-                </select>
-                <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
-                    {{ __('Select the default AI provider for your application.') }}
-                </p>
+            <!-- Default AI Provider and Max Tokens -->
+            <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+                <div class="flex-1">
+                    <label for="ai_default_provider" class="form-label">
+                        {{ __('Default AI Provider') }}
+                    </label>
+                    <select name="ai_default_provider"
+                        id="ai_default_provider"
+                        class="form-control">
+                        <option value="openai" {{ (config('settings.ai_default_provider', 'openai') == 'openai') ? 'selected' : '' }}>
+                            {{ __('OpenAI') }}
+                        </option>
+                        <option value="claude" {{ (config('settings.ai_default_provider', 'openai') == 'claude') ? 'selected' : '' }}>
+                            {{ __('Claude (Anthropic)') }}
+                        </option>
+                    </select>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
+                        {{ __('Select the default AI provider for your application.') }}
+                    </p>
+                </div>
+                <div class="flex-1">
+                    <label for="ai_max_tokens" class="form-label">
+                        {{ __('Max Tokens') }}
+                    </label>
+                    <input type="number" name="ai_max_tokens"
+                        id="ai_max_tokens"
+                        value="{{ config('settings.ai_max_tokens', 2000) }}"
+                        placeholder="4096"
+                        min="100"
+                        class="form-control">
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
+                        {{ __('Maximum tokens for AI responses (100-8000). OpenAI GPT-3.5: max 4096 total, Claude: up to 100k.') }}
+                    </p>
+                </div>
             </div>
 
             <!-- OpenAI API Key -->
@@ -37,7 +53,7 @@
                         id="ai_openai_api_key"
                         value="{{ config('settings.ai_openai_api_key') ?? '' }}"
                         placeholder="{{ __('Enter your OpenAI API key') }}"
-                        class="form-control pr-16">
+                        class="form-control pr-14">
                     <button type="button" 
                         onclick="copyToClipboard('ai_openai_api_key')" 
                         class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-300 flex items-center justify-center w-6 h-6 hover:text-gray-700 dark:hover:text-gray-100 transition-colors">
@@ -62,7 +78,7 @@
                         id="ai_claude_api_key"
                         value="{{ config('settings.ai_claude_api_key') ?? '' }}"
                         placeholder="{{ __('Enter your Claude API key') }}"
-                        class="form-control">
+                        class="form-control pr-14">
                     <button type="button" 
                         onclick="copyToClipboard('ai_claude_api_key')" 
                         class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-300 flex items-center justify-center w-6 h-6 hover:text-gray-700 dark:hover:text-gray-100 transition-colors">
