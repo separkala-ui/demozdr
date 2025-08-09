@@ -9,7 +9,7 @@
         <div class="space-y-4">
             <!-- Default AI Provider -->
             <div class="relative">
-                <label for="ai_default_provider" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label for="ai_default_provider" class="form-label">
                     {{ __('Default AI Provider') }}
                 </label>
                 <select name="ai_default_provider"
@@ -29,7 +29,7 @@
 
             <!-- OpenAI API Key -->
             <div class="relative">
-                <label for="ai_openai_api_key" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label for="ai_openai_api_key" class="form-label">
                     {{ __('OpenAI API Key') }}
                 </label>
                 <div class="relative">
@@ -54,7 +54,7 @@
 
             <!-- Claude API Key -->
             <div class="relative">
-                <label for="ai_claude_api_key" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label for="ai_claude_api_key" class="form-label">
                     {{ __('Claude API Key (Anthropic)') }}
                 </label>
                 <div class="relative">
