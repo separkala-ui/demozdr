@@ -37,7 +37,10 @@ class AiContentGeneratorService
         };
 
         if (empty($this->apiKey)) {
-            throw new Exception("API key not configured for provider: {$this->provider}");
+            // throw new Exception("API key not configured for provider: {$this->provider}");
+            Log::error('AI Content Generator: API key not configured', [
+                'provider' => $this->provider,
+            ]);
         }
     }
 
@@ -82,15 +85,19 @@ class AiContentGeneratorService
         return Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->apiKey,
             'Content-Type' => 'application/json',
-        ])->timeout(60)->post('https://api.openai.com/v1/chat/completions', [
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                ['role' => 'system', 'content' => $systemPrompt],
-                ['role' => 'user', 'content' => $userPrompt],
-            ],
-            'temperature' => 0.7,
-            'max_tokens' => 1500,
-        ]);
+        ])->timeout(60)
+            ->post(
+                'https://api.openai.com/v1/chat/completions',
+                [
+                    'model' => 'gpt-3.5-turbo',
+                    'messages' => [
+                        ['role' => 'system', 'content' => $systemPrompt],
+                        ['role' => 'user', 'content' => $userPrompt],
+                    ],
+                    'temperature' => 0.7,
+                    'max_tokens' => 1500,
+                ]
+            );
     }
 
     private function sendClaudeRequest(string $systemPrompt, string $userPrompt): Response
@@ -99,14 +106,18 @@ class AiContentGeneratorService
             'x-api-key' => $this->apiKey,
             'Content-Type' => 'application/json',
             'anthropic-version' => '2023-06-01',
-        ])->timeout(60)->post('https://api.anthropic.com/v1/messages', [
-            'model' => 'claude-3-haiku-20240307',
-            'max_tokens' => 1500,
-            'system' => $systemPrompt,
-            'messages' => [
-                ['role' => 'user', 'content' => $userPrompt],
-            ],
-        ]);
+        ])->timeout(60)
+            ->post(
+                'https://api.anthropic.com/v1/messages',
+                [
+                    'model' => 'claude-3-haiku-20240307',
+                    'max_tokens' => 1500,
+                    'system' => $systemPrompt,
+                    'messages' => [
+                        ['role' => 'user', 'content' => $userPrompt],
+                    ],
+                ]
+            );
     }
 
     private function parseResponse(Response $response): array
