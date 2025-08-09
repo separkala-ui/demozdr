@@ -89,6 +89,12 @@
                     ])
 
                     <div class="flex items-center gap-3">
+                        
+                        <button @click="uploadModalOpen = true"
+                            class="btn-primary inline-flex items-center gap-2">
+                            <iconify-icon icon="lucide:upload" height="16"></iconify-icon>
+                            {{ __('Upload Media') }}
+                        </button>
                         <!-- Bulk Actions dropdown -->
                         <div class="flex items-center justify-center relative" x-show="selectedMedia.length > 0">
                             <button @click="bulkActionsDropdownOpen = !bulkActionsDropdownOpen"
