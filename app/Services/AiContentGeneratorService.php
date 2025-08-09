@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Log;
 
 class AiContentGeneratorService
 {
-    private string $provider;
-    private string $apiKey;
+    private ?string $provider;
+    private ?string $apiKey;
 
     public function __construct()
     {
@@ -20,7 +20,7 @@ class AiContentGeneratorService
         $this->setApiKey();
     }
 
-    public function setProvider(string $provider): self
+    public function setProvider(?string $provider): self
     {
         $this->provider = $provider;
         $this->setApiKey();
