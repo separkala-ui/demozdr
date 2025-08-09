@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Backend\MediaBulkDeleteRequest;
+use App\Http\Requests\Backend\MediaUploadRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -94,13 +96,9 @@ class MediaController extends Controller
         return view('backend.pages.media.index', compact('media', 'breadcrumbs', 'stats'));
     }
 
-    public function store(Request $request)
+    public function store(MediaUploadRequest $request)
     {
         $this->checkAuthorization(Auth::user(), ['media.upload']);
-
-        $request->validate([
-            'files.*' => 'required|file|max:10240', // 10MB max
-        ]);
 
         $uploadedFiles = [];
 
@@ -156,14 +154,9 @@ class MediaController extends Controller
         ]);
     }
 
-    public function bulkDelete(Request $request)
+    public function bulkDelete(MediaBulkDeleteRequest $request)
     {
         $this->checkAuthorization(Auth::user(), ['media.delete']);
-
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'exists:media,id',
-        ]);
 
         $media = SpatieMedia::whereIn('id', $request->ids)->get();
 
