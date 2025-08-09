@@ -7,13 +7,16 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\MediaBulkDeleteRequest;
 use App\Http\Requests\Backend\MediaUploadRequest;
+use App\Services\MediaLibraryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 
 class MediaController extends Controller
 {
+    public function __construct(private readonly MediaLibraryService $mediaLibraryService)
+    {
+    }
+
     public function index(Request $request)
     {
         $this->checkAuthorization(Auth::user(), ['media.view']);
@@ -32,101 +35,26 @@ class MediaController extends Controller
             ],
         ];
 
-        $query = SpatieMedia::query()
-            ->latest();
+        $result = $this->mediaLibraryService->getMediaList(
+            $request->get('search'),
+            $request->get('type'),
+            $request->get('sort', 'created_at'),
+            $request->get('direction', 'desc'),
+            24
+        );
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('file_name', 'like', "%{$search}%")
-                    ->orWhere('mime_type', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by type
-        if ($request->filled('type')) {
-            $type = $request->get('type');
-            switch ($type) {
-                case 'images':
-                    $query->where('mime_type', 'like', 'image/%');
-                    break;
-                case 'videos':
-                    $query->where('mime_type', 'like', 'video/%');
-                    break;
-                case 'documents':
-                    $query->whereNotIn('mime_type', function ($q) {
-                        $q->select('mime_type')
-                            ->from('media')
-                            ->where('mime_type', 'like', 'image/%')
-                            ->orWhere('mime_type', 'like', 'video/%');
-                    });
-                    break;
-            }
-        }
-
-        // Sort functionality
-        $sort = $request->get('sort', 'created_at');
-        $direction = $request->get('direction', 'desc');
-
-        if (in_array($sort, ['name', 'size', 'created_at', 'mime_type'])) {
-            $query->orderBy($sort, $direction);
-        }
-
-        $media = $query->paginate(24)->withQueryString();
-
-        // Add human readable size to each media item
-        $media->getCollection()->transform(function ($item) {
-            $item->human_readable_size = $this->formatBytes($item->size);
-            return $item;
-        });
-
-        // Get statistics
-        $stats = [
-            'total' => SpatieMedia::count(),
-            'images' => SpatieMedia::where('mime_type', 'like', 'image/%')->count(),
-            'videos' => SpatieMedia::where('mime_type', 'like', 'video/%')->count(),
-            'documents' => SpatieMedia::whereNotLike('mime_type', 'image/%')
-                ->whereNotLike('mime_type', 'video/%')
-                ->count(),
-            'total_size' => $this->formatBytes(SpatieMedia::sum('size')),
-        ];
-
-        return view('backend.pages.media.index', compact('media', 'breadcrumbs', 'stats'));
+        return view('backend.pages.media.index', [
+            'media' => $result['media'],
+            'breadcrumbs' => $breadcrumbs,
+            'stats' => $result['stats']
+        ]);
     }
 
     public function store(MediaUploadRequest $request)
     {
         $this->checkAuthorization(Auth::user(), ['media.create']);
 
-        $uploadedFiles = [];
-
-        foreach ($request->file('files', []) as $file) {
-            // Store the file first
-            $path = $file->store('media', 'public');
-
-            // Create media record
-            $mediaItem = SpatieMedia::create([
-                'model_type' => SpatieMedia::class,
-                'model_id' => 0,
-                'uuid' => null,
-                'collection_name' => 'default',
-                'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
-                'file_name' => basename($path),
-                'mime_type' => $file->getMimeType(),
-                'disk' => 'public',
-                'conversions_disk' => 'public',
-                'size' => $file->getSize(),
-                'manipulations' => '[]',
-                'custom_properties' => '[]',
-                'generated_conversions' => '[]',
-                'responsive_images' => '[]',
-                'order_column' => null,
-            ]);
-
-            $uploadedFiles[] = $mediaItem;
-        }
+        $uploadedFiles = $this->mediaLibraryService->uploadMedia($request->file('files', []));
 
         return response()->json([
             'success' => true,
@@ -139,14 +67,7 @@ class MediaController extends Controller
     {
         $this->checkAuthorization(Auth::user(), ['media.delete']);
 
-        $media = SpatieMedia::findOrFail($id);
-
-        // Delete the physical file
-        if (Storage::disk($media->disk)->exists($media->getPath())) {
-            Storage::disk($media->disk)->delete($media->getPath());
-        }
-
-        $media->delete();
+        $this->mediaLibraryService->deleteMedia($id);
 
         return response()->json([
             'success' => true,
@@ -158,26 +79,8 @@ class MediaController extends Controller
     {
         $this->checkAuthorization(Auth::user(), ['media.delete']);
 
-        $media = SpatieMedia::whereIn('id', $request->ids)->get();
-
-        foreach ($media as $item) {
-            if (Storage::disk($item->disk)->exists($item->getPath())) {
-                Storage::disk($item->disk)->delete($item->getPath());
-            }
-            $item->delete();
-        }
+        $this->mediaLibraryService->bulkDeleteMedia($request->ids);
 
         return redirect()->back()->with('success', __('Selected media deleted successfully'));
-    }
-
-    private function formatBytes($bytes, $precision = 2)
-    {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-        for ($i = 0; $bytes > 1024; $i++) {
-            $bytes /= 1024;
-        }
-
-        return round($bytes, $precision) . ' ' . $units[$i];
     }
 }
