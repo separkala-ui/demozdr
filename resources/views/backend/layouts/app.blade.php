@@ -25,12 +25,6 @@
     </style>
     @endif
 
-    <!-- Prevent FOUC (Flash of Unstyled Content) -->
-    <style>
-        /* Hide content until Alpine.js is ready */
-        [x-cloak] { display: none !important; }
-    </style>
-
     @include('backend.layouts.partials.integration-scripts')
 
     @php echo ld_apply_filters('admin_head', ''); @endphp
