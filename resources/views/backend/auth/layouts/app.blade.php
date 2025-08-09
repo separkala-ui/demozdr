@@ -20,24 +20,36 @@
     </style>
     @endif
 
+    <!-- Prevent FOUC (Flash of Unstyled Content) -->
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+
     @include('backend.layouts.partials.integration-scripts')
 
     @yield('styles')
 </head>
 
-<body x-data="{ page: 'ecommerce', loaded: true, darkMode: false, stickyMenu: false, sidebarToggle: false, scrollTop: false }" x-init="darkMode = JSON.parse(localStorage.getItem('darkMode'));
-$watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))" :class="{ 'dark bg-gray-900': darkMode === true }">
-    <!-- Preloader -->
-    <div x-show="loaded" x-init="window.addEventListener('DOMContentLoaded', () => { setTimeout(() => loaded = false, 500) })"
-        class="fixed left-0 top-0 z-999999 flex h-screen w-screen items-center justify-center bg-white dark:bg-black">
-        <div class="h-16 w-16 animate-spin rounded-full border-4 border-solid border-brand-500 border-t-transparent">
-        </div>
-    </div>
-    <!-- End Preloader -->
+<body x-data="{
+    page: 'ecommerce',
+    darkMode: false,
+    stickyMenu: false,
+    sidebarToggle: false,
+    scrollTop: false
+}"
+x-init="
+    darkMode = JSON.parse(localStorage.getItem('darkMode'));
+    $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)));
+    
+    // Add loaded class for smooth fade-in
+    $nextTick(() => {
+        document.querySelector('.auth-container').classList.add('loaded');
+    });
+"
+:class="{ 'dark bg-gray-900': darkMode === true }">
 
-    <!-- Page Wrapper -->
-    <div class="flex h-screen overflow-hidden">
-
+    <!-- Page Wrapper with smooth fade-in -->
+    <div class="auth-container flex h-screen overflow-hidden">
         <!-- Content Area -->
         <div class="relative flex flex-col flex-1 overflow-x-hidden overflow-y-auto">
             <!-- Small Device Overlay -->
@@ -54,8 +66,7 @@ $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(valu
                         </div>
                     </div>
 
-                    <div
-                        class="relative items-center hidden w-full h-full bg-brand-950 dark:bg-white/5 lg:grid lg:w-1/2">
+                    <div class="relative items-center hidden w-full h-full bg-brand-950 dark:bg-white/5 lg:grid lg:w-1/2">
                         <div class="flex items-center justify-center z-1">
                             <!-- ===== Common Grid Shape Start ===== -->
                             <div class="absolute right-0 top-0 -z-1 w-full max-w-[250px] xl:max-w-[450px]">
@@ -75,6 +86,7 @@ $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(valu
                             </div>
                         </div>
                     </div>
+                    
                     <!-- Toggler -->
                     <div class="fixed z-50 hidden bottom-6 right-6 sm:flex gap-2 items-center justify-center">
                         @include('backend.layouts.partials.locale-switcher', [

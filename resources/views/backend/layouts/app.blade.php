@@ -26,33 +26,31 @@
     @endif
 
     @include('backend.layouts.partials.integration-scripts')
-    
+
     @php echo ld_apply_filters('admin_head', ''); @endphp
 </head>
 
-<body x-data="{ 
-    page: 'ecommerce', 
-    loaded: true, 
-    darkMode: false, 
-    stickyMenu: false, 
-    sidebarToggle: $persist(false), 
-    scrollTop: false 
-}" 
+<body x-data="{
+    page: 'ecommerce',
+    darkMode: false,
+    stickyMenu: false,
+    sidebarToggle: $persist(false),
+    scrollTop: false
+}"
 x-init="
     darkMode = JSON.parse(localStorage.getItem('darkMode')) ?? false;
     $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)));
-    $watch('sidebarToggle', value => localStorage.setItem('sidebarToggle', JSON.stringify(value)))
-" 
+    $watch('sidebarToggle', value => localStorage.setItem('sidebarToggle', JSON.stringify(value)));
+    
+    // Add loaded class for smooth fade-in
+    $nextTick(() => {
+        document.querySelector('.app-container').classList.add('loaded');
+    });
+"
 :class="{ 'dark bg-gray-900': darkMode === true }">
-    <!-- Preloader -->
-    <div x-show="loaded" x-init="window.addEventListener('DOMContentLoaded', () => { setTimeout(() => loaded = false, 500) })"
-        class="fixed left-0 top-0 z-999999 flex h-screen w-screen items-center justify-center bg-white dark:bg-black">
-        <div class="h-16 w-16 animate-spin rounded-full border-4 border-solid border-brand-500 border-t-transparent">
-        </div>
-    </div>
-    <!-- End Preloader -->
-    <!-- Page Wrapper -->
-    <div class="flex h-screen overflow-hidden">
+
+    <!-- Page Wrapper with smooth fade-in -->
+    <div class="app-container flex h-screen overflow-hidden">
         @include('backend.layouts.partials.sidebar-logo')
 
         <!-- Content Area -->
@@ -84,7 +82,6 @@ x-init="
             const html = document.documentElement;
             const darkModeToggle = document.getElementById('darkModeToggle');
             const header = document.getElementById('appHeader');
-
 
             // Update header background based on current mode
             function updateHeaderBg() {
@@ -134,7 +131,7 @@ x-init="
             }
         });
     </script>
-    
+
     @if (!empty(config('settings.global_custom_js')))
     <script>
         {!! config('settings.global_custom_js') !!}
@@ -150,7 +147,7 @@ x-init="
                 window.LaraDrawers[drawerId].open = true;
                 return;
             }
-            
+
             // Method 2: Try using Alpine.js directly
             const drawerEl = document.querySelector(`[data-drawer-id="${drawerId}"]`);
             if (drawerEl && window.Alpine) {
@@ -164,12 +161,12 @@ x-init="
                     console.error('Alpine error:', e);
                 }
             }
-            
+
             // Method 3: Dispatch a custom event as fallback
             console.log('Opening drawer via event dispatch');
             window.dispatchEvent(new CustomEvent('open-drawer-' + drawerId));
         };
-        
+
         // Initialize all drawer triggers on page load
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('[data-drawer-trigger]').forEach(function(element) {
@@ -184,7 +181,7 @@ x-init="
             });
         });
     </script>
-    
+
     <x-toast-notifications />
 
     @livewireScriptConfig

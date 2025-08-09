@@ -12,6 +12,7 @@
     // New functional props
     'queryParam' => null,
     'refreshPage' => false,
+    'onchange' => null,
 ])
 
 @php
@@ -80,6 +81,13 @@
                     this.updateUrlParam(this.queryParam, option.value);
                 }
 
+                // Call onchange function if provided
+                @if($onchange)
+                if (typeof {{ $onchange }} === 'function') {
+                    {{ $onchange }}();
+                }
+                @endif
+
                 // Dispatch custom event
                 const event = new CustomEvent('combobox-change', {
                     detail: {
@@ -106,6 +114,13 @@
             if (this.queryParam) {
                 this.updateUrlParam(this.queryParam, this.selectedOptions.join(','));
             }
+
+            // Call onchange function if provided
+            @if($onchange)
+            if (typeof {{ $onchange }} === 'function') {
+                {{ $onchange }}();
+            }
+            @endif
 
             // Dispatch custom event for multiple select
             const option = this.allOptions.find(opt => opt.value == optionValue);

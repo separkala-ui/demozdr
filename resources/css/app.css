@@ -24,3 +24,13 @@ layer(base);
 @source '../views';
 @source "../../node_modules/flowbite";
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+/* Smooth fade-in animation for the main content */
+.app-container {
+    opacity: 0;
+    transition: opacity 0.2s ease-in;
+}
+
+.app-container.loaded {
+    opacity: 1;
+}
