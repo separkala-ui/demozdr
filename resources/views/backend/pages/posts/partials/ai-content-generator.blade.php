@@ -243,12 +243,27 @@
                     document.getElementById('excerpt').value = this.generatedContent.excerpt;
                 }
 
-                // Insert content
+                // Insert content into Quill editor.
                 if (this.generatedContent.content && document.getElementById('content')) {
-                    // Handle TinyMCE editor if present
-                    if (typeof tinymce !== 'undefined' && tinymce.get('content')) {
-                        tinymce.get('content').setContent(this.generatedContent.content);
+                    if (window['quill_content']) {
+                        // Convert line breaks to HTML paragraphs and breaks.
+                        let htmlContent = this?.generatedContent?.content || '';
+                        
+                        // If the content doesn't contain HTML tags, convert line breaks to HTML
+                        if (!htmlContent.includes('<') && !htmlContent.includes('>')) {
+                            // Split by double line breaks to create paragraphs
+                            htmlContent = htmlContent
+                                .split('\n\n')
+                                .map(paragraph => paragraph.trim())
+                                .filter(paragraph => paragraph.length > 0)
+                                .map(paragraph => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
+                                .join('');
+                        }
+                        
+                        // Use Quill's method to insert HTML content.
+                        window['quill_content'].clipboard.dangerouslyPasteHTML(htmlContent);
                     } else {
+                        // Fallback to regular textarea if Quill is not available
                         document.getElementById('content').value = this.generatedContent.content;
                     }
                 }

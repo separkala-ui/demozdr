@@ -65,9 +65,24 @@ class AiContentGeneratorService
     private function getSystemPrompt(string $type): string
     {
         return match ($type) {
-            'post_content' => 'You are a content creation assistant. Generate well-structured blog post content including title, excerpt, and main content based on the user\'s requirements. Return the response in JSON format with keys: "title", "excerpt", and "content". Make the content engaging, SEO-friendly, and well-formatted with proper paragraphs.',
-            'page_content' => 'You are a web page content creation assistant. Generate professional page content including title, excerpt, and main content based on the user\'s requirements. Return the response in JSON format with keys: "title", "excerpt", and "content". Make the content informative, professional, and well-structured.',
-            default => 'You are a helpful content creation assistant. Generate content based on the user\'s requirements and return it in JSON format with appropriate keys.'
+            'post_content' => 'You are a content creation assistant. Generate well-structured blog post content including title, excerpt, and main content based on the user\'s requirements. 
+
+IMPORTANT: Return the response in JSON format with keys: "title", "excerpt", and "content". 
+
+For the content field:
+- Use double line breaks (\\n\\n) to separate paragraphs
+- Make each paragraph 2-3 sentences long
+- Create engaging, SEO-friendly content with proper structure
+- Use simple HTML formatting when appropriate (like <strong>, <em>)
+
+Example format:
+{
+  "title": "Your Title Here",
+  "excerpt": "A brief summary of the content",
+  "content": "First paragraph with 2-3 sentences.\\n\\nSecond paragraph with more details.\\n\\nThird paragraph with conclusion."
+}',
+            'page_content' => 'You are a web page content creation assistant. Generate professional page content including title, excerpt, and main content based on the user\'s requirements. Return the response in JSON format with keys: "title", "excerpt", and "content". Use double line breaks (\\n\\n) to separate paragraphs and make the content informative, professional, and well-structured.',
+            default => 'You are a helpful content creation assistant. Generate content based on the user\'s requirements and return it in JSON format with appropriate keys. Use proper paragraph breaks with \\n\\n.'
         };
     }
 
@@ -138,10 +153,39 @@ class AiContentGeneratorService
         $parsedContent = json_decode($content, true);
 
         if (json_last_error() === JSON_ERROR_NONE && is_array($parsedContent)) {
-            return $parsedContent;
+            // Ensure we have the required keys
+            return [
+                'title' => $parsedContent['title'] ?? 'Generated Title',
+                'excerpt' => $parsedContent['excerpt'] ?? 'Generated excerpt from AI',
+                'content' => $parsedContent['content'] ?? $content,
+            ];
         }
 
-        // If not valid JSON, return as plain content
+        // If not valid JSON, try to structure the content better
+        $lines = explode('\n', trim($content));
+        $lines = array_filter($lines, fn ($line) => ! empty(trim($line)));
+
+        if (count($lines) >= 2) {
+            // Use first line as title, create excerpt and content from remaining
+            $title = trim($lines[0]);
+            $contentLines = array_slice($lines, 1);
+            $fullContent = implode("\n\n", $contentLines);
+
+            // Create excerpt from first sentence or first 150 characters
+            $sentences = preg_split('/[.!?]+/', $fullContent);
+            $excerpt = trim($sentences[0] ?? '');
+            if (strlen($excerpt) > 150) {
+                $excerpt = substr($excerpt, 0, 150) . '...';
+            }
+
+            return [
+                'title' => $title,
+                'excerpt' => $excerpt ?: 'Generated excerpt from AI',
+                'content' => $fullContent,
+            ];
+        }
+
+        // Fallback for single paragraph content
         return [
             'title' => 'Generated Title',
             'excerpt' => 'Generated excerpt from AI',

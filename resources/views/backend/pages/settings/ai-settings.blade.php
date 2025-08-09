@@ -37,7 +37,7 @@
                         id="ai_openai_api_key"
                         value="{{ config('settings.ai_openai_api_key') ?? '' }}"
                         placeholder="{{ __('Enter your OpenAI API key') }}"
-                        class="form-control">
+                        class="form-control pr-16">
                     <button type="button" 
                         onclick="copyToClipboard('ai_openai_api_key')" 
                         class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-300 flex items-center justify-center w-6 h-6 hover:text-gray-700 dark:hover:text-gray-100 transition-colors">
