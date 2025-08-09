@@ -106,6 +106,15 @@ class PermissionService
                     'term.delete',
                 ],
             ],
+            [
+                'group_name' => 'media',
+                'permissions' => [
+                    'media.create',
+                    'media.view',
+                    'media.edit',
+                    'media.delete',
+                ],
+            ],
         ];
 
         return $permissions;
