@@ -9,9 +9,6 @@ use Illuminate\Http\Request;
 
 class MediaLibraryService
 {
-    /**
-     * Upload a file from request to a model's media collection
-     */
     public function uploadFromRequest(
         MediaInterface $model,
         Request $request,
@@ -24,9 +21,6 @@ class MediaLibraryService
         }
     }
 
-    /**
-     * Upload multiple files from request to a model's media collection
-     */
     public function uploadMultipleFromRequest(
         MediaInterface $model,
         Request $request,
@@ -41,9 +35,6 @@ class MediaLibraryService
         }
     }
 
-    /**
-     * Clear a media collection
-     */
     public function clearMediaCollection(MediaInterface $model, string $collection = 'default'): void
     {
         $model->clearMediaCollection($collection);
