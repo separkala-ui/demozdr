@@ -105,6 +105,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('/media-modal-demo', function () {
         return view('components.media-modal-examples');
     })->name('media-modal.demo');
+    // AI Content Generation Routes
+    Route::prefix('ai')->name('ai.')->group(function () {
+        Route::get('/providers', [App\Http\Controllers\Backend\AiContentController::class, 'getProviders'])->name('providers');
+        Route::post('/generate-content', [App\Http\Controllers\Backend\AiContentController::class, 'generateContent'])->name('generate-content');
+    });
 });
 
 /**

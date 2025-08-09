@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ActionLogController;
+use App\Http\Controllers\Api\AiContentController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\ModuleController;
 use App\Http\Controllers\Api\PermissionController;
@@ -91,6 +92,12 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     // Action logs
     Route::get('action-logs', [ActionLogController::class, 'index'])->name('api.action-logs.index');
     Route::get('action-logs/{id}', [ActionLogController::class, 'show'])->name('api.action-logs.show');
+
+    // AI Content Generation
+    Route::prefix('ai')->group(function () {
+        Route::get('providers', [AiContentController::class, 'getProviders'])->name('api.ai.providers');
+        Route::post('generate-content', [AiContentController::class, 'generateContent'])->name('api.ai.generate-content');
+    });
 
     // Module management
     Route::get('modules', [ModuleController::class, 'index'])->name('api.modules.index');

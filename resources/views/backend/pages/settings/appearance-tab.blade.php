@@ -9,7 +9,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label for="color-picker-theme_primary_color" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     {{ __('Theme Primary Color') }}
                 </label>
                 <div class="flex gap-2 items-center">
@@ -26,14 +26,14 @@
                     </div>
                     <input type="text" id="input-theme_primary_color" name="theme_primary_color_text"
                         value="{{ config('settings.theme_primary_color') ?? '#ffffff' }}"
-                        class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                        class="form-control"
                         placeholder="#ffffff" oninput="syncColor('theme_primary_color', true)">
                 </div>
             </div>
 
             <!-- Theme Secondary Color -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label for="color-picker-theme_secondary_color" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     {{ __('Theme Secondary Color') }}
                 </label>
                 <div class="flex gap-2 items-center">
@@ -50,7 +50,7 @@
                     </div>
                     <input type="text" id="input-theme_secondary_color" name="theme_secondary_color_text"
                         value="{{ config('settings.theme_secondary_color') ?? '#ffffff' }}"
-                        class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                        class="form-control"
                         placeholder="#ffffff" oninput="syncColor('theme_secondary_color', true)">
                 </div>
             </div>
@@ -58,11 +58,11 @@
 
         <div class="flex">
             <div class="md:basis-1/2">
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label for="default_mode" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {{ __('Default Mode') }}
                 </label>
-                <select name="default_mode"
-                    class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                <select id="default_mode" name="default_mode"
+                    class="form-control">
                     <option value="lite" {{ config('settings.default_mode') == 'lite' ? 'selected' : '' }}>{{ __('Lite') }}
                     </option>
                     <option value="dark"{{ config('settings.default_mode') == 'dark' ? 'selected' : '' }}>{{ __('Dark') }}
@@ -80,7 +80,7 @@
 
                 <!-- Navbar Background Color (Lite Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label for="color-picker-navbar_bg_lite" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Navbar Background Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -97,14 +97,14 @@
                         </div>
                         <input type="text" id="input-navbar_bg_lite" name="navbar_bg_lite_text"
                             value="{{ config('settings.navbar_bg_lite') ?? '#ffffff' }}"
-                            class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                            class="form-control"
                             placeholder="#ffffff" oninput="syncColor('navbar_bg_lite', true)">
                     </div>
                 </div>
 
                 <!-- Sidebar Background Color (Lite Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label for="color-picker-sidebar_bg_lite" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Sidebar Background Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -121,14 +121,14 @@
                         </div>
                         <input type="text" id="input-sidebar_bg_lite" name="sidebar_bg_lite_text"
                             value="{{ config('settings.sidebar_bg_lite') ?? '#ffffff' }}"
-                            class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                            class="form-control"
                             placeholder="#ffffff" oninput="syncColor('sidebar_bg_lite', true)">
                     </div>
                 </div>
 
                 <!-- Navbar Text Color (Lite Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label for="color-picker-navbar_text_lite" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Navbar Text Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -145,14 +145,14 @@
                         </div>
                         <input type="text" id="input-navbar_text_lite" name="navbar_text_lite_text"
                             value="{{ config('settings.navbar_text_lite') ?? '#ffffff' }}"
-                            class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                            class="form-control"
                             placeholder="#ffffff" oninput="syncColor('navbar_text_lite', true)">
                     </div>
                 </div>
 
                 <!-- Sidebar Text Color (Lite Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label for="color-picker-sidebar_text_lite" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Sidebar Text Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -169,7 +169,7 @@
                         </div>
                         <input type="text" id="input-sidebar_text_lite" name="sidebar_text_lite_text"
                             value="{{ config('settings.sidebar_text_lite') ?? '#ffffff' }}"
-                            class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                            class="form-control"
                             placeholder="#ffffff" oninput="syncColor('sidebar_text_lite', true)">
                     </div>
                 </div>
@@ -181,7 +181,7 @@
 
                 <!-- Navbar Background Color (Dark Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label for="color-picker-navbar_bg_dark" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Navbar Background Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -198,14 +198,14 @@
                         </div>
                         <input type="text" id="input-navbar_bg_dark" name="navbar_bg_dark_text"
                             value="{{ config('settings.navbar_bg_dark') ?? '#ffffff' }}"
-                            class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                            class="form-control"
                             placeholder="#ffffff" oninput="syncColor('navbar_bg_dark', true)">
                     </div>
                 </div>
 
                 <!-- Sidebar Background Color (Dark Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label for="color-picker-sidebar_bg_dark" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Sidebar Background Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -222,14 +222,14 @@
                         </div>
                         <input type="text" id="input-sidebar_bg_dark" name="sidebar_bg_dark_text"
                             value="{{ config('settings.sidebar_bg_dark') ?? '#ffffff' }}"
-                            class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                            class="form-control"
                             placeholder="#ffffff" oninput="syncColor('sidebar_bg_dark', true)">
                     </div>
                 </div>
 
                 <!-- Navbar Text Color (Dark Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label for="color-picker-navbar_text_dark" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Navbar Text Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -246,14 +246,14 @@
                         </div>
                         <input type="text" id="input-navbar_text_dark" name="navbar_text_dark_text"
                             value="{{ config('settings.navbar_text_dark') ?? '#ffffff' }}"
-                            class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                            class="form-control"
                             placeholder="#ffffff" oninput="syncColor('navbar_text_dark', true)">
                     </div>
                 </div>
 
                 <!-- Sidebar Text Color (Dark Mode) -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label for="color-picker-sidebar_text_dark" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Sidebar Text Color') }}
                     </label>
                     <div class="flex gap-2 items-center">
@@ -270,7 +270,7 @@
                         </div>
                         <input type="text" id="input-sidebar_text_dark" name="sidebar_text_dark_text"
                             value="{{ config('settings.sidebar_text_dark') ?? '#ffffff' }}"
-                            class="h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+                            class="form-control"
                             placeholder="#ffffff" oninput="syncColor('sidebar_text_dark', true)">
                     </div>
                 </div>
@@ -291,11 +291,11 @@
     <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
         <!-- Custom CSS -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label for="global_custom_css" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {{ __('Global Custom CSS') }}
             </label>
-            <textarea name="global_custom_css" rows="6"
-                class="w-full rounded-md border border-gray-300 bg-transparent p-4 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+            <textarea id="global_custom_css" name="global_custom_css" rows="6"
+                class="form-control h-16"
                 placeholder=".my-class { color: red; }">{{ config('settings.global_custom_css') }}</textarea>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">
                 {{ __('Add custom CSS that will be applied to all pages') }}
@@ -304,11 +304,11 @@
 
         <!-- Custom JavaScript -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label for="global_custom_js" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {{ __('Global Custom JavaScript') }}
             </label>
-            <textarea name="global_custom_js" rows="6"
-                class="w-full rounded-md border border-gray-300 bg-transparent p-4 text-sm text-gray-700 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+            <textarea id="global_custom_js" name="global_custom_js" rows="6"
+                class="form-control h-16"
                 placeholder="document.addEventListener('DOMContentLoaded', function() { /* Your code */ });">{{ config('settings.global_custom_js') }}</textarea>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">
                 {{ __('Add custom JavaScript that will be loaded on all pages') }}

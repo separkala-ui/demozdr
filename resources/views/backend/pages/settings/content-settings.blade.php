@@ -12,9 +12,7 @@
     >
         <div class="flex">
             <div class="md:basis-1/2">
-                <label
-                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
+                <label class="form-label">
                     {{ __("Default Pagination") }}
                 </label>
                 <input
