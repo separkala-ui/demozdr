@@ -92,6 +92,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     // Media Routes.
     Route::prefix('media')->name('media.')->group(function () {
         Route::get('/', [MediaController::class, 'index'])->name('index');
+        Route::get('/api', [MediaController::class, 'api'])->name('api');
         Route::post('/', [MediaController::class, 'store'])->name('store');
         Route::delete('/{id}', [MediaController::class, 'destroy'])->name('destroy');
         Route::delete('/', [MediaController::class, 'bulkDelete'])->name('bulk-delete');
@@ -99,6 +100,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
 
     // Editor Upload Route
     Route::post('/editor/upload', [App\Http\Controllers\Backend\EditorController::class, 'upload'])->name('editor.upload');
+
+    // Media Modal Demo Route (for testing)
+    Route::get('/media-modal-demo', function () {
+        return view('components.media-modal-examples');
+    })->name('media-modal.demo');
 });
 
 /**
