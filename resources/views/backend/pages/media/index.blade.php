@@ -9,12 +9,19 @@
     selectedMedia: [],
     selectAll: false,
     bulkDeleteModalOpen: false,
+    typeDropdownOpen: false,
+    bulkActionsDropdownOpen: false,
     viewMode: localStorage.getItem('mediaViewMode') || 'grid',
     uploadModalOpen: false,
     
     toggleViewMode() {
         this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid';
         localStorage.setItem('mediaViewMode', this.viewMode);
+    },
+    
+    showSingleDeleteModal(id) {
+        this.selectedMedia = [id.toString()];
+        this.bulkDeleteModalOpen = true;
     }
 }" id="mediaManager">
     <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
@@ -83,27 +90,36 @@
 
                 <div class="flex items-center gap-3">
                     <!-- Bulk Actions dropdown -->
-                    <div class="flex items-center justify-center" x-show="selectedMedia.length > 0">
-                        <button id="bulkActionsButton" data-dropdown-toggle="bulkActionsDropdown" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
+                    <div class="flex items-center justify-center relative" x-show="selectedMedia.length > 0">
+                        <button @click="bulkActionsDropdownOpen = !bulkActionsDropdownOpen" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
                             <iconify-icon icon="lucide:more-vertical"></iconify-icon>
                             <span>{{ __('Bulk Actions') }} (<span x-text="selectedMedia.length"></span>)</span>
                             <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                         </button>
 
                         <!-- Bulk Actions dropdown menu -->
-                        <div id="bulkActionsDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
+                        <div x-show="bulkActionsDropdownOpen" 
+                             @click.away="bulkActionsDropdownOpen = false"
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute top-full right-0 z-10 w-48 p-2 bg-white rounded-md shadow-lg dark:bg-gray-700 mt-2">
                             <ul class="space-y-2">
-                                <li class="cursor-pointer flex items-center gap-1 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500 dark:hover:text-red-50 px-2 py-1.5 rounded transition-colors duration-300"
-                                    @click="bulkDeleteModalOpen = true">
-                                    <iconify-icon icon="lucide:trash"></iconify-icon> {{ __('Delete Selected') }}
+                                <li class="cursor-pointer flex items-center gap-2 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500 dark:hover:text-red-50 px-2 py-1.5 rounded transition-colors duration-300"
+                                    @click="bulkDeleteModalOpen = true; bulkActionsDropdownOpen = false">
+                                    <iconify-icon icon="lucide:trash"></iconify-icon> 
+                                    {{ __('Delete Selected') }}
                                 </li>
                             </ul>
                         </div>
                     </div>
 
                     <!-- Type Filter dropdown -->
-                    <div class="flex items-center justify-center">
-                        <button id="typeDropdownButton" data-dropdown-toggle="typeDropdown" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
+                    <div class="flex items-center justify-center relative">
+                        <button @click="typeDropdownOpen = !typeDropdownOpen" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
                             <iconify-icon icon="lucide:filter"></iconify-icon>
                             <span class="hidden sm:inline">{{ __('Type') }}</span>
                             @if(request('type'))
@@ -115,23 +131,47 @@
                         </button>
 
                         <!-- Type dropdown menu -->
-                        <div id="typeDropdown" class="z-10 hidden w-48 p-2 bg-white rounded-md shadow dark:bg-gray-700">
+                        <div x-show="typeDropdownOpen" 
+                             @click.away="typeDropdownOpen = false"
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute top-full right-0 z-10 w-48 p-2 bg-white rounded-md shadow-lg dark:bg-gray-700 mt-2">
                             <ul class="space-y-2">
-                                <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ !request('type') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
-                                    onclick="window.location.href='{{ route('admin.media.index', array_merge(request()->query(), ['type' => null])) }}'">
-                                    {{ __('All Types') }}
+                                <li>
+                                    <a href="{{ route('admin.media.index', array_merge(request()->query(), ['type' => null])) }}" 
+                                       @click="typeDropdownOpen = false"
+                                       class="cursor-pointer flex items-center gap-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1.5 rounded transition-colors duration-300 {{ !request('type') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                        <iconify-icon icon="lucide:layers" class="text-gray-500 dark:text-gray-400"></iconify-icon>
+                                        {{ __('All Types') }}
+                                    </a>
                                 </li>
-                                <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ request('type') === 'images' ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
-                                    onclick="window.location.href='{{ route('admin.media.index', array_merge(request()->query(), ['type' => 'images'])) }}'">
-                                    {{ __('Images') }}
+                                <li>
+                                    <a href="{{ route('admin.media.index', array_merge(request()->query(), ['type' => 'images'])) }}" 
+                                       @click="typeDropdownOpen = false"
+                                       class="cursor-pointer flex items-center gap-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1.5 rounded transition-colors duration-300 {{ request('type') === 'images' ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                        <iconify-icon icon="lucide:image" class="text-green-500"></iconify-icon>
+                                        {{ __('Images') }}
+                                    </a>
                                 </li>
-                                <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ request('type') === 'videos' ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
-                                    onclick="window.location.href='{{ route('admin.media.index', array_merge(request()->query(), ['type' => 'videos'])) }}'">
-                                    {{ __('Videos') }}
+                                <li>
+                                    <a href="{{ route('admin.media.index', array_merge(request()->query(), ['type' => 'videos'])) }}" 
+                                       @click="typeDropdownOpen = false"
+                                       class="cursor-pointer flex items-center gap-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1.5 rounded transition-colors duration-300 {{ request('type') === 'videos' ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                        <iconify-icon icon="lucide:video" class="text-purple-500"></iconify-icon>
+                                        {{ __('Videos') }}
+                                    </a>
                                 </li>
-                                <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ request('type') === 'documents' ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
-                                    onclick="window.location.href='{{ route('admin.media.index', array_merge(request()->query(), ['type' => 'documents'])) }}'">
-                                    {{ __('Documents') }}
+                                <li>
+                                    <a href="{{ route('admin.media.index', array_merge(request()->query(), ['type' => 'documents'])) }}" 
+                                       @click="typeDropdownOpen = false"
+                                       class="cursor-pointer flex items-center gap-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1.5 rounded transition-colors duration-300 {{ request('type') === 'documents' ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                        <iconify-icon icon="lucide:file-text" class="text-orange-500"></iconify-icon>
+                                        {{ __('Documents') }}
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -206,20 +246,20 @@
                                     <!-- Actions overlay -->
                                     <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2">
                                         @if(str_starts_with($item->mime_type, 'image/'))
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:bg-gray-100 transition-colors"
+                                        <button class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
                                                 onclick="openImageModal('{{ asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}')"
                                                 title="{{ __('View') }}">
                                             <iconify-icon icon="lucide:eye" class="text-sm"></iconify-icon>
                                         </button>
                                         @endif
-                                        <button class="p-2 bg-white rounded-full text-gray-700 hover:bg-gray-100 transition-colors"
+                                        <button class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
                                                 onclick="copyToClipboard('{{ asset('storage/media/' . $item->file_name) }}')"
                                                 title="{{ __('Copy URL') }}">
                                             <iconify-icon icon="lucide:copy" class="text-sm"></iconify-icon>
                                         </button>
                                         @if (auth()->user()->can('media.delete'))
-                                        <button class="p-2 bg-red-500 rounded-full text-white hover:bg-red-600 transition-colors"
-                                                onclick="deleteMedia({{ $item->id }})"
+                                        <button class="p-2 bg-red-500 rounded-md text-white hover:bg-red-600 transition-colors"
+                                                @click="showSingleDeleteModal({{ $item->id }})"
                                                 title="{{ __('Delete') }}">
                                             <iconify-icon icon="lucide:trash" class="text-sm"></iconify-icon>
                                         </button>
@@ -320,7 +360,7 @@
                                             </button>
                                             @if (auth()->user()->can('media.delete'))
                                             <button class="text-red-400 hover:text-red-600"
-                                                    onclick="deleteMedia({{ $item->id }})"
+                                                    @click="showSingleDeleteModal({{ $item->id }})"
                                                     title="{{ __('Delete') }}">
                                                 <iconify-icon icon="lucide:trash" class="text-sm"></iconify-icon>
                                             </button>
@@ -382,36 +422,6 @@ function copyToClipboard(text) {
             window.showToast('success', '{{ __("Success") }}', '{{ __("URL copied to clipboard") }}');
         }
     });
-}
-
-function deleteMedia(id) {
-    if (confirm('{{ __("Are you sure you want to delete this media file?") }}')) {
-        fetch(`/admin/media/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert(data.message || '{{ __("Error deleting media file") }}');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('{{ __("Error deleting media file") }}');
-        });
-    }
 }
 
 function openImageModal(src, alt) {
