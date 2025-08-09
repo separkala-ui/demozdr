@@ -124,6 +124,10 @@
             "@phpstan",
             "@phpunit",
             "@type-check"
+        ],
+        "fresh:seed": [
+            "@php artisan migrate:fresh --seed",
+            "@php artisan module:seed"
         ]
     },
     "minimum-stability": "beta",
