@@ -150,18 +150,4 @@ class MediaHelper
 
         return $icons[$category] ?? $icons['other'];
     }
-
-    public static function supportsImageConversions(string $mimeType): bool
-    {
-        $supportedTypes = [
-            'image/jpeg',
-            'image/png',
-            'image/gif',
-            'image/webp',
-            'image/bmp',
-            'image/tiff'
-        ];
-
-        return in_array($mimeType, $supportedTypes);
-    }
 }
