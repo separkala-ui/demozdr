@@ -27,8 +27,9 @@
         <div class="px-6 pb-6">
             <form id="upload-form" enctype="multipart/form-data">
                 @csrf
-                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center transition-colors"
+                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center transition-colors cursor-pointer hover:border-primary hover:bg-primary-50 dark:hover:bg-primary-900/20"
                      id="drop-zone"
+                     onclick="document.getElementById('file-input').click()"
                      ondrop="dropHandler(event);"
                      ondragover="dragOverHandler(event);"
                      ondragleave="dragLeaveHandler(event);">
@@ -42,11 +43,6 @@
                            multiple 
                            accept="image/*,video/*,.pdf,.doc,.docx,.txt"
                            class="hidden">
-                    <button type="button" 
-                            onclick="document.getElementById('file-input').click()"
-                            class="btn-primary">
-                        {{ __('Select Files') }}
-                    </button>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
                         {{ __('Maximum file size: 10MB per file') }}
                     </p>
