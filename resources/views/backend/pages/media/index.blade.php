@@ -378,8 +378,8 @@
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
         // Show success message
-        if (window.toast) {
-            window.toast('{{ __("URL copied to clipboard") }}', 'success');
+        if (window.showToast) {
+            window.showToast('success', '{{ __("Success") }}', '{{ __("URL copied to clipboard") }}');
         }
     });
 }
