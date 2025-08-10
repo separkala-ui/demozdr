@@ -137,9 +137,11 @@ class MediaLibraryService
     {
         $media = SpatieMedia::findOrFail($id);
 
-        // Delete the physical file
-        if (Storage::disk($media->disk)->exists($media->getPath())) {
-            Storage::disk($media->disk)->delete($media->getPath());
+        // Delete the physical file - construct path manually to avoid Spatie method issues
+        $filePath = 'media/' . $media->file_name;
+
+        if (Storage::disk($media->disk)->exists($filePath)) {
+            Storage::disk($media->disk)->delete($filePath);
         }
 
         return $media->delete();
@@ -151,9 +153,13 @@ class MediaLibraryService
         $media = SpatieMedia::whereIn('id', $ids)->get();
 
         foreach ($media as $item) {
-            if (Storage::disk($item->disk)->exists($item->getPath())) {
-                Storage::disk($item->disk)->delete($item->getPath());
+            // Delete the physical file - construct path manually to avoid Spatie method issues
+            $filePath = 'media/' . $item->file_name;
+
+            if (Storage::disk($item->disk)->exists($filePath)) {
+                Storage::disk($item->disk)->delete($filePath);
             }
+
             if ($item->delete()) {
                 $deleteCount++;
             }
