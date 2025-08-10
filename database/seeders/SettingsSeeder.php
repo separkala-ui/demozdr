@@ -54,6 +54,11 @@ class SettingsSeeder extends Seeder
             // Custom CSS and JS.
             ['option_name' => 'global_custom_css', 'option_value' => ''],
             ['option_name' => 'global_custom_js', 'option_value' => ''],
+
+            // AI Integration settings.
+            ['option_name' => 'ai_default_provider', 'option_value' => 'openai'],
+            ['option_name' => 'ai_openai_api_key', 'option_value' => ''],
+            ['option_name' => 'ai_claude_api_key', 'option_value' => ''],
         ];
 
         // Add created_at and updated_at.

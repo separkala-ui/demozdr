@@ -68,7 +68,7 @@ class ContentServiceProvider extends ServiceProvider
             'description' => 'Default post type for static pages',
             'has_archive' => false,
             'hierarchical' => true,
-            'supports_excerpt' => false,
+            'supports_excerpt' => true,
             'taxonomies' => [],
         ]);
 
