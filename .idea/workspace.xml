@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="refactor: add ModuleServiceProvider to application service providers">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/Modules/ModuleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/Modules/ModuleService.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/task-manager/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/composer.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
