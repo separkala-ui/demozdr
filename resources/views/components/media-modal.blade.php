@@ -252,7 +252,8 @@ function createMediaItem(modalId, file) {
 
     let thumbnailHtml = '';
     if (isImage) {
-        thumbnailHtml = `<img src="${file.url}" alt="${file.name}" class="w-full h-32 object-cover" loading="lazy">`;
+        const imgSrc = file.thumbnail_url || file.url;
+        thumbnailHtml = `<img src="${imgSrc}" alt="${file.name}" class="w-full h-32 object-cover" loading="lazy">`;
     } else if (isVideo) {
         thumbnailHtml = `
             <div class="w-full h-32 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 flex items-center justify-center">

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backend;
 
-use App\Helper\MediaHelper;
+use App\Support\Helper\MediaHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\MediaBulkDeleteRequest;
 use App\Http\Requests\Backend\MediaUploadRequest;
@@ -51,6 +51,24 @@ class MediaController extends Controller
             $request->get('direction', 'desc'),
             50
         );
+
+        // Transform media items to include proper URLs.
+        $result['media']->getCollection()->transform(function ($item) {
+            try {
+                if (empty($item->model_type) || $item->model_id == 0) {
+                    $item->url = asset('storage/media/' . $item->file_name);
+                    $item->thumb_url = $item->url;
+                } else {
+                    $item->url = $item->getUrl();
+                    $item->thumb_url = $item->hasGeneratedConversion('thumb') ? $item->getUrl('thumb') : $item->getUrl();
+                }
+            } catch (\Exception $e) {
+                $item->url = asset('storage/media/' . $item->file_name);
+                $item->thumb_url = $item->url;
+            }
+
+            return $item;
+        });
 
         // Get upload limits for frontend
         $uploadLimits = MediaHelper::getUploadLimits();
@@ -127,11 +145,27 @@ class MediaController extends Controller
             $request->get('type'),
             $request->get('sort', 'created_at'),
             $request->get('direction', 'desc'),
-            100 // Return more items for modal
+            100
         );
 
-        // Transform media for API response
+        // Transform media for API response.
         $mediaItems = $result['media']->map(function ($item) {
+            $url = '';
+            $thumbnailUrl = '';
+
+            try {
+                if (empty($item->model_type) || $item->model_id == 0) {
+                    $url = asset('storage/media/' . $item->file_name);
+                    $thumbnailUrl = $url;
+                } else {
+                    $url = $item->getUrl();
+                    $thumbnailUrl = $item->hasGeneratedConversion('thumb') ? $item->getUrl('thumb') : $item->getUrl();
+                }
+            } catch (\Exception $e) {
+                $url = asset('storage/media/' . $item->file_name);
+                $thumbnailUrl = $url;
+            }
+
             return [
                 'id' => $item->id,
                 'name' => $item->name,
@@ -139,9 +173,14 @@ class MediaController extends Controller
                 'mime_type' => $item->mime_type,
                 'size' => $item->size,
                 'human_readable_size' => $item->human_readable_size,
-                'url' => asset('storage/media/' . $item->file_name),
+                'url' => $url,
+                'thumbnail_url' => $thumbnailUrl,
                 'extension' => pathinfo($item->file_name, PATHINFO_EXTENSION),
                 'created_at' => $item->created_at->format('Y-m-d H:i:s'),
+                'collection_name' => $item->collection_name ?? 'default',
+                'model_type' => $item->model_type,
+                'model_id' => $item->model_id,
+                'is_standalone' => empty($item->model_type) || $item->model_id == 0,
             ];
         });
 

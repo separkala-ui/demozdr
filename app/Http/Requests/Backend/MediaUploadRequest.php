@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Backend;
 
-use App\Helper\MediaHelper;
+use App\Support\Helper\MediaHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 

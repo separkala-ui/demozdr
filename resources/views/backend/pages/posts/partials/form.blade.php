@@ -82,7 +82,7 @@
                         id="featured_image"
                         accept="image/*"
                         label="{{ __('Featured Image') }}"
-                        :existingAttachment="isset($post) && $post->featured_image ? $post->featured_image : null"
+                        :existingAttachment="isset($post) && $post->hasFeaturedImage() ? $post->getFeaturedImageUrl() : null"
                         :existingAltText="isset($post) ? $post->title : ''"
                         :removeCheckboxLabel="__('Remove featured image')"
                         class="mt-1"

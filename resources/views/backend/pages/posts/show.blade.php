@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
 
 @section('title')
-    {{ $breadcrumbs['title'] }} | {{ config('app.name') }}
+ {{ $breadcrumbs['title'] }} | {{ config('app.name') }}
 @endsection
 
 @section('admin-content')

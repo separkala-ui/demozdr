@@ -18,7 +18,6 @@ return new class () extends Migration {
             $table->string('slug')->unique();
             $table->text('excerpt')->nullable();
             $table->longText('content')->nullable();
-            $table->string('featured_image')->nullable();
             $table->string('status')->default('draft'); // draft, publish, future, pending, private
             $table->json('meta')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('posts')->onDelete('cascade');

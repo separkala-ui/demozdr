@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Helper\MediaHelper;
+use App\Support\Helper\MediaHelper;
 use PHPUnit\Framework\TestCase;
 
 class MediaHelperTest extends TestCase
@@ -13,7 +13,6 @@ class MediaHelperTest extends TestCase
     {
         $limits = MediaHelper::getUploadLimits();
 
-        $this->assertIsArray($limits);
         $this->assertArrayHasKey('upload_max_filesize', $limits);
         $this->assertArrayHasKey('post_max_size', $limits);
         $this->assertArrayHasKey('effective_max_filesize', $limits);

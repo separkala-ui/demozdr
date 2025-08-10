@@ -7,6 +7,8 @@ namespace App\Models;
 use App\Services\Content\ContentService;
 use App\Services\Content\PostType;
 use App\Concerns\QueryBuilderTrait;
+use App\Concerns\HasMedia;
+use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,11 +16,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Post extends Model
+class Post extends Model implements SpatieHasMedia
 {
     use HasFactory;
     use QueryBuilderTrait;
+    use HasMedia;
 
     protected $fillable = [
         'user_id',
@@ -27,7 +33,6 @@ class Post extends Model
         'slug',
         'excerpt',
         'content',
-        'featured_image',
         'status',
         'meta',
         'parent_id',
@@ -49,8 +54,8 @@ class Post extends Model
                 $post->slug = Str::slug($post->title);
             }
 
-            if (empty($post->user_id) && auth()->check()) {
-                $post->user_id = auth()->id();
+            if (empty($post->user_id) && Auth::check()) {
+                $post->user_id = Auth::id();
             }
         });
     }
@@ -178,6 +183,84 @@ class Post extends Model
         return $this->postMeta()
             ->pluck('meta_value', 'meta_key')
             ->toArray();
+    }
+
+    /**
+     * Register media collections for posts
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('featured')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+
+        $this->addMediaCollection('gallery')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+    }
+
+    /**
+     * Register media conversions for posts
+     */
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        // Preview conversion for admin interface
+        $this->addMediaConversion('preview')
+            ->fit(Fit::Contain, 300, 300);
+
+        // Thumbnail for featured images
+        $this->addMediaConversion('thumb')
+            ->width(200)
+            ->height(200)
+            ->sharpen(10);
+
+        // Medium size for content display
+        $this->addMediaConversion('medium')
+            ->width(500)
+            ->height(500);
+
+        // Large size for detailed view
+        $this->addMediaConversion('large')
+            ->width(1000)
+            ->height(1000);
+    }
+
+    /**
+     * Get the featured image URL
+     */
+    public function getFeaturedImageUrl(string $conversion = ''): ?string
+    {
+        $media = $this->getFirstMedia('featured');
+
+        if (! $media) {
+            return null;
+        }
+
+        return $conversion ? $media->getUrl($conversion) : $media->getUrl();
+    }
+
+    /**
+     * Check if post has featured image
+     */
+    public function hasFeaturedImage(): bool
+    {
+        return $this->hasMedia('featured');
+    }
+
+    /**
+     * Get gallery images
+     */
+    public function getGalleryImages(): array
+    {
+        return $this->getMedia('gallery')->map(function ($media) {
+            return [
+                'id' => $media->id,
+                'name' => $media->name,
+                'original' => $media->getUrl(),
+                'thumb' => $media->getUrl('thumb'),
+                'medium' => $media->getUrl('medium'),
+                'large' => $media->getUrl('large'),
+            ];
+        })->toArray();
     }
 
     /**

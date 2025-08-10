@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Concerns;
 
-use App\Contacts\HasMediaInterface;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Collection;
 
 /**
  * Custom implementation of Spatie's InteractsWithMedia trait
- * This ensures method compatibility with our HasMediaInterface
+ * This ensures method compatibility with both our HasMediaInterface and Spatie's HasMedia
  */
 trait InteractsWithMedia
 {
@@ -17,9 +19,9 @@ trait InteractsWithMedia
     }
 
     /**
-     * Override clearMediaCollection to return HasMediaInterface instead of Spatie\MediaLibrary\HasMedia
+     * Override clearMediaCollection to return HasMedia interface for compatibility
      */
-    public function clearMediaCollection(string $collectionName = 'default'): HasMediaInterface
+    public function clearMediaCollection(string $collectionName = 'default'): HasMedia
     {
         $this->spatieMediaClearMediaCollection($collectionName);
 
@@ -27,9 +29,9 @@ trait InteractsWithMedia
     }
 
     /**
-     * Override clearMediaCollectionExcept to return HasMediaInterface instead of Spatie\MediaLibrary\HasMedia
+     * Override clearMediaCollectionExcept to return HasMedia interface for compatibility
      */
-    public function clearMediaCollectionExcept(string $collectionName = 'default', array|Collection $excludedMedia = []): HasMediaInterface
+    public function clearMediaCollectionExcept(string $collectionName = 'default', array|Collection $excludedMedia = []): HasMedia
     {
         $this->spatieMediaClearMediaCollectionExcept($collectionName, $excludedMedia);
 

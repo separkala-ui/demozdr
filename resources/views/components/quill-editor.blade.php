@@ -16,6 +16,7 @@
     }
     .ql-toolbar.ql-snow {
         border-radius: 10px 10px 0px 0px;
+        margin-bottom: 0px;
     }
     .ql-container {
         height: {{ $height }};

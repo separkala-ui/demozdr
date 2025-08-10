@@ -24,5 +24,5 @@
 @endsection
 
 @push('scripts')
-    <x-quill-editor :editor-id="'content'" />
+    <x-quill-editor :editor-id="'content'" height="200px" />
 @endpush

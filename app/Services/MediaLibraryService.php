@@ -9,10 +9,12 @@ use App\Contacts\MediaInterface;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MediaLibraryService
 {
     use HandlesMediaOperations;
+
     public function getMediaList(
         ?string $search = null,
         ?string $type = null,
@@ -105,12 +107,12 @@ class MediaLibraryService
             // Store the file with a secure name
             $path = $file->storeAs('media', $safeFileName, 'public');
 
-            // Create media record
+            // Create media record directly in the media table for standalone uploads
             $mediaItem = SpatieMedia::create([
-                'model_type' => SpatieMedia::class,
-                'model_id' => 0,
-                'uuid' => null,
-                'collection_name' => 'default',
+                'model_type' => '', // Empty for standalone media
+                'model_id' => 0,   // 0 for standalone media
+                'uuid' => Str::uuid(),
+                'collection_name' => 'uploads',
                 'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
                 'file_name' => basename($path),
                 'mime_type' => $file->getMimeType(),

@@ -241,7 +241,7 @@
 
                                         <div class="aspect-square">
                                             @if (str_starts_with($item->mime_type, 'image/'))
-                                                <img src="{{ asset('storage/media/' . $item->file_name) }}"
+                                                <img src="{{ $item->url ?? asset('storage/media/' . $item->file_name) }}"
                                                     alt="{{ $item->name }}" class="w-full h-full object-cover"
                                                     loading="lazy">
                                             @elseif(str_starts_with($item->mime_type, 'video/'))
@@ -297,12 +297,12 @@
                                             @if (str_starts_with($item->mime_type, 'image/'))
                                                 <button
                                                     class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
-                                                    onclick="openImageModal('{{ asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}')"
+                                                    onclick="openImageModal('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}')"
                                                     title="{{ __('View') }}">
                                                     <iconify-icon icon="lucide:eye" class="text-sm"></iconify-icon>
                                                 </button>
                                             @endif
-                                            <a href="{{ asset('storage/media/' . $item->file_name) }}" 
+                                            <a href="{{ $item->url ?? asset('storage/media/' . $item->file_name) }}" 
                                                 download="{{ $item->name }}"
                                                 class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
                                                 title="{{ __('Download') }}">
@@ -310,7 +310,7 @@
                                             </a>
                                             <button
                                                 class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
-                                                onclick="copyToClipboard('{{ asset('storage/media/' . $item->file_name) }}')"
+                                                onclick="copyToClipboard('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}')"
                                                 title="{{ __('Copy URL') }}">
                                                 <iconify-icon icon="lucide:copy" class="text-sm"></iconify-icon>
                                             </button>
@@ -389,7 +389,7 @@
                                             <td class="px-5 py-4 flex items-center">
                                                 <div class="flex-shrink-0 h-12 w-12 mr-3">
                                                     @if (str_starts_with($item->mime_type, 'image/'))
-                                                        <img src="{{ asset('storage/media/' . $item->file_name) }}"
+                                                        <img src="{{ $item->url ?? asset('storage/media/' . $item->file_name) }}"
                                                             alt="{{ $item->name }}"
                                                             class="h-12 w-12 object-cover rounded border border-gray-200 dark:border-gray-700"
                                                             loading="lazy">
@@ -431,7 +431,7 @@
                                             </td>
                                             <td class="px-5 py-4 text-center">
                                                 <div class="flex items-center justify-center gap-2">
-                                                    <a href="{{ asset('storage/media/' . $item->file_name) }}" 
+                                                    <a href="{{ $item->url ?? asset('storage/media/' . $item->file_name) }}" 
                                                         download="{{ $item->name }}"
                                                         class="text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
                                                         title="{{ __('Download') }}">
@@ -439,7 +439,7 @@
                                                     </a>
                                                     <button
                                                         class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                                                        onclick="copyToClipboard('{{ $item->getUrl() }}')"
+                                                        onclick="copyToClipboard('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}')"
                                                         title="{{ __('Copy URL') }}">
                                                         <iconify-icon icon="lucide:copy" class="text-sm"></iconify-icon>
                                                     </button>

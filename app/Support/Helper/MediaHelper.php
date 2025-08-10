@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Helper;
+namespace App\Support\Helper;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
