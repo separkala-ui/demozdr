@@ -59,7 +59,7 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-5 md:gap-6">
+        <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-6 md:gap-6">
             <div class="p-4 bg-white rounded-md border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03]">
                 <div class="flex items-center">
                     <iconify-icon icon="lucide:files" class="text-2xl text-blue-500 mr-3"></iconify-icon>
@@ -86,6 +86,16 @@
                     <div>
                         <p class="text-sm text-gray-500 dark:text-gray-300">{{ __('Videos') }}</p>
                         <p class="text-lg font-semibold text-gray-700 dark:text-white">{{ $stats['videos'] }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 bg-white rounded-md border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03]">
+                <div class="flex items-center">
+                    <iconify-icon icon="lucide:music" class="text-2xl text-emerald-500 mr-3"></iconify-icon>
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-300">{{ __('Audio') }}</p>
+                        <p class="text-lg font-semibold text-gray-700 dark:text-white">{{ $stats['audio'] ?? 0 }}</p>
                     </div>
                 </div>
             </div>
@@ -198,6 +208,14 @@
                                         </a>
                                     </li>
                                     <li>
+                                        <a href="{{ route('admin.media.index', array_merge(request()->query(), ['type' => 'audio'])) }}"
+                                            @click="typeDropdownOpen = false"
+                                            class="cursor-pointer flex items-center gap-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1.5 rounded transition-colors duration-300 {{ request('type') === 'audio' ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                            <iconify-icon icon="lucide:music" class="text-emerald-500"></iconify-icon>
+                                            {{ __('Audio') }}
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a href="{{ route('admin.media.index', array_merge(request()->query(), ['type' => 'documents'])) }}"
                                             @click="typeDropdownOpen = false"
                                             class="cursor-pointer flex items-center gap-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1.5 rounded transition-colors duration-300 {{ request('type') === 'documents' ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
@@ -246,14 +264,34 @@
                                                     alt="{{ $item->name }}" class="w-full h-full object-cover"
                                                     loading="lazy">
                                             @elseif(str_starts_with($item->mime_type, 'video/'))
-                                                <div
-                                                    class="w-full h-full bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 flex items-center justify-center">
-                                                    <div class="text-center">
-                                                        <iconify-icon icon="lucide:video"
-                                                            class="text-4xl text-purple-600 dark:text-purple-300 mb-2"></iconify-icon>
-                                                        <p
-                                                            class="text-xs text-purple-600 dark:text-purple-300 font-medium">
-                                                            Video</p>
+                                                <div class="w-full h-full bg-black rounded-lg overflow-hidden relative">
+                                                    <video 
+                                                        class="w-full h-full object-cover" 
+                                                        preload="metadata"
+                                                        style="background: linear-gradient(135deg, rgb(147 51 234 / 0.1) 0%, rgb(147 51 234 / 0.2) 100%)"
+                                                        muted
+                                                    >
+                                                        <source src="{{ $item->url ?? asset('storage/media/' . $item->file_name) }}" type="{{ $item->mime_type }}">
+                                                    </video>
+                                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                                        <div class="text-center">
+                                                            <iconify-icon icon="lucide:play" class="text-4xl text-white mb-2"></iconify-icon>
+                                                            <p class="text-xs text-white font-medium">Video</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @elseif(str_starts_with($item->mime_type, 'audio/'))
+                                                <div class="w-full h-full bg-gradient-to-br from-green-100 to-emerald-200 dark:from-green-900 dark:to-emerald-800 flex flex-col">
+                                                    <div class="flex-1 flex items-center justify-center">
+                                                        <div class="text-center">
+                                                            <iconify-icon icon="lucide:music" class="text-4xl text-green-600 dark:text-green-300 mb-2"></iconify-icon>
+                                                            <p class="text-xs text-green-600 dark:text-green-300 font-medium">Audio</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-2 bg-white/50 dark:bg-gray-800/50">
+                                                        <audio class="w-full" style="height: 24px;" preload="metadata" onloadstart="this.volume=0.3">
+                                                            <source src="{{ $item->url ?? asset('storage/media/' . $item->file_name) }}" type="{{ $item->mime_type }}">
+                                                        </audio>
                                                     </div>
                                                 </div>
                                             @elseif(str_starts_with($item->mime_type, 'application/pdf'))
@@ -301,6 +339,20 @@
                                                     onclick="openImageModal('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}')"
                                                     title="{{ __('View') }}">
                                                     <iconify-icon icon="lucide:eye" class="text-sm"></iconify-icon>
+                                                </button>
+                                            @elseif (str_starts_with($item->mime_type, 'video/'))
+                                                <button
+                                                    class="p-2 bg-white/90 backdrop-blur-sm rounded-md text-gray-700 hover:bg-white transition-colors shadow-lg"
+                                                    onclick="openVideoModal('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}')"
+                                                    title="{{ __('Play Video') }}">
+                                                    <iconify-icon icon="lucide:play" class="text-sm"></iconify-icon>
+                                                </button>
+                                            @elseif (str_starts_with($item->mime_type, 'audio/'))
+                                                <button
+                                                    class="p-2 bg-white/90 backdrop-blur-sm rounded-md text-gray-700 hover:bg-white transition-colors shadow-lg"
+                                                    onclick="openAudioModal('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}', { name: '{{ $item->name }}', human_readable_size: '{{ $item->human_readable_size }}', extension: '{{ pathinfo($item->file_name, PATHINFO_EXTENSION) }}', duration: {{ $item->duration ?? 'null' }} })"
+                                                    title="{{ __('Play Audio') }}">
+                                                    <iconify-icon icon="lucide:headphones" class="text-sm"></iconify-icon>
                                                 </button>
                                             @endif
                                             <a href="{{ $item->url ?? asset('storage/media/' . $item->file_name) }}" 
@@ -486,7 +538,7 @@
     <!-- Image Modal -->
     <div id="imageModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75"
         onclick="closeImageModal()">
-        <div class="max-w-4xl max-h-[90vh] p-4">
+        <div class="max-w-4xl max-h-[90vh] p-4" onclick="event.stopPropagation()">
             <img id="modalImage" src="" alt="" class="max-w-full max-h-full object-contain">
         </div>
         <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white hover:text-gray-300">
@@ -494,38 +546,184 @@
         </button>
     </div>
 
-    @push('scripts')
-        <script>
-            function copyToClipboard(text) {
-                navigator.clipboard.writeText(text).then(() => {
-                    // Show success message
-                    if (window.showToast) {
-                        window.showToast('success', '{{ __('Success') }}', '{{ __('URL copied to clipboard') }}');
-                    }
-                });
-            }
+    <!-- Video Modal -->
+    <div id="videoModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75"
+        onclick="closeVideoModal()">
+        <div class="max-w-6xl max-h-[90vh] p-4" onclick="event.stopPropagation()">
+            <video id="modalVideo" 
+                   class="max-w-full max-h-full" 
+                   controls 
+                   preload="metadata"
+                   style="outline: none;"
+                   onloadstart="this.volume=0.5">
+                <!-- Source will be set dynamically -->
+            </video>
+        </div>
+        <button onclick="closeVideoModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+            <iconify-icon icon="lucide:x" class="text-2xl"></iconify-icon>
+        </button>
+    </div>
 
-            function openImageModal(src, alt) {
-                const modal = document.getElementById('imageModal');
-                const img = document.getElementById('modalImage');
-                img.src = src;
-                img.alt = alt;
-                modal.classList.remove('hidden');
-                modal.classList.add('flex', 'items-center', 'justify-center');
-            }
+    <!-- Audio Modal -->
+    <div id="audioModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75"
+        onclick="closeAudioModal()">
+        <div class="max-w-2xl max-h-[90vh] p-4" onclick="event.stopPropagation()">
+            <div class="bg-gradient-to-br from-green-100 to-emerald-200 dark:from-green-900 dark:to-emerald-800 rounded-lg p-8 text-center">
+                <!-- Audio Visualization -->
+                <div class="mb-6">
+                    <iconify-icon icon="lucide:music" class="text-8xl text-green-600 dark:text-green-300 mb-4"></iconify-icon>
+                    <h3 id="modalAudioTitle" class="text-xl font-semibold text-green-800 dark:text-green-200 mb-2"></h3>
+                    <p class="text-green-600 dark:text-green-400 text-sm">Audio Player</p>
+                </div>
+                
+                <!-- Audio Player -->
+                <div class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-4">
+                    <audio id="modalAudio" 
+                           class="w-full mb-4" 
+                           controls 
+                           preload="metadata"
+                           style="height: 40px;"
+                           onloadstart="this.volume=0.5">
+                        <!-- Source will be set dynamically -->
+                    </audio>
+                    
+                    <!-- Audio Info -->
+                    <div id="modalAudioInfo" class="text-sm text-green-700 dark:text-green-300 space-y-1">
+                        <!-- Audio details will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button onclick="closeAudioModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+            <iconify-icon icon="lucide:x" class="text-2xl"></iconify-icon>
+        </button>
+    </div>
+@endsection
 
-            function closeImageModal() {
-                const modal = document.getElementById('imageModal');
-                modal.classList.add('hidden');
-                modal.classList.remove('flex', 'items-center', 'justify-center');
-            }
-
-            // Close modal on escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeImageModal();
+@push('scripts')
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Show success message
+                if (window.showToast) {
+                    window.showToast('success', '{{ __('Success') }}', '{{ __('URL copied to clipboard') }}');
                 }
             });
-        </script>
-    @endpush
-@endsection
+        }
+
+        function openImageModal(src, alt) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            img.src = src;
+            img.alt = alt;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex', 'items-center', 'justify-center');
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex', 'items-center', 'justify-center');
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
+        // Video Modal Functions
+        function openVideoModal(url, title) {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+
+            // Set video source
+            video.src = url;
+            video.load(); // Reload video with new source
+
+            // Show modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex', 'items-center', 'justify-center');
+
+            // Focus on video for keyboard controls
+            setTimeout(() => video.focus(), 100);
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+
+            // Pause and reset video
+            video.pause();
+            video.src = '';
+
+            // Hide modal
+            modal.classList.add('hidden');
+            modal.classList.remove('flex', 'items-center', 'justify-center');
+        }
+
+        // Audio Modal Functions
+        function openAudioModal(url, title, fileSize) {
+            const modal = document.getElementById('audioModal');
+            const audio = document.getElementById('modalAudio');
+            const titleElement = document.getElementById('modalAudioTitle');
+            const infoElement = document.getElementById('modalAudioInfo');
+
+            // Set audio source and title
+            audio.src = url;
+            audio.load(); // Reload audio with new source
+            titleElement.textContent = title || 'Audio File';
+
+            // Add audio info
+            infoElement.innerHTML = `
+                <div>File: ${title || 'Audio File'}</div>
+                ${fileSize ? `<div>Size: ${fileSize}</div>` : ''}
+                <div>Format: ${url.split('.').pop().toUpperCase()}</div>
+            `;
+
+            // Show modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex', 'items-center', 'justify-center');
+
+            // Focus on audio for keyboard controls
+            setTimeout(() => audio.focus(), 100);
+        }
+
+        function closeAudioModal() {
+            const modal = document.getElementById('audioModal');
+            const audio = document.getElementById('modalAudio');
+
+            // Pause and reset audio
+            audio.pause();
+            audio.src = '';
+
+            // Hide modal
+            modal.classList.add('hidden');
+            modal.classList.remove('flex', 'items-center', 'justify-center');
+        }
+
+        // Enhanced keyboard navigation for modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Close any open modal
+                closeImageModal();
+                closeVideoModal();
+                closeAudioModal();
+            }
+        });
+
+        // Video/Audio preview button enhancements
+        function handleVideoPreview(event, url, title) {
+            event.preventDefault();
+            event.stopPropagation();
+            openVideoModal(url, title);
+        }
+
+        function handleAudioPreview(event, url, title, fileSize) {
+            event.preventDefault();
+            event.stopPropagation();
+            openAudioModal(url, title, fileSize);
+        }
+    </script>
+@endpush
