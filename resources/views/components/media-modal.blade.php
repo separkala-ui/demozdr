@@ -20,7 +20,7 @@
 
 <!-- Media Modal -->
 <div id="{{ $id }}" class="fixed inset-0 z-50 hidden bg-black/20 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-lg shadow-2xl border border-white/20 dark:border-gray-700/50 max-w-6xl w-full h-[90vh] flex flex-col">
+    <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-lg shadow-2xl border border-white/20 dark:border-gray-700/50 max-w-7xl w-full h-[90vh] flex flex-col">
         <!-- Modal Header -->
         <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $title }}</h3>
@@ -35,7 +35,7 @@
 
         <!-- Modal Content -->
         <div class="flex-1 flex overflow-hidden">
-            <!-- Sidebar -->
+            <!-- Left Sidebar - Filters -->
             <div class="w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 p-4">
                 <!-- Upload Section -->
                 <div class="mb-6">
@@ -85,7 +85,7 @@
                     </div>
                 </div>
 
-                <!-- Selected Files Info -->
+                <!-- Selected Files Count -->
                 <div id="{{ $id }}_selectedInfo" class="mt-6 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg hidden">
                     <p class="text-sm text-blue-700 dark:text-blue-300">
                         <span id="{{ $id }}_selectedCount">0</span> file(s) selected
@@ -138,6 +138,90 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Right Sidebar - Media Details -->
+            <div class="w-64 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col">
+                <!-- No Selection State -->
+                <div id="{{ $id }}_noSelection" class="flex-1 flex items-center justify-center p-6">
+                    <div class="text-center">
+                        <iconify-icon icon="lucide:mouse-pointer-click" class="text-4xl text-gray-300 dark:text-gray-600 mb-3"></iconify-icon>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">Select a file to view details</p>
+                    </div>
+                </div>
+
+                <!-- Media Details -->
+                <div id="{{ $id }}_mediaDetails" class="hidden flex-1 flex flex-col">
+                    <!-- Preview Area -->
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <div id="{{ $id }}_previewContainer" class="bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden relative group">
+                            <!-- Preview content will be inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- File Info -->
+                    <div class="flex-1 p-4 overflow-y-auto">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">File Name</label>
+                                <p id="{{ $id }}_fileName" class="text-sm text-gray-900 dark:text-white break-all"></p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">File Type</label>
+                                <p id="{{ $id }}_fileType" class="text-sm text-gray-900 dark:text-white"></p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">File Size</label>
+                                <p id="{{ $id }}_fileSize" class="text-sm text-gray-900 dark:text-white"></p>
+                            </div>
+                            
+                            <div id="{{ $id }}_imageDimensions" class="hidden">
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Dimensions</label>
+                                <p id="{{ $id }}_dimensions" class="text-sm text-gray-900 dark:text-white"></p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Uploaded</label>
+                                <p id="{{ $id }}_uploadDate" class="text-sm text-gray-900 dark:text-white"></p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">URL</label>
+                                <div class="flex items-center gap-2">
+                                    <input id="{{ $id }}_fileUrl" type="text" readonly class="form-control text-xs flex-1" />
+                                    <button type="button" onclick="copyToClipboard('{{ $id }}_fileUrl')" class="btn-default p-2" title="{{ __('Copy URL') }}">
+                                        <iconify-icon icon="lucide:copy" class="text-sm"></iconify-icon>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-2 pt-2">
+                                <button type="button" 
+                                        id="{{ $id }}_downloadButton"
+                                        class="flex-1 btn-default flex items-center justify-center gap-2 text-sm"
+                                        title="{{ __('Download') }}">
+                                    <iconify-icon icon="lucide:download" class="text-sm"></iconify-icon>
+                                    <span>{{ __('Download') }}</span>
+                                </button>
+                                <button type="button" 
+                                        id="{{ $id }}_fullViewButton"
+                                        class="flex-1 btn-default flex items-center justify-center gap-2 text-sm hidden"
+                                        title="{{ __('Full View') }}">
+                                    <iconify-icon icon="lucide:maximize-2" class="text-sm"></iconify-icon>
+                                    <span>{{ __('View') }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selection Actions -->
+                    <div class="p-4 border-t border-gray-200 dark:border-gray-700" x-show="false">
+                        <!-- Remove the individual select button -->
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Modal Footer -->
@@ -162,11 +246,22 @@
                     class="btn-primary"
                     disabled
                 >
-                    {{ __('Select') }}
+                    {{ $multiple ? __('Select Files') : __('Select') }}
                 </button>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Image Modal for Full View -->
+<div id="imageModal" class="fixed inset-0 z-[60] hidden bg-black bg-opacity-75"
+    onclick="closeImageModal()">
+    <div class="max-w-4xl max-h-[90vh] p-4">
+        <img id="modalImage" src="" alt="" class="max-w-full max-h-full object-contain">
+    </div>
+    <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white hover:text-gray-300">
+        <iconify-icon icon="lucide:x" class="text-2xl"></iconify-icon>
+    </button>
 </div>
 
 
@@ -192,6 +287,7 @@ function openMediaModal(modalId, multiple = false, allowedTypes = 'all', onSelec
         totalCount: 0,
         isLoading: false,
         hasMorePages: true,
+        currentFile: null,
         currentFilters: {
             search: '',
             type: 'all'
@@ -214,7 +310,12 @@ function closeMediaModal(modalId) {
         window.mediaModalData[modalId].allFiles = [];
         window.mediaModalData[modalId].currentPage = 1;
         window.mediaModalData[modalId].hasMorePages = true;
+        window.mediaModalData[modalId].currentFile = null;
         updateSelectedInfo(modalId);
+        
+        // Reset details sidebar
+        document.getElementById(`${modalId}_noSelection`).classList.remove('hidden');
+        document.getElementById(`${modalId}_mediaDetails`).classList.add('hidden');
     }
 }
 
@@ -321,13 +422,19 @@ function renderMediaFiles(modalId, files, isInitialLoad = false) {
         const mediaItem = createMediaItem(modalId, file);
         container.appendChild(mediaItem);
     });
+    
+    // Update checkbox states after rendering
+    if (!isInitialLoad) {
+        updateCheckboxStates(modalId);
+    }
 }
 
 function createMediaItem(modalId, file) {
+    const modalData = window.mediaModalData[modalId];
     const div = document.createElement('div');
     div.className = 'relative group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-md transition-all duration-200 cursor-pointer';
     div.dataset.fileId = file.id;
-    div.onclick = () => toggleFileSelection(modalId, file);
+    div.onclick = () => selectMediaFile(modalId, file);
 
     const isImage = file.mime_type.startsWith('image/');
     const isVideo = file.mime_type.startsWith('video/');
@@ -364,46 +471,199 @@ function createMediaItem(modalId, file) {
                 ${file.extension?.toUpperCase() || 'FILE'} • ${file.human_readable_size || '0 KB'}
             </p>
         </div>
-        <div class="absolute inset-0 bg-blue-500 bg-opacity-20 opacity-0 transition-opacity duration-200 flex items-center justify-center media-selected-overlay">
-            <iconify-icon icon="lucide:check" class="text-2xl text-white bg-blue-500 rounded-full p-1"></iconify-icon>
-        </div>
+        ${modalData.multiple ? `
+            <div class="absolute top-2 left-2">
+                <input type="checkbox" 
+                       class="form-checkbox media-checkbox w-4 h-4 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
+                       data-file-id="${file.id}"
+                       onchange="toggleFileSelection(event, '${modalId}', ${file.id})"
+                       onclick="event.stopPropagation()">
+            </div>
+        ` : ''}
     `;
 
     return div;
 }
 
-function toggleFileSelection(modalId, file) {
+function selectMediaFile(modalId, file) {
     const modalData = window.mediaModalData[modalId];
-    const fileElement = document.querySelector(`[data-file-id="${file.id}"]`);
-    const overlay = fileElement.querySelector('.media-selected-overlay');
-
-    const isSelected = modalData.selectedFiles.some(f => f.id === file.id);
-
-    if (isSelected) {
-        // Deselect
-        modalData.selectedFiles = modalData.selectedFiles.filter(f => f.id !== file.id);
-        overlay.classList.add('opacity-0');
-        fileElement.classList.remove('ring-2', 'ring-blue-500');
-    } else {
-        // Select
-        if (!modalData.multiple) {
-            // Single selection - clear previous selections
-            modalData.selectedFiles.forEach(f => {
-                const prevElement = document.querySelector(`[data-file-id="${f.id}"]`);
-                if (prevElement) {
-                    prevElement.querySelector('.media-selected-overlay').classList.add('opacity-0');
-                    prevElement.classList.remove('ring-2', 'ring-blue-500');
-                }
-            });
-            modalData.selectedFiles = [];
-        }
-
-        modalData.selectedFiles.push(file);
-        overlay.classList.remove('opacity-0');
-        fileElement.classList.add('ring-2', 'ring-blue-500');
+    
+    // Update current file and show details
+    modalData.currentFile = file;
+    showMediaDetails(modalId, file);
+    
+    // Update visual selection state
+    updateMediaItemSelection(modalId);
+    
+    // For single selection, automatically add to selectedFiles when viewing
+    if (!modalData.multiple) {
+        modalData.selectedFiles = [file];
+        updateSelectedInfo(modalId);
     }
+}
 
+function toggleFileSelection(event, modalId, fileId) {
+    const modalData = window.mediaModalData[modalId];
+    const checkbox = event.target;
+    
+    // Find the file object from allFiles
+    const file = modalData.allFiles.find(f => f.id == fileId);
+    if (!file) return;
+    
+    if (checkbox.checked) {
+        // Add to selection if not already selected
+        const isAlreadySelected = modalData.selectedFiles.some(f => f.id === file.id);
+        if (!isAlreadySelected) {
+            modalData.selectedFiles.push(file);
+        }
+    } else {
+        // Remove from selection
+        modalData.selectedFiles = modalData.selectedFiles.filter(f => f.id !== file.id);
+    }
+    
     updateSelectedInfo(modalId);
+}
+
+function updateCheckboxStates(modalId) {
+    const modalData = window.mediaModalData[modalId];
+    
+    // Update checkbox states to match selectedFiles
+    document.querySelectorAll('.media-checkbox').forEach(checkbox => {
+        const fileId = checkbox.dataset.fileId;
+        const isSelected = modalData.selectedFiles.some(f => f.id == fileId);
+        checkbox.checked = isSelected;
+    });
+}
+
+function showMediaDetails(modalId, file) {
+    const noSelectionEl = document.getElementById(`${modalId}_noSelection`);
+    const detailsEl = document.getElementById(`${modalId}_mediaDetails`);
+    const previewContainer = document.getElementById(`${modalId}_previewContainer`);
+    
+    // Hide no selection state and show details
+    noSelectionEl.classList.add('hidden');
+    detailsEl.classList.remove('hidden');
+    detailsEl.classList.add('flex', 'flex-col');
+    
+    // Update file information
+    document.getElementById(`${modalId}_fileName`).textContent = file.name;
+    document.getElementById(`${modalId}_fileType`).textContent = file.extension?.toUpperCase() || 'Unknown';
+    document.getElementById(`${modalId}_fileSize`).textContent = file.human_readable_size || '0 KB';
+    document.getElementById(`${modalId}_fileUrl`).value = file.url;
+    
+    // Update upload date
+    const uploadDate = file.created_at ? new Date(file.created_at).toLocaleDateString() : 'Unknown';
+    document.getElementById(`${modalId}_uploadDate`).textContent = uploadDate;
+    
+    // Show/hide dimensions for images
+    const dimensionsEl = document.getElementById(`${modalId}_imageDimensions`);
+    if (file.mime_type.startsWith('image/') && (file.width || file.height)) {
+        document.getElementById(`${modalId}_dimensions`).textContent = `${file.width || 0} × ${file.height || 0} pixels`;
+        dimensionsEl.classList.remove('hidden');
+    } else {
+        dimensionsEl.classList.add('hidden');
+    }
+    
+    // Generate preview
+    generateMediaPreview(modalId, file, previewContainer);
+    
+    // Setup action buttons
+    setupActionButtons(modalId, file);
+}
+
+function generateMediaPreview(modalId, file, container) {
+    const isImage = file.mime_type.startsWith('image/');
+    const isVideo = file.mime_type.startsWith('video/');
+    const isPdf = file.mime_type.includes('pdf');
+    
+    if (isImage) {
+        container.innerHTML = `
+            <img src="${file.thumbnail_url || file.url}" 
+                 alt="${file.name}" 
+                 class="w-full h-48 object-contain bg-gray-100 dark:bg-gray-800 cursor-pointer"
+                 loading="lazy"
+                 onclick="openImageModal('${file.url}', '${file.name}')">
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <button onclick="openImageModal('${file.url}', '${file.name}')" 
+                        class="p-2 bg-white/90 backdrop-blur-sm rounded-md text-gray-700 hover:bg-white transition-colors shadow-lg"
+                        title="View Full Size">
+                    <iconify-icon icon="lucide:maximize-2" class="text-lg"></iconify-icon>
+                </button>
+            </div>
+        `;
+    } else if (isVideo) {
+        container.innerHTML = `
+            <div class="w-full h-48 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 flex items-center justify-center">
+                <iconify-icon icon="lucide:video" class="text-6xl text-purple-600 dark:text-purple-300"></iconify-icon>
+            </div>
+        `;
+    } else if (isPdf) {
+        container.innerHTML = `
+            <div class="w-full h-48 bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900 dark:to-red-800 flex items-center justify-center">
+                <iconify-icon icon="lucide:file-text" class="text-6xl text-red-600 dark:text-red-300"></iconify-icon>
+            </div>
+        `;
+    } else {
+        container.innerHTML = `
+            <div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+                <iconify-icon icon="lucide:file" class="text-6xl text-gray-600 dark:text-gray-300"></iconify-icon>
+            </div>
+        `;
+    }
+}
+
+function setupActionButtons(modalId, file) {
+    const downloadButton = document.getElementById(`${modalId}_downloadButton`);
+    const fullViewButton = document.getElementById(`${modalId}_fullViewButton`);
+    const isImage = file.mime_type.startsWith('image/');
+    
+    // Setup download button
+    downloadButton.onclick = () => {
+        const link = document.createElement('a');
+        link.href = file.url;
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+    
+    // Setup full view button (only for images)
+    if (isImage) {
+        fullViewButton.classList.remove('hidden');
+        fullViewButton.onclick = () => openImageModal(file.url, file.name);
+    } else {
+        fullViewButton.classList.add('hidden');
+    }
+}
+
+function updateMediaItemSelection(modalId) {
+    const modalData = window.mediaModalData[modalId];
+    
+    // Remove previous active states
+    document.querySelectorAll(`[data-file-id]`).forEach(item => {
+        item.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+    });
+    
+    // Add active state to current file
+    if (modalData.currentFile) {
+        const activeItem = document.querySelector(`[data-file-id="${modalData.currentFile.id}"]`);
+        if (activeItem) {
+            activeItem.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        }
+    }
+}
+
+function copyToClipboard(inputId) {
+    const input = document.getElementById(inputId);
+    if (input) {
+        input.select();
+        document.execCommand('copy');
+        
+        // Show feedback
+        if (window.showToast) {
+            window.showToast('success', 'Copied', 'URL copied to clipboard');
+        }
+    }
 }
 
 function updateSelectedInfo(modalId) {
@@ -665,12 +925,36 @@ function checkFileTypeAllowed(mimeType, allowedType) {
     }
 }
 
+// Image modal functions
+function openImageModal(src, alt) {
+    const modal = document.getElementById('imageModal');
+    const img = document.getElementById('modalImage');
+    img.src = src;
+    img.alt = alt;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex', 'items-center', 'justify-center');
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex', 'items-center', 'justify-center');
+}
+
 // Close modal on escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
+        // Close image modal first if open
+        const imageModal = document.getElementById('imageModal');
+        if (imageModal && !imageModal.classList.contains('hidden')) {
+            closeImageModal();
+            return;
+        }
+        
+        // Then close media modals
         const openModals = document.querySelectorAll('[id$="Modal"]:not(.hidden)');
         openModals.forEach(modal => {
-            if (modal.id.includes('media')) {
+            if (modal.id.includes('media') || modal.id.includes('Media')) {
                 closeMediaModal(modal.id);
             }
         });

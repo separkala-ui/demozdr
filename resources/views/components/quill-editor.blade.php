@@ -124,7 +124,7 @@
         const mediaModalHandler = function() {
             const modalId = `quillMediaModal_${editorId}`;
             
-            // Open media modal using the existing component
+            // Open media modal using the existing component (single selection for editor)
             openMediaModal(modalId, false, 'all', `handleQuillMediaSelect_${editorId}`);
         };
 
