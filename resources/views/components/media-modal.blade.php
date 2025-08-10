@@ -9,8 +9,8 @@
 ])
 
 <!-- Media Modal Button -->
-<button 
-    type="button" 
+<button
+    type="button"
     class="{{ $buttonClass }}"
     onclick="openMediaModal('{{ $id }}', {{ $multiple ? 'true' : 'false' }}, '{{ $allowedTypes }}', {{ $onSelect ? "'{$onSelect}'" : 'null' }})"
 >
@@ -24,8 +24,8 @@
         <!-- Modal Header -->
         <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $title }}</h3>
-            <button 
-                type="button" 
+            <button
+                type="button"
                 onclick="closeMediaModal('{{ $id }}')"
                 class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             >
@@ -39,7 +39,7 @@
             <div class="w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 p-4">
                 <!-- Upload Section -->
                 <div class="mb-6">
-                    <button 
+                    <button
                         type="button"
                         onclick="triggerFileUpload('{{ $id }}')"
                         class="w-full btn-primary flex items-center justify-center gap-2"
@@ -47,10 +47,10 @@
                         <iconify-icon icon="lucide:upload"></iconify-icon>
                         Upload Files
                     </button>
-                    <input 
-                        type="file" 
-                        id="{{ $id }}_fileInput" 
-                        class="hidden" 
+                    <input
+                        type="file"
+                        id="{{ $id }}_fileInput"
+                        class="hidden"
                         {{ $multiple ? 'multiple' : '' }}
                         accept="{{ $allowedTypes === 'images' ? 'image/*' : ($allowedTypes === 'videos' ? 'video/*' : ($allowedTypes === 'documents' ? '.pdf,.doc,.docx,.txt' : '*')) }}"
                         onchange="handleFileUpload(event, '{{ $id }}')"
@@ -61,8 +61,8 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Filter by Type</label>
-                        <select 
-                            id="{{ $id }}_typeFilter" 
+                        <select
+                            id="{{ $id }}_typeFilter"
                             class="form-control w-full"
                             onchange="filterMediaByType('{{ $id }}', this.value)"
                         >
@@ -75,10 +75,10 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Search</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             id="{{ $id }}_searchInput"
-                            class="form-control w-full" 
+                            class="form-control w-full"
                             placeholder="Search files..."
                             oninput="searchMedia('{{ $id }}', this.value)"
                         >
@@ -115,7 +115,7 @@
                     <div class="text-center">
                         <iconify-icon icon="lucide:image" class="text-6xl text-gray-300 dark:text-gray-600 mb-4"></iconify-icon>
                         <p class="text-gray-500 dark:text-gray-400 mb-4">No media files found</p>
-                        <button 
+                        <button
                             type="button"
                             onclick="triggerFileUpload('{{ $id }}')"
                             class="btn-primary"
@@ -130,18 +130,20 @@
         <!-- Modal Footer -->
         <div class="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700">
             <div class="text-sm text-gray-500 dark:text-gray-400">
-                <span id="{{ $id }}_totalFiles">0</span> files available
+                <span id="{{ $id }}_totalFiles">0</span> files
+                <span id="{{ $id }}_filterInfo" class="ml-1"></span>
+                <span id="{{ $id }}_paginationInfo" class="ml-2 text-xs"></span>
             </div>
             <div class="flex gap-3">
-                <button 
-                    type="button" 
+                <button
+                    type="button"
                     onclick="closeMediaModal('{{ $id }}')"
                     class="btn-default"
                 >
                     Cancel
                 </button>
-                <button 
-                    type="button" 
+                <button
+                    type="button"
                     id="{{ $id }}_selectButton"
                     onclick="confirmMediaSelection('{{ $id }}')"
                     class="btn-primary"
@@ -170,11 +172,21 @@ function openMediaModal(modalId, multiple = false, allowedTypes = 'all', onSelec
         allowedTypes: allowedTypes,
         onSelectCallback: onSelectCallback,
         selectedFiles: [],
-        allFiles: []
+        allFiles: [],
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: 0,
+        isLoading: false,
+        hasMorePages: true,
+        scrollHandler: null,
+        currentFilters: {
+            search: '',
+            type: 'all'
+        }
     };
 
     modal.classList.remove('hidden');
-    loadMediaFiles(modalId);
+    loadMediaFiles(modalId, true);
 }
 
 function closeMediaModal(modalId) {
@@ -182,53 +194,120 @@ function closeMediaModal(modalId) {
     if (!modal) return;
 
     modal.classList.add('hidden');
-    
+
     // Reset modal state
     if (window.mediaModalData[modalId]) {
+        // Clean up scroll handler
+        if (window.mediaModalData[modalId].scrollHandler) {
+            const scrollContainer = document.getElementById(`${modalId}_mediaGrid`);
+            scrollContainer.removeEventListener('scroll', window.mediaModalData[modalId].scrollHandler);
+        }
+
         window.mediaModalData[modalId].selectedFiles = [];
+        window.mediaModalData[modalId].allFiles = [];
+        window.mediaModalData[modalId].currentPage = 1;
+        window.mediaModalData[modalId].hasMorePages = true;
+        window.mediaModalData[modalId].scrollHandler = null;
         updateSelectedInfo(modalId);
     }
 }
 
-async function loadMediaFiles(modalId) {
+async function loadMediaFiles(modalId, isInitialLoad = false) {
+    const modalData = window.mediaModalData[modalId];
     const loadingEl = document.getElementById(`${modalId}_loading`);
     const gridEl = document.getElementById(`${modalId}_mediaGrid`);
     const emptyEl = document.getElementById(`${modalId}_emptyState`);
 
-    // Show loading state
-    loadingEl.classList.remove('hidden');
-    gridEl.classList.add('hidden');
-    emptyEl.classList.add('hidden');
+    // Prevent multiple simultaneous requests
+    if (modalData.isLoading) return;
+    modalData.isLoading = true;
+
+    // Show loading state only for initial load
+    if (isInitialLoad) {
+        loadingEl.classList.remove('hidden');
+        gridEl.classList.add('hidden');
+        emptyEl.classList.add('hidden');
+    } else {
+        // Show loading indicator at bottom for pagination
+        showLoadingIndicator(modalId);
+    }
 
     try {
-        const response = await fetch('/admin/media/api');
+        const params = new URLSearchParams({
+            page: modalData.currentPage.toString(),
+            per_page: '20',
+            search: modalData.currentFilters.search,
+            type: modalData.currentFilters.type === 'all' ? '' : modalData.currentFilters.type,
+            sort: 'created_at',
+            direction: 'desc'
+        });
+
+        const response = await fetch(`/admin/media/api?${params}`);
         const data = await response.json();
 
-        if (data.success && data.media.length > 0) {
-            window.mediaModalData[modalId].allFiles = data.media;
-            renderMediaFiles(modalId, data.media);
-            updateTotalFilesCount(modalId, data.media.length);
-            
-            loadingEl.classList.add('hidden');
-            gridEl.classList.remove('hidden');
+        if (data.success) {
+            // Store the total count for reference first
+            modalData.totalCount = data.pagination.total;
+            modalData.totalPages = data.pagination.last_page;
+            modalData.hasMorePages = data.pagination.has_more_pages;
+
+            if (isInitialLoad) {
+                modalData.allFiles = data.media;
+                renderMediaFiles(modalId, data.media, isInitialLoad);
+            } else {
+                modalData.allFiles = [...modalData.allFiles, ...data.media];
+                renderMediaFiles(modalId, data.media, isInitialLoad); // Pass only new files for rendering
+            }
+
+            updateTotalFilesCount(modalId, data.pagination.total);
+
+            if (modalData.allFiles.length > 0) {
+                if (isInitialLoad) {
+                    loadingEl.classList.add('hidden');
+                    gridEl.classList.remove('hidden');
+                    // Setup infinite scroll listener
+                    setupInfiniteScroll(modalId);
+                }
+            } else {
+                if (isInitialLoad) {
+                    loadingEl.classList.add('hidden');
+                    emptyEl.classList.remove('hidden');
+                }
+            }
         } else {
-            loadingEl.classList.add('hidden');
-            emptyEl.classList.remove('hidden');
+            throw new Error(data.message || 'Failed to load media');
         }
     } catch (error) {
         console.error('Error loading media files:', error);
-        loadingEl.classList.add('hidden');
-        emptyEl.classList.remove('hidden');
+        if (isInitialLoad) {
+            loadingEl.classList.add('hidden');
+            emptyEl.classList.remove('hidden');
+        }
+    } finally {
+        modalData.isLoading = false;
+        hideLoadingIndicator(modalId);
     }
 }
 
-function renderMediaFiles(modalId, files) {
+function renderMediaFiles(modalId, files, isInitialLoad = false) {
     const container = document.getElementById(`${modalId}_mediaContainer`);
     const modalData = window.mediaModalData[modalId];
-    
-    container.innerHTML = '';
 
+    if (isInitialLoad) {
+        container.innerHTML = '';
+    }
+
+    // For both initial load and pagination, render the provided files
     files.forEach(file => {
+        // Check if this file is already rendered to avoid duplicates
+        if (!isInitialLoad) {
+            const existingItem = container.querySelector(`[data-file-id="${file.id}"]`);
+            if (existingItem) {
+                console.log('File already exists, skipping:', file.id);
+                return;
+            }
+        }
+
         // Filter by allowed types
         if (modalData.allowedTypes !== 'all') {
             const isAllowed = checkFileTypeAllowed(file.mime_type, modalData.allowedTypes);
@@ -238,6 +317,8 @@ function renderMediaFiles(modalId, files) {
         const mediaItem = createMediaItem(modalId, file);
         container.appendChild(mediaItem);
     });
+
+    console.log('Rendered files:', { isInitialLoad, filesRendered: files.length, totalInContainer: container.children.length });
 }
 
 function createMediaItem(modalId, file) {
@@ -293,9 +374,9 @@ function toggleFileSelection(modalId, file) {
     const modalData = window.mediaModalData[modalId];
     const fileElement = document.querySelector(`[data-file-id="${file.id}"]`);
     const overlay = fileElement.querySelector('.media-selected-overlay');
-    
+
     const isSelected = modalData.selectedFiles.some(f => f.id === file.id);
-    
+
     if (isSelected) {
         // Deselect
         modalData.selectedFiles = modalData.selectedFiles.filter(f => f.id !== file.id);
@@ -314,12 +395,12 @@ function toggleFileSelection(modalId, file) {
             });
             modalData.selectedFiles = [];
         }
-        
+
         modalData.selectedFiles.push(file);
         overlay.classList.remove('opacity-0');
         fileElement.classList.add('ring-2', 'ring-blue-500');
     }
-    
+
     updateSelectedInfo(modalId);
 }
 
@@ -328,9 +409,9 @@ function updateSelectedInfo(modalId) {
     const selectedInfo = document.getElementById(`${modalId}_selectedInfo`);
     const selectedCount = document.getElementById(`${modalId}_selectedCount`);
     const selectButton = document.getElementById(`${modalId}_selectButton`);
-    
+
     const count = modalData.selectedFiles.length;
-    
+
     if (count > 0) {
         selectedInfo.classList.remove('hidden');
         selectedCount.textContent = count;
@@ -343,21 +424,55 @@ function updateSelectedInfo(modalId) {
 
 function updateTotalFilesCount(modalId, count) {
     const totalFilesEl = document.getElementById(`${modalId}_totalFiles`);
+    const filterInfoEl = document.getElementById(`${modalId}_filterInfo`);
+    const paginationInfoEl = document.getElementById(`${modalId}_paginationInfo`);
+    const modalData = window.mediaModalData[modalId];
+
     if (totalFilesEl) {
         totalFilesEl.textContent = count;
+    }
+
+    if (filterInfoEl && modalData) {
+        const hasSearch = modalData.currentFilters.search.length > 0;
+        const hasTypeFilter = modalData.currentFilters.type !== 'all';
+
+        if (hasSearch || hasTypeFilter) {
+            let filterText = 'matching';
+            if (hasSearch && hasTypeFilter) {
+                filterText += ` "${modalData.currentFilters.search}" in ${modalData.currentFilters.type}`;
+            } else if (hasSearch) {
+                filterText += ` "${modalData.currentFilters.search}"`;
+            } else if (hasTypeFilter) {
+                filterText += ` ${modalData.currentFilters.type}`;
+            }
+            filterInfoEl.textContent = filterText;
+        } else {
+            filterInfoEl.textContent = 'available';
+        }
+    }
+
+    if (paginationInfoEl && modalData) {
+        const loadedCount = modalData.allFiles.length;
+        if (modalData.hasMorePages && loadedCount < count) {
+            paginationInfoEl.textContent = `• ${loadedCount} loaded, scroll for more`;
+        } else if (loadedCount >= count && count > 20) {
+            paginationInfoEl.textContent = '• all loaded';
+        } else {
+            paginationInfoEl.textContent = '';
+        }
     }
 }
 
 function confirmMediaSelection(modalId) {
     const modalData = window.mediaModalData[modalId];
-    
+
     if (modalData.selectedFiles.length === 0) return;
-    
+
     // Execute callback if provided
     if (modalData.onSelectCallback && typeof window[modalData.onSelectCallback] === 'function') {
         window[modalData.onSelectCallback](modalData.selectedFiles);
     }
-    
+
     // Dispatch custom event
     const event = new CustomEvent('mediaSelected', {
         detail: {
@@ -367,7 +482,7 @@ function confirmMediaSelection(modalId) {
         }
     });
     document.dispatchEvent(event);
-    
+
     closeMediaModal(modalId);
 }
 
@@ -395,11 +510,11 @@ async function handleFileUpload(event, modalId) {
         });
 
         const data = await response.json();
-        
+
         if (data.success) {
             // Reload media files
-            loadMediaFiles(modalId);
-            
+            loadMediaFiles(modalId, true);
+
             // Show success message
             if (window.showToast) {
                 window.showToast('success', 'Success', 'Files uploaded successfully');
@@ -418,33 +533,84 @@ async function handleFileUpload(event, modalId) {
     event.target.value = '';
 }
 
-function filterMediaByType(modalId, type) {
+function setupInfiniteScroll(modalId) {
+    const scrollContainer = document.getElementById(`${modalId}_mediaGrid`);
     const modalData = window.mediaModalData[modalId];
-    let filteredFiles = modalData.allFiles;
 
-    if (type !== 'all') {
-        filteredFiles = modalData.allFiles.filter(file => 
-            checkFileTypeAllowed(file.mime_type, type)
-        );
+    // Remove any existing scroll listeners
+    scrollContainer.removeEventListener('scroll', modalData.scrollHandler);
+
+    // Create the scroll handler
+    modalData.scrollHandler = function() {
+        const scrollTop = this.scrollTop;
+        const scrollHeight = this.scrollHeight;
+        const clientHeight = this.clientHeight;
+
+        console.log('Scroll detected:', { scrollTop, scrollHeight, clientHeight, nearBottom: scrollTop + clientHeight >= scrollHeight - 100 });
+
+        // Check if we're near the bottom (within 100px)
+        if (scrollTop + clientHeight >= scrollHeight - 100) {
+            console.log('Near bottom! hasMorePages:', modalData.hasMorePages, 'isLoading:', modalData.isLoading);
+            if (modalData.hasMorePages && !modalData.isLoading) {
+                console.log('Loading next page:', modalData.currentPage + 1);
+                modalData.currentPage++;
+                loadMediaFiles(modalId, false);
+            }
+        }
+    };
+
+    scrollContainer.addEventListener('scroll', modalData.scrollHandler);
+}
+
+function showLoadingIndicator(modalId) {
+    const container = document.getElementById(`${modalId}_mediaContainer`);
+    let loadingIndicator = document.getElementById(`${modalId}_loadingMore`);
+
+    if (!loadingIndicator) {
+        loadingIndicator = document.createElement('div');
+        loadingIndicator.id = `${modalId}_loadingMore`;
+        loadingIndicator.className = 'col-span-full flex items-center justify-center py-8';
+        loadingIndicator.innerHTML = `
+            <div class="text-center">
+                <iconify-icon icon="lucide:loader-2" class="text-2xl text-gray-400 animate-spin mb-2"></iconify-icon>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Loading more files...</p>
+            </div>
+        `;
+        container.appendChild(loadingIndicator);
     }
 
-    renderMediaFiles(modalId, filteredFiles);
-    updateTotalFilesCount(modalId, filteredFiles.length);
+    loadingIndicator.classList.remove('hidden');
+}
+
+function hideLoadingIndicator(modalId) {
+    const loadingIndicator = document.getElementById(`${modalId}_loadingMore`);
+    if (loadingIndicator) {
+        loadingIndicator.classList.add('hidden');
+    }
+}
+
+function filterMediaByType(modalId, type) {
+    const modalData = window.mediaModalData[modalId];
+    modalData.currentFilters.type = type;
+    modalData.currentPage = 1;
+    modalData.hasMorePages = true;
+    modalData.allFiles = [];
+
+    loadMediaFiles(modalId, true);
 }
 
 function searchMedia(modalId, searchTerm) {
     const modalData = window.mediaModalData[modalId];
-    let filteredFiles = modalData.allFiles;
+    modalData.currentFilters.search = searchTerm.trim();
+    modalData.currentPage = 1;
+    modalData.hasMorePages = true;
+    modalData.allFiles = [];
 
-    if (searchTerm.trim()) {
-        filteredFiles = modalData.allFiles.filter(file => 
-            file.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            file.file_name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }
-
-    renderMediaFiles(modalId, filteredFiles);
-    updateTotalFilesCount(modalId, filteredFiles.length);
+    // Debounce the search to avoid too many API calls
+    clearTimeout(modalData.searchTimeout);
+    modalData.searchTimeout = setTimeout(() => {
+        loadMediaFiles(modalId, true);
+    }, 300);
 }
 
 function checkFileTypeAllowed(mimeType, allowedType) {
@@ -454,8 +620,8 @@ function checkFileTypeAllowed(mimeType, allowedType) {
         case 'videos':
             return mimeType.startsWith('video/');
         case 'documents':
-            return mimeType.includes('pdf') || 
-                   mimeType.includes('document') || 
+            return mimeType.includes('pdf') ||
+                   mimeType.includes('document') ||
                    mimeType.includes('text') ||
                    mimeType.includes('msword') ||
                    mimeType.includes('officedocument');

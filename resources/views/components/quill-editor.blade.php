@@ -11,15 +11,14 @@
 <style>
     .ql-editor {
         min-height: {{ $height }};
+        @if($maxHeight !== '-1')
         max-height: {{ $maxHeight }};
+        @endif
         overflow-y: auto;
     }
     .ql-toolbar.ql-snow {
         border-radius: 10px 10px 0px 0px;
         margin-bottom: 0px;
-    }
-    .ql-container {
-        height: {{ $height }};
     }
     /* Create a container for Quill to target */
     .quill-container {

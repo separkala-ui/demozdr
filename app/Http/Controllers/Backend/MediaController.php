@@ -145,7 +145,7 @@ class MediaController extends Controller
             $request->get('type'),
             $request->get('sort', 'created_at'),
             $request->get('direction', 'desc'),
-            100
+            (int) $request->get('per_page', 100)
         );
 
         // Transform media for API response.
@@ -188,6 +188,13 @@ class MediaController extends Controller
             'success' => true,
             'media' => $mediaItems,
             'stats' => $result['stats'],
+            'pagination' => [
+                'current_page' => $result['media']->currentPage(),
+                'last_page' => $result['media']->lastPage(),
+                'per_page' => $result['media']->perPage(),
+                'total' => $result['media']->total(),
+                'has_more_pages' => $result['media']->hasMorePages(),
+            ],
         ]);
     }
 
