@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Concerns\HandlesMediaOperations;
-use App\Contacts\MediaInterface;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class MediaLibraryService
@@ -162,27 +163,29 @@ class MediaLibraryService
     }
 
     public function uploadFromRequest(
-        MediaInterface $model,
+        HasMedia $model,
         Request $request,
-        string $requestKey,
+        string $fieldName,
         string $collection = 'default'
-    ): void {
-        if ($request->hasFile($requestKey)) {
-            $file = $request->file($requestKey);
+    ): ?SpatieMedia {
+        if ($request->hasFile($fieldName)) {
+            $file = $request->file($fieldName);
 
             // Security checks
-            if ($this->isSecureFile($file)) {
-                $model->addMedia($file)
+            if ($file && $this->isSecureFile($file)) {
+                return $model->addMedia($file)
                     ->sanitizingFileName(function ($fileName) {
                         return $this->sanitizeFilename($fileName);
                     })
                     ->toMediaCollection($collection);
             }
         }
+
+        return null;
     }
 
     public function uploadMultipleFromRequest(
-        MediaInterface $model,
+        HasMedia $model,
         Request $request,
         string $requestKey,
         string $collection = 'default'
@@ -201,8 +204,105 @@ class MediaLibraryService
         }
     }
 
-    public function clearMediaCollection(MediaInterface $model, string $collection = 'default'): void
+    public function clearMediaCollection(HasMedia $model, string $collection = 'default'): void
     {
         $model->clearMediaCollection($collection);
+    }
+
+    /**
+     * Associate existing media with a model by URL or ID
+     */
+    public function associateExistingMedia(
+        HasMedia $model,
+        string $mediaUrlOrId,
+        string $collection = 'default'
+    ): ?SpatieMedia {
+        $media = null;
+
+        // Try to find media by ID first (most reliable)
+        if (is_numeric($mediaUrlOrId)) {
+            $media = SpatieMedia::find($mediaUrlOrId);
+        } else {
+            // Extract file name from URL path
+            $urlPath = parse_url($mediaUrlOrId, PHP_URL_PATH);
+            $fileName = basename($urlPath);
+
+            // Try to find media by file name
+            $media = SpatieMedia::where('file_name', $fileName)->first();
+
+            // If not found, try by full URL pattern
+            if (! $media) {
+                $media = SpatieMedia::where('disk', 'public')
+                    ->get()
+                    ->first(function ($item) use ($mediaUrlOrId) {
+                        try {
+                            return $item->getUrl() === $mediaUrlOrId;
+                        } catch (\Exception $e) {
+                            return false;
+                        }
+                    });
+            }
+        }
+
+        if (! $media) {
+            Log::warning("Media not found for ID/URL: {$mediaUrlOrId}");
+            return null;
+        }
+
+        // Copy the media file to associate it with the model
+        try {
+            // For standalone media (model_id = 0), construct the correct path
+            if ($media->model_id == 0) {
+                // Standalone media is stored in media/ directory
+                $mediaPath = storage_path('app/public/media/' . $media->file_name);
+            } else {
+                // Model-attached media uses the default path
+                $mediaPath = $media->getPath();
+            }
+
+            if (file_exists($mediaPath)) {
+                $copiedMedia = $model
+                    ->addMedia($mediaPath)
+                    ->preservingOriginal()
+                    ->usingName($media->name)
+                    ->usingFileName($media->file_name)
+                    ->toMediaCollection($collection);
+
+                return $copiedMedia;
+            } else {
+                // Try alternative paths for different storage structures
+                $alternativePaths = [
+                    storage_path('app/public/' . $media->file_name),
+                    storage_path('app/public/uploads/' . $media->file_name),
+                    public_path('storage/media/' . $media->file_name),
+                    public_path('storage/' . $media->file_name),
+                ];
+
+                foreach ($alternativePaths as $altPath) {
+                    if (file_exists($altPath)) {
+                        $copiedMedia = $model
+                            ->addMedia($altPath)
+                            ->preservingOriginal()
+                            ->usingName($media->name)
+                            ->usingFileName($media->file_name)
+                            ->toMediaCollection($collection);
+                        return $copiedMedia;
+                    }
+                }
+
+                Log::warning("Media file does not exist at any expected path", [
+                    'primary_path' => $mediaPath,
+                    'alternative_paths' => $alternativePaths,
+                    'media_id' => $media->id,
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to associate existing media: ' . $e->getMessage(), [
+                'media_id' => $media->id,
+                'exception' => $e,
+            ]);
+        }
+
+        return null;
     }
 }

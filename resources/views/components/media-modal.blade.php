@@ -1,10 +1,10 @@
 @props([
     'id' => 'mediaModal',
-    'title' => 'Select Media',
+    'title' => __('Select Media'),
     'multiple' => false,
     'allowedTypes' => 'all', // 'all', 'images', 'videos', 'documents'
     'onSelect' => null,
-    'buttonText' => 'Select Media',
+    'buttonText' => __('Select Media'),
     'buttonClass' => 'btn-primary'
 ])
 
@@ -162,7 +162,7 @@
                     class="btn-primary"
                     disabled
                 >
-                    Select
+                    {{ __('Select') }}
                 </button>
             </div>
         </div>

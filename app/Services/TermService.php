@@ -13,7 +13,8 @@ use Illuminate\Support\Str;
 class TermService
 {
     public function __construct(
-        private readonly ContentService $contentService
+        private readonly ContentService $contentService,
+        private readonly MediaLibraryService $mediaLibraryService
     ) {
     }
 
@@ -72,10 +73,16 @@ class TermService
         $term->parent_id = $data['parent_id'] ?? null;
         $term->save();
 
-        // Handle featured image if provided
-        if (isset($data['featured_image']) && $data['featured_image'] instanceof UploadedFile) {
-            $term->addMedia($data['featured_image'])
-                ->toMediaCollection('featured');
+        if (isset($data['featured_image']) && ! empty($data['featured_image'])) {
+            if ($data['featured_image'] instanceof UploadedFile) {
+                $term->addMedia($data['featured_image'])->toMediaCollection('featured');
+            } elseif (is_string($data['featured_image'])) {
+                $this->mediaLibraryService->associateExistingMedia(
+                    $term,
+                    $data['featured_image'],
+                    'featured'
+                );
+            }
         }
 
         return $term;
@@ -96,19 +103,20 @@ class TermService
         $term->parent_id = $data['parent_id'] ?? null;
         $term->save();
 
-        // Handle featured image upload
-        if (isset($data['featured_image']) && $data['featured_image'] instanceof UploadedFile) {
-            // Clear existing featured image.
-            $term->clearMediaCollection('featured');
-
-            // Add new featured image.
-            $term->addMedia($data['featured_image'])
-                ->toMediaCollection('featured');
-        }
-
-        // Handle image removal
         if (isset($data['remove_featured_image']) && $data['remove_featured_image']) {
             $term->clearMediaCollection('featured');
+        } elseif (isset($data['featured_image']) && ! empty($data['featured_image'])) {
+            $term->clearMediaCollection('featured');
+
+            if ($data['featured_image'] instanceof UploadedFile) {
+                $term->addMedia($data['featured_image'])->toMediaCollection('featured');
+            } elseif (is_string($data['featured_image'])) {
+                $this->mediaLibraryService->associateExistingMedia(
+                    $term,
+                    $data['featured_image'],
+                    'featured'
+                );
+            }
         }
 
         return $term;

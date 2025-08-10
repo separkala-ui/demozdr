@@ -64,13 +64,13 @@ class UpdatePostRequest extends FormRequest
             'status' => 'required|in:draft,publish,pending,future,private',
 
             /** @example null */
-            'featured_image' => 'nullable|file|image|max:5120',
-
-            /** @example null */
             'parent_id' => 'nullable|exists:posts,id',
 
             /** @example null */
             'published_at' => 'nullable|date',
+
+            /** Featured image - accepts both file uploads and media library IDs */
+            'featured_image' => 'nullable',
 
             /** @example null */
             'remove_featured_image' => 'nullable',

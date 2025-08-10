@@ -11,6 +11,7 @@ use App\Models\Post;
 use App\Models\Term;
 use App\Services\Content\ContentService;
 use App\Services\ImageService;
+use App\Services\MediaLibraryService;
 use App\Services\PostMetaService;
 use App\Services\PostService;
 use Carbon\Carbon;
@@ -26,7 +27,8 @@ class PostsController extends Controller
         private readonly ContentService $contentService,
         private readonly PostMetaService $postMetaService,
         private readonly PostService $postService,
-        private readonly ImageService $imageService
+        private readonly ImageService $imageService,
+        private readonly MediaLibraryService $mediaService
     ) {
     }
 
@@ -140,14 +142,16 @@ class PostsController extends Controller
 
         $post->save();
 
-        if ($request->hasFile('featured_image')) {
-            $post->clearMediaCollection('featured');
-            $post->addMediaFromRequest('featured_image')->toMediaCollection('featured');
-        }
-
-        // Handle featured image removal.
+        // Handle featured image removal first.
         if ($request->has('remove_featured_image') && $request->remove_featured_image) {
             $post->clearMediaCollection('featured');
+        } elseif ($request->filled('featured_image')) {
+            if ($request->hasFile('featured_image')) {
+                $post->clearMediaCollection('featured');
+                $post->addMediaFromRequest('featured_image')->toMediaCollection('featured');
+            } else {
+                $this->mediaService->associateExistingMedia($post, $request->input('featured_image'), 'featured');
+            }
         }
 
         $post = ld_apply_filters('after_post_save', $post, $request);
@@ -277,15 +281,17 @@ class PostsController extends Controller
 
         $post->save();
 
-        // Handle featured image with media library.
-        if ($request->hasFile('featured_image')) {
-            $post->clearMediaCollection('featured');
-            $post->addMediaFromRequest('featured_image')->toMediaCollection('featured');
-        }
-
-        // Handle featured image removal.
+        // Handle featured image removal first.
         if ($request->has('remove_featured_image') && $request->remove_featured_image) {
             $post->clearMediaCollection('featured');
+        } elseif ($request->filled('featured_image')) {
+            $post->clearMediaCollection('featured');
+
+            if ($request->hasFile('featured_image')) {
+                $post->addMediaFromRequest('featured_image')->toMediaCollection('featured');
+            } else {
+                $this->mediaService->associateExistingMedia($post, $request->input('featured_image'), 'featured');
+            }
         }
 
         $post = ld_apply_filters('after_post_update', $post, $request);
