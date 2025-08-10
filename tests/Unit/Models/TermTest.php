@@ -24,7 +24,6 @@ class TermTest extends TestCase
             'description',
             'parent_id',
             'count',
-            'featured_image',
         ], $term->getFillable());
     }
 
