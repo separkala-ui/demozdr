@@ -8,7 +8,7 @@ module.exports = {
         'feat',     // new feature
         'fix',      // bug fix
         'docs',     // documentation
-        'style',    // formatting, missing semi colons, etc
+        'style',    // formatting, missing semi-colons, etc
         'refactor', // code change that neither fixes a bug nor adds a feature
         'perf',     // performance improvements
         'test',     // adding missing tests
