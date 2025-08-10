@@ -234,7 +234,8 @@
                                 @foreach ($media as $item)
                                     <div
                                         class="relative group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200 bg-white dark:bg-gray-800">
-                                        <div class="absolute top-2 left-2 z-10">
+                                        <div class="absolute top-2 left-2 z-10 transition-opacity duration-200" 
+                                             :class="selectedMedia.includes('{{ $item->id }}') ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'">
                                             <input type="checkbox" value="{{ $item->id }}" x-model="selectedMedia"
                                                 class="form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         </div>
@@ -293,10 +294,10 @@
 
                                         <!-- Actions overlay -->
                                         <div
-                                            class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2">
+                                            class="absolute inset-0 bg-white/10 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2">
                                             @if (str_starts_with($item->mime_type, 'image/'))
                                                 <button
-                                                    class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+                                                    class="p-2 bg-white/90 backdrop-blur-sm rounded-md text-gray-700 hover:bg-white transition-colors shadow-lg"
                                                     onclick="openImageModal('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}')"
                                                     title="{{ __('View') }}">
                                                     <iconify-icon icon="lucide:eye" class="text-sm"></iconify-icon>
@@ -304,19 +305,19 @@
                                             @endif
                                             <a href="{{ $item->url ?? asset('storage/media/' . $item->file_name) }}" 
                                                 download="{{ $item->name }}"
-                                                class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+                                                class="p-2 bg-white/90 backdrop-blur-sm rounded-md text-gray-700 hover:bg-white transition-colors shadow-lg"
                                                 title="{{ __('Download') }}">
                                                 <iconify-icon icon="lucide:download" class="text-sm"></iconify-icon>
                                             </a>
                                             <button
-                                                class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+                                                class="p-2 bg-white/90 backdrop-blur-sm rounded-md text-gray-700 hover:bg-white transition-colors shadow-lg"
                                                 onclick="copyToClipboard('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}')"
                                                 title="{{ __('Copy URL') }}">
                                                 <iconify-icon icon="lucide:copy" class="text-sm"></iconify-icon>
-                                            </button>
+                                            </a>
                                             @if (auth()->user()->can('media.delete'))
                                                 <button
-                                                    class="p-2 bg-red-500 rounded-md text-white hover:bg-red-600 transition-colors"
+                                                    class="p-2 bg-red-500/90 backdrop-blur-sm rounded-md text-white hover:bg-red-500 transition-colors shadow-lg"
                                                     @click="showSingleDeleteModal({{ $item->id }})"
                                                     title="{{ __('Delete') }}">
                                                     <iconify-icon icon="lucide:trash" class="text-sm"></iconify-icon>
@@ -380,11 +381,12 @@
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                                     @foreach ($media as $item)
-                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 group">
                                             <td class="px-5 py-4 sm:px-6">
                                                 <input type="checkbox" value="{{ $item->id }}"
                                                     x-model="selectedMedia"
-                                                    class="media-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                    class="media-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 transition-opacity duration-200"
+                                                    :class="selectedMedia.includes('{{ $item->id }}') ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'">
                                             </td>
                                             <td class="px-5 py-4 flex items-center">
                                                 <div class="flex-shrink-0 h-12 w-12 mr-3">
