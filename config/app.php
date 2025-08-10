@@ -203,6 +203,7 @@ return [
         App\Providers\TelescopeServiceProvider::class,
         App\Providers\ContentServiceProvider::class,
         App\Providers\MenuServiceProvider::class,
+        App\Providers\ModuleServiceProvider::class,
     ],
 
     /*

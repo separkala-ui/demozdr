@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="fix: prevent loading in console for admin route redirection and update include paths" />
+    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="refactor: add ModuleServiceProvider to application service providers">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Services/Modules/ModuleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/Modules/ModuleService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/task-manager/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/composer.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,6 +18,9 @@
     <option name="configs">
       <option value="$PROJECT_DIR$/Modules/TaskManager/composer.json" />
       <option value="$PROJECT_DIR$/Modules/UserAvatar/composer.json" />
+      <option value="$PROJECT_DIR$/modules/crm/composer.json" />
+      <option value="$PROJECT_DIR$/modules/user-avatar/composer.json" />
+      <option value="$PROJECT_DIR$/modules/task-manager/composer.json" />
     </option>
   </component>
   <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
@@ -185,16 +192,25 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;fix/api-ready&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/mostafizur/Code/projects/laradashboard&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mostafizur/Code/projects/laradashboard/app&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/Support" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner configuration_file="$PROJECT_DIR$/phpunit.xml" scope="XML" use_alternative_configuration_file="true" />
@@ -204,8 +220,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PS-251.26927.60" />
-        <option value="bundled-php-predefined-a98d8de5180a-e5747d4f5a45-com.jetbrains.php.sharedIndexes-PS-251.26927.60" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PS-251.27812.52" />
+        <option value="bundled-php-predefined-a98d8de5180a-e5747d4f5a45-com.jetbrains.php.sharedIndexes-PS-251.27812.52" />
       </set>
     </attachedChunks>
   </component>
@@ -231,6 +247,8 @@
       <workItem from="1752979964542" duration="2824000" />
       <workItem from="1752996350224" duration="2634000" />
       <workItem from="1753757813189" duration="309000" />
+      <workItem from="1754804012767" duration="3636000" />
+      <workItem from="1754807719865" duration="1253000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />
@@ -312,7 +330,47 @@
       <option name="project" value="LOCAL" />
       <updated>1753758101641</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="refactor: rename helper files and update autoload paths">
+      <option name="closed" value="true" />
+      <created>1754805388703</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1754805388703</updated>
+    </task>
+    <task id="LOCAL-00012" summary="refactor: update module paths and author information in configuration files">
+      <option name="closed" value="true" />
+      <created>1754806528033</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1754806528033</updated>
+    </task>
+    <task id="LOCAL-00013" summary="refactor: update .gitignore to reflect lowercase modules directory">
+      <option name="closed" value="true" />
+      <created>1754807081456</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1754807081456</updated>
+    </task>
+    <task id="LOCAL-00014" summary="refactor: add module paths for CRM, Task Manager, and User Avatar in project configuration">
+      <option name="closed" value="true" />
+      <created>1754808092848</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1754808092848</updated>
+    </task>
+    <task id="LOCAL-00015" summary="refactor: add ModuleServiceProvider to application service providers">
+      <option name="closed" value="true" />
+      <created>1754808618287</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1754808618287</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -330,6 +388,11 @@
     <MESSAGE value="chore: add i18n-ally configuration for locales paths" />
     <MESSAGE value="feat: implement screenshot generation with user session handling" />
     <MESSAGE value="fix: prevent loading in console for admin route redirection and update include paths" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: prevent loading in console for admin route redirection and update include paths" />
+    <MESSAGE value="refactor: rename helper files and update autoload paths" />
+    <MESSAGE value="refactor: update module paths and author information in configuration files" />
+    <MESSAGE value="refactor: update .gitignore to reflect lowercase modules directory" />
+    <MESSAGE value="refactor: add module paths for CRM, Task Manager, and User Avatar in project configuration" />
+    <MESSAGE value="refactor: add ModuleServiceProvider to application service providers" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: add ModuleServiceProvider to application service providers" />
   </component>
 </project>
