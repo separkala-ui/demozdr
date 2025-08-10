@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helper;
 
 use Illuminate\Http\UploadedFile;
@@ -148,5 +150,82 @@ class MediaHelper
         ];
 
         return $icons[$category] ?? $icons['other'];
+    }
+
+    /**
+     * Get PHP upload limits from ini settings
+     */
+    public static function getUploadLimits(): array
+    {
+        $uploadMaxFilesize = self::parseSize(ini_get('upload_max_filesize'));
+        $postMaxSize = self::parseSize(ini_get('post_max_size'));
+        $maxFileUploads = (int) ini_get('max_file_uploads');
+        $maxInputTime = (int) ini_get('max_input_time');
+        $maxExecutionTime = (int) ini_get('max_execution_time');
+
+        // The effective upload limit is the smaller of upload_max_filesize and post_max_size
+        $effectiveMaxFilesize = min($uploadMaxFilesize, $postMaxSize);
+
+        return [
+            'upload_max_filesize' => $uploadMaxFilesize,
+            'upload_max_filesize_formatted' => self::formatFileSize($uploadMaxFilesize),
+            'post_max_size' => $postMaxSize,
+            'post_max_size_formatted' => self::formatFileSize($postMaxSize),
+            'effective_max_filesize' => $effectiveMaxFilesize,
+            'effective_max_filesize_formatted' => self::formatFileSize($effectiveMaxFilesize),
+            'max_file_uploads' => $maxFileUploads,
+            'max_input_time' => $maxInputTime,
+            'max_execution_time' => $maxExecutionTime,
+        ];
+    }
+
+    /**
+     * Parse PHP size strings (like "8M", "2G") to bytes
+     */
+    public static function parseSize(string $size): int
+    {
+        $size = trim($size);
+        $last = strtolower($size[strlen($size) - 1]);
+        $size = (int) $size;
+
+        switch ($last) {
+            case 'g':
+                $size *= 1024;
+                // no break
+            case 'm':
+                $size *= 1024;
+                // no break
+            case 'k':
+                $size *= 1024;
+        }
+
+        return $size;
+    }
+
+    /**
+     * Check if the current request might have exceeded PHP limits
+     */
+    public static function checkPhpUploadError(): ?array
+    {
+        $limits = self::getUploadLimits();
+
+        // Check if POST was truncated due to post_max_size
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST' &&
+            empty($_POST) &&
+            empty($_FILES) &&
+            isset($_SERVER['CONTENT_LENGTH']) &&
+            $_SERVER['CONTENT_LENGTH'] > $limits['post_max_size']
+        ) {
+            return [
+                'error' => 'post_max_size_exceeded',
+                'message' => "Upload size (" . self::formatFileSize((int)$_SERVER['CONTENT_LENGTH']) . ") exceeds the post_max_size limit ({$limits['post_max_size_formatted']})",
+                'uploaded_size' => (int)$_SERVER['CONTENT_LENGTH'],
+                'limit' => $limits['post_max_size'],
+                'limit_formatted' => $limits['post_max_size_formatted'],
+            ];
+        }
+
+        return null;
     }
 }

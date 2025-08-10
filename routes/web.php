@@ -92,7 +92,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     // Media Routes.
     Route::prefix('media')->name('media.')->group(function () {
         Route::get('/', [MediaController::class, 'index'])->name('index');
-        Route::post('/', [MediaController::class, 'store'])->name('store');
+        Route::post('/', [MediaController::class, 'store'])->name('store')->middleware('check.upload.limits');
+        Route::get('/upload-limits', [MediaController::class, 'getUploadLimits'])->name('upload-limits');
         Route::delete('/{id}', [MediaController::class, 'destroy'])->name('destroy');
         Route::delete('/', [MediaController::class, 'bulkDelete'])->name('bulk-delete');
     });

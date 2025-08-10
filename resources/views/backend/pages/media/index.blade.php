@@ -28,7 +28,37 @@
 
         {!! ld_apply_filters('media_after_breadcrumbs', '') !!}
 
-        <!-- Statistics Cards -->
+        @if ($errors->any())
+            <div class="mb-6 p-4 border border-red-200 bg-red-50 rounded-md dark:border-red-800 dark:bg-red-900/20">
+                <div class="flex">
+                    <iconify-icon icon="lucide:alert-circle" class="text-red-500 text-xl mr-3 mt-0.5"></iconify-icon>
+                    <div>
+                        <h3 class="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+                            {{ __('Upload Error') }}
+                        </h3>
+                        <ul class="text-sm text-red-700 dark:text-red-300 space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        @if ($errors->has('upload_error'))
+                            <div class="mt-3 p-3 bg-red-100 dark:bg-red-900/40 rounded border border-red-200 dark:border-red-700">
+                                <p class="text-xs text-red-600 dark:text-red-400 font-medium mb-2">{{ __('Current PHP Upload Limits:') }}</p>
+                                <ul class="text-xs text-red-600 dark:text-red-400 space-y-1">
+                                    <li>{{ __('Max file size:') }} {{ $uploadLimits['effective_max_filesize_formatted'] }}</li>
+                                    <li>{{ __('Max total upload:') }} {{ $uploadLimits['post_max_size_formatted'] }}</li>
+                                    <li>{{ __('Max files:') }} {{ $uploadLimits['max_file_uploads'] }}</li>
+                                </ul>
+                                <p class="text-xs text-red-600 dark:text-red-400 mt-2">
+                                    {{ __('Contact your administrator to increase PHP upload limits.') }}
+                                </p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-5 md:gap-6">
             <div class="p-4 bg-white rounded-md border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03]">
                 <div class="flex items-center">
