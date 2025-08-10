@@ -82,19 +82,13 @@
         </div>
 
         <div class="space-y-6">
-            <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+            <div class="rounded-md border border-gray-200  dark:border-gray-800 bg-white dark:bg-white/[0.03]">
                 <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
                     @include('backend.partials.search-form', [
                         'placeholder' => __('Search media files...'),
                     ])
 
                     <div class="flex items-center gap-3">
-                        
-                        <button @click="uploadModalOpen = true"
-                            class="btn-primary inline-flex items-center gap-2">
-                            <iconify-icon icon="lucide:upload" height="16"></iconify-icon>
-                            {{ __('Upload Media') }}
-                        </button>
                         <!-- Bulk Actions dropdown -->
                         <div class="flex items-center justify-center relative" x-show="selectedMedia.length > 0">
                             <button @click="bulkActionsDropdownOpen = !bulkActionsDropdownOpen"
@@ -193,7 +187,7 @@
                                 x-text="viewMode === 'grid' ? '{{ __('List View') }}' : '{{ __('Grid View') }}'"></span>
                         </button>
 
-                        @if (auth()->user()->can('media.upload'))
+                        @if (auth()->user()->can('media.create') && count($media))
                             <button @click="uploadModalOpen = true" class="btn-primary flex items-center gap-2">
                                 <iconify-icon icon="lucide:upload" height="16"></iconify-icon>
                                 {{ __('Upload Media') }}
@@ -278,6 +272,12 @@
                                                     <iconify-icon icon="lucide:eye" class="text-sm"></iconify-icon>
                                                 </button>
                                             @endif
+                                            <a href="{{ asset('storage/media/' . $item->file_name) }}" 
+                                                download="{{ $item->name }}"
+                                                class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+                                                title="{{ __('Download') }}">
+                                                <iconify-icon icon="lucide:download" class="text-sm"></iconify-icon>
+                                            </a>
                                             <button
                                                 class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
                                                 onclick="copyToClipboard('{{ asset('storage/media/' . $item->file_name) }}')"
@@ -301,6 +301,15 @@
                                 <iconify-icon icon="lucide:image"
                                     class="text-6xl text-gray-300 dark:text-gray-600 mb-4 mx-auto"></iconify-icon>
                                 <p class="text-gray-500 dark:text-gray-400 mb-4">{{ __('No media files found') }}</p>
+
+                                @if (auth()->user()->can('media.create'))
+                                    <div class="flex justify-center">
+                                        <button @click="uploadModalOpen = true" class="btn-primary flex items-center gap-2">
+                                            <iconify-icon icon="lucide:upload" height="16"></iconify-icon>
+                                            {{ __('Upload Media') }}
+                                        </button>
+                                    </div>
+                                @endif
                             </div>
                         @endif
                     </div>
@@ -392,6 +401,12 @@
                                             </td>
                                             <td class="px-5 py-4 text-center">
                                                 <div class="flex items-center justify-center gap-2">
+                                                    <a href="{{ asset('storage/media/' . $item->file_name) }}" 
+                                                        download="{{ $item->name }}"
+                                                        class="text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
+                                                        title="{{ __('Download') }}">
+                                                        <iconify-icon icon="lucide:download" class="text-sm"></iconify-icon>
+                                                    </a>
                                                     <button
                                                         class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                                         onclick="copyToClipboard('{{ $item->getUrl() }}')"
@@ -422,7 +437,7 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="px-5 py-4 border-t border-gray-100 dark:border-gray-800">
+                    <div class="px-5 py-4">
                         {{ $media->links() }}
                     </div>
                 </div>

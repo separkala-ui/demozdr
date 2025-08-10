@@ -40,13 +40,13 @@ class MediaController extends Controller
             $request->get('type'),
             $request->get('sort', 'created_at'),
             $request->get('direction', 'desc'),
-            24
+            50
         );
 
         return view('backend.pages.media.index', [
             'media' => $result['media'],
             'breadcrumbs' => $breadcrumbs,
-            'stats' => $result['stats']
+            'stats' => $result['stats'],
         ]);
     }
 

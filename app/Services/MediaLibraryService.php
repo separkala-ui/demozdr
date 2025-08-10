@@ -8,13 +8,11 @@ use App\Contacts\MediaInterface;
 use App\Helper\MediaHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 use Illuminate\Support\Facades\Storage;
 
 class MediaLibraryService
 {
-
     public function getMediaList(
         ?string $search = null,
         ?string $type = null,
@@ -74,7 +72,7 @@ class MediaLibraryService
 
         return [
             'media' => $media,
-            'stats' => $stats
+            'stats' => $stats,
         ];
     }
 
@@ -97,13 +95,13 @@ class MediaLibraryService
 
         foreach ($files as $file) {
             // Skip files that don't pass security checks
-            if (!$this->isSecureFile($file)) {
+            if (! $this->isSecureFile($file)) {
                 continue;
             }
 
             // Generate a secure filename
             $safeFileName = MediaHelper::generateUniqueFilename($file->getClientOriginalName());
-            
+
             // Store the file with a secure name
             $path = $file->storeAs('media', $safeFileName, 'public');
 
@@ -169,11 +167,11 @@ class MediaLibraryService
     ): void {
         if ($request->hasFile($requestKey)) {
             $file = $request->file($requestKey);
-            
+
             // Security checks
             if ($this->isSecureFile($file)) {
                 $model->addMedia($file)
-                    ->sanitizingFileName(function($fileName) {
+                    ->sanitizingFileName(function ($fileName) {
                         return MediaHelper::sanitizeFilename($fileName);
                     })
                     ->toMediaCollection($collection);
@@ -192,7 +190,7 @@ class MediaLibraryService
                 // Security checks
                 if ($this->isSecureFile($file)) {
                     $model->addMedia($file)
-                        ->sanitizingFileName(function($fileName) {
+                        ->sanitizingFileName(function ($fileName) {
                             return MediaHelper::sanitizeFilename($fileName);
                         })
                         ->toMediaCollection($collection);
@@ -212,7 +210,7 @@ class MediaLibraryService
             return false;
         }
 
-        if (!MediaHelper::validateFileHeaders($file)) {
+        if (! MediaHelper::validateFileHeaders($file)) {
             return false;
         }
 

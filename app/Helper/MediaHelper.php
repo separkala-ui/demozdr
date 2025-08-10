@@ -3,7 +3,6 @@
 namespace App\Helper;
 
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class MediaHelper
@@ -11,11 +10,11 @@ class MediaHelper
     public static function formatFileSize(int $bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        
+
         for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
             $bytes /= 1024;
         }
-        
+
         return round($bytes, 2) . ' ' . $units[$i];
     }
 
@@ -29,13 +28,13 @@ class MediaHelper
                 'application/pdf',
                 'application/msword',
                 'application/vnd.openxmlformats-officedocument',
-                'text/'
+                'text/',
             ],
             'archive' => [
                 'application/zip',
                 'application/x-rar',
-                'application/x-7z'
-            ]
+                'application/x-7z',
+            ],
         ];
 
         foreach ($categories as $category => $patterns) {
@@ -53,13 +52,13 @@ class MediaHelper
     {
         // Remove path traversal attempts
         $filename = basename($filename);
-        
+
         // Remove dangerous characters
         $filename = preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename);
-        
+
         // Prevent double extensions
         $filename = preg_replace('/\.+/', '.', $filename);
-        
+
         // Ensure filename is not too long
         if (strlen($filename) > 255) {
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
@@ -77,11 +76,11 @@ class MediaHelper
             'asp', 'aspx', 'jsp', 'jspx',
             'exe', 'com', 'bat', 'cmd', 'scr',
             'vbs', 'vbe', 'js', 'jar',
-            'pl', 'py', 'rb', 'sh'
+            'pl', 'py', 'rb', 'sh',
         ];
 
         $extension = strtolower($file->getClientOriginalExtension());
-        
+
         if (in_array($extension, $dangerousExtensions)) {
             return true;
         }
@@ -116,7 +115,7 @@ class MediaHelper
             'ogg' => ['audio/ogg'],
         ];
 
-        if (!isset($validMimeTypes[$extension])) {
+        if (! isset($validMimeTypes[$extension])) {
             return true; // Allow unknown extensions
         }
 
@@ -127,25 +126,25 @@ class MediaHelper
     {
         $extension = pathinfo($originalName, PATHINFO_EXTENSION);
         $name = pathinfo($originalName, PATHINFO_FILENAME);
-        
+
         $sanitizedName = self::sanitizeFilename($name);
         $timestamp = now()->format('Y-m-d_H-i-s');
         $random = Str::random(8);
-        
+
         return "{$sanitizedName}_{$timestamp}_{$random}.{$extension}";
     }
 
     public static function getMediaIcon(string $mimeType): string
     {
         $category = self::getFileTypeCategory($mimeType);
-        
+
         $icons = [
             'image' => 'fa-image',
             'video' => 'fa-video',
             'audio' => 'fa-music',
             'document' => 'fa-file-text',
             'archive' => 'fa-file-archive',
-            'other' => 'fa-file'
+            'other' => 'fa-file',
         ];
 
         return $icons[$category] ?? $icons['other'];
