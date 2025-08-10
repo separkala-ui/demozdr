@@ -60,7 +60,7 @@
         },
         "merge-plugin": {
             "include": [
-                "Modules/*/composer.json"
+                "modules/*/composer.json"
             ]
         },
         "patches-file": "composer-patches.json"

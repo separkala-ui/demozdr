@@ -2,8 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Modules/Crm" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Modules/TaskManager" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Modules/UserAvatar" vcs="Git" />
   </component>
 </project>

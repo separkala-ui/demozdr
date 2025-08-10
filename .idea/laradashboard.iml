@@ -2,18 +2,18 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/Modules" isTestSource="false" packagePrefix="Modules\" />
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
-      <sourceFolder url="file://$MODULE_DIR$/Modules/TaskManager/app" isTestSource="false" packagePrefix="Modules\TaskManager\" />
-      <sourceFolder url="file://$MODULE_DIR$/Modules/TaskManager/database/factories" isTestSource="false" packagePrefix="Modules\TaskManager\Database\Factories\" />
-      <sourceFolder url="file://$MODULE_DIR$/Modules/TaskManager/database/seeders" isTestSource="false" packagePrefix="Modules\TaskManager\Database\Seeders\" />
-      <sourceFolder url="file://$MODULE_DIR$/Modules/TaskManager/tests" isTestSource="true" packagePrefix="Modules\TaskManager\Tests\" />
-      <sourceFolder url="file://$MODULE_DIR$/Modules/UserAvatar/app" isTestSource="false" packagePrefix="Modules\UserAvatar\" />
-      <sourceFolder url="file://$MODULE_DIR$/Modules/UserAvatar/database/factories" isTestSource="false" packagePrefix="Modules\UserAvatar\Database\Factories\" />
-      <sourceFolder url="file://$MODULE_DIR$/Modules/UserAvatar/database/seeders" isTestSource="false" packagePrefix="Modules\UserAvatar\Database\Seeders\" />
-      <sourceFolder url="file://$MODULE_DIR$/Modules/UserAvatar/tests" isTestSource="true" packagePrefix="Modules\UserAvatar\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules" isTestSource="false" packagePrefix="Modules\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/TaskManager/app" isTestSource="false" packagePrefix="Modules\TaskManager\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/TaskManager/database/factories" isTestSource="false" packagePrefix="Modules\TaskManager\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/TaskManager/database/seeders" isTestSource="false" packagePrefix="Modules\TaskManager\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/TaskManager/tests" isTestSource="true" packagePrefix="Modules\TaskManager\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/UserAvatar/app" isTestSource="false" packagePrefix="Modules\UserAvatar\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/UserAvatar/database/factories" isTestSource="false" packagePrefix="Modules\UserAvatar\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/UserAvatar/database/seeders" isTestSource="false" packagePrefix="Modules\UserAvatar\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/UserAvatar/tests" isTestSource="true" packagePrefix="Modules\UserAvatar\Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/storage/app" />
@@ -155,9 +155,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/wikimedia/composer-merge-plugin" />
-      <excludeFolder url="file://$MODULE_DIR$/Modules/UserAvatar/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/browsershot" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/temporary-directory" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/UserAvatar/vendor/composer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
