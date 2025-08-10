@@ -8,6 +8,7 @@ use App\Support\Helper\MediaHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\MediaBulkDeleteRequest;
 use App\Http\Requests\Backend\MediaUploadRequest;
+use App\Models\Media;
 use App\Services\MediaLibraryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -85,6 +86,13 @@ class MediaController extends Controller
     {
         $this->checkAuthorization(Auth::user(), ['media.create']);
 
+        if (config('app.demo_mode', false) && Media::count() > 10) {
+            return response()->json([
+                'success' => false,
+                'message' => __('More than 10 media items are not allowed in demo mode. To test, please either delete some existing items and try again or test on your local/live environment.'),
+            ], 403);
+        }
+
         // Double-check for PHP upload errors in case they weren't caught earlier
         $phpError = MediaHelper::checkPhpUploadError();
         if ($phpError) {
@@ -106,6 +114,13 @@ class MediaController extends Controller
                 'message' => __('Files uploaded successfully'),
                 'files' => $uploadedFiles,
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Upload validation failed'),
+                'errors' => $e->errors(),
+                'error_type' => 'validation_failed',
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -206,6 +221,15 @@ class MediaController extends Controller
         $this->checkAuthorization(Auth::user(), ['media.view']);
 
         $limits = MediaHelper::getUploadLimits();
+
+        // Add demo mode restrictions info
+        if (config('app.demo_mode', false)) {
+            $limits['demo_mode'] = true;
+            $limits['allowed_mime_types'] = MediaHelper::getAllowedMimeTypesForDemo();
+            $limits['demo_restriction_message'] = __('In demo mode, only images, videos, PDFs, and documents (Word, Excel, PowerPoint, text files) are allowed.');
+        } else {
+            $limits['demo_mode'] = false;
+        }
 
         return response()->json([
             'success' => true,

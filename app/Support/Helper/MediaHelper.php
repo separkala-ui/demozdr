@@ -228,4 +228,59 @@ class MediaHelper
 
         return null;
     }
+
+    /**
+     * Get allowed MIME types for demo mode
+     * Only allows images, videos, PDFs, and documents
+     */
+    public static function getAllowedMimeTypesForDemo(): array
+    {
+        return [
+            // Images
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+            'image/gif',
+            'image/webp',
+            'image/svg+xml',
+            'image/bmp',
+            'image/tiff',
+
+            // Videos
+            'video/mp4',
+            'video/avi',
+            'video/quicktime',
+            'video/x-msvideo',
+            'video/webm',
+            'video/ogg',
+            'video/3gpp',
+            'video/x-ms-wmv',
+
+            // PDFs
+            'application/pdf',
+
+            // Documents
+            'application/msword', // .doc
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+            'application/vnd.ms-excel', // .xls
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+            'application/vnd.ms-powerpoint', // .ppt
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation', // .pptx
+            'text/plain', // .txt
+            'text/csv', // .csv
+            'application/rtf', // .rtf
+        ];
+    }
+
+    /**
+     * Check if a file type is allowed in demo mode
+     */
+    public static function isAllowedInDemoMode(string $mimeType): bool
+    {
+        if (! config('app.demo_mode', false)) {
+            return true; // No restrictions when not in demo mode
+        }
+
+        return in_array($mimeType, self::getAllowedMimeTypesForDemo());
+    }
 }

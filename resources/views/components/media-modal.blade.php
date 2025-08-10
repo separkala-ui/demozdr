@@ -950,6 +950,12 @@ async function handleFileUpload(event, modalId) {
             }
         });
 
+        // Check if the response is ok (status 200-299)
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+        }
+
         const data = await response.json();
 
         if (data.success) {
@@ -961,12 +967,36 @@ async function handleFileUpload(event, modalId) {
                 window.showToast('success', 'Success', 'Files uploaded successfully');
             }
         } else {
-            throw new Error(data.message || 'Upload failed');
+            // Handle different types of errors
+            let errorMessage = data.message || 'Upload failed';
+            
+            // Check for validation errors
+            if (data.errors) {
+                const validationErrors = Object.values(data.errors).flat();
+                errorMessage = validationErrors.join(', ');
+            }
+            
+            // Show the specific error message from the API
+            if (window.showToast) {
+                window.showToast('error', 'Upload Failed', errorMessage);
+            } else {
+                alert(errorMessage);
+            }
+            return;
         }
     } catch (error) {
         console.error('Upload error:', error);
+        
+        // Try to extract error message from response if it's a fetch error
+        let errorMessage = 'Failed to upload files';
+        if (error.message && error.message !== 'Failed to fetch') {
+            errorMessage = error.message;
+        }
+        
         if (window.showToast) {
-            window.showToast('error', 'Error', 'Failed to upload files');
+            window.showToast('error', 'Upload Error', errorMessage);
+        } else {
+            alert(errorMessage);
         }
     }
 

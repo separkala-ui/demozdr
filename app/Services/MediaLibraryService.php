@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Concerns\HandlesMediaOperations;
+use App\Support\Helper\MediaHelper;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
@@ -102,6 +103,14 @@ class MediaLibraryService
                 continue;
             }
 
+            // Check demo mode restrictions.
+            if (config('app.demo_mode', false)) {
+                $mimeType = $file->getMimeType();
+                if (! MediaHelper::isAllowedInDemoMode($mimeType)) {
+                    throw new \InvalidArgumentException(__('In demo mode, only images, videos, PDFs, and documents are allowed. File type :type is not permitted.', ['type' => $mimeType]));
+                }
+            }
+
             // Generate a secure filename
             $safeFileName = $this->generateUniqueFilename($file->getClientOriginalName());
 
@@ -179,6 +188,14 @@ class MediaLibraryService
 
             // Security checks
             if ($file && $this->isSecureFile($file)) {
+                // Check demo mode restrictions
+                if (config('app.demo_mode', false)) {
+                    $mimeType = $file->getMimeType();
+                    if (! MediaHelper::isAllowedInDemoMode($mimeType)) {
+                        throw new \InvalidArgumentException(__('In demo mode, only images, videos, PDFs, and documents are allowed. File type :type is not permitted.', ['type' => $mimeType]));
+                    }
+                }
+
                 return $model->addMedia($file)
                     ->sanitizingFileName(function ($fileName) {
                         return $this->sanitizeFilename($fileName);
@@ -200,6 +217,14 @@ class MediaLibraryService
             foreach ($request->file($requestKey) as $file) {
                 // Security checks
                 if ($this->isSecureFile($file)) {
+                    // Check demo mode restrictions
+                    if (config('app.demo_mode', false)) {
+                        $mimeType = $file->getMimeType();
+                        if (! MediaHelper::isAllowedInDemoMode($mimeType)) {
+                            throw new \InvalidArgumentException(__('In demo mode, only images, videos, PDFs, and documents are allowed. File type :type is not permitted.', ['type' => $mimeType]));
+                        }
+                    }
+
                     $model->addMedia($file)
                         ->sanitizingFileName(function ($fileName) {
                             return $this->sanitizeFilename($fileName);
