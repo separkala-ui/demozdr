@@ -34,9 +34,10 @@ class MediaHelperTest extends TestCase
 
     public function test_format_file_size()
     {
-        $this->assertEquals('1 KB', MediaHelper::formatFileSize(1024));
-        $this->assertEquals('1 MB', MediaHelper::formatFileSize(1024 * 1024));
-        $this->assertEquals('1 GB', MediaHelper::formatFileSize(1024 * 1024 * 1024));
+        $this->assertEquals('1024 B', MediaHelper::formatFileSize(1024));
+        $this->assertEquals('2 KB', MediaHelper::formatFileSize(2048));
+        $this->assertEquals('1024 KB', MediaHelper::formatFileSize(1024 * 1024));
+        $this->assertEquals('1024 MB', MediaHelper::formatFileSize(1024 * 1024 * 1024));
         $this->assertEquals('500 B', MediaHelper::formatFileSize(500));
     }
 }

@@ -22,7 +22,7 @@ class RoleTest extends TestCase
     public function it_uses_query_builder_trait(): void
     {
         $role = new Role();
-        $this->assertTrue(in_array('App\Traits\QueryBuilderTrait', class_uses_recursive($role)));
+        $this->assertTrue(in_array('App\Concerns\QueryBuilderTrait', class_uses_recursive($role)));
     }
 
     #[Test]

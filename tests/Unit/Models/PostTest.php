@@ -25,7 +25,6 @@ class PostTest extends TestCase
             'slug',
             'excerpt',
             'content',
-            'featured_image',
             'status',
             'meta',
             'parent_id',
