@@ -354,6 +354,13 @@
                                                     title="{{ __('Play Audio') }}">
                                                     <iconify-icon icon="lucide:headphones" class="text-sm"></iconify-icon>
                                                 </button>
+                                            @elseif (str_starts_with($item->mime_type, 'application/pdf'))
+                                                <button
+                                                    class="p-2 bg-white/90 backdrop-blur-sm rounded-md text-gray-700 hover:bg-white transition-colors shadow-lg"
+                                                    onclick="openPdfModal('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}')"
+                                                    title="{{ __('View PDF') }}">
+                                                    <iconify-icon icon="lucide:eye" class="text-sm"></iconify-icon>
+                                                </button>
                                             @endif
                                             <a href="{{ $item->url ?? asset('storage/media/' . $item->file_name) }}" 
                                                 download="{{ $item->name }}"
@@ -485,6 +492,35 @@
                                             </td>
                                             <td class="px-5 py-4 text-center">
                                                 <div class="flex items-center justify-center gap-2">
+                                                    @if (str_starts_with($item->mime_type, 'image/'))
+                                                        <button
+                                                            class="text-green-400 hover:text-green-600 dark:hover:text-green-300"
+                                                            onclick="openImageModal('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}')"
+                                                            title="{{ __('View Image') }}">
+                                                            <iconify-icon icon="lucide:eye" class="text-sm"></iconify-icon>
+                                                        </button>
+                                                    @elseif (str_starts_with($item->mime_type, 'video/'))
+                                                        <button
+                                                            class="text-purple-400 hover:text-purple-600 dark:hover:text-purple-300"
+                                                            onclick="openVideoModal('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}')"
+                                                            title="{{ __('Play Video') }}">
+                                                            <iconify-icon icon="lucide:play" class="text-sm"></iconify-icon>
+                                                        </button>
+                                                    @elseif (str_starts_with($item->mime_type, 'audio/'))
+                                                        <button
+                                                            class="text-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-300"
+                                                            onclick="openAudioModal('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}', '{{ $item->human_readable_size }}')"
+                                                            title="{{ __('Play Audio') }}">
+                                                            <iconify-icon icon="lucide:headphones" class="text-sm"></iconify-icon>
+                                                        </button>
+                                                    @elseif (str_starts_with($item->mime_type, 'application/pdf'))
+                                                        <button
+                                                            class="text-red-400 hover:text-red-600 dark:hover:text-red-300"
+                                                            onclick="openPdfModal('{{ $item->url ?? asset('storage/media/' . $item->file_name) }}', '{{ $item->name }}')"
+                                                            title="{{ __('View PDF') }}">
+                                                            <iconify-icon icon="lucide:eye" class="text-sm"></iconify-icon>
+                                                        </button>
+                                                    @endif
                                                     <a href="{{ $item->url ?? asset('storage/media/' . $item->file_name) }}" 
                                                         download="{{ $item->name }}"
                                                         class="text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
@@ -595,6 +631,45 @@
             </div>
         </div>
         <button onclick="closeAudioModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+            <iconify-icon icon="lucide:x" class="text-2xl"></iconify-icon>
+        </button>
+    </div>
+
+    <!-- PDF Modal -->
+    <div id="pdfModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75"
+        onclick="closePdfModal()">
+        <div class="max-w-7xl md:w-7xl max-h-[95vh] p-4" onclick="event.stopPropagation()">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden h-full">
+                <!-- PDF Header -->
+                <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <iconify-icon icon="lucide:file-text" class="text-red-500 text-xl"></iconify-icon>
+                        <h3 id="modalPdfTitle" class="text-lg font-semibold text-gray-900 dark:text-white"></h3>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a id="pdfDownloadLink" href="#" download 
+                           class="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm flex items-center gap-2">
+                            <iconify-icon icon="lucide:download" class="text-sm"></iconify-icon>
+                            {{ __('Download') }}
+                        </a>
+                        <button type="button" onclick="closePdfModal()"
+                                class="p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                            <iconify-icon icon="lucide:x" class="text-xl"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- PDF Viewer -->
+                <div class="h-full bg-gray-100 dark:bg-gray-900">
+                    <iframe id="modalPdfViewer" 
+                            src="" 
+                            class="w-full h-full border-0"
+                            style="min-height: 600px;">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+        <button onclick="closePdfModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
             <iconify-icon icon="lucide:x" class="text-2xl"></iconify-icon>
         </button>
     </div>
@@ -710,10 +785,41 @@
                 closeImageModal();
                 closeVideoModal();
                 closeAudioModal();
+                closePdfModal();
             }
         });
 
-        // Video/Audio preview button enhancements
+        // PDF Modal Functions
+        function openPdfModal(url, title) {
+            const modal = document.getElementById('pdfModal');
+            const iframe = document.getElementById('modalPdfViewer');
+            const titleElement = document.getElementById('modalPdfTitle');
+            const downloadLink = document.getElementById('pdfDownloadLink');
+
+            // Set PDF source and title
+            iframe.src = url;
+            titleElement.textContent = title || 'PDF Document';
+            downloadLink.href = url;
+            downloadLink.download = title || 'document.pdf';
+
+            // Show modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex', 'items-center', 'justify-center');
+        }
+
+        function closePdfModal() {
+            const modal = document.getElementById('pdfModal');
+            const iframe = document.getElementById('modalPdfViewer');
+
+            // Clear iframe source
+            iframe.src = '';
+
+            // Hide modal
+            modal.classList.add('hidden');
+            modal.classList.remove('flex', 'items-center', 'justify-center');
+        }
+
+        // Video/Audio/PDF preview button enhancements
         function handleVideoPreview(event, url, title) {
             event.preventDefault();
             event.stopPropagation();
@@ -724,6 +830,12 @@
             event.preventDefault();
             event.stopPropagation();
             openAudioModal(url, title, fileSize);
+        }
+
+        function handlePdfPreview(event, url, title) {
+            event.preventDefault();
+            event.stopPropagation();
+            openPdfModal(url, title);
         }
     </script>
 @endpush
