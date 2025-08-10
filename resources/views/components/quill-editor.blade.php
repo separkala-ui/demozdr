@@ -11,14 +11,14 @@
 <style>
     .ql-editor {
         min-height: {{ $height }};
+        @if($maxHeight !== '-1')
         max-height: {{ $maxHeight }};
+        @endif
         overflow-y: auto;
     }
     .ql-toolbar.ql-snow {
         border-radius: 10px 10px 0px 0px;
-    }
-    .ql-container {
-        height: {{ $height }};
+        margin-bottom: 0px;
     }
     /* Create a container for Quill to target */
     .quill-container {
@@ -48,6 +48,23 @@
     .dark .ql-editor.ql-blank::before {
         color: rgba(255, 255, 255, 0.6);
     }
+
+    /* Alternative using iconify icon */
+    .ql-toolbar .ql-media-modal {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .ql-toolbar .ql-media-modal:after {
+        content: '';
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>');
+        background-size: 18px;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
 </style>
 
 <script src="{{ asset('vendor/quill/quill.min.js') }}"></script>
@@ -74,7 +91,7 @@
         // Store original textarea content
         const initialContent = textareaElement.value || '';
 
-        // Define toolbar configurations based on type
+        // Define toolbar configurations based on type (removed default image handler)
         const toolbarConfigs = {
             full: [
                 ['bold', 'italic', 'underline', 'strike'],
@@ -85,13 +102,13 @@
                 [{ 'indent': '-1' }, { 'indent': '+1' }],
                 [{ 'color': [] }, { 'background': [] }],
                 [{ 'font': [] }],
-                ['link', 'image', 'video', 'code-block']
+                ['link', 'media-modal', 'video', 'code-block']
             ],
             basic: [
                 ['bold', 'italic', 'underline'],
                 [{ 'header': [1, 2, 3, false] }],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                ['link']
+                ['link', 'media-modal']
             ],
             minimal: [
                 ['bold', 'italic'],
@@ -103,16 +120,48 @@
         const toolbarConfig = customToolbar ? JSON.parse(customToolbar) :
                              (toolbarConfigs[editorType] || toolbarConfigs.basic);
 
+        // Custom media modal handler
+        const mediaModalHandler = function() {
+            const modalId = `quillMediaModal_${editorId}`;
+            
+            // Open media modal using the existing component (single selection for editor)
+            openMediaModal(modalId, false, 'all', `handleQuillMediaSelect_${editorId}`);
+        };
+
         // Initialize Quill on the container div
         const quill = new Quill(`#quill-${editorId}`, {
             theme: "snow",
             placeholder: '{{ __('Type here...') }}',
             modules: {
-                toolbar: toolbarConfig
+                toolbar: {
+                    container: toolbarConfig,
+                    handlers: {
+                        'media-modal': mediaModalHandler
+                    }
+                }
             }
         });
 
         window['quill_' + editorId] = quill;
+
+        // Create media selection handler function for this specific editor
+        window[`handleQuillMediaSelect_${editorId}`] = function(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                const range = quill.getSelection(true);
+                
+                if (file.mime_type && file.mime_type.startsWith('image/')) {
+                    // Insert image
+                    quill.insertEmbed(range.index, 'image', file.url, 'user');
+                } else {
+                    // Insert as link for non-image files
+                    quill.insertText(range.index, file.name, 'link', file.url, 'user');
+                }
+                
+                // Move cursor after inserted content
+                quill.setSelection(range.index + 1);
+            }
+        };
 
         // Set initial content from textarea
         if (initialContent) {
@@ -138,5 +187,16 @@
                 textareaElement.value = quill.root.innerHTML;
             });
         }
+
     });
 </script>
+
+<!-- Include the media modal component for Quill editor -->
+<x-media-modal 
+    :id="'quillMediaModal_' . $editorId" 
+    title="Select Media for Editor"
+    :multiple="false"
+    allowedTypes="all"
+    buttonText="Select Media"
+    buttonClass="hidden"
+/>

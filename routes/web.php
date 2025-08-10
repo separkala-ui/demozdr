@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\ActionLogController;
 use App\Http\Controllers\Backend\Auth\ScreenshotGeneratorLoginController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\LocaleController;
+use App\Http\Controllers\Backend\MediaController;
 use App\Http\Controllers\Backend\ModulesController;
 use App\Http\Controllers\Backend\PermissionsController;
 use App\Http\Controllers\Backend\PostsController;
@@ -54,12 +55,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingsController::class, 'store'])->name('settings.store');
 
-    // Translation Routes
+    // Translation Routes.
     Route::get('/translations', [TranslationController::class, 'index'])->name('translations.index');
     Route::post('/translations', [TranslationController::class, 'update'])->name('translations.update');
     Route::post('/translations/create', [TranslationController::class, 'create'])->name('translations.create');
 
-    // Login as & Switch back
+    // Login as & Switch back.
     Route::resource('users', UsersController::class);
     Route::delete('users/delete/bulk-delete', [UsersController::class, 'bulkDelete'])->name('users.bulk-delete');
     Route::get('users/{id}/login-as', [UserLoginAsController::class, 'loginAs'])->name('users.login-as');
@@ -88,10 +89,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::delete('/terms/{taxonomy}/{id}', [TermsController::class, 'destroy'])->name('terms.destroy');
     Route::delete('/terms/{taxonomy}/delete/bulk-delete', [TermsController::class, 'bulkDelete'])->name('terms.bulk-delete');
 
-    // Editor Upload Route
+    // Media Routes.
+    Route::prefix('media')->name('media.')->group(function () {
+        Route::get('/', [MediaController::class, 'index'])->name('index');
+        Route::get('/api', [MediaController::class, 'api'])->name('api');
+        Route::post('/', [MediaController::class, 'store'])->name('store')->middleware('check.upload.limits');
+        Route::get('/upload-limits', [MediaController::class, 'getUploadLimits'])->name('upload-limits');
+        Route::delete('/{id}', [MediaController::class, 'destroy'])->name('destroy');
+        Route::delete('/', [MediaController::class, 'bulkDelete'])->name('bulk-delete');
+    });
+
+    // Editor Upload Route.
     Route::post('/editor/upload', [App\Http\Controllers\Backend\EditorController::class, 'upload'])->name('editor.upload');
 
-    // AI Content Generation Routes
+    // AI Content Generation Routes.
     Route::prefix('ai')->name('ai.')->group(function () {
         Route::get('/providers', [App\Http\Controllers\Backend\AiContentController::class, 'getProviders'])->name('providers');
         Route::post('/generate-content', [App\Http\Controllers\Backend\AiContentController::class, 'generateContent'])->name('generate-content');

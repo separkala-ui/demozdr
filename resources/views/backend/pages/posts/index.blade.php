@@ -224,8 +224,8 @@
                                     </td>
                                     <td class="px-5 py-4 sm:px-6">
                                         <div class="flex gap-0.5 items-center">
-                                            @if($post->featured_image)
-                                                <img src="{{ asset($post->featured_image) }}" alt="{{ $post->title }}" class="w-12 object-cover rounded mr-3">
+                                            @if($post->hasFeaturedImage())
+                                                <img src="{{ $post->getFeaturedImageUrl('thumb') }}" alt="{{ $post->title }}" class="w-12 object-cover rounded mr-3">
                                             @else
                                                 <div class="bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center mr-2 h-10 w-10">
                                                     <iconify-icon icon="lucide:image" class=" text-center text-gray-400"></iconify-icon>

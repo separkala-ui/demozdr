@@ -77,20 +77,18 @@
                 {!! ld_apply_filters('post_form_after_excerpt', '') !!}
 
                 @if ($postTypeModel->supports_thumbnail)
-                    <x-inputs.file-input
-                        name="featured_image"
-                        id="featured_image"
-                        accept="image/*"
+                    <x-media-selector 
+                        name="featured_image" 
                         label="{{ __('Featured Image') }}"
-                        :existingAttachment="isset($post) && $post->featured_image ? $post->featured_image : null"
+                        :multiple="false"
+                        allowedTypes="images"
+                        :existingMedia="isset($post) && $post->hasFeaturedImage() ? $post->getFeaturedImageUrl() : null"
                         :existingAltText="isset($post) ? $post->title : ''"
-                        :removeCheckboxLabel="__('Remove featured image')"
+                        removeCheckboxName="remove_featured_image"
+                        removeCheckboxLabel="{{ __('Remove featured image') }}"
+                        :showPreview="true"
                         class="mt-1"
-                    >
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">
-                            {{ __('Select an image to represent this post') }}
-                        </p>
-                    </x-inputs.file-input>
+                    />
                 @endif
                 {!! ld_apply_filters('post_form_after_featured_image', '') !!}
             </div>

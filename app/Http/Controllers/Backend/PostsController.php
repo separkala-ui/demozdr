@@ -11,6 +11,7 @@ use App\Models\Post;
 use App\Models\Term;
 use App\Services\Content\ContentService;
 use App\Services\ImageService;
+use App\Services\MediaLibraryService;
 use App\Services\PostMetaService;
 use App\Services\PostService;
 use Carbon\Carbon;
@@ -26,7 +27,8 @@ class PostsController extends Controller
         private readonly ContentService $contentService,
         private readonly PostMetaService $postMetaService,
         private readonly PostService $postService,
-        private readonly ImageService $imageService
+        private readonly ImageService $imageService,
+        private readonly MediaLibraryService $mediaService
     ) {
     }
 
@@ -126,11 +128,6 @@ class PostsController extends Controller
         $post->user_id = Auth::id();
         $post->parent_id = $request->parent_id;
 
-        // Handle featured image
-        if ($request->hasFile('featured_image')) {
-            $post->featured_image = $this->imageService->storeImageAndGetUrl($request, 'featured_image', 'uploads/posts');
-        }
-
         // Handle publish date
         if ($request->has('schedule_post') && $request->schedule_post && ! empty($request->published_at)) {
             $post->status = 'future';
@@ -144,6 +141,18 @@ class PostsController extends Controller
         $post = ld_apply_filters('before_post_save', $post, $request);
 
         $post->save();
+
+        // Handle featured image removal first.
+        if ($request->has('remove_featured_image') && $request->remove_featured_image) {
+            $post->clearMediaCollection('featured');
+        } elseif ($request->filled('featured_image')) {
+            if ($request->hasFile('featured_image')) {
+                $post->clearMediaCollection('featured');
+                $post->addMediaFromRequest('featured_image')->toMediaCollection('featured');
+            } else {
+                $this->mediaService->associateExistingMedia($post, $request->input('featured_image'), 'featured');
+            }
+        }
 
         $post = ld_apply_filters('after_post_save', $post, $request);
 
@@ -258,21 +267,6 @@ class PostsController extends Controller
         $post->status = $request->status;
         $post->parent_id = $request->parent_id;
 
-        // Handle featured image.
-        if ($request->hasFile('featured_image')) {
-            // Delete old image if exists.
-            if (! empty($post->featured_image)) {
-                $this->imageService->deleteImageFromPublic($post->featured_image);
-            }
-            $post->featured_image = $this->imageService->storeImageAndGetUrl($request, 'featured_image', 'uploads/posts');
-        } elseif ($request->has('remove_featured_image') && $request->remove_featured_image) {
-            // Delete image if remove is checked.
-            if (! empty($post->featured_image)) {
-                $this->imageService->deleteImageFromPublic($post->featured_image);
-                $post->featured_image = null;
-            }
-        }
-
         // Handle publish date.
         if ($request->has('schedule_post') && $request->schedule_post && ! empty($request->published_at)) {
             $post->status = 'future';
@@ -286,6 +280,20 @@ class PostsController extends Controller
         $post = ld_apply_filters('before_post_update', $post, $request);
 
         $post->save();
+
+        // Handle featured image removal first.
+        if ($request->has('remove_featured_image') && $request->remove_featured_image) {
+            $post->clearMediaCollection('featured');
+        } elseif ($request->filled('featured_image')) {
+            $post->clearMediaCollection('featured');
+
+            if ($request->hasFile('featured_image')) {
+                $post->addMediaFromRequest('featured_image')->toMediaCollection('featured');
+            } else {
+                $this->mediaService->associateExistingMedia($post, $request->input('featured_image'), 'featured');
+            }
+        }
+
         $post = ld_apply_filters('after_post_update', $post, $request);
 
         // Handle post meta.
@@ -305,11 +313,6 @@ class PostsController extends Controller
     {
         $this->checkAuthorization(Auth::user(), ['post.delete']);
         $post = Post::where('post_type', $postType)->findOrFail($id);
-
-        // Delete featured image if exists
-        if (! empty($post->featured_image)) {
-            $this->imageService->deleteImageFromPublic($post->featured_image);
-        }
 
         ld_do_action('post_before_deleted', $post);
         $post->delete();
@@ -336,11 +339,6 @@ class PostsController extends Controller
         $posts = Post::where('post_type', $postType)->whereIn('id', $ids)->get();
 
         foreach ($posts as $post) {
-            // Delete featured image if exists.
-            if (! empty($post->featured_image)) {
-                $this->imageService->deleteImageFromPublic($post->featured_image);
-            }
-
             ld_do_action('post_before_deleted', $post);
 
             $post->delete();

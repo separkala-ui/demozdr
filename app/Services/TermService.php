@@ -8,13 +8,13 @@ use App\Models\Term;
 use App\Services\Content\ContentService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class TermService
 {
     public function __construct(
-        private readonly ContentService $contentService
+        private readonly ContentService $contentService,
+        private readonly MediaLibraryService $mediaLibraryService
     ) {
     }
 
@@ -71,13 +71,19 @@ class TermService
         $term->taxonomy = $taxonomy;
         $term->description = $data['description'] ?? null;
         $term->parent_id = $data['parent_id'] ?? null;
-
-        // Handle featured image if provided
-        if (isset($data['featured_image']) && $data['featured_image'] instanceof UploadedFile) {
-            $term->featured_image = $this->handleImageUpload($data['featured_image']);
-        }
-
         $term->save();
+
+        if (isset($data['featured_image']) && ! empty($data['featured_image'])) {
+            if ($data['featured_image'] instanceof UploadedFile) {
+                $term->addMedia($data['featured_image'])->toMediaCollection('featured');
+            } elseif (is_string($data['featured_image'])) {
+                $this->mediaLibraryService->associateExistingMedia(
+                    $term,
+                    $data['featured_image'],
+                    'featured'
+                );
+            }
+        }
 
         return $term;
     }
@@ -95,23 +101,23 @@ class TermService
 
         $term->description = $data['description'] ?? null;
         $term->parent_id = $data['parent_id'] ?? null;
-
-        // Handle featured image upload
-        if (isset($data['featured_image']) && $data['featured_image'] instanceof UploadedFile) {
-            // Delete old image if exists
-            if ($term->featured_image) {
-                Storage::disk('public')->delete($term->featured_image);
-            }
-            $term->featured_image = $this->handleImageUpload($data['featured_image']);
-        }
-
-        // Handle image removal
-        if (isset($data['remove_featured_image']) && $data['remove_featured_image'] && $term->featured_image) {
-            Storage::disk('public')->delete($term->featured_image);
-            $term->featured_image = null;
-        }
-
         $term->save();
+
+        if (isset($data['remove_featured_image']) && $data['remove_featured_image']) {
+            $term->clearMediaCollection('featured');
+        } elseif (isset($data['featured_image']) && ! empty($data['featured_image'])) {
+            $term->clearMediaCollection('featured');
+
+            if ($data['featured_image'] instanceof UploadedFile) {
+                $term->addMedia($data['featured_image'])->toMediaCollection('featured');
+            } elseif (is_string($data['featured_image'])) {
+                $this->mediaLibraryService->associateExistingMedia(
+                    $term,
+                    $data['featured_image'],
+                    'featured'
+                );
+            }
+        }
 
         return $term;
     }
@@ -126,11 +132,6 @@ class TermService
         // Check if term has children.
         if ($term->children()->count() > 0) {
             return false;
-        }
-
-        // Delete featured image if exists.
-        if ($term->featured_image) {
-            Storage::disk('public')->delete($term->featured_image);
         }
 
         return $term->delete();
@@ -149,11 +150,6 @@ class TermService
         }
 
         return $errors;
-    }
-
-    private function handleImageUpload(UploadedFile $file): string
-    {
-        return $file->store('terms', 'public');
     }
 
     public function getTaxonomyLabel(string $taxonomy, bool $singular = false): string

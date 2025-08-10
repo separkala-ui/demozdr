@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Support;
 
 use TorMorten\Eventy\Facades\Events as Eventy;
@@ -43,11 +45,11 @@ class HookManager
      * @param string $tag The action hook to which the function to be removed is hooked.
      * @param callable $function_to_remove The name of the function which should be removed.
      * @param int $priority Optional. The priority of the function. Default 20.
-     * @return bool Whether the function was registered as an action before it was removed.
+     * @return void
      */
-    public function removeAction(string $tag, callable $function_to_remove, int $priority = 20): bool
+    public function removeAction(string $tag, callable $function_to_remove, int $priority = 20): void
     {
-        return Eventy::removeAction($tag, $function_to_remove, $priority);
+        Eventy::removeAction($tag, $function_to_remove, $priority);
     }
 
     /**
@@ -83,10 +85,10 @@ class HookManager
      * @param string $tag The filter hook to which the function to be removed is hooked.
      * @param callable $function_to_remove The name of the function which should be removed.
      * @param int $priority Optional. The priority of the function. Default 20.
-     * @return bool Whether the function existed before it was removed.
+     * @return void
      */
-    public function removeFilter(string $tag, callable $function_to_remove, int $priority = 20): bool
+    public function removeFilter(string $tag, callable $function_to_remove, int $priority = 20): void
     {
-        return Eventy::removeFilter($tag, $function_to_remove, $priority);
+        Eventy::removeFilter($tag, $function_to_remove, $priority);
     }
 }

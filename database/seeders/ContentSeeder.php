@@ -8,7 +8,7 @@ use App\Enums\ActionType;
 use App\Models\Post;
 use App\Models\Term;
 use App\Services\Content\ContentService;
-use App\Traits\HasActionLogTrait;
+use App\Concerns\HasActionLogTrait;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
@@ -105,15 +105,11 @@ class ContentSeeder extends Seeder
                 'name' => 'Uncategorized',
                 'slug' => 'uncategorized',
                 'description' => 'Default category for posts that do not belong to any other category.',
-                'featured_image' => 'categories/uncategorized.jpg',
             ],
         ];
 
         foreach ($categories as $category) {
             try {
-                // Generate a placeholder image instead of trying to copy
-                $this->generatePlaceholderImage('public/'.$category['featured_image'], pathinfo($category['featured_image'], PATHINFO_BASENAME));
-
                 $category = Term::firstOrCreate([
                     'id' => $category['id'],
                     'name' => $category['name'],
@@ -121,7 +117,6 @@ class ContentSeeder extends Seeder
                     'slug' => \Illuminate\Support\Str::slug($category['name']),
                 ], [
                     'description' => $category['description'],
-                    'featured_image' => $category['featured_image'],
                 ]);
                 $this->logAction(ActionType::CREATED->value, Term::class, $category->toArray());
 
@@ -146,15 +141,11 @@ class ContentSeeder extends Seeder
                 'name' => 'Sample Tag',
                 'slug' => 'sample-tag',
                 'description' => 'A sample tag for demonstration purposes.',
-                'featured_image' => 'tags/sample-tag.jpg',
             ],
         ];
 
         foreach ($tags as $tag) {
             try {
-                // Generate a placeholder image instead of trying to copy
-                $this->generatePlaceholderImage('public/'.$tag['featured_image'], pathinfo($tag['featured_image'], PATHINFO_BASENAME));
-
                 $tag = Term::firstOrCreate([
                     'id' => $tag['id'],
                     'name' => $tag['name'],
@@ -162,7 +153,6 @@ class ContentSeeder extends Seeder
                     'slug' => \Illuminate\Support\Str::slug($tag['name']),
                 ], [
                     'description' => $tag['description'],
-                    'featured_image' => $tag['featured_image'],
                 ]);
 
                 $this->logAction(ActionType::CREATED->value, Term::class, $tag->toArray());

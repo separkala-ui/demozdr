@@ -289,6 +289,19 @@ class GenerateScreenshots extends Command
                 'customAction' => '#add-language-button',
             ],
 
+            // Media pages.
+            [
+                'name' => '60-Media-List-Lite-Mode',
+                'url' => '/admin/media',
+                'mode' => 'lite',
+            ],
+            [
+                'name' => '61-Media-Modal-View',
+                'url' => '/admin/posts/post/1/edit',
+                'mode' => 'lite',
+                'customAction' => '.ql-media-modal',
+            ],
+
             // Other features
             [
                 'name' => '90-Language-Switcher',

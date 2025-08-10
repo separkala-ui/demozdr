@@ -50,7 +50,35 @@ class UpdateTermRequest extends FormRequest
 
         if ($taxonomyModel && $taxonomyModel->show_featured_image) {
             /** @example null */
-            $rules['featured_image'] = 'nullable|image|max:2048';
+            $rules['featured_image'] = [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    // Allow either file upload or media ID.
+                    if ($value instanceof \Illuminate\Http\UploadedFile) {
+                        // Validate as image file.
+                        if (! in_array($value->getMimeType(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'])) {
+                            $fail('The featured image must be a valid image file (JPEG, PNG, GIF, or WebP).');
+                        }
+                        if ($value->getSize() > 2048 * 1024) { // 2MB in bytes
+                            $fail('The featured image must not be larger than 2MB.');
+                        }
+                    } elseif (is_string($value)) {
+                        // Validate as media ID or URL.
+                        if (! is_numeric($value)) {
+                            // If it's not numeric, check if it's a valid URL.
+                            if (! filter_var($value, FILTER_VALIDATE_URL)) {
+                                $fail('The featured image must be a valid media ID or URL.');
+                            }
+                        } else {
+                            // If it's numeric, verify the media exists.
+                            $mediaExists = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($value);
+                            if (! $mediaExists) {
+                                $fail('The selected media does not exist.');
+                            }
+                        }
+                    }
+                },
+            ];
         }
 
         return ld_apply_filters('term.update.validation.rules', $rules, $taxonomyName);

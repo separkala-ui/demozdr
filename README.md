@@ -451,6 +451,21 @@ composer run phpunit
   </tr>
 </table>
 
+### 📁 Media Management
+
+<table>
+  <tr>
+    <td width="50%">
+      <strong>Media List</strong><br/>
+      <img width="100%" alt="Media List" src="/demo-screenshots/60-Media-List-Lite-Mode.png"/>
+    </td>
+    <td width="50%">
+      <strong>Media Modal View</strong><br/>
+      <img width="100%" alt="Media Modal View" src="/demo-screenshots/61-Media-Modal-View.png"/>
+    </td>
+  </tr>
+</table>
+
 ### 🧩 Module Management
 
 <table>

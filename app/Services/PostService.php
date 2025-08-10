@@ -103,12 +103,17 @@ class PostService
             'slug' => $data['slug'] ?? str()->slug($data['title']),
             'content' => $data['content'] ?? '',
             'excerpt' => $data['excerpt'] ?? '',
-            'featured_image' => $data['featured_image'] ?? null,
             'post_type' => $data['post_type'] ?? 'post',
             'status' => $data['status'] ?? 'draft',
             'published_at' => $data['published_at'] ?? null,
             'author_id' => $data['author_id'],
         ]);
+
+        // Handle featured image upload to media library.
+        if (isset($data['featured_image']) && $data['featured_image'] instanceof \Illuminate\Http\UploadedFile) {
+            $post->addMediaFromRequest('featured_image')
+                ->toMediaCollection('featured');
+        }
 
         // Sync terms if provided
         if (isset($data['terms']) && ! empty($data['terms'])) {
@@ -138,12 +143,26 @@ class PostService
             'slug' => $data['slug'] ?? $post->slug,
             'content' => $data['content'] ?? $post->content,
             'excerpt' => $data['excerpt'] ?? $post->excerpt,
-            'featured_image' => $data['featured_image'] ?? $post->featured_image,
             'status' => $data['status'] ?? $post->status,
             'published_at' => $data['published_at'] ?? $post->published_at,
         ];
 
         $post->update($updateData);
+
+        // Handle featured image upload to media library.
+        if (isset($data['featured_image']) && $data['featured_image'] instanceof \Illuminate\Http\UploadedFile) {
+            // Clear existing featured image.
+            $post->clearMediaCollection('featured');
+
+            // Add new featured image.
+            $post->addMediaFromRequest('featured_image')
+                ->toMediaCollection('featured');
+        }
+
+        // Handle featured image removal.
+        if (isset($data['remove_featured_image']) && $data['remove_featured_image']) {
+            $post->clearMediaCollection('featured');
+        }
 
         // Sync terms if provided
         if (isset($data['terms'])) {
