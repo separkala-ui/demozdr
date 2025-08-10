@@ -52,7 +52,7 @@
                         id="{{ $id }}_fileInput"
                         class="hidden"
                         {{ $multiple ? 'multiple' : '' }}
-                        accept="{{ $allowedTypes === 'images' ? 'image/*' : ($allowedTypes === 'videos' ? 'video/*' : ($allowedTypes === 'documents' ? '.pdf,.doc,.docx,.txt' : '*')) }}"
+                        accept="{{ $allowedTypes === 'images' ? 'image/*' : ($allowedTypes === 'videos' ? 'video/*' : ($allowedTypes === 'audio' ? 'audio/*' : ($allowedTypes === 'documents' ? '.pdf,.doc,.docx,.txt' : '*'))) }}"
                         onchange="handleFileUpload(event, '{{ $id }}')"
                     >
                 </div>
@@ -69,6 +69,7 @@
                             <option value="all">All Files</option>
                             <option value="images">Images</option>
                             <option value="videos">Videos</option>
+                            <option value="audio">Audio</option>
                             <option value="documents">Documents</option>
                         </select>
                     </div>
@@ -108,7 +109,7 @@
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="{{ $id }}_mediaContainer">
                         <!-- Media items will be loaded here -->
                     </div>
-                    
+
                     <!-- Load More Button -->
                     <div id="{{ $id }}_loadMoreSection" class="flex justify-center mt-6 hidden">
                         <button
@@ -165,27 +166,27 @@
                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">File Name</label>
                                 <p id="{{ $id }}_fileName" class="text-sm text-gray-900 dark:text-white break-all"></p>
                             </div>
-                            
+
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">File Type</label>
                                 <p id="{{ $id }}_fileType" class="text-sm text-gray-900 dark:text-white"></p>
                             </div>
-                            
+
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">File Size</label>
                                 <p id="{{ $id }}_fileSize" class="text-sm text-gray-900 dark:text-white"></p>
                             </div>
-                            
+
                             <div id="{{ $id }}_imageDimensions" class="hidden">
                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Dimensions</label>
                                 <p id="{{ $id }}_dimensions" class="text-sm text-gray-900 dark:text-white"></p>
                             </div>
-                            
+
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Uploaded</label>
                                 <p id="{{ $id }}_uploadDate" class="text-sm text-gray-900 dark:text-white"></p>
                             </div>
-                            
+
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">URL</label>
                                 <div class="flex items-center gap-2">
@@ -198,14 +199,14 @@
 
                             <!-- Action Buttons -->
                             <div class="flex gap-2 pt-2">
-                                <button type="button" 
+                                <button type="button"
                                         id="{{ $id }}_downloadButton"
                                         class="flex-1 btn-default flex items-center justify-center gap-2 text-sm"
                                         title="{{ __('Download') }}">
                                     <iconify-icon icon="lucide:download" class="text-sm"></iconify-icon>
                                     <span>{{ __('Download') }}</span>
                                 </button>
-                                <button type="button" 
+                                <button type="button"
                                         id="{{ $id }}_fullViewButton"
                                         class="flex-1 btn-default flex items-center justify-center gap-2 text-sm hidden"
                                         title="{{ __('Full View') }}">
@@ -256,10 +257,63 @@
 <!-- Image Modal for Full View -->
 <div id="imageModal" class="fixed inset-0 z-[60] hidden bg-black bg-opacity-75"
     onclick="closeImageModal()">
-    <div class="max-w-4xl max-h-[90vh] p-4">
+    <div class="max-w-4xl max-h-[90vh] p-4" onclick="event.stopPropagation()">
         <img id="modalImage" src="" alt="" class="max-w-full max-h-full object-contain">
     </div>
-    <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white hover:text-gray-300">
+    <button type="button" onclick="closeImageModal()" class="absolute top-4 right-4 text-white hover:text-gray-300">
+        <iconify-icon icon="lucide:x" class="text-2xl"></iconify-icon>
+    </button>
+</div>
+
+<!-- Video Modal for Full View -->
+<div id="videoModal" class="fixed inset-0 z-[60] hidden bg-black bg-opacity-75"
+    onclick="closeVideoModal()">
+    <div class="max-w-6xl max-h-[90vh] p-4" onclick="event.stopPropagation()">
+        <video id="modalVideo"
+               class="max-w-full max-h-full"
+               controls
+               preload="metadata"
+               style="outline: none;"
+               onloadstart="this.volume=0.5">
+            <!-- Source will be set dynamically -->
+        </video>
+    </div>
+    <button type="button" onclick="closeVideoModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+        <iconify-icon icon="lucide:x" class="text-2xl"></iconify-icon>
+    </button>
+</div>
+
+<!-- Audio Modal for Full View -->
+<div id="audioModal" class="fixed inset-0 z-[60] hidden bg-black bg-opacity-75"
+    onclick="closeAudioModal()">
+    <div class="max-w-2xl max-h-[90vh] p-4" onclick="event.stopPropagation()">
+        <div class="bg-gradient-to-br from-green-100 to-emerald-200 dark:from-green-900 dark:to-emerald-800 rounded-lg p-8 text-center">
+            <!-- Audio Visualization -->
+            <div class="mb-6">
+                <iconify-icon icon="lucide:music" class="text-8xl text-green-600 dark:text-green-300 mb-4"></iconify-icon>
+                <h3 id="modalAudioTitle" class="text-xl font-semibold text-green-800 dark:text-green-200 mb-2"></h3>
+                <p class="text-green-600 dark:text-green-400 text-sm">Audio Player</p>
+            </div>
+
+            <!-- Audio Player -->
+            <div class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-4">
+                <audio id="modalAudio"
+                       class="w-full mb-4"
+                       controls
+                       preload="metadata"
+                       style="height: 40px;"
+                       onloadstart="this.volume=0.5">
+                    <!-- Source will be set dynamically -->
+                </audio>
+
+                <!-- Audio Info -->
+                <div id="modalAudioInfo" class="text-sm text-green-700 dark:text-green-300 space-y-1">
+                    <!-- Audio details will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" onclick="closeAudioModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
         <iconify-icon icon="lucide:x" class="text-2xl"></iconify-icon>
     </button>
 </div>
@@ -312,7 +366,7 @@ function closeMediaModal(modalId) {
         window.mediaModalData[modalId].hasMorePages = true;
         window.mediaModalData[modalId].currentFile = null;
         updateSelectedInfo(modalId);
-        
+
         // Reset details sidebar
         document.getElementById(`${modalId}_noSelection`).classList.remove('hidden');
         document.getElementById(`${modalId}_mediaDetails`).classList.add('hidden');
@@ -422,7 +476,7 @@ function renderMediaFiles(modalId, files, isInitialLoad = false) {
         const mediaItem = createMediaItem(modalId, file);
         container.appendChild(mediaItem);
     });
-    
+
     // Update checkbox states after rendering
     if (!isInitialLoad) {
         updateCheckboxStates(modalId);
@@ -438,6 +492,7 @@ function createMediaItem(modalId, file) {
 
     const isImage = file.mime_type.startsWith('image/');
     const isVideo = file.mime_type.startsWith('video/');
+    const isAudio = file.mime_type.startsWith('audio/');
     const isPdf = file.mime_type.includes('pdf');
 
     let thumbnailHtml = '';
@@ -448,6 +503,11 @@ function createMediaItem(modalId, file) {
         thumbnailHtml = `
             <div class="w-full h-32 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 flex items-center justify-center">
                 <iconify-icon icon="lucide:video" class="text-3xl text-purple-600 dark:text-purple-300"></iconify-icon>
+            </div>`;
+    } else if (isAudio) {
+        thumbnailHtml = `
+            <div class="w-full h-32 bg-gradient-to-br from-green-100 to-emerald-200 dark:from-green-900 dark:to-emerald-800 flex items-center justify-center">
+                <iconify-icon icon="lucide:music" class="text-3xl text-green-600 dark:text-green-300"></iconify-icon>
             </div>`;
     } else if (isPdf) {
         thumbnailHtml = `
@@ -473,8 +533,8 @@ function createMediaItem(modalId, file) {
         </div>
         ${modalData.multiple ? `
             <div class="absolute top-2 left-2">
-                <input type="checkbox" 
-                       class="form-checkbox media-checkbox w-4 h-4 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
+                <input type="checkbox"
+                       class="form-checkbox media-checkbox w-4 h-4 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                        data-file-id="${file.id}"
                        onchange="toggleFileSelection(event, '${modalId}', ${file.id})"
                        onclick="event.stopPropagation()">
@@ -487,14 +547,14 @@ function createMediaItem(modalId, file) {
 
 function selectMediaFile(modalId, file) {
     const modalData = window.mediaModalData[modalId];
-    
+
     // Update current file and show details
     modalData.currentFile = file;
     showMediaDetails(modalId, file);
-    
+
     // Update visual selection state
     updateMediaItemSelection(modalId);
-    
+
     // For single selection, automatically add to selectedFiles when viewing
     if (!modalData.multiple) {
         modalData.selectedFiles = [file];
@@ -505,11 +565,11 @@ function selectMediaFile(modalId, file) {
 function toggleFileSelection(event, modalId, fileId) {
     const modalData = window.mediaModalData[modalId];
     const checkbox = event.target;
-    
+
     // Find the file object from allFiles
     const file = modalData.allFiles.find(f => f.id == fileId);
     if (!file) return;
-    
+
     if (checkbox.checked) {
         // Add to selection if not already selected
         const isAlreadySelected = modalData.selectedFiles.some(f => f.id === file.id);
@@ -520,13 +580,13 @@ function toggleFileSelection(event, modalId, fileId) {
         // Remove from selection
         modalData.selectedFiles = modalData.selectedFiles.filter(f => f.id !== file.id);
     }
-    
+
     updateSelectedInfo(modalId);
 }
 
 function updateCheckboxStates(modalId) {
     const modalData = window.mediaModalData[modalId];
-    
+
     // Update checkbox states to match selectedFiles
     document.querySelectorAll('.media-checkbox').forEach(checkbox => {
         const fileId = checkbox.dataset.fileId;
@@ -539,34 +599,45 @@ function showMediaDetails(modalId, file) {
     const noSelectionEl = document.getElementById(`${modalId}_noSelection`);
     const detailsEl = document.getElementById(`${modalId}_mediaDetails`);
     const previewContainer = document.getElementById(`${modalId}_previewContainer`);
-    
+
     // Hide no selection state and show details
     noSelectionEl.classList.add('hidden');
     detailsEl.classList.remove('hidden');
     detailsEl.classList.add('flex', 'flex-col');
-    
+
     // Update file information
     document.getElementById(`${modalId}_fileName`).textContent = file.name;
     document.getElementById(`${modalId}_fileType`).textContent = file.extension?.toUpperCase() || 'Unknown';
     document.getElementById(`${modalId}_fileSize`).textContent = file.human_readable_size || '0 KB';
     document.getElementById(`${modalId}_fileUrl`).value = file.url;
-    
+
     // Update upload date
     const uploadDate = file.created_at ? new Date(file.created_at).toLocaleDateString() : 'Unknown';
     document.getElementById(`${modalId}_uploadDate`).textContent = uploadDate;
-    
-    // Show/hide dimensions for images
+
+    // Show/hide dimensions for images, videos, and audio duration
     const dimensionsEl = document.getElementById(`${modalId}_imageDimensions`);
-    if (file.mime_type.startsWith('image/') && (file.width || file.height)) {
+    const isImage = file.mime_type.startsWith('image/');
+    const isVideo = file.mime_type.startsWith('video/');
+    const isAudio = file.mime_type.startsWith('audio/');
+
+    if (isImage && (file.width || file.height)) {
         document.getElementById(`${modalId}_dimensions`).textContent = `${file.width || 0} × ${file.height || 0} pixels`;
+        dimensionsEl.classList.remove('hidden');
+    } else if (isVideo && (file.width || file.height)) {
+        document.getElementById(`${modalId}_dimensions`).textContent = `${file.width || 0} × ${file.height || 0} resolution`;
+        dimensionsEl.classList.remove('hidden');
+    } else if (isAudio && file.duration) {
+        const duration = formatAudioDuration(file.duration);
+        document.getElementById(`${modalId}_dimensions`).textContent = `Duration: ${duration}`;
         dimensionsEl.classList.remove('hidden');
     } else {
         dimensionsEl.classList.add('hidden');
     }
-    
+
     // Generate preview
     generateMediaPreview(modalId, file, previewContainer);
-    
+
     // Setup action buttons
     setupActionButtons(modalId, file);
 }
@@ -574,17 +645,18 @@ function showMediaDetails(modalId, file) {
 function generateMediaPreview(modalId, file, container) {
     const isImage = file.mime_type.startsWith('image/');
     const isVideo = file.mime_type.startsWith('video/');
+    const isAudio = file.mime_type.startsWith('audio/');
     const isPdf = file.mime_type.includes('pdf');
-    
+
     if (isImage) {
         container.innerHTML = `
-            <img src="${file.thumbnail_url || file.url}" 
-                 alt="${file.name}" 
+            <img src="${file.thumbnail_url || file.url}"
+                 alt="${file.name}"
                  class="w-full h-48 object-contain bg-gray-100 dark:bg-gray-800 cursor-pointer"
                  loading="lazy"
                  onclick="openImageModal('${file.url}', '${file.name}')">
             <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                <button onclick="openImageModal('${file.url}', '${file.name}')" 
+                <button onclick="openImageModal('${file.url}', '${file.name}')"
                         class="p-2 bg-white/90 backdrop-blur-sm rounded-md text-gray-700 hover:bg-white transition-colors shadow-lg"
                         title="View Full Size">
                     <iconify-icon icon="lucide:maximize-2" class="text-lg"></iconify-icon>
@@ -593,8 +665,54 @@ function generateMediaPreview(modalId, file, container) {
         `;
     } else if (isVideo) {
         container.innerHTML = `
-            <div class="w-full h-48 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 flex items-center justify-center">
-                <iconify-icon icon="lucide:video" class="text-6xl text-purple-600 dark:text-purple-300"></iconify-icon>
+            <div class="w-full h-48 bg-black rounded-lg overflow-hidden relative">
+                <video
+                    class="w-full h-full object-contain"
+                    controls
+                    preload="metadata"
+                    style="background: linear-gradient(135deg, rgb(147 51 234 / 0.1) 0%, rgb(147 51 234 / 0.2) 100%)"
+                    onloadstart="this.volume=0.5"
+                >
+                    <source src="${file.url}" type="${file.mime_type}">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none">
+                    <div class="p-2 bg-white/90 backdrop-blur-sm rounded-md text-gray-700 shadow-lg">
+                        <iconify-icon icon="lucide:video" class="text-lg"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else if (isAudio) {
+        container.innerHTML = `
+            <div class="w-full h-48 bg-gradient-to-br from-green-100 to-emerald-200 dark:from-green-900 dark:to-emerald-800 rounded-lg overflow-hidden relative flex flex-col">
+                <!-- Audio Waveform Visual -->
+                <div class="flex-1 flex items-center justify-center p-4">
+                    <div class="text-center">
+                        <iconify-icon icon="lucide:music" class="text-4xl text-green-600 dark:text-green-300 mb-3"></iconify-icon>
+                        <p class="text-sm font-medium text-green-700 dark:text-green-300 truncate" title="${file.name}">
+                            ${file.name}
+                        </p>
+                    </div>
+                </div>
+                <!-- Audio Player -->
+                <div class="p-3 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                    <audio
+                        class="w-full"
+                        controls
+                        preload="metadata"
+                        style="height: 32px;"
+                        onloadstart="this.volume=0.5"
+                    >
+                        <source src="${file.url}" type="${file.mime_type}">
+                        Your browser does not support the audio tag.
+                    </audio>
+                </div>
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none">
+                    <div class="p-2 bg-white/90 backdrop-blur-sm rounded-md text-gray-700 shadow-lg">
+                        <iconify-icon icon="lucide:headphones" class="text-lg"></iconify-icon>
+                    </div>
+                </div>
             </div>
         `;
     } else if (isPdf) {
@@ -616,7 +734,9 @@ function setupActionButtons(modalId, file) {
     const downloadButton = document.getElementById(`${modalId}_downloadButton`);
     const fullViewButton = document.getElementById(`${modalId}_fullViewButton`);
     const isImage = file.mime_type.startsWith('image/');
-    
+    const isVideo = file.mime_type.startsWith('video/');
+    const isAudio = file.mime_type.startsWith('audio/');
+
     // Setup download button
     downloadButton.onclick = () => {
         const link = document.createElement('a');
@@ -626,24 +746,50 @@ function setupActionButtons(modalId, file) {
         link.click();
         document.body.removeChild(link);
     };
-    
-    // Setup full view button (only for images)
+
+    // Setup full view button (for images, videos, and audio)
     if (isImage) {
         fullViewButton.classList.remove('hidden');
         fullViewButton.onclick = () => openImageModal(file.url, file.name);
+        // Reset button text for images
+        fullViewButton.innerHTML = `
+            <iconify-icon icon="lucide:maximize-2" class="text-sm"></iconify-icon>
+            <span>{{ __('View') }}</span>
+        `;
+    } else if (isVideo) {
+        fullViewButton.classList.remove('hidden');
+        fullViewButton.onclick = () => openVideoModal(file.url, file.name);
+        // Update button text and icon for video
+        fullViewButton.innerHTML = `
+            <iconify-icon icon="lucide:play" class="text-sm"></iconify-icon>
+            <span>{{ __('Play') }}</span>
+        `;
+    } else if (isAudio) {
+        fullViewButton.classList.remove('hidden');
+        fullViewButton.onclick = () => openAudioModal(file.url, file.name, file);
+        // Update button text and icon for audio
+        fullViewButton.innerHTML = `
+            <iconify-icon icon="lucide:headphones" class="text-sm"></iconify-icon>
+            <span>{{ __('Listen') }}</span>
+        `;
     } else {
         fullViewButton.classList.add('hidden');
+        // Reset button text for other file types
+        fullViewButton.innerHTML = `
+            <iconify-icon icon="lucide:maximize-2" class="text-sm"></iconify-icon>
+            <span>{{ __('View') }}</span>
+        `;
     }
 }
 
 function updateMediaItemSelection(modalId) {
     const modalData = window.mediaModalData[modalId];
-    
+
     // Remove previous active states
     document.querySelectorAll(`[data-file-id]`).forEach(item => {
         item.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
     });
-    
+
     // Add active state to current file
     if (modalData.currentFile) {
         const activeItem = document.querySelector(`[data-file-id="${modalData.currentFile.id}"]`);
@@ -658,7 +804,7 @@ function copyToClipboard(inputId) {
     if (input) {
         input.select();
         document.execCommand('copy');
-        
+
         // Show feedback
         if (window.showToast) {
             window.showToast('success', 'Copied', 'URL copied to clipboard');
@@ -751,9 +897,9 @@ function confirmMediaSelection(modalId) {
 function loadMoreMedia(modalId) {
     console.log('loadMoreMedia', modalId);
     const modalData = window.mediaModalData[modalId];
-    
+
     if (!modalData.hasMorePages || modalData.isLoading) return;
-    
+
     modalData.currentPage++;
     loadMediaFiles(modalId, false);
 }
@@ -762,13 +908,13 @@ function updateLoadMoreButton(modalId) {
     const modalData = window.mediaModalData[modalId];
     const loadMoreSection = document.getElementById(`${modalId}_loadMoreSection`);
     const loadMoreButton = document.getElementById(`${modalId}_loadMoreButton`);
-    
+
     if (!loadMoreSection || !loadMoreButton) return;
-    
+
     if (modalData.hasMorePages) {
         loadMoreSection.classList.remove('hidden');
         loadMoreButton.disabled = false;
-        
+
         // Update button text to show remaining items
         const remainingItems = modalData.totalCount - modalData.allFiles.length;
         const itemsToLoad = Math.min(100, remainingItems);
@@ -914,6 +1060,8 @@ function checkFileTypeAllowed(mimeType, allowedType) {
             return mimeType.startsWith('image/');
         case 'videos':
             return mimeType.startsWith('video/');
+        case 'audio':
+            return mimeType.startsWith('audio/');
         case 'documents':
             return mimeType.includes('pdf') ||
                    mimeType.includes('document') ||
@@ -941,16 +1089,158 @@ function closeImageModal() {
     modal.classList.remove('flex', 'items-center', 'justify-center');
 }
 
+// Video modal functions
+function openVideoModal(src, name) {
+    const modal = document.getElementById('videoModal');
+    const video = document.getElementById('modalVideo');
+
+    // Clear any existing sources
+    video.innerHTML = '';
+
+    // Add the video source
+    const source = document.createElement('source');
+    source.src = src;
+    source.type = getVideoMimeType(src);
+    video.appendChild(source);
+
+    // Set video attributes
+    video.load(); // Reload the video element with new source
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex', 'items-center', 'justify-center');
+}
+
+function closeVideoModal() {
+    const modal = document.getElementById('videoModal');
+    const video = document.getElementById('modalVideo');
+
+    // Pause video when closing modal
+    video.pause();
+    video.currentTime = 0;
+
+    modal.classList.add('hidden');
+    modal.classList.remove('flex', 'items-center', 'justify-center');
+}
+
+function getVideoMimeType(url) {
+    const extension = url.split('.').pop().toLowerCase();
+    const mimeTypes = {
+        'mp4': 'video/mp4',
+        'webm': 'video/webm',
+        'ogg': 'video/ogg',
+        'mov': 'video/quicktime',
+        'avi': 'video/x-msvideo',
+        'wmv': 'video/x-ms-wmv',
+        'flv': 'video/x-flv',
+        'm4v': 'video/x-m4v'
+    };
+    return mimeTypes[extension] || 'video/mp4';
+}
+
+// Audio modal functions
+function openAudioModal(src, name, file) {
+    const modal = document.getElementById('audioModal');
+    const audio = document.getElementById('modalAudio');
+    const title = document.getElementById('modalAudioTitle');
+    const info = document.getElementById('modalAudioInfo');
+
+    // Set audio title
+    title.textContent = name;
+
+    // Clear any existing sources
+    audio.innerHTML = '';
+
+    // Add the audio source
+    const source = document.createElement('source');
+    source.src = src;
+    source.type = getAudioMimeType(src);
+    audio.appendChild(source);
+
+    // Set audio info
+    let infoHtml = '';
+    if (file.human_readable_size) {
+        infoHtml += `<div>Size: ${file.human_readable_size}</div>`;
+    }
+    if (file.duration) {
+        infoHtml += `<div>Duration: ${formatAudioDuration(file.duration)}</div>`;
+    }
+    if (file.extension) {
+        infoHtml += `<div>Format: ${file.extension.toUpperCase()}</div>`;
+    }
+    info.innerHTML = infoHtml;
+
+    // Set audio attributes and load
+    audio.load(); // Reload the audio element with new source
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex', 'items-center', 'justify-center');
+}
+
+function closeAudioModal() {
+    const modal = document.getElementById('audioModal');
+    const audio = document.getElementById('modalAudio');
+
+    // Pause audio when closing modal
+    audio.pause();
+    audio.currentTime = 0;
+
+    modal.classList.add('hidden');
+    modal.classList.remove('flex', 'items-center', 'justify-center');
+}
+
+function getAudioMimeType(url) {
+    const extension = url.split('.').pop().toLowerCase();
+    const mimeTypes = {
+        'mp3': 'audio/mpeg',
+        'wav': 'audio/wav',
+        'ogg': 'audio/ogg',
+        'aac': 'audio/aac',
+        'flac': 'audio/flac',
+        'm4a': 'audio/mp4',
+        'webm': 'audio/webm',
+        'wma': 'audio/x-ms-wma'
+    };
+    return mimeTypes[extension] || 'audio/mpeg';
+}
+
+function formatAudioDuration(seconds) {
+    if (!seconds || isNaN(seconds)) return 'Unknown';
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+
+    if (hours > 0) {
+        return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    } else {
+        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+}
+
 // Close modal on escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        // Close image modal first if open
+        // Close audio modal first if open
+        const audioModal = document.getElementById('audioModal');
+        if (audioModal && !audioModal.classList.contains('hidden')) {
+            closeAudioModal();
+            return;
+        }
+
+        // Close video modal if open
+        const videoModal = document.getElementById('videoModal');
+        if (videoModal && !videoModal.classList.contains('hidden')) {
+            closeVideoModal();
+            return;
+        }
+
+        // Close image modal if open
         const imageModal = document.getElementById('imageModal');
         if (imageModal && !imageModal.classList.contains('hidden')) {
             closeImageModal();
             return;
         }
-        
+
         // Then close media modals
         const openModals = document.querySelectorAll('[id$="Modal"]:not(.hidden)');
         openModals.forEach(modal => {
