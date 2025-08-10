@@ -175,7 +175,7 @@
                                     <li>
                                         <a href="{{ route('admin.media.index', array_merge(request()->query(), ['type' => null])) }}"
                                             @click="typeDropdownOpen = false"
-                                            class="cursor-pointer flex items-center gap-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1.5 rounded transition-colors duration-300 {{ !request('type') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                            class="cursor-pointer flex items-center gap-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-400 hover:opacity-80 px-2 py-1.5 rounded transition-colors duration-300 {{ !request('type') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
                                             <iconify-icon icon="lucide:layers"
                                                 class="text-gray-500 dark:text-gray-400"></iconify-icon>
                                             {{ __('All Types') }}
@@ -482,7 +482,7 @@
     </div>
 
     <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75  items-center justify-center"
+    <div id="imageModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75"
         onclick="closeImageModal()">
         <div class="max-w-4xl max-h-[90vh] p-4">
             <img id="modalImage" src="" alt="" class="max-w-full max-h-full object-contain">
@@ -509,11 +509,13 @@
                 img.src = src;
                 img.alt = alt;
                 modal.classList.remove('hidden');
+                modal.classList.add('flex', 'items-center', 'justify-center');
             }
 
             function closeImageModal() {
                 const modal = document.getElementById('imageModal');
                 modal.classList.add('hidden');
+                modal.classList.remove('flex', 'items-center', 'justify-center');
             }
 
             // Close modal on escape key

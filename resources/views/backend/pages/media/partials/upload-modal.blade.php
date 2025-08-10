@@ -59,13 +59,13 @@
             <div class="flex justify-end gap-3 mt-6">
                 <button type="button" 
                         x-on:click="uploadModalOpen = false"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
+                        class="btn-default">
                     {{ __('Cancel') }}
                 </button>
                 <button type="button" 
                         id="upload-btn"
                         onclick="uploadFiles()"
-                        class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="btn-primary">
                     {{ __('Upload Files') }}
                 </button>
             </div>
