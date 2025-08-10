@@ -85,14 +85,14 @@ return [
         | This path will also be added automatically to the list of scanned folders.
         |
         */
-        'modules' => base_path('Modules'),
+        'modules' => base_path('modules'),
 
         /*
         |--------------------------------------------------------------------------
         | Modules assets path
         |--------------------------------------------------------------------------
         |
-        | Here you may update the modules' assets path.
+        | Here you may update the modules' asset path.
         |
         */
         'assets' => public_path('modules'),
@@ -114,7 +114,7 @@ return [
         |--------------------------------------------------------------------------
         |
         | app folder name
-        | for example can change it to 'src' or 'App'
+        | for example, can change it to 'src' or 'App'
         */
         'app_folder' => 'app/',
 
@@ -123,7 +123,7 @@ return [
         | Generator path
         |--------------------------------------------------------------------------
         | Customise the paths where the folders will be generated.
-        | Setting the generate key to false will not generate that folder
+        | Setting the generated key to false will not generate that folder
         */
         'generator' => [
             // app/
@@ -209,7 +209,7 @@ return [
         | Translations
         |--------------------------------------------------------------------------
         |
-        | This option for register lang file automatically.
+        | This option for a register lang file automatically.
         |
         */
         'translations' => false,
@@ -235,8 +235,8 @@ return [
     | Scan Path
     |--------------------------------------------------------------------------
     |
-    | Here you define which folder will be scanned. By default will scan vendor
-    | directory. This is useful if you host the package in packagist website.
+    | Here you define which folder will be scanned. By default, will scan vendor
+    | directory. This is useful if you host the package in a packagist website.
     |
     */
     'scan' => [
@@ -255,10 +255,10 @@ return [
     |
     */
     'composer' => [
-        'vendor' => env('MODULE_VENDOR', 'nwidart'),
+        'vendor' => env('MODULE_VENDOR', 'laradashboard'),
         'author' => [
-            'name' => env('MODULE_AUTHOR_NAME', 'Nicolas Widart'),
-            'email' => env('MODULE_AUTHOR_EMAIL', 'n.widart@gmail.com'),
+            'name' => env('MODULE_AUTHOR_NAME', 'LaraDashboard'),
+            'email' => env('MODULE_AUTHOR_EMAIL', 'admin@laradashboard.com'),
         ],
         'composer-output' => false,
     ],
@@ -273,7 +273,7 @@ return [
     'register' => [
         'translations' => true,
         /**
-         * load files on boot or register method
+         * load files on boot or register a method
          */
         'files' => 'register',
     ],

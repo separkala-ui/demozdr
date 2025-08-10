@@ -20,10 +20,10 @@ yarn-error.log
 public/.DS_Store
 public/images/.DS_Store
 
-# Exclude anything from /Modules folder.
-/Modules/*
-# Keep the Modules directory structure
-!/Modules/.gitkeep
+# Exclude anything from /modules folder.
+/modules/*
+# Keep the modules directory structure
+!/modules/.gitkeep
 
 # Exclude release builds
 /releases

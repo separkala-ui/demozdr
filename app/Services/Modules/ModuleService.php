@@ -25,7 +25,7 @@ class ModuleService
 
     public function __construct()
     {
-        $this->modulesPath = base_path('Modules');
+        $this->modulesPath = config('modules.paths.modules');
         $this->modulesStatusesPath = base_path('modules_statuses.json');
     }
 
