@@ -118,6 +118,40 @@ class MediaController extends Controller
         return redirect()->back()->with('success', __('Selected media deleted successfully'));
     }
 
+    public function api(Request $request)
+    {
+        $this->checkAuthorization(Auth::user(), ['media.view']);
+
+        $result = $this->mediaLibraryService->getMediaList(
+            $request->get('search'),
+            $request->get('type'),
+            $request->get('sort', 'created_at'),
+            $request->get('direction', 'desc'),
+            100 // Return more items for modal
+        );
+
+        // Transform media for API response
+        $mediaItems = $result['media']->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'file_name' => $item->file_name,
+                'mime_type' => $item->mime_type,
+                'size' => $item->size,
+                'human_readable_size' => $item->human_readable_size,
+                'url' => asset('storage/media/' . $item->file_name),
+                'extension' => pathinfo($item->file_name, PATHINFO_EXTENSION),
+                'created_at' => $item->created_at->format('Y-m-d H:i:s'),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'media' => $mediaItems,
+            'stats' => $result['stats'],
+        ]);
+    }
+
     /**
      * Get upload limits for frontend consumption
      */
