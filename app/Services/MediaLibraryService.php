@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Concerns\HandlesMediaOperations;
 use App\Contacts\MediaInterface;
-use App\Helper\MediaHelper;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 use Illuminate\Support\Facades\Storage;
 
 class MediaLibraryService
 {
-
+    use HandlesMediaOperations;
     public function getMediaList(
         ?string $search = null,
         ?string $type = null,
@@ -63,9 +61,9 @@ class MediaLibraryService
 
         // Enhance media items with additional information
         $media->getCollection()->transform(function ($item) {
-            $item->human_readable_size = MediaHelper::formatFileSize($item->size);
-            $item->file_type_category = MediaHelper::getFileTypeCategory($item->mime_type);
-            $item->icon = MediaHelper::getMediaIcon($item->mime_type);
+            $item->human_readable_size = $this->formatFileSize($item->size);
+            $item->file_type_category = $this->getFileTypeCategory($item->mime_type);
+            $item->icon = $this->getMediaIcon($item->mime_type);
             return $item;
         });
 
@@ -74,7 +72,7 @@ class MediaLibraryService
 
         return [
             'media' => $media,
-            'stats' => $stats
+            'stats' => $stats,
         ];
     }
 
@@ -87,7 +85,7 @@ class MediaLibraryService
             'documents' => SpatieMedia::whereNotLike('mime_type', 'image/%')
                 ->whereNotLike('mime_type', 'video/%')
                 ->count(),
-            'total_size' => MediaHelper::formatFileSize((int) SpatieMedia::sum('size')),
+            'total_size' => $this->formatFileSize((int) SpatieMedia::sum('size')),
         ];
     }
 
@@ -97,13 +95,13 @@ class MediaLibraryService
 
         foreach ($files as $file) {
             // Skip files that don't pass security checks
-            if (!$this->isSecureFile($file)) {
+            if (! $this->isSecureFile($file)) {
                 continue;
             }
 
             // Generate a secure filename
-            $safeFileName = MediaHelper::generateUniqueFilename($file->getClientOriginalName());
-            
+            $safeFileName = $this->generateUniqueFilename($file->getClientOriginalName());
+
             // Store the file with a secure name
             $path = $file->storeAs('media', $safeFileName, 'public');
 
@@ -169,12 +167,12 @@ class MediaLibraryService
     ): void {
         if ($request->hasFile($requestKey)) {
             $file = $request->file($requestKey);
-            
+
             // Security checks
             if ($this->isSecureFile($file)) {
                 $model->addMedia($file)
-                    ->sanitizingFileName(function($fileName) {
-                        return MediaHelper::sanitizeFilename($fileName);
+                    ->sanitizingFileName(function ($fileName) {
+                        return $this->sanitizeFilename($fileName);
                     })
                     ->toMediaCollection($collection);
             }
@@ -192,8 +190,8 @@ class MediaLibraryService
                 // Security checks
                 if ($this->isSecureFile($file)) {
                     $model->addMedia($file)
-                        ->sanitizingFileName(function($fileName) {
-                            return MediaHelper::sanitizeFilename($fileName);
+                        ->sanitizingFileName(function ($fileName) {
+                            return $this->sanitizeFilename($fileName);
                         })
                         ->toMediaCollection($collection);
                 }
@@ -204,18 +202,5 @@ class MediaLibraryService
     public function clearMediaCollection(MediaInterface $model, string $collection = 'default'): void
     {
         $model->clearMediaCollection($collection);
-    }
-
-    private function isSecureFile(UploadedFile $file): bool
-    {
-        if (MediaHelper::isDangerousFile($file)) {
-            return false;
-        }
-
-        if (!MediaHelper::validateFileHeaders($file)) {
-            return false;
-        }
-
-        return true;
     }
 }

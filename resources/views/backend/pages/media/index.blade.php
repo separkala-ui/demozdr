@@ -28,7 +28,37 @@
 
         {!! ld_apply_filters('media_after_breadcrumbs', '') !!}
 
-        <!-- Statistics Cards -->
+        @if ($errors->any())
+            <div class="mb-6 p-4 border border-red-200 bg-red-50 rounded-md dark:border-red-800 dark:bg-red-900/20">
+                <div class="flex">
+                    <iconify-icon icon="lucide:alert-circle" class="text-red-500 text-xl mr-3 mt-0.5"></iconify-icon>
+                    <div>
+                        <h3 class="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+                            {{ __('Upload Error') }}
+                        </h3>
+                        <ul class="text-sm text-red-700 dark:text-red-300 space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        @if ($errors->has('upload_error'))
+                            <div class="mt-3 p-3 bg-red-100 dark:bg-red-900/40 rounded border border-red-200 dark:border-red-700">
+                                <p class="text-xs text-red-600 dark:text-red-400 font-medium mb-2">{{ __('Current PHP Upload Limits:') }}</p>
+                                <ul class="text-xs text-red-600 dark:text-red-400 space-y-1">
+                                    <li>{{ __('Max file size:') }} {{ $uploadLimits['effective_max_filesize_formatted'] }}</li>
+                                    <li>{{ __('Max total upload:') }} {{ $uploadLimits['post_max_size_formatted'] }}</li>
+                                    <li>{{ __('Max files:') }} {{ $uploadLimits['max_file_uploads'] }}</li>
+                                </ul>
+                                <p class="text-xs text-red-600 dark:text-red-400 mt-2">
+                                    {{ __('Contact your administrator to increase PHP upload limits.') }}
+                                </p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-5 md:gap-6">
             <div class="p-4 bg-white rounded-md border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03]">
                 <div class="flex items-center">
@@ -82,19 +112,13 @@
         </div>
 
         <div class="space-y-6">
-            <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+            <div class="rounded-md border border-gray-200  dark:border-gray-800 bg-white dark:bg-white/[0.03]">
                 <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
                     @include('backend.partials.search-form', [
                         'placeholder' => __('Search media files...'),
                     ])
 
                     <div class="flex items-center gap-3">
-                        
-                        <button @click="uploadModalOpen = true"
-                            class="btn-primary inline-flex items-center gap-2">
-                            <iconify-icon icon="lucide:upload" height="16"></iconify-icon>
-                            {{ __('Upload Media') }}
-                        </button>
                         <!-- Bulk Actions dropdown -->
                         <div class="flex items-center justify-center relative" x-show="selectedMedia.length > 0">
                             <button @click="bulkActionsDropdownOpen = !bulkActionsDropdownOpen"
@@ -151,7 +175,7 @@
                                     <li>
                                         <a href="{{ route('admin.media.index', array_merge(request()->query(), ['type' => null])) }}"
                                             @click="typeDropdownOpen = false"
-                                            class="cursor-pointer flex items-center gap-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1.5 rounded transition-colors duration-300 {{ !request('type') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                            class="cursor-pointer flex items-center gap-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-400 hover:opacity-80 px-2 py-1.5 rounded transition-colors duration-300 {{ !request('type') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
                                             <iconify-icon icon="lucide:layers"
                                                 class="text-gray-500 dark:text-gray-400"></iconify-icon>
                                             {{ __('All Types') }}
@@ -193,7 +217,7 @@
                                 x-text="viewMode === 'grid' ? '{{ __('List View') }}' : '{{ __('Grid View') }}'"></span>
                         </button>
 
-                        @if (auth()->user()->can('media.upload'))
+                        @if (auth()->user()->can('media.create') && count($media))
                             <button @click="uploadModalOpen = true" class="btn-primary flex items-center gap-2">
                                 <iconify-icon icon="lucide:upload" height="16"></iconify-icon>
                                 {{ __('Upload Media') }}
@@ -278,6 +302,12 @@
                                                     <iconify-icon icon="lucide:eye" class="text-sm"></iconify-icon>
                                                 </button>
                                             @endif
+                                            <a href="{{ asset('storage/media/' . $item->file_name) }}" 
+                                                download="{{ $item->name }}"
+                                                class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+                                                title="{{ __('Download') }}">
+                                                <iconify-icon icon="lucide:download" class="text-sm"></iconify-icon>
+                                            </a>
                                             <button
                                                 class="p-2 bg-white rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
                                                 onclick="copyToClipboard('{{ asset('storage/media/' . $item->file_name) }}')"
@@ -301,6 +331,15 @@
                                 <iconify-icon icon="lucide:image"
                                     class="text-6xl text-gray-300 dark:text-gray-600 mb-4 mx-auto"></iconify-icon>
                                 <p class="text-gray-500 dark:text-gray-400 mb-4">{{ __('No media files found') }}</p>
+
+                                @if (auth()->user()->can('media.create'))
+                                    <div class="flex justify-center">
+                                        <button @click="uploadModalOpen = true" class="btn-primary flex items-center gap-2">
+                                            <iconify-icon icon="lucide:upload" height="16"></iconify-icon>
+                                            {{ __('Upload Media') }}
+                                        </button>
+                                    </div>
+                                @endif
                             </div>
                         @endif
                     </div>
@@ -392,6 +431,12 @@
                                             </td>
                                             <td class="px-5 py-4 text-center">
                                                 <div class="flex items-center justify-center gap-2">
+                                                    <a href="{{ asset('storage/media/' . $item->file_name) }}" 
+                                                        download="{{ $item->name }}"
+                                                        class="text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
+                                                        title="{{ __('Download') }}">
+                                                        <iconify-icon icon="lucide:download" class="text-sm"></iconify-icon>
+                                                    </a>
                                                     <button
                                                         class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                                         onclick="copyToClipboard('{{ $item->getUrl() }}')"
@@ -422,7 +467,7 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="px-5 py-4 border-t border-gray-100 dark:border-gray-800">
+                    <div class="px-5 py-4">
                         {{ $media->links() }}
                     </div>
                 </div>
@@ -437,7 +482,7 @@
     </div>
 
     <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75  items-center justify-center"
+    <div id="imageModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75"
         onclick="closeImageModal()">
         <div class="max-w-4xl max-h-[90vh] p-4">
             <img id="modalImage" src="" alt="" class="max-w-full max-h-full object-contain">
@@ -464,11 +509,13 @@
                 img.src = src;
                 img.alt = alt;
                 modal.classList.remove('hidden');
+                modal.classList.add('flex', 'items-center', 'justify-center');
             }
 
             function closeImageModal() {
                 const modal = document.getElementById('imageModal');
                 modal.classList.add('hidden');
+                modal.classList.remove('flex', 'items-center', 'justify-center');
             }
 
             // Close modal on escape key

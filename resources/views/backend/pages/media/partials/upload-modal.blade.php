@@ -43,9 +43,11 @@
                            multiple 
                            accept="image/*,video/*,.pdf,.doc,.docx,.txt"
                            class="hidden">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        {{ __('Maximum file size: 10MB per file') }}
-                    </p>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-2 space-y-1">
+                        <p>{{ __('Maximum file size:') }} <span class="font-medium">{{ $uploadLimits['effective_max_filesize_formatted'] }}</span></p>
+                        <p>{{ __('Maximum files at once:') }} <span class="font-medium">{{ $uploadLimits['max_file_uploads'] }}</span></p>
+                        <p>{{ __('Maximum total upload:') }} <span class="font-medium">{{ $uploadLimits['post_max_size_formatted'] }}</span></p>
+                    </div>
                 </div>
                 
                 <div id="file-preview" class="mt-4 hidden">
@@ -57,13 +59,13 @@
             <div class="flex justify-end gap-3 mt-6">
                 <button type="button" 
                         x-on:click="uploadModalOpen = false"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
+                        class="btn-default">
                     {{ __('Cancel') }}
                 </button>
                 <button type="button" 
                         id="upload-btn"
                         onclick="uploadFiles()"
-                        class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="btn-primary">
                     {{ __('Upload Files') }}
                 </button>
             </div>
@@ -72,16 +74,48 @@
 </div>
 
 <script>
+const uploadLimits = @json($uploadLimits);
+
 document.getElementById('file-input').addEventListener('change', function(e) {
     const files = Array.from(e.target.files);
     const preview = document.getElementById('file-preview');
     const fileList = document.getElementById('file-list');
     
-    if (files.length > 0) {
+    // Validate files before showing them
+    const validFiles = [];
+    const errors = [];
+    
+    if (files.length > uploadLimits.max_file_uploads) {
+        errors.push(`{{ __('You can upload a maximum of :max files at once.', ['max' => '']) }}${uploadLimits.max_file_uploads}`);
+    }
+    
+    let totalSize = 0;
+    files.forEach((file, index) => {
+        totalSize += file.size;
+        
+        if (file.size > uploadLimits.effective_max_filesize) {
+            errors.push(`{{ __('File ":name" exceeds the maximum size of :max', ['name' => '', 'max' => '']) }}${file.name}" exceeds ${uploadLimits.effective_max_filesize_formatted}`);
+        } else {
+            validFiles.push(file);
+        }
+    });
+    
+    if (totalSize > uploadLimits.post_max_size) {
+        errors.push(`{{ __('Total upload size exceeds the limit of :max', ['max' => '']) }}${uploadLimits.post_max_size_formatted}`);
+    }
+    
+    if (errors.length > 0) {
+        alert(errors.join('\n'));
+        this.value = '';
+        preview.classList.add('hidden');
+        return;
+    }
+    
+    if (validFiles.length > 0) {
         preview.classList.remove('hidden');
         fileList.innerHTML = '';
         
-        files.forEach((file, index) => {
+        validFiles.forEach((file, index) => {
             const fileItem = document.createElement('div');
             fileItem.className = 'flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded';
             fileItem.innerHTML = `
@@ -141,9 +175,18 @@ function uploadFiles() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            if (window.showToast) {
+                window.showToast('success', '{{ __('Success') }}', data.message);
+            }
             location.reload();
         } else {
-            alert(data.message || '{{ __("Error uploading files") }}');
+            let errorMessage = data.message || '{{ __("Error uploading files") }}';
+            
+            if (data.error_type === 'php_upload_limit') {
+                errorMessage += `\n\n{{ __('Upload size:') }} ${Math.round(data.uploaded_size / 1024 / 1024)} MB\n{{ __('PHP Limit:') }} ${data.limit_formatted}`;
+            }
+            
+            alert(errorMessage);
         }
     })
     .catch(error => {
