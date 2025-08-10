@@ -108,6 +108,19 @@
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="{{ $id }}_mediaContainer">
                         <!-- Media items will be loaded here -->
                     </div>
+                    
+                    <!-- Load More Button -->
+                    <div id="{{ $id }}_loadMoreSection" class="flex justify-center mt-6 hidden">
+                        <button
+                            type="button"
+                            id="{{ $id }}_loadMoreButton"
+                            onclick="loadMoreMedia('{{ $id }}')"
+                            class="btn-default px-6 py-2 flex items-center gap-2"
+                        >
+                            <iconify-icon icon="lucide:chevron-down" class="text-lg"></iconify-icon>
+                            Load More (100 items)
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Empty State -->
@@ -156,8 +169,9 @@
     </div>
 </div>
 
-@once
+
 @push('scripts')
+
 <script>
 // Global media modal functionality
 window.mediaModalData = {};
@@ -178,7 +192,6 @@ function openMediaModal(modalId, multiple = false, allowedTypes = 'all', onSelec
         totalCount: 0,
         isLoading: false,
         hasMorePages: true,
-        scrollHandler: null,
         currentFilters: {
             search: '',
             type: 'all'
@@ -197,17 +210,10 @@ function closeMediaModal(modalId) {
 
     // Reset modal state
     if (window.mediaModalData[modalId]) {
-        // Clean up scroll handler
-        if (window.mediaModalData[modalId].scrollHandler) {
-            const scrollContainer = document.getElementById(`${modalId}_mediaGrid`);
-            scrollContainer.removeEventListener('scroll', window.mediaModalData[modalId].scrollHandler);
-        }
-
         window.mediaModalData[modalId].selectedFiles = [];
         window.mediaModalData[modalId].allFiles = [];
         window.mediaModalData[modalId].currentPage = 1;
         window.mediaModalData[modalId].hasMorePages = true;
-        window.mediaModalData[modalId].scrollHandler = null;
         updateSelectedInfo(modalId);
     }
 }
@@ -227,15 +233,12 @@ async function loadMediaFiles(modalId, isInitialLoad = false) {
         loadingEl.classList.remove('hidden');
         gridEl.classList.add('hidden');
         emptyEl.classList.add('hidden');
-    } else {
-        // Show loading indicator at bottom for pagination
-        showLoadingIndicator(modalId);
     }
 
     try {
         const params = new URLSearchParams({
             page: modalData.currentPage.toString(),
-            per_page: '20',
+            per_page: 100,
             search: modalData.currentFilters.search,
             type: modalData.currentFilters.type === 'all' ? '' : modalData.currentFilters.type,
             sort: 'created_at',
@@ -257,6 +260,8 @@ async function loadMediaFiles(modalId, isInitialLoad = false) {
             } else {
                 modalData.allFiles = [...modalData.allFiles, ...data.media];
                 renderMediaFiles(modalId, data.media, isInitialLoad); // Pass only new files for rendering
+                // Update load more button after loading more items
+                updateLoadMoreButton(modalId);
             }
 
             updateTotalFilesCount(modalId, data.pagination.total);
@@ -265,8 +270,8 @@ async function loadMediaFiles(modalId, isInitialLoad = false) {
                 if (isInitialLoad) {
                     loadingEl.classList.add('hidden');
                     gridEl.classList.remove('hidden');
-                    // Setup infinite scroll listener
-                    setupInfiniteScroll(modalId);
+                    // Show load more button if there are more pages
+                    updateLoadMoreButton(modalId);
                 }
             } else {
                 if (isInitialLoad) {
@@ -285,7 +290,6 @@ async function loadMediaFiles(modalId, isInitialLoad = false) {
         }
     } finally {
         modalData.isLoading = false;
-        hideLoadingIndicator(modalId);
     }
 }
 
@@ -317,8 +321,6 @@ function renderMediaFiles(modalId, files, isInitialLoad = false) {
         const mediaItem = createMediaItem(modalId, file);
         container.appendChild(mediaItem);
     });
-
-    console.log('Rendered files:', { isInitialLoad, filesRendered: files.length, totalInContainer: container.children.length });
 }
 
 function createMediaItem(modalId, file) {
@@ -454,8 +456,8 @@ function updateTotalFilesCount(modalId, count) {
     if (paginationInfoEl && modalData) {
         const loadedCount = modalData.allFiles.length;
         if (modalData.hasMorePages && loadedCount < count) {
-            paginationInfoEl.textContent = `• ${loadedCount} loaded, scroll for more`;
-        } else if (loadedCount >= count && count > 20) {
+            paginationInfoEl.textContent = `• ${loadedCount} loaded of ${count} total`;
+        } else if (loadedCount >= count && count > 100) {
             paginationInfoEl.textContent = '• all loaded';
         } else {
             paginationInfoEl.textContent = '';
@@ -484,6 +486,39 @@ function confirmMediaSelection(modalId) {
     document.dispatchEvent(event);
 
     closeMediaModal(modalId);
+}
+
+function loadMoreMedia(modalId) {
+    console.log('loadMoreMedia', modalId);
+    const modalData = window.mediaModalData[modalId];
+    
+    if (!modalData.hasMorePages || modalData.isLoading) return;
+    
+    modalData.currentPage++;
+    loadMediaFiles(modalId, false);
+}
+
+function updateLoadMoreButton(modalId) {
+    const modalData = window.mediaModalData[modalId];
+    const loadMoreSection = document.getElementById(`${modalId}_loadMoreSection`);
+    const loadMoreButton = document.getElementById(`${modalId}_loadMoreButton`);
+    
+    if (!loadMoreSection || !loadMoreButton) return;
+    
+    if (modalData.hasMorePages) {
+        loadMoreSection.classList.remove('hidden');
+        loadMoreButton.disabled = false;
+        
+        // Update button text to show remaining items
+        const remainingItems = modalData.totalCount - modalData.allFiles.length;
+        const itemsToLoad = Math.min(100, remainingItems);
+        loadMoreButton.innerHTML = `
+            <iconify-icon icon="lucide:chevron-down" class="text-lg"></iconify-icon>
+            Load More (${itemsToLoad} items)
+        `;
+    } else {
+        loadMoreSection.classList.add('hidden');
+    }
 }
 
 function triggerFileUpload(modalId) {
@@ -643,4 +678,3 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 @endpush
-@endonce
