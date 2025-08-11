@@ -3,7 +3,6 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Post;
-use App\Models\User;
 use PHPUnit\Framework\Attributes\Test;
 
 class PostManagementTest extends BaseApiTest
@@ -58,8 +57,8 @@ class PostManagementTest extends BaseApiTest
                         'status',
                         'post_type',
                         'created_at',
-                        'updated_at'
-                    ]
+                        'updated_at',
+                    ],
                 ]);
 
             $this->assertDatabaseHas('posts', [
@@ -148,7 +147,7 @@ class PostManagementTest extends BaseApiTest
                         'id' => $post->id,
                         'title' => $post->title,
                         'post_type' => $post->post_type,
-                    ]
+                    ],
                 ]);
         } else {
             $this->assertTrue(true, 'Post system not implemented');
@@ -187,7 +186,7 @@ class PostManagementTest extends BaseApiTest
                         'id' => $post->id,
                         'title' => 'Updated Post Title',
                         'status' => 'draft',
-                    ]
+                    ],
                 ]);
 
             $this->assertDatabaseHas('posts', [

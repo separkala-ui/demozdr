@@ -3,7 +3,6 @@
 namespace Tests\Feature\Api;
 
 use App\Models\User;
-use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
 
@@ -30,8 +29,8 @@ class AuthenticationTest extends BaseApiTest
                     'name',
                     'email',
                     'created_at',
-                    'updated_at'
-                ]
+                    'updated_at',
+                ],
             ]);
 
         $this->assertDatabaseHas('personal_access_tokens', [
@@ -55,7 +54,7 @@ class AuthenticationTest extends BaseApiTest
 
         $response->assertStatus(401)
             ->assertJson([
-                'message' => 'Invalid credentials'
+                'message' => 'Invalid credentials',
             ]);
     }
 
@@ -140,7 +139,7 @@ class AuthenticationTest extends BaseApiTest
                 'name',
                 'email',
                 'created_at',
-                'updated_at'
+                'updated_at',
             ]);
     }
 
@@ -151,7 +150,7 @@ class AuthenticationTest extends BaseApiTest
 
         $response->assertStatus(401)
             ->assertJson([
-                'message' => 'Unauthenticated.'
+                'message' => 'Unauthenticated.',
             ]);
     }
 
@@ -167,7 +166,7 @@ class AuthenticationTest extends BaseApiTest
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Logged out successfully'
+                'message' => 'Logged out successfully',
             ]);
 
         // Verify token is deleted
@@ -182,7 +181,7 @@ class AuthenticationTest extends BaseApiTest
 
         $response->assertStatus(401)
             ->assertJson([
-                'message' => 'Unauthenticated.'
+                'message' => 'Unauthenticated.',
             ]);
     }
 
@@ -202,7 +201,7 @@ class AuthenticationTest extends BaseApiTest
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'All tokens revoked successfully'
+                'message' => 'All tokens revoked successfully',
             ]);
 
         // Verify all tokens are deleted
@@ -217,7 +216,7 @@ class AuthenticationTest extends BaseApiTest
 
         $response->assertStatus(401)
             ->assertJson([
-                'message' => 'Unauthenticated.'
+                'message' => 'Unauthenticated.',
             ]);
     }
 
@@ -231,7 +230,7 @@ class AuthenticationTest extends BaseApiTest
 
         $response->assertStatus(401)
             ->assertJson([
-                'message' => 'Invalid credentials'
+                'message' => 'Invalid credentials',
             ]);
     }
 
@@ -302,7 +301,7 @@ class AuthenticationTest extends BaseApiTest
     {
         $response = $this->call('POST', '/api/auth/login', [
             'email' => 'test@example.com',
-            'password' => 'password123'
+            'password' => 'password123',
         ], [], [], [
             'HTTP_ACCEPT' => 'application/json',
         ]);

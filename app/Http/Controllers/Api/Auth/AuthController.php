@@ -6,12 +6,10 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends ApiController
 {
@@ -26,7 +24,7 @@ class AuthController extends ApiController
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Invalid credentials'
+                'message' => 'Invalid credentials',
             ], 401);
         }
 
@@ -73,7 +71,7 @@ class AuthController extends ApiController
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Logged out successfully'
+            'message' => 'Logged out successfully',
         ], 200);
     }
 
@@ -87,7 +85,7 @@ class AuthController extends ApiController
         $request->user()->tokens()->delete();
 
         return response()->json([
-            'message' => 'All tokens revoked successfully'
+            'message' => 'All tokens revoked successfully',
         ], 200);
     }
 }

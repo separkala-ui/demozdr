@@ -21,7 +21,7 @@ class UserManagementTest extends BaseApiTest
             ->assertJsonStructure([
                 'success',
                 'message',
-                'data' => ['*' => ['id', 'name', 'email']]
+                'data' => ['*' => ['id', 'name', 'email']],
             ]);
     }
 
@@ -199,7 +199,7 @@ class UserManagementTest extends BaseApiTest
                     'id',
                     'name',
                     'email',
-                ]
+                ],
             ]);
     }
 
@@ -235,7 +235,7 @@ class UserManagementTest extends BaseApiTest
                     'id',
                     'name',
                     'email',
-                ]
+                ],
             ]);
 
         $this->assertDatabaseHas('users', [
@@ -275,7 +275,7 @@ class UserManagementTest extends BaseApiTest
             ->assertJsonStructure([
                 'success',
                 'message',
-                'data'
+                'data',
             ]);
 
         $this->assertDatabaseMissing('users', [
@@ -309,8 +309,8 @@ class UserManagementTest extends BaseApiTest
                 'success',
                 'message',
                 'data' => [
-                    'deleted_count'
-                ]
+                    'deleted_count',
+                ],
             ])
             ->assertJsonPath('data.deleted_count', 3);
 
@@ -374,7 +374,7 @@ class UserManagementTest extends BaseApiTest
             ->assertJsonStructure([
                 'success',
                 'message',
-                'data' => ['*' => ['id', 'name', 'email']]
+                'data' => ['*' => ['id', 'name', 'email']],
             ]);
     }
 
@@ -390,7 +390,7 @@ class UserManagementTest extends BaseApiTest
             ->assertJsonStructure([
                 'success',
                 'message',
-                'data' => ['*' => ['id', 'name', 'email']]
+                'data' => ['*' => ['id', 'name', 'email']],
             ]);
 
         // Verify we get exactly 5 users (per_page parameter)

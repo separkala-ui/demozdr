@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\User;
 use PHPUnit\Framework\Attributes\Test;
 
 class ComprehensiveApiTest extends BaseApiTest
@@ -123,7 +122,7 @@ class ComprehensiveApiTest extends BaseApiTest
         $this->assertContains($response->status(), [200, 403]);
         if ($response->status() === 200) {
             $response->assertJsonStructure([
-                'data' => []
+                'data' => [],
             ]);
         }
     }
@@ -207,7 +206,7 @@ class ComprehensiveApiTest extends BaseApiTest
                 'meta' => [
                     'current_page',
                     'per_page',
-                ]
+                ],
             ]);
         }
     }
@@ -221,7 +220,7 @@ class ComprehensiveApiTest extends BaseApiTest
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'data' => []
+                'data' => [],
             ]);
     }
 
@@ -278,7 +277,7 @@ class ComprehensiveApiTest extends BaseApiTest
         $this->assertContains($response->status(), [200, 403]);
         if ($response->status() === 200) {
             $response->assertJsonStructure([
-                'data' => []
+                'data' => [],
             ]);
         }
     }

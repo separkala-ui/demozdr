@@ -12,7 +12,8 @@ use Spatie\Permission\Models\Permission;
 
 abstract class BaseApiTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     protected User $user;
     protected User $adminUser;
@@ -89,7 +90,7 @@ abstract class BaseApiTest extends TestCase
                 'user.view', 'user.create', 'user.edit', 'user.delete',
                 'post.view', 'post.create', 'post.edit', 'post.delete',
                 'role.view', 'role.create', 'role.edit', 'role.delete',
-                'permission.view'
+                'permission.view',
             ];
 
             // Give all permissions to both users
@@ -126,7 +127,7 @@ abstract class BaseApiTest extends TestCase
     {
         return [
             'message',
-            'errors' => []
+            'errors' => [],
         ];
     }
 
@@ -141,7 +142,7 @@ abstract class BaseApiTest extends TestCase
                 'first',
                 'last',
                 'prev',
-                'next'
+                'next',
             ],
             'meta' => [
                 'current_page',
@@ -150,8 +151,8 @@ abstract class BaseApiTest extends TestCase
                 'path',
                 'per_page',
                 'to',
-                'total'
-            ]
+                'total',
+            ],
         ];
     }
 

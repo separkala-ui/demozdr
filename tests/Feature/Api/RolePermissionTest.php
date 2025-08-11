@@ -42,8 +42,8 @@ class RolePermissionTest extends BaseApiTest
                         '*' => [
                             'id',
                             'name',
-                        ]
-                    ]
+                        ],
+                    ],
                 ]);
         } else {
             $this->assertTrue(true, 'Role system not implemented');
@@ -169,7 +169,7 @@ class RolePermissionTest extends BaseApiTest
                     'data' => [
                         'id' => $role->id,
                         'name' => 'test-role',
-                    ]
+                    ],
                 ]);
         } else {
             $this->assertTrue(true, 'Role system not implemented');
@@ -260,7 +260,7 @@ class RolePermissionTest extends BaseApiTest
                     'message' => '3 roles deleted successfully',
                     'data' => [
                         'deleted_count' => 3,
-                    ]
+                    ],
                 ]);
 
             foreach ($roleIds as $id) {
@@ -297,8 +297,8 @@ class RolePermissionTest extends BaseApiTest
                         '*' => [
                             'id',
                             'name',
-                        ]
-                    ]
+                        ],
+                    ],
                 ]);
         } else {
             $response->assertStatus(404);
@@ -344,7 +344,7 @@ class RolePermissionTest extends BaseApiTest
                     'data' => [
                         'id' => $permission->id,
                         'name' => 'test-permission',
-                    ]
+                    ],
                 ]);
         } else {
             $this->assertTrue(true, 'Permission system not implemented');
