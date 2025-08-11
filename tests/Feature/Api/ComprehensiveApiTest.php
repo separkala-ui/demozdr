@@ -507,7 +507,7 @@ class ComprehensiveApiTest extends BaseApiTest
 
         // Check if any rate limiting occurred (implementation dependent)
         $hasRateLimit = in_array(429, $responses);
-        $this->assertTrue(true, 'Rate limiting test completed');
+        $this->assertTrue($hasRateLimit || count($responses) < 100, 'Rate limiting test completed - either rate limited or endpoint allows many requests');
     }
 
     #[Test]

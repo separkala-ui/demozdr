@@ -46,7 +46,7 @@ class RolePermissionTest extends BaseApiTest
                     ],
                 ]);
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -84,7 +84,7 @@ class RolePermissionTest extends BaseApiTest
                 ]);
             }
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -102,7 +102,7 @@ class RolePermissionTest extends BaseApiTest
             $response->assertStatus(422)
                 ->assertJsonPath('errors.name', ['The name field is required.']);
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -122,7 +122,7 @@ class RolePermissionTest extends BaseApiTest
             $response->assertStatus(422)
                 ->assertJsonPath('errors.name', ['The name has already been taken.']);
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -150,7 +150,7 @@ class RolePermissionTest extends BaseApiTest
                 $response->assertStatus(422);
             }
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -172,7 +172,7 @@ class RolePermissionTest extends BaseApiTest
                     ],
                 ]);
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -214,7 +214,7 @@ class RolePermissionTest extends BaseApiTest
                 ]);
             }
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -234,7 +234,7 @@ class RolePermissionTest extends BaseApiTest
                 'id' => $role->id,
             ]);
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -267,7 +267,7 @@ class RolePermissionTest extends BaseApiTest
                 $this->assertDatabaseMissing('roles', ['id' => $id]);
             }
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -347,7 +347,7 @@ class RolePermissionTest extends BaseApiTest
                     ],
                 ]);
         } else {
-            $this->assertTrue(true, 'Permission system not implemented');
+            $this->markTestSkipped('Permission system not implemented');
         }
     }
 
@@ -383,7 +383,7 @@ class RolePermissionTest extends BaseApiTest
                 $this->assertEquals(count($permissionIds), $role->permissions()->count());
             }
         } else {
-            $this->assertTrue(true, 'Role/Permission system not implemented');
+            $this->markTestSkipped('Role/Permission system not implemented');
         }
     }
 
@@ -405,7 +405,7 @@ class RolePermissionTest extends BaseApiTest
 
             $response->assertStatus(200);
         } else {
-            $this->assertTrue(true, 'Role/Permission system not implemented');
+            $this->markTestSkipped('Role/Permission system not implemented');
         }
     }
 
@@ -429,7 +429,7 @@ class RolePermissionTest extends BaseApiTest
                 $this->assertContains($response->status(), [200, 201, 422]);
             }
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -447,7 +447,7 @@ class RolePermissionTest extends BaseApiTest
             // Should be forbidden (assuming proper authorization)
             $this->assertContains($response->status(), [403, 401, 422]);
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -464,7 +464,7 @@ class RolePermissionTest extends BaseApiTest
             // Should be forbidden (assuming proper authorization)
             $this->assertContains($response->status(), [403, 401, 200]);
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -485,7 +485,7 @@ class RolePermissionTest extends BaseApiTest
                     'data' => ['*' => ['id', 'name']],
                 ]);
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -533,7 +533,7 @@ class RolePermissionTest extends BaseApiTest
                 $this->assertContains($response->status(), [403, 422, 200, 400]);
             }
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
@@ -554,7 +554,7 @@ class RolePermissionTest extends BaseApiTest
             // This might not exist in the API, so we accept various responses
             $this->assertContains($response->status(), [200, 201, 404]);
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 }

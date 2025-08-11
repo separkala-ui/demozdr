@@ -20,7 +20,7 @@ class PostManagementTest extends BaseApiTest
             $response->assertStatus(200)
                 ->assertJsonStructure($this->getApiResourceStructure());
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -66,7 +66,7 @@ class PostManagementTest extends BaseApiTest
                 'post_type' => 'page',
             ]);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -84,7 +84,7 @@ class PostManagementTest extends BaseApiTest
             $response->assertStatus(422)
                 ->assertJsonPath('errors.title', ['The title field is required.']);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -104,7 +104,7 @@ class PostManagementTest extends BaseApiTest
 
             $response->assertStatus(422);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -127,7 +127,7 @@ class PostManagementTest extends BaseApiTest
                 $response->assertStatus(422);
             }
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -150,7 +150,7 @@ class PostManagementTest extends BaseApiTest
                     ],
                 ]);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -195,7 +195,7 @@ class PostManagementTest extends BaseApiTest
                 'status' => 'draft',
             ]);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -215,7 +215,7 @@ class PostManagementTest extends BaseApiTest
                 'id' => $post->id,
             ]);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -242,7 +242,7 @@ class PostManagementTest extends BaseApiTest
                 $this->assertDatabaseMissing('posts', ['id' => $id]);
             }
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -281,7 +281,7 @@ class PostManagementTest extends BaseApiTest
                 ]);
             }
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -307,7 +307,7 @@ class PostManagementTest extends BaseApiTest
 
             $response->assertStatus(201);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -331,7 +331,7 @@ class PostManagementTest extends BaseApiTest
                 'title' => 'Post with Author',
             ]);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -354,7 +354,7 @@ class PostManagementTest extends BaseApiTest
                 $this->assertContains($response->status(), [200, 201, 422]);
             }
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -377,7 +377,7 @@ class PostManagementTest extends BaseApiTest
                 }
             }
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -398,7 +398,7 @@ class PostManagementTest extends BaseApiTest
                 $this->assertStringContainsString('Searchable', $response->json('data.0.title'));
             }
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -423,7 +423,7 @@ class PostManagementTest extends BaseApiTest
                     ],
                 ]);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -470,7 +470,7 @@ class PostManagementTest extends BaseApiTest
 
             $response->assertStatus(422);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -494,7 +494,7 @@ class PostManagementTest extends BaseApiTest
                 $this->assertEquals('this-should-generate-slug', $post->slug);
             }
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 
@@ -518,7 +518,7 @@ class PostManagementTest extends BaseApiTest
             $post->refresh();
             $this->assertEquals($originalCreatedAt, $post->created_at);
         } else {
-            $this->assertTrue(true, 'Post system not implemented');
+            $this->markTestSkipped('Post system not implemented');
         }
     }
 }

@@ -417,7 +417,7 @@ class UserManagementTest extends BaseApiTest
 
             $response->assertStatus(201);
         } else {
-            $this->assertTrue(true, 'Role system not implemented');
+            $this->markTestSkipped('Role system not implemented');
         }
     }
 
