@@ -5,12 +5,11 @@ namespace Tests\Feature\Api;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Role;
-use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Permission;
 
-abstract class BaseApiTest extends TestCase
+class BaseApiTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
@@ -87,9 +86,18 @@ abstract class BaseApiTest extends TestCase
     {
         if (class_exists(Permission::class)) {
             $permissions = [
-                'user.view', 'user.create', 'user.edit', 'user.delete',
-                'post.view', 'post.create', 'post.edit', 'post.delete',
-                'role.view', 'role.create', 'role.edit', 'role.delete',
+                'user.view',
+                'user.create',
+                'user.edit',
+                'user.delete',
+                'post.view',
+                'post.create',
+                'post.edit',
+                'post.delete',
+                'role.view',
+                'role.create',
+                'role.edit',
+                'role.delete',
                 'permission.view',
             ];
 
