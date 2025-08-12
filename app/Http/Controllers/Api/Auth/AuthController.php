@@ -6,12 +6,10 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends ApiController
 {
@@ -25,19 +23,25 @@ class AuthController extends ApiController
         $user = User::where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            return response()->json([
+                'message' => 'Invalid credentials',
+            ], 401);
         }
 
         // Create a token for the user
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return $this->successResponse([
-            'user' => new UserResource($user->load('roles')),
+        return response()->json([
             'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at,
+            ],
             'token_type' => 'Bearer',
-        ], 'Login successful');
+        ], 200);
     }
 
     /**
@@ -47,10 +51,14 @@ class AuthController extends ApiController
      */
     public function user(Request $request): JsonResponse
     {
-        return $this->resourceResponse(
-            new UserResource($request->user()->load('roles')),
-            'User retrieved successfully'
-        );
+        $user = $request->user();
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at,
+        ], 200);
     }
 
     /**
@@ -62,7 +70,9 @@ class AuthController extends ApiController
     {
         $request->user()->currentAccessToken()->delete();
 
-        return $this->successResponse(null, 'Logout successful');
+        return response()->json([
+            'message' => 'Logged out successfully',
+        ], 200);
     }
 
     /**
@@ -74,6 +84,8 @@ class AuthController extends ApiController
     {
         $request->user()->tokens()->delete();
 
-        return $this->successResponse(null, 'All tokens revoked successfully');
+        return response()->json([
+            'message' => 'All tokens revoked successfully',
+        ], 200);
     }
 }

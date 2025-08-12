@@ -36,7 +36,7 @@ class PostController extends ApiController
     #[QueryParameter('date_from', description: 'Filter posts created from this date.', type: 'string', example: '2023-01-01')]
     #[QueryParameter('date_to', description: 'Filter posts created until this date.', type: 'string', example: '2023-12-31')]
     #[QueryParameter('sort', description: 'Sort posts by field (prefix with - for descending).', type: 'string', example: '-created_at')]
-    public function index(Request $request, string $postType = 'post'): JsonResponse
+    public function index(Request $request, string $postType = 'post')
     {
         $this->checkAuthorization(Auth::user(), ['post.view']);
 
@@ -46,20 +46,24 @@ class PostController extends ApiController
 
         $posts = $this->postService->getPaginatedPosts($filters, $perPage);
 
-        return $this->resourceResponse(
-            PostResource::collection($posts)->additional([
-                'meta' => [
-                    'pagination' => [
-                        'current_page' => $posts->currentPage(),
-                        'last_page' => $posts->lastPage(),
-                        'per_page' => $posts->perPage(),
-                        'total' => $posts->total(),
-                    ],
-                    'post_type' => $postType,
-                ],
-            ]),
-            ucfirst($postType) . 's retrieved successfully'
-        );
+        return PostResource::collection($posts)->additional([
+            'meta' => [
+                'current_page' => $posts->currentPage(),
+                'from' => $posts->firstItem(),
+                'last_page' => $posts->lastPage(),
+                'path' => $posts->path(),
+                'per_page' => $posts->perPage(),
+                'to' => $posts->lastItem(),
+                'total' => $posts->total(),
+                'post_type' => $postType,
+            ],
+            'links' => [
+                'first' => $posts->url(1),
+                'last' => $posts->url($posts->lastPage()),
+                'prev' => $posts->previousPageUrl(),
+                'next' => $posts->nextPageUrl(),
+            ],
+        ]);
     }
 
     /**
@@ -137,7 +141,7 @@ class PostController extends ApiController
 
         $this->logAction('Post Deleted', $post);
 
-        return $this->successResponse(null, ucfirst($postType) . ' deleted successfully');
+        return $this->successResponse(null, ucfirst($postType) . ' deleted successfully', 204);
     }
 
     /**
@@ -158,9 +162,9 @@ class PostController extends ApiController
             'deleted_count' => $deletedCount,
         ]);
 
-        return $this->successResponse(
-            ['deleted_count' => $deletedCount],
-            $deletedCount . " " . $postType . "s deleted successfully"
-        );
+        return response()->json([
+            'message' => 'Posts deleted successfully',
+            'deleted_count' => $deletedCount,
+        ]);
     }
 }

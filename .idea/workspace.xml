@@ -4,36 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: implement screenshot generation with user session handling">
-      <change afterPath="$PROJECT_DIR$/app/Contacts/MediaInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Contacts/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Services/MediaLibraryService.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Traits/HasMediaLibrary.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/View/Components/MediaImage.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2025_07_27_045826_create_media_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/components/media-image.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Feature/MediaLibraryTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/InvoiceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/InvoiceController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Controllers/ProductController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Http/Requests/ProductRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Http/Requests/ProductRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/app/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/app/Models/Product.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/database/migrations/2025_07_21_000001_create_products_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/database/migrations/2025_07_21_000001_create_products_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/products/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/products/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/products/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/products/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/products/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Crm/resources/views/pages/products/show.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/PermissionService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/PermissionService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules_statuses.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules_statuses.json" afterDir="false" />
-    </list>
-    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="fix: prevent loading in console for admin route redirection and update include paths" />
-    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="refactor: add ModuleServiceProvider to application service providers">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: implement post management actions with Spatie Query Builder integration">
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailCampaignsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailCampaignsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000001_create_deal_comment_attachments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000001_create_deal_comment_attachments_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000002_create_deal_attachments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000002_create_deal_attachments_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/task-manager/app/Livewire/Components/StatusChangeButton.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/app/Livewire/Components/StatusChangeButton.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/task-manager/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules_statuses.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules_statuses.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/AuthenticationTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/AuthenticationTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/BaseApiTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ApiTestUtils.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/ComprehensiveApiTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/ComprehensiveApiTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/PostManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/PostManagementTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/RolePermissionTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/RolePermissionTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/UserManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/UserManagementTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +44,9 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
     <include_path>
+      <path value="$PROJECT_DIR$/vendor/_laravel_idea" />
+      <path value="$PROJECT_DIR$/Modules/TaskManager/vendor/composer" />
+      <path value="$PROJECT_DIR$/Modules/UserAvatar/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/laravel/pulse" />
       <path value="$PROJECT_DIR$/vendor/laravel/prompts" />
       <path value="$PROJECT_DIR$/vendor/laravel/serializable-closure" />
@@ -192,19 +181,19 @@
       <path value="$PROJECT_DIR$/vendor/dedoc/scramble" />
       <path value="$PROJECT_DIR$/vendor/laravel/sanctum" />
       <path value="$PROJECT_DIR$/vendor/phpstan/phpdoc-parser" />
-      <path value="$PROJECT_DIR$/vendor/_laravel_idea" />
       <path value="$PROJECT_DIR$/vendor/beyondcode/laravel-dump-server" />
       <path value="$PROJECT_DIR$/vendor/laravel/telescope" />
-      <path value="$PROJECT_DIR$/Modules/TaskManager/vendor/composer" />
-      <path value="$PROJECT_DIR$/Modules/UserAvatar/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/spatie/temporary-directory" />
       <path value="$PROJECT_DIR$/vendor/spatie/browsershot" />
+      <path value="$PROJECT_DIR$/vendor/mhmiton/laravel-modules-livewire" />
       <path value="$PROJECT_DIR$/vendor/spatie/image" />
       <path value="$PROJECT_DIR$/vendor/spatie/image-optimizer" />
       <path value="$PROJECT_DIR$/vendor/spatie/laravel-medialibrary" />
       <path value="$PROJECT_DIR$/vendor/maennchen/zipstream-php" />
-      <path value="$PROJECT_DIR$/vendor/mhmiton/laravel-modules-livewire" />
     </include_path>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -228,7 +217,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMThirdPartyAiProvidersConfigurable&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -241,11 +230,20 @@
       <recent name="$PROJECT_DIR$/app/Support" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="PHPUnit.UserManagementTest.authenticated_user_can_create_user">
     <configuration name="Main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner configuration_file="$PROJECT_DIR$/phpunit.xml" scope="XML" use_alternative_configuration_file="true" />
       <method v="2" />
     </configuration>
+    <configuration name="UserManagementTest.authenticated_user_can_create_user" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <TestRunner class="Tests\Feature\Api\UserManagementTest" file="$PROJECT_DIR$/tests/Feature/Api/UserManagementTest.php" method="authenticated_user_can_create_user" scope="Method" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="PHPUnit.UserManagementTest.authenticated_user_can_create_user" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -283,6 +281,11 @@
       <workItem from="1753757813189" duration="309000" />
       <workItem from="1754804012767" duration="3636000" />
       <workItem from="1754807719865" duration="1253000" />
+      <workItem from="1754881147073" duration="35000" />
+      <workItem from="1754881276507" duration="125000" />
+      <workItem from="1754881417945" duration="2286000" />
+      <workItem from="1754884425439" duration="10082000" />
+      <workItem from="1754921781090" duration="2310000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />
@@ -427,6 +430,11 @@
     <MESSAGE value="refactor: update .gitignore to reflect lowercase modules directory" />
     <MESSAGE value="refactor: add module paths for CRM, Task Manager, and User Avatar in project configuration" />
     <MESSAGE value="refactor: add ModuleServiceProvider to application service providers" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: add ModuleServiceProvider to application service providers" />
+    <MESSAGE value="feat: implement post management actions with Spatie Query Builder integration" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: implement post management actions with Spatie Query Builder integration" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

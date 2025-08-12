@@ -30,7 +30,7 @@ class PostFactory extends Factory
             'status' => fake()->randomElement(['draft', 'publish']),
             'post_type' => fake()->randomElement(['post', 'page']),
             'slug' => fake()->unique()->slug(),
-            'user_id' => fake()->numberBetween(1, 100),
+            'user_id' => \App\Models\User::factory(),
 
             // Create at and update_at would be random time between 1 year ago and now
             'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
