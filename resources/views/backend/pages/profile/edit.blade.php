@@ -14,8 +14,10 @@
         <div class="space-y-6">
             <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                 <div class="px-5 py-2.5 sm:px-6 sm:py-5">
-                    <h3 class="text-base font-medium text-gray-700 dark:text-white">{{ __('Edit Profile') }} -
-                        {{ $user->name }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+                        {{ $user->full_name }}</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ __('Update your account profile information and email address.') }}</p>
                 </div>
                 <div class="p-5 space-y-6 border-t border-gray-100 dark:border-gray-800 sm:p-6">
                     <x-messages />
@@ -24,10 +26,16 @@
                         @csrf
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div class="space-y-1">
-                                <label for="name"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Name') }}</label>
-                                <input type="text" name="name" id="name" required value="{{ $user->name }}"
-                                    class="form-control">
+                                <label for="first_name"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('First Name') }}</label>
+                                <input type="text" name="first_name" id="first_name" required value="{{ $user->first_name }}"
+                                    placeholder="{{ __('Enter First Name') }}" class="form-control">
+                            </div>
+                            <div class="space-y-1">
+                                <label for="last_name"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Last Name') }}</label>
+                                <input type="text" name="last_name" id="last_name" required value="{{ $user->last_name }}"
+                                    placeholder="{{ __('Enter Last Name') }}" class="form-control">
                             </div>
                             <div class="space-y-1">
                                 <label for="email"

@@ -67,7 +67,8 @@ class UsersController extends Controller
     public function store(StoreUserRequest $request): RedirectResponse
     {
         $user = new User();
-        $user->name = $request->name;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
         $user->username = $request->username;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
@@ -124,7 +125,8 @@ class UsersController extends Controller
         // Prevent editing of super admin in demo mode
         $this->preventSuperAdminModification($user);
 
-        $user->name = $request->name;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
         $user->email = $request->email;
         $user->username = $request->username;
         $user->avatar_id = $request->avatar_id;

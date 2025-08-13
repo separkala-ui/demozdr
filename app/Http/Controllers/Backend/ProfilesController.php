@@ -37,14 +37,16 @@ class ProfilesController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|min:8|confirmed',
             'avatar_id' => 'nullable|exists:media,id',
         ]);
 
         $requestInputs = ld_apply_filters('user_profile_update_data_before', [
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => $request->password ? bcrypt($request->password) : $user->password,
             'avatar_id' => $request->avatar_id,

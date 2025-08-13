@@ -72,7 +72,8 @@ class UserManagementTest extends TestCase
         $this->authenticateAdmin();
 
         $userData = [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'username' => 'johndoe',
             'password' => 'password123',
@@ -84,18 +85,20 @@ class UserManagementTest extends TestCase
         $response->assertStatus(201);
 
         $this->assertDatabaseHas('users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'username' => 'johndoe',
         ]);
     }
 
     #[Test]
-    public function user_creation_requires_name()
+    public function user_creation_requires_first_name()
     {
         $this->authenticateAdmin();
 
         $response = $this->postJson('/api/v1/users', [
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'username' => 'johndoe',
             'password' => 'password123',
@@ -103,7 +106,24 @@ class UserManagementTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-            ->assertJsonPath('errors.name', ['The name field is required.']);
+            ->assertJsonPath('errors.first_name', ['The first name field is required.']);
+    }
+
+    #[Test]
+    public function user_creation_requires_last_name()
+    {
+        $this->authenticateAdmin();
+
+        $response = $this->postJson('/api/v1/users', [
+            'first_name' => 'John',
+            'email' => 'john@example.com',
+            'username' => 'johndoe',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonPath('errors.last_name', ['The last name field is required.']);
     }
 
     #[Test]
@@ -112,7 +132,8 @@ class UserManagementTest extends TestCase
         $this->authenticateAdmin();
 
         $response = $this->postJson('/api/v1/users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'username' => 'johndoe',
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -129,7 +150,8 @@ class UserManagementTest extends TestCase
         User::factory()->create(['email' => 'existing@example.com']);
 
         $response = $this->postJson('/api/v1/users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'existing@example.com',
             'username' => 'johndoe',
             'password' => 'password123',
@@ -156,7 +178,8 @@ class UserManagementTest extends TestCase
 
         foreach ($invalidEmails as $email) {
             $response = $this->postJson('/api/v1/users', [
-                'name' => 'John Doe',
+                'first_name' => 'John',
+                'last_name' => 'Doe',
                 'email' => $email,
                 'username' => 'johndoe',
                 'password' => 'password123',
@@ -173,7 +196,8 @@ class UserManagementTest extends TestCase
         $this->authenticateAdmin();
 
         $response = $this->postJson('/api/v1/users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'username' => 'johndoe',
         ]);
@@ -188,7 +212,8 @@ class UserManagementTest extends TestCase
         $this->authenticateAdmin();
 
         $response = $this->postJson('/api/v1/users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'username' => 'johndoe',
             'password' => 'password123',
@@ -204,7 +229,8 @@ class UserManagementTest extends TestCase
         $this->authenticateAdmin();
 
         $response = $this->postJson('/api/v1/users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'username' => 'johndoe',
             'password' => '123',
@@ -252,7 +278,8 @@ class UserManagementTest extends TestCase
         $user = User::factory()->create();
 
         $updateData = [
-            'name' => 'Updated Name',
+            'first_name' => 'Updated',
+            'last_name' => 'Name',
             'email' => 'updated@example.com',
             'username' => 'updated_username',
         ];
@@ -272,7 +299,8 @@ class UserManagementTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'name' => 'Updated Name',
+            'first_name' => 'Updated',
+            'last_name' => 'Name',
             'email' => 'updated@example.com',
             'username' => 'updated_username',
         ]);
@@ -286,7 +314,8 @@ class UserManagementTest extends TestCase
         $user2 = User::factory()->create(['email' => 'user2@example.com']);
 
         $response = $this->putJson("/api/v1/users/{$user1->id}", [
-            'name' => $user1->name,
+            'first_name' => $user1->first_name,
+            'last_name' => $user1->last_name,
             'email' => 'user2@example.com',
             'username' => $user1->username,
         ]);
@@ -382,7 +411,8 @@ class UserManagementTest extends TestCase
 
         foreach ($edgeCases as $case => $value) {
             $response = $this->postJson('/api/v1/users', [
-                'name' => $value,
+                'first_name' => $value,
+                'last_name' => is_string($value) ? 'Doe' : 'Test',
                 'email' => is_string($value) ? $value . '@example.com' : 'test@example.com',
                 'username' => is_string($value) ? $value : 'testuser',
                 'password' => 'password123',
@@ -439,7 +469,8 @@ class UserManagementTest extends TestCase
             $role = Role::create(['name' => 'test-role']);
 
             $response = $this->postJson('/api/v1/users', [
-                'name' => 'Jane Doe',
+                'first_name' => 'Jane',
+                'last_name' => 'Doe',
                 'email' => 'jane@example.com',
                 'username' => 'janedoe',
                 'password' => 'password123',
@@ -459,7 +490,8 @@ class UserManagementTest extends TestCase
         $this->authenticateAdmin();
 
         $response = $this->postJson('/api/v1/users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'username' => 'johndoe',
             'password' => 'password123',
@@ -481,7 +513,8 @@ class UserManagementTest extends TestCase
         $originalPassword = $user->password;
 
         $response = $this->putJson("/api/v1/users/{$user->id}", [
-            'name' => 'Updated Name',
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
             'email' => $user->email,
             'username' => $user->username,
         ]);

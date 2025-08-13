@@ -25,8 +25,11 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return ld_apply_filters('user.store.validation.rules', [
-            /** @example "John Doe" */
-            'name' => 'required|max:50',
+            /** @example "John" */
+            'first_name' => 'required|max:50',
+
+            /** @example "Doe" */
+            'last_name' => 'required|max:50',
 
             /** @example "john.doe@example.com" */
             'email' => 'required|max:100|email|unique:users,email',

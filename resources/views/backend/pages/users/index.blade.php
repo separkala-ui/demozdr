@@ -144,9 +144,9 @@
                                 </td>
                                 <td class="px-5 py-4 sm:px-6 flex items-center md:min-w-[200px]">
                                     <a data-tooltip-target="tooltip-user-{{ $user->id }}" href="{{ auth()->user()->canBeModified($user) ? route('admin.users.edit', $user->id) : '#' }}" class="flex items-center">
-                                        <img src="{{ ld_apply_filters('user_list_page_avatar_item', $user->avatar_url, $user) }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-full mr-3">
-                                        <div class="flex flex-col">
-                                            <span>{{ $user->name }}</span>
+                                        <img src="{{ $user->avatar_url }}" alt="{{ $user->full_name }}" class="w-10 h-10 rounded-full mr-3">
+                                        <div class="flex-1 min-w-0">
+                                            <span>{{ $user->full_name }}</span>
                                             <span class="text-xs text-gray-500 dark:text-gray-300">{{ $user->username }}</span>
                                         </div>
                                     </a>

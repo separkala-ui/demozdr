@@ -241,7 +241,7 @@
                                         </div>
                                     </td>
                                     <td class="px-5 py-4 sm:px-6">
-                                        {{ $post->user->name }}
+                                        {{ $post->user->full_name }}
                                     </td>
                                     @if($postType === 'post')
                                         <td class="px-5 py-4 sm:px-6">

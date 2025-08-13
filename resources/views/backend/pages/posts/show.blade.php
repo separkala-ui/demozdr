@@ -33,7 +33,7 @@
                 <div class="mb-6 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-300">
                     <div class="flex items-center">
                         <iconify-icon icon="lucide:user" class="mr-1"></iconify-icon>
-                        {{ __('Author:') }} {{ $post->user->name }}
+                        <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('Author:') }} {{ $post->user->full_name }}</span>
                     </div>
                     <div class="flex items-center">
                         <iconify-icon icon="lucide:calendar" class="mr-1"></iconify-icon>

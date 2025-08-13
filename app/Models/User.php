@@ -21,7 +21,6 @@ class User extends Authenticatable
     use AuthorizationChecker;
     use HasApiTokens;
     use HasFactory;
-    use HasGravatar;
     use HasRoles;
     use Notifiable;
     use QueryBuilderTrait;
@@ -32,7 +31,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'username',
@@ -64,6 +64,7 @@ class User extends Authenticatable
      */
     protected $appends = [
         'avatar_url',
+        'full_name',
     ];
 
     /**
@@ -120,7 +121,7 @@ class User extends Authenticatable
      */
     protected function getSearchableColumns(): array
     {
-        return ['name', 'email', 'username'];
+        return ['first_name', 'last_name', 'email', 'username'];
     }
 
     /**
@@ -144,10 +145,32 @@ class User extends Authenticatable
      */
     public function getAvatarUrlAttribute(): string
     {
-        if ($this->avatar) {
+        if ($this->avatar_id) {
             return asset('storage/media/' . $this->avatar->file_name);
         }
 
         return $this->getGravatarUrl();
+    }
+
+    /**
+     * Get the Gravatar URL for the model's email.
+     */
+    public function getGravatarUrl(int $size = 80): string
+    {
+        // $hash = md5(strtolower(trim($this->email)));
+
+        // // Fallback with UI Avatars if not gravatar is set.
+        // $uiAvatarUrl = urlencode("https://ui-avatars.com/api/{$this->full_name}/{$size}/635bff/fff/2");
+
+        // return "https://www.gravatar.com/avatar/{$hash}?d={$uiAvatarUrl}";
+        return "https://ui-avatars.com/api/{$this->full_name}/{$size}/635bff/fff/2";
+    }
+
+    /**
+     * Get the user's full name.
+     */
+    public function getFullNameAttribute(): string
+    {
+        return trim($this->first_name . ' ' . $this->last_name);
     }
 }

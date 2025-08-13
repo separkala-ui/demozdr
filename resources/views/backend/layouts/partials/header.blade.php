@@ -120,7 +120,7 @@ x-init="init()"
                                 <button type="submit"
                                     class="group flex items-center gap-3 rounded-md px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-gray-300 mt-1 w-full">
                                     <iconify-icon icon="lucide:arrow-left" width="16" height="16"></iconify-icon>
-                                    {{ __('Switch back to') }} {{ $originalUser->name }}
+                                    {{ __('Switch back to') }} {{ $originalUser->full_name }}
                                 </button>
                             </form>
                         @endif

@@ -14,7 +14,7 @@ trait HasGravatar
         $hash = md5(strtolower(trim($this->email)));
 
         // Fallback with UI Avatars if not gravatar is set.
-        $uiAvatarUrl = urlencode("https://ui-avatars.com/api/{$this->name}/{$size}/635bff/fff/2");
+        $uiAvatarUrl = urlencode("https://ui-avatars.com/api/{$this->full_name}/{$size}/635bff/fff/2");
 
         return "https://www.gravatar.com/avatar/{$hash}?d={$uiAvatarUrl}";
     }

@@ -24,11 +24,15 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->route('user');
+        // Get user ID from the request parameters
+        $userId = request()->route('user');
 
         return ld_apply_filters('user.update.validation.rules', [
-            /** @example "Jane Smith" */
-            'name' => 'required|max:50',
+            /** @example "Jane" */
+            'first_name' => 'required|max:50',
+
+            /** @example "Smith" */
+            'last_name' => 'required|max:50',
 
             /** @example "jane.smith@example.com" */
             'email' => 'required|max:100|email|unique:users,email,' . $userId,

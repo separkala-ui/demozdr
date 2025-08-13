@@ -16,19 +16,22 @@ class UserSeeder extends Seeder
     public function run(): void
     {
 
-        User::insert([
-            [
-                'name' => 'Super Admin',
-                'email' => 'superadmin@example.com',
-                'username' => 'superadmin',
-                'password' => Hash::make('12345678'),
-            ],
-            [
-                'name' => 'Subscriber',
-                'email' => 'subscriber@example.com',
-                'username' => 'subscriber',
-                'password' => Hash::make('12345678'),
-            ],
+        $superAdmin = User::create([
+            'first_name' => 'Super',
+            'last_name' => 'Admin',
+            'email' => 'admin@example.com',
+            'username' => 'superadmin',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+        ]);
+
+        $subscriber = User::create([
+            'first_name' => 'Sub',
+            'last_name' => 'Scriber',
+            'email' => 'subscriber@example.com',
+            'username' => 'subscriber',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
         ]);
 
         // Run factory to create additional users with unique details.
