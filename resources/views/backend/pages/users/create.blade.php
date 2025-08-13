@@ -52,6 +52,17 @@
                                 <input type="text" name="username" id="username" required value="{{ old('username') }}"
                                     placeholder="{{ __('Enter Username') }}" class="form-control">
                             </div>
+                            <div>
+                                <x-media-selector
+                                    name="avatar_id"
+                                    label="{{ __('Avatar') }}"
+                                    :multiple="false"
+                                    allowedTypes="images"
+                                    :existingMedia="null"
+                                    :required="false"
+                                    height="150px"
+                                />
+                            </div>
                             {!! ld_apply_filters('after_username_field', '', null) !!}
                         </div>
 

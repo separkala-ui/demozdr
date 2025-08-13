@@ -8,6 +8,7 @@
     <div class="p-4 mx-auto max-w-7xl md:p-6">
         <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
 
+
         {!! ld_apply_filters('profile_edit_breadcrumbs', '') !!}
 
         <div class="space-y-6">
@@ -18,7 +19,7 @@
                 </div>
                 <div class="p-5 space-y-6 border-t border-gray-100 dark:border-gray-800 sm:p-6">
                     <x-messages />
-                    <form action="{{ route('profile.update') }}" method="POST" class="space-y-6">
+                    <form action="{{ route('profile.update') }}" method="POST" class="space-y-6" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -33,6 +34,17 @@
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Email') }}</label>
                                 <input type="email" name="email" id="email" required value="{{ $user->email }}"
                                     class="form-control">
+                            </div>
+                            <div>
+                                <x-media-selector
+                                    name="avatar_id"
+                                    label="{{ __('Avatar') }}"
+                                    :multiple="false"
+                                    allowedTypes="images"
+                                    :existingMedia="$user->avatar ? [['id' => $user->avatar->id, 'url' => $user->avatar->getUrl(), 'name' => $user->avatar->name]] : null"
+                                    :required="false"
+                                    height="150px"
+                                />
                             </div>
                             <x-inputs.password name="password" label="{{ __('Password (Optional)') }}" />
                             <x-inputs.password name="password_confirmation" label="{{ __('Confirm Password (Optional)') }}" />

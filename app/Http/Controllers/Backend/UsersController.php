@@ -22,8 +22,7 @@ class UsersController extends Controller
     public function __construct(
         private readonly UserService $userService,
         private readonly RolesService $rolesService
-    ) {
-    }
+    ) {}
 
     public function index(): Renderable
     {
@@ -72,6 +71,7 @@ class UsersController extends Controller
         $user->username = $request->username;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->avatar_id = $request->avatar_id;
 
         $user = ld_apply_filters('user_store_before_save', $user, $request);
         $user->save();
@@ -96,7 +96,7 @@ class UsersController extends Controller
     {
         $this->checkAuthorization(Auth::user(), ['user.edit']);
 
-        $user = User::findOrFail($id);
+        $user = User::with('avatar')->findOrFail($id);
 
         ld_do_action('user_edit_page_before');
 
@@ -127,6 +127,7 @@ class UsersController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->username = $request->username;
+        $user->avatar_id = $request->avatar_id;
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }
@@ -189,7 +190,7 @@ class UsersController extends Controller
 
         if (in_array(Auth::id(), $ids)) {
             // Remove current user from the deletion list.
-            $ids = array_filter($ids, fn ($id) => $id != Auth::id());
+            $ids = array_filter($ids, fn($id) => $id != Auth::id());
             session()->flash('error', __('You cannot delete your own account. Other selected users will be processed.'));
 
             // If no users left to delete after filtering out current user.

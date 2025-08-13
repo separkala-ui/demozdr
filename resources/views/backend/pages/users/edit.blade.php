@@ -8,6 +8,7 @@
     <div class="p-4 mx-auto max-w-7xl md:p-6">
         <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
 
+
         {!! ld_apply_filters('users_after_breadcrumbs', '') !!}
 
         <div class="space-y-6">
@@ -53,6 +54,17 @@
 
                                 <input type="text" name="username" id="username" required value="{{ $user->username }}"
                                     placeholder="{{ __('Enter Username') }}" class="form-control">
+                            </div>
+                            <div>
+                                <x-media-selector
+                                    name="avatar_id"
+                                    label="{{ __('Avatar') }}"
+                                    :multiple="false"
+                                    allowedTypes="images"
+                                    :existingMedia="[['id' => $user->avatar_id, 'url' => $user->avatar_url, 'name' => $user->avatar->name]]"
+                                    :required="false"
+                                    height="150px"
+                                />
                             </div>
                             {!! ld_apply_filters('after_username_field', '', $user) !!}
                         </div>

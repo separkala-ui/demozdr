@@ -35,6 +35,9 @@ class StoreUserRequest extends FormRequest
             'username' => 'required|max:100|unique:users,username',
 
             'password' => 'required|min:6|confirmed',
+
+            /** @example "123" */
+            'avatar_id' => 'nullable|exists:media,id',
         ]);
     }
 }

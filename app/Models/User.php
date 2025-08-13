@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Media;
 
 class User extends Authenticatable
 {
@@ -35,6 +36,7 @@ class User extends Authenticatable
         'email',
         'password',
         'username',
+        'avatar_id',
     ];
 
     /**
@@ -55,6 +57,20 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * The attributes that should be appended to the model.
+     */
+    protected $appends = [
+        'avatar_url',
+    ];
+
+    /**
+     * The relationships that should be eager loaded.
+     */
+    protected $with = [
+        'avatar',
     ];
 
     public function actionLogs()
@@ -113,5 +129,25 @@ class User extends Authenticatable
     protected function getExcludedSortColumns(): array
     {
         return [];
+    }
+
+    /**
+     * Get the user's avatar media.
+     */
+    public function avatar()
+    {
+        return $this->belongsTo(Media::class, 'avatar_id', 'id');
+    }
+
+    /**
+     * Get the user's avatar URL.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            return asset('storage/media/' . $this->avatar->file_name);
+        }
+
+        return $this->getGravatarUrl();
     }
 }
