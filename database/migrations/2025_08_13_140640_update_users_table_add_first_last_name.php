@@ -17,6 +17,9 @@ return new class extends Migration
 
             $table->string('first_name')->after('id');
             $table->string('last_name')->after('first_name');
+
+            $table->unsignedBigInteger('avatar_id')->nullable()->after('username');
+            $table->foreign('avatar_id')->references('id')->on('media')->onDelete('set null');
         });
     }
 
@@ -27,9 +30,11 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // Revert changes - add back the name field
+            $table->dropForeign(['avatar_id']);
+
             $table->string('name')->after('id');
 
-            $table->dropColumn(['first_name', 'last_name']);
+            $table->dropColumn(['first_name', 'last_name', 'avatar_id']);
         });
     }
 };

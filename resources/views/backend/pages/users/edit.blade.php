@@ -32,6 +32,13 @@
                                     placeholder="{{ __('Enter Last Name') }}" class="form-control">
                             </div>
                             <div class="space-y-1">
+                                <label for="username"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Username') }}</label>
+
+                                <input type="text" name="username" id="username" required value="{{ $user->username }}"
+                                    placeholder="{{ __('Enter Username') }}" class="form-control">
+                            </div>
+                            <div class="space-y-1">
                                 <label for="email"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('User Email') }}</label>
                                 <input type="email" name="email" id="email" required value="{{ $user->email }}"
@@ -54,13 +61,7 @@
                                         ->toArray()" :selected="$user->roles->pluck('name')->toArray()"
                                     :multiple="true" :searchable="false" />
                             </div>
-                            <div class="space-y-1">
-                                <label for="username"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Username') }}</label>
 
-                                <input type="text" name="username" id="username" required value="{{ $user->username }}"
-                                    placeholder="{{ __('Enter Username') }}" class="form-control">
-                            </div>
                             <div>
                                 <x-media-selector
                                     name="avatar_id"
