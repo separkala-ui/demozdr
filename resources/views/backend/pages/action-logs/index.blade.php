@@ -46,33 +46,27 @@
                         </div>
                     </div>
                 </div>
-                <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto">
-                    <table id="actionLogsTable" class="w-full dark:text-gray-300">
-                        <thead class="bg-light text-capitalize">
-                            <tr class="border-b border-gray-100 dark:border-gray-800">
-                                <th class="bg-gray-50 dark:bg-gray-800 dark:text-white px-5 p-2 sm:px-6 text-left">
-                                    {{ __('Sl') }}</th>
-                                <th class="bg-gray-50 dark:bg-gray-800 dark:text-white px-5 p-2 sm:px-6 text-left">
-                                    {{ __('Type') }}</th>
-                                <th class="bg-gray-50 dark:bg-gray-800 dark:text-white px-5 p-2 sm:px-6 text-left">
-                                    {{ __('Title') }}</th>
-                                <th class="bg-gray-50 dark:bg-gray-800 dark:text-white px-5 p-2 sm:px-6 text-left">
-                                    {{ __('Action By') }}</th>
-                                <th class="bg-gray-50 dark:bg-gray-800 dark:text-white px-5 p-2 sm:px-6 text-left">
-                                    {{ __('Data') }}</th>
-                                <th class="bg-gray-50 dark:bg-gray-800 dark:text-white px-5 p-2 sm:px-6 text-left">
-                                    {{ __('Date') }}</th>
+                <div class="table-responsive">
+                    <table id="actionLogsTable" class="table">
+                        <thead class="table-thead">
+                            <tr class="table-tr">
+                                <th class="table-thead-th">{{ __('Sl') }}</th>
+                                <th class="table-thead-th">{{ __('Type') }}</th>
+                                <th class="table-thead-th">{{ __('Title') }}</th>
+                                <th class="table-thead-th">{{ __('Action By') }}</th>
+                                <th class="table-thead-th">{{ __('Data') }}</th>
+                                <th class="table-thead-th table-thead-th-last">{{ __('Date') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($actionLogs as $log)
-                                <tr class="{{ $loop->index + 1 != count($actionLogs) ?  'border-b border-gray-100 dark:border-gray-800' : '' }}">
-                                    <td class="px-5 py-4 sm:px-6 text-left">{{ $loop->index + 1 }}</td>
-                                <td class="px-5 py-4 sm:px-6 text-left">{{ __(ucfirst($log->type)) }}</td>
-                                    <td class="px-5 py-4 sm:px-6 text-left">{{ $log->title }}</td>
-                                    <td class="px-5 py-4 sm:px-6 text-left">
+                                <tr class="{{ $loop->index + 1 != count($actionLogs) ?  'table-tr' : '' }}">
+                                    <td class="table-td text-left">{{ $loop->index + 1 }}</td>
+                                    <td class="table-td text-left">{{ __(ucfirst($log->type)) }}</td>
+                                    <td class="table-td text-left">{{ $log->title }}</td>
+                                    <td class="table-td text-left">
                                         {{ $log->user->name . ' (' . $log->user->username . ')' ?? '' }}</td>
-                                    <td class="px-5 py-4 sm:px-6 text-left">
+                                    <td class="table-td text-left">
                                         <button id="expand-btn-{{ $log->id }}" class="text-primary text-sm mt-2"
                                             data-modal-target="json-modal-{{ $log->id }}"
                                             data-modal-toggle="json-modal-{{ $log->id }}">
@@ -82,7 +76,7 @@
                                         <x-action-log-modal :log="$log" />
                                     </td>
 
-                                    <td class="px-5 py-4 sm:px-6 text-left">
+                                    <td class="table-td text-left">
                                         {{ $log->created_at->format('d M Y H:i A') }}
                                     </td>
                                 </tr>
@@ -93,8 +87,8 @@
                                 @php
                                     $isActionLogExist = false;
                                 @endphp
-                                <tr>
-                                    <td colspan="5" class="text-center py-4">
+                                <tr class="table-tr">
+                                    <td colspan="6" class="table-td text-center py-4">
                                         <p class="text-gray-500 dark:text-gray-300">{{ __('No action logs found') }}</p>
                                     </td>
                                 </tr>
