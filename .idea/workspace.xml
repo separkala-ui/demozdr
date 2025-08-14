@@ -4,24 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: implement post management actions with Spatie Query Builder integration">
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Backend/ProfileController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/UserMeta.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Services/TimezoneService.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2025_08_13_153546_create_user_meta_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/laradashboard.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/laradashboard.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: update user model to include first and last name, add user metadata functionality">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Concerns/HasGravatar.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Backend/ProfilesController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Backend/UsersController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Backend/UsersController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/factories/UserFactory.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/factories/UserFactory.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2025_08_13_140640_update_users_table_add_first_last_name.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2025_08_13_140640_update_users_table_add_first_last_name.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeders/TestUserProfileFieldsSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/TestUserProfileFieldsSeeder.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Enums/ActivityType.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Enums/ActivityType.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactGroupsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactGroupsController.php" afterDir="false" />
@@ -45,14 +29,6 @@
       <change beforePath="$PROJECT_DIR$/modules/task-manager/app/Models/Task.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/app/Models/Task.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/task-manager/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/composer.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/user-avatar/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/user-avatar/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/profile/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/profile/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/users/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/users/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Admin/ContentManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Admin/ContentManagementTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Admin/RoleManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Admin/RoleManagementTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/AuthenticationTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/AuthenticationTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/UserManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/UserManagementTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Unit/Models/UserTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/Models/UserTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -469,7 +445,8 @@
     <MESSAGE value="refactor: add module paths for CRM, Task Manager, and User Avatar in project configuration" />
     <MESSAGE value="refactor: add ModuleServiceProvider to application service providers" />
     <MESSAGE value="feat: implement post management actions with Spatie Query Builder integration" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: implement post management actions with Spatie Query Builder integration" />
+    <MESSAGE value="feat: update user model to include first and last name, add user metadata functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: update user model to include first and last name, add user metadata functionality" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

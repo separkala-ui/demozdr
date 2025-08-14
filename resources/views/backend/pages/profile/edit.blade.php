@@ -95,27 +95,23 @@
                                           placeholder="{{ __('Tell us about yourself...') }}" class="form-control">{{ $userMeta['bio'] ?? '' }}</textarea>
                             </div>
 
-                            <div class="space-y-1">
-                                <label for="timezone"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Timezone') }}</label>
-                                <select name="timezone" id="timezone" class="form-control">
-                                    <option value="">{{ __('Select Timezone') }}</option>
-                                    @foreach($timezones as $key => $timezone)
-                                        <option value="{{ $key }}" {{ ($userMeta['timezone'] ?? '') === $key ? 'selected' : '' }}>{{ $timezone }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <x-searchable-select
+                                name="timezone"
+                                label="{{ __('Timezone') }}"
+                                placeholder="{{ __('Select Timezone') }}"
+                                searchPlaceholder="{{ __('Search timezones...') }}"
+                                :options="$timezones"
+                                :selected="$userMeta['timezone'] ?? ''"
+                            />
 
-                            <div class="space-y-1">
-                                <label for="locale"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Locale') }}</label>
-                                <select name="locale" id="locale" class="form-control">
-                                    <option value="">{{ __('Select Locale') }}</option>
-                                    @foreach($locales as $key => $locale)
-                                        <option value="{{ $key }}" {{ ($userMeta['locale'] ?? '') === $key ? 'selected' : '' }}>{{ $locale }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <x-searchable-select
+                                name="locale"
+                                label="{{ __('Locale') }}"
+                                placeholder="{{ __('Select Locale') }}"
+                                searchPlaceholder="{{ __('Search locales...') }}"
+                                :options="$locales"
+                                :selected="$userMeta['locale'] ?? ''"
+                            />
                         </div>
 
                         <x-buttons.submit-buttons cancelUrl="{{ route('admin.dashboard') }}" />
