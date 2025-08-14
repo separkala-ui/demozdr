@@ -5,33 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: update user model to include first and last name, add user metadata functionality">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2025_08_13_140640_update_users_table_add_first_last_name.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Enums/ActivityType.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Enums/ActivityType.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactGroupsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactGroupsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailCampaignsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailCampaignsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Requests/ContactRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Requests/ContactRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Models/Contact.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Models/Contact.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Models/ContactGroup.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Models/ContactGroup.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_08_13_000000_add_reminder_date_to_contact_activities_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_08_13_000000_add_reminder_date_to_contact_activities_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_08_13_034521_add_missing_columns_to_contact_groups_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_08_13_034521_add_missing_columns_to_contact_groups_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000001_create_deal_comment_attachments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000001_create_deal_comment_attachments_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000002_create_deal_attachments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000002_create_deal_attachments_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/routes/api.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactActivitiesControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactActivitiesControllerTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactGroupsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactGroupsControllerTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactsControllerTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/DealsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/DealsControllerTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/EmailCampaignsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/EmailCampaignsControllerTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/TicketsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/TicketsControllerTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/task-manager/app/Livewire/Components/StatusChangeButton.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/app/Livewire/Components/StatusChangeButton.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/task-manager/app/Models/Task.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/app/Models/Task.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/task-manager/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/user-avatar/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/user-avatar/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Admin/RoleManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Admin/RoleManagementTest.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/copilot-instructions.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.junie/guidelines.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.junie/mcp/mcp.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mcp.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.vscode/mcp.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Services/MenuService/AdminMenuItem.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/MenuService/AdminMenuItem.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Services/MenuService/AdminMenuService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/MenuService/AdminMenuService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Support/Helper/common.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Support/Helper/common.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Support/Helper/hooks.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Support/Helper/hooks.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/css/components.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/css/components.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/action-logs/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/action-logs/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/permissions/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/permissions/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/posts/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/posts/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/roles/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/roles/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/terms/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/terms/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/translations/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/translations/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/users/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/users/index.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +45,18 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectState">
+    <option name="mcpServerConfigStates">
+      <list>
+        <McpServerConfigState>
+          <option name="args" value="$PROJECT_DIR$/../../../../maniruzzamanakash/workspace/laradashboard/artisan boost:mcp" />
+          <option name="command" value="php" />
+          <option name="name" value="laravel-boost" />
+          <option name="path" value="$PROJECT_DIR$/.junie/mcp/mcp.json" />
+        </McpServerConfigState>
+      </list>
+    </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
     <include_path>

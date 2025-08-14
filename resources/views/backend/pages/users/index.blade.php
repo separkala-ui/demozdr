@@ -19,7 +19,7 @@
 
     <div class="space-y-6">
         <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-          <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
+          <div class="table-td sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
                 @include('backend.partials.search-form', [
                     'placeholder' => __('Search by name or email'),
                 ])
@@ -77,11 +77,11 @@
                     @endif
                 </div>
             </div>
-            <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">
-                <table id="dataTable" class="w-full dark:text-gray-300">
-                    <thead class="bg-light text-capitalize">
-                        <tr class="border-b border-gray-100 dark:border-gray-800">
-                            <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5 sm:px-6">
+            <div class="table-responsive">
+                <table id="dataTable" class="table">
+                    <thead class="table-thead">
+                        <tr class="table-tr">
+                            <th width="5%" class="table-thead-th">
                                 <div class="flex items-center">
                                     <input
                                         type="checkbox"
@@ -96,7 +96,7 @@
                                     >
                                 </div>
                             </th>
-                            <th width="20%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+                            <th width="20%" class="table-thead-th">
                                 <div class="flex items-center">
                                     {{ __('Name') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'name' ? '-name' : 'name']) }}" class="ml-1">
@@ -110,7 +110,7 @@
                                     </a>
                                 </div>
                             </th>
-                            <th width="10%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+                            <th width="10%" class="table-thead-th">
                                 <div class="flex items-center">
                                     {{ __('Email') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'email' ? '-email' : 'email']) }}" class="ml-1">
@@ -124,16 +124,16 @@
                                     </a>
                                 </div>
                             </th>
-                            <th width="30%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">{{ __('Roles') }}</th>
+                            <th width="30%" class="table-thead-th">{{ __('Roles') }}</th>
                             @php ld_apply_filters('user_list_page_table_header_before_action', '') @endphp
-                            <th width="15%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">{{ __('Action') }}</th>
+                            <th width="15%" class="table-thead-th table-thead-th-last">{{ __('Action') }}</th>
                             @php ld_apply_filters('user_list_page_table_header_after_action', '') @endphp
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($users as $user)
-                            <tr class="{{ $loop->index + 1 != count($users) ?  'border-b border-gray-100 dark:border-gray-800' : '' }}">
-                                <td class="px-5 py-4 sm:px-6">
+                            <tr class="{{ $loop->index + 1 != count($users) ?  'table-tr' : '' }}">
+                                <td class="table-td">
                                     <input
                                         type="checkbox"
                                         class="user-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -142,7 +142,7 @@
                                         {{ !auth()->user()->canBeModified($user, 'user.delete') ? 'disabled' : '' }}
                                     >
                                 </td>
-                                <td class="px-5 py-4 sm:px-6 flex items-center md:min-w-[200px]">
+                                <td class="table-td flex items-center md:min-w-[200px]">
                                     <a data-tooltip-target="tooltip-user-{{ $user->id }}" href="{{ auth()->user()->canBeModified($user) ? route('admin.users.edit', $user->id) : '#' }}" class="flex items-center">
                                         <img src="{{ $user->avatar_url }}" alt="{{ $user->full_name }}" class="w-10 h-10 rounded-full mr-3">
                                         <div class="flex-1 min-w-0">
@@ -157,8 +157,8 @@
                                     </div>
                                     @endif
                                 </td>
-                                <td class="px-5 py-4 sm:px-6">{{ $user->email }}</td>
-                                <td class="px-5 py-4 sm:px-6">
+                                <td class="table-td">{{ $user->email }}</td>
+                                <td class="table-td">
                                     @foreach ($user->roles as $role)
                                         <span class="capitalize badge">
                                             @if (auth()->user()->can('role.edit'))
@@ -176,7 +176,7 @@
                                     @endforeach
                                 </td>
                                 @php ld_apply_filters('user_list_page_table_row_before_action', '', $user) @endphp
-                                <td class="px-5 py-4 sm:px-6 flex justify-center">
+                                <td class="table-td flex justify-center">
                                     <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
                                         @if (auth()->user()->canBeModified($user))
                                             <x-buttons.action-item

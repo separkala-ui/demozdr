@@ -120,4 +120,33 @@
         opacity: 0.8;
         cursor: grabbing; /* Changes the cursor to indicate dragging */
     }
+
+    /* Table styles */
+    .table-responsive {
+        @apply space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible;
+    }
+
+    .table {
+        @apply w-full dark:text-gray-300;
+    }
+
+    .table-thead {
+        @apply bg-gray-50 capitalize;
+    }
+
+    .table-thead-th {
+        @apply p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5;
+    }
+
+    .table-thead-th-last {
+        @apply text-center;
+    }
+
+    .table-tr {
+        @apply border-b border-gray-100 dark:border-gray-800;
+    }
+
+    .table-td {
+        @apply px-5 py-4 sm:px-6;
+    }
 }
