@@ -88,7 +88,7 @@
                                     placeholder="{{ __('Enter Display Name') }}" class="form-control">
                             </div>
 
-                            <div class="space-y-1 sm:col-span-2">
+                            <div class="space-y-1">
                                 <label for="bio"
                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Bio') }}</label>
                                 <textarea name="bio" id="bio" rows="4"

@@ -66,7 +66,7 @@
                     x-model="searchQuery"
                     @input="filterOptions"
                     :placeholder="searchPlaceholder"
-                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                    class="form-control w-full"
                 >
             </div>
 
@@ -75,7 +75,7 @@
                 <template x-for="option in filteredOptions" :key="option.key">
                     <button
                         type="button"
-                        class="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-colors duration-150"
+                        class="w-full px-3 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition-colors duration-150"
                         :class="{ 'bg-brand-50 text-brand-700 dark:bg-brand-900 dark:text-brand-200': selectedValue === option.key }"
                         @click="selectOption(option)"
                         x-text="option.value"
