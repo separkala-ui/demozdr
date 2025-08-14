@@ -12,18 +12,22 @@ use App\Services\SlugService;
 use Illuminate\Foundation\Vite;
 use Illuminate\Database\Eloquent\Model;
 
-function get_module_asset_paths(): array
-{
-    return app(ModuleService::class)->getModuleAssetPath();
+if (! function_exists('get_module_asset_paths')) {
+    function get_module_asset_paths(): array
+    {
+        return app(ModuleService::class)->getModuleAssetPath();
+    }
 }
 
 /**
  * support for vite hot reload overriding manifest file.
  */
-function module_vite_compile(string $module, string $asset, ?string $hotFilePath = null, $manifestFile = '.vite/manifest.json'): Vite
-{
-    return app(ModuleService::class)
-        ->moduleViteCompile($module, $asset, $hotFilePath, $manifestFile);
+if (! function_exists('module_vite_compile')) {
+    function module_vite_compile(string $module, string $asset, ?string $hotFilePath = null, $manifestFile = '.vite/manifest.json'): Vite
+    {
+        return app(ModuleService::class)
+            ->moduleViteCompile($module, $asset, $hotFilePath, $manifestFile);
+    }
 }
 
 /**
@@ -34,15 +38,17 @@ function module_vite_compile(string $module, string $asset, ?string $hotFilePath
  *
  * @return mixed  The result of the method invocation
  */
-function invoke_setting(string $method, ...$parameters): mixed
-{
-    $service = app(App\Services\SettingService::class);
+if (! function_exists('invoke_setting')) {
+    function invoke_setting(string $method, ...$parameters): mixed
+    {
+        $service = app(App\Services\SettingService::class);
 
-    if (! method_exists($service, $method)) {
-        throw new \InvalidArgumentException("Method {$method} does not exist on SettingService");
+        if (! method_exists($service, $method)) {
+            throw new \InvalidArgumentException("Method {$method} does not exist on SettingService");
+        }
+
+        return $service->{$method}(...$parameters);
     }
-
-    return $service->{$method}(...$parameters);
 }
 
 /**
@@ -52,9 +58,11 @@ function invoke_setting(string $method, ...$parameters): mixed
  * @param  mixed  $optionValue  The value of the setting option
  * @param  bool  $autoload  Whether to autoload this setting (default: false)
  */
-function add_setting(string $optionName, mixed $optionValue, bool $autoload = false): void
-{
-    invoke_setting('addSetting', $optionName, $optionValue, $autoload);
+if (! function_exists('add_setting')) {
+    function add_setting(string $optionName, mixed $optionValue, bool $autoload = false): void
+    {
+        invoke_setting('addSetting', $optionName, $optionValue, $autoload);
+    }
 }
 
 /**
@@ -64,9 +72,11 @@ function add_setting(string $optionName, mixed $optionValue, bool $autoload = fa
  * @param  mixed  $optionValue  The value of the setting option
  * @param  bool|null  $autoload  Whether to autoload this setting (default: null)
  */
-function update_setting(string $optionName, mixed $optionValue, ?bool $autoload = null): bool
-{
-    return invoke_setting('updateSetting', $optionName, $optionValue, $autoload);
+if (! function_exists('update_setting')) {
+    function update_setting(string $optionName, mixed $optionValue, ?bool $autoload = null): bool
+    {
+        return invoke_setting('updateSetting', $optionName, $optionValue, $autoload);
+    }
 }
 
 /**
@@ -74,9 +84,11 @@ function update_setting(string $optionName, mixed $optionValue, ?bool $autoload 
  *
  * @param  string  $optionName  The name of the setting option
  */
-function delete_setting(string $optionName): bool
-{
-    return invoke_setting('deleteSetting', $optionName);
+if (! function_exists('delete_setting')) {
+    function delete_setting(string $optionName): bool
+    {
+        return invoke_setting('deleteSetting', $optionName);
+    }
 }
 
 /**
@@ -87,12 +99,14 @@ function delete_setting(string $optionName): bool
  *
  * @return mixed  The setting value or the default value
  */
-function get_setting(string $optionName, mixed $default = null): mixed
-{
-    try {
-        return invoke_setting('getSetting', $optionName) ?? $default;
-    } catch (\Exception $e) {
-        return $default;
+if (! function_exists('get_setting')) {
+    function get_setting(string $optionName, mixed $default = null): mixed
+    {
+        try {
+            return invoke_setting('getSetting', $optionName) ?? $default;
+        } catch (\Exception $e) {
+            return $default;
+        }
     }
 }
 
@@ -102,9 +116,11 @@ function get_setting(string $optionName, mixed $default = null): mixed
  * @param  int|bool|null  $autoload  Autoload setting (default: true)
  * @return array  All settings
  */
-function get_settings(int|bool|null $autoload = true): array
-{
-    return invoke_setting('getSettings', $autoload);
+if (! function_exists('get_settings')) {
+    function get_settings(int|bool|null $autoload = true): array
+    {
+        return invoke_setting('getSettings', $autoload);
+    }
 }
 
 /**
@@ -114,10 +130,12 @@ function get_settings(int|bool|null $autoload = true): array
  * @param  string  $fileKey  The key name (e.g., 'photo')
  * @param  string  $path  Target relative path (e.g., 'uploads/contacts')
  */
-function store_image_url($input, string $fileKey, string $path): ?string
-{
-    return app(ImageService::class)
-        ->storeImageAndGetUrl($input, $fileKey, $path);
+if (! function_exists('store_image_url')) {
+    function store_image_url($input, string $fileKey, string $path): ?string
+    {
+        return app(ImageService::class)
+            ->storeImageAndGetUrl($input, $fileKey, $path);
+    }
 }
 
 /**
@@ -126,10 +144,12 @@ function store_image_url($input, string $fileKey, string $path): ?string
  * @param  string  $imageUrl  The URL of the image to delete
  * @return bool  True if the image was deleted, false otherwise
  */
-function delete_image_from_public_path(string $imageUrl): bool
-{
-    return app(ImageService::class)
-        ->deleteImageFromPublic($imageUrl);
+if (! function_exists('delete_image_from_public_path')) {
+    function delete_image_from_public_path(string $imageUrl): bool
+    {
+        return app(ImageService::class)
+            ->deleteImageFromPublic($imageUrl);
+    }
 }
 
 /**
@@ -138,17 +158,21 @@ function delete_image_from_public_path(string $imageUrl): bool
  * @param  array|AdminMenuItem  $item  The menu item configuration array or instance
  * @param  string|null  $group  The group to add the item to (defaults to 'Main')
  */
-function add_menu_item(array|AdminMenuItem $item, ?string $group = null): void
-{
-    app(AdminMenuService::class)->addMenuItem($item, $group);
+if (! function_exists('add_menu_item')) {
+    function add_menu_item(array|AdminMenuItem $item, ?string $group = null): void
+    {
+        app(AdminMenuService::class)->addMenuItem($item, $group);
+    }
 }
 
 /**
  * Get the list of available languages with their flags.
  */
-function get_languages(): array
-{
-    return app(LanguageService::class)->getActiveLanguages();
+if (! function_exists('get_languages')) {
+    function get_languages(): array
+    {
+        return app(LanguageService::class)->getActiveLanguages();
+    }
 }
 
 /**
@@ -159,10 +183,12 @@ function get_languages(): array
  * @param  string  $fallback  Fallback icon name if the SVG file does not exist
  * @return string  The SVG icon HTML or an Iconify icon if the SVG does not exist
  */
-function svg_icon(string $name, string $classes = '', string $fallback = ''): string
-{
-    return app(ImageService::class)
-        ->getSvgIcon($name, $classes, $fallback);
+if (! function_exists('svg_icon')) {
+    function svg_icon(string $name, string $classes = '', string $fallback = ''): string
+    {
+        return app(ImageService::class)
+            ->getSvgIcon($name, $classes, $fallback);
+    }
 }
 
 /**
@@ -175,15 +201,17 @@ function svg_icon(string $name, string $classes = '', string $fallback = ''): st
  *
  * @return string  The generated unique slug
  */
-function generate_unique_slug(string $string, string $column = 'slug', string $separator = '-', $model = null): string
-{
-    return app(SlugService::class)
-        ->generateSlugFromString(
-            $string,
-            $column,
-            $separator,
-            $model
-        );
+if (! function_exists('generate_unique_slug')) {
+    function generate_unique_slug(string $string, string $column = 'slug', string $separator = '-', $model = null): string
+    {
+        return app(SlugService::class)
+            ->generateSlugFromString(
+                $string,
+                $column,
+                $separator,
+                $model
+            );
+    }
 }
 
 /**
@@ -194,8 +222,10 @@ function generate_unique_slug(string $string, string $column = 'slug', string $s
  *
  * @return string  The generated password
  */
-function generate_secure_password(int $length = 12, bool $includeSpecialChars = true): string
-{
-    return app(PasswordService::class)
-        ->generatePassword($length, $includeSpecialChars);
+if (! function_exists('generate_secure_password')) {
+    function generate_secure_password(int $length = 12, bool $includeSpecialChars = true): string
+    {
+        return app(PasswordService::class)
+            ->generatePassword($length, $includeSpecialChars);
+    }
 }
