@@ -17,12 +17,12 @@
                     'placeholder' => __('Search by name or group'),
                 ])
             </div>
-            <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">
-                <table id="dataTable" class="w-full dark:text-gray-300">
-                    <thead class="bg-light text-capitalize">
-                        <tr class="border-b border-gray-100 dark:border-gray-800">
-                            <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5 sm:px-6">{{ __('Sl') }}</th>
-                            <th width="20%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+            <div class="table-responsive">
+                <table id="dataTable" class="table">
+                    <thead class="table-thead">
+                        <tr class="table-tr">
+                            <th width="5%" class="table-thead-th">{{ __('Sl') }}</th>
+                            <th width="20%" class="table-thead-th">
                                 <div class="flex items-center">
                                     {{ __('Name') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'name' ? '-name' : 'name']) }}" class="ml-1">
@@ -36,7 +36,7 @@
                                     </a>
                                 </div>
                             </th>
-                            <th width="15%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+                            <th width="15%" class="table-thead-th">
                                 <div class="flex items-center">
                                     {{ __('Group') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'group_name' ? '-group_name' : 'group_name']) }}" class="ml-1">
@@ -50,7 +50,7 @@
                                     </a>
                                 </div>
                             </th>
-                            <th width="45%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+                            <th width="45%" class="table-thead-th">
                                 <div class="flex items-center">
                                     {{ __('Roles') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'role_count' ? '-role_count' : 'role_count']) }}" class="ml-1">
@@ -64,20 +64,20 @@
                                     </a>
                                 </div>
                             </th>
-                            <th width="10%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white">{{ __('Action') }}</th>
+                            <th width="10%" class="table-thead-th table-thead-th-last">{{ __('Action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($permissions as $permission)
-                            <tr class="{{ $loop->index + 1 != count($permissions) ?  'border-b border-gray-100 dark:border-gray-800' : '' }}">
-                                <td class="px-5 py-4 sm:px-6">{{ $loop->index + 1 }}</td>
-                                <td class="px-5 py-4 sm:px-6">
+                            <tr class="{{ $loop->index + 1 != count($permissions) ?  'table-tr' : '' }}">
+                                <td class="table-td">{{ $loop->index + 1 }}</td>
+                                <td class="table-td">
                                     {{ ucfirst($permission->name) }}
                                 </td>
-                                <td class="px-5 py-4 sm:px-6">
+                                <td class="table-td">
                                     <span class="badge">{{ ucfirst($permission->group_name) }}</span>
                                 </td>
-                                <td class="px-5 py-4 sm:px-6">
+                                <td class="table-td">
                                     @if ($permission->role_count > 0)
                                         <div class="flex items-center">
                                             <a href="{{ route('admin.permissions.show', $permission->id) }}" class="text-primary hover:underline">
@@ -89,7 +89,7 @@
                                         <span class="text-gray-400">{{ __('No roles assigned') }}</span>
                                     @endif
                                 </td>
-                                <td class="px-5 py-4 sm:px-6 flex justify-center">
+                                <td class="table-td flex justify-center">
                                     <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
                                         <x-buttons.action-item
                                             :href="route('admin.permissions.show', $permission->id)"
@@ -100,15 +100,14 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr class="border-b border-gray-100 dark:border-gray-800">
-                                <td colspan="5" class="px-5 py-4 sm:px-6 text-center">
+                            <tr class="table-tr">
+                                <td colspan="5" class="table-td text-center">
                                     <span class="text-gray-500 dark:text-gray-300">{{ __('No permissions found') }}</span>
                                 </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
-
                 <div class="my-4 px-4 sm:px-6">
                     {{ $permissions->links() }}
                 </div>

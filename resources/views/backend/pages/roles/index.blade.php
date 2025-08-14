@@ -46,11 +46,11 @@
                 @endif
                </div>
             </div>
-            <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">
-                <table id="dataTable" class="w-full dark:text-gray-300">
-                    <thead class="bg-light text-capitalize">
-                        <tr class="border-b border-gray-100 dark:border-gray-800">
-                            <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5 sm:px-6">
+            <div class="table-responsive">
+                <table id="dataTable" class="table">
+                    <thead class="table-thead">
+                        <tr class="table-tr">
+                            <th width="5%" class="table-thead-th">
                                 <div class="flex items-center">
                                     <input
                                         type="checkbox"
@@ -65,7 +65,7 @@
                                     >
                                 </div>
                             </th>
-                            <th width="15%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+                            <th width="15%" class="table-thead-th">
                                 <div class="flex items-center">
                                     {{ __('Name') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'name' ? '-name' : 'name']) }}" class="ml-1">
@@ -79,7 +79,7 @@
                                     </a>
                                 </div>
                             </th>
-                            <th width="8%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+                            <th width="8%" class="table-thead-th">
                                 <div class="flex items-center">
                                     {{ __('Users') }}
                                     <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'user_count' ? '-user_count' : 'user_count']) }}" class="ml-1">
@@ -93,14 +93,14 @@
                                     </a>
                                 </div>
                             </th>
-                            <th width="35%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white">{{ __('Permissions') }}</th>
-                            <th width="12%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white">{{ __('Action') }}</th>
+                            <th width="35%" class="table-thead-th">{{ __('Permissions') }}</th>
+                            <th width="12%" class="table-thead-th table-thead-th-last">{{ __('Action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($roles as $role)
-                            <tr class="{{ $loop->index + 1 != count($roles) ?  'border-b border-gray-100 dark:border-gray-800' : '' }}">
-                                <td class="px-5 py-4 sm:px-6">
+                            <tr class="{{ $loop->index + 1 != count($roles) ?  'table-tr' : '' }}">
+                                <td class="table-td">
                                     <input
                                         type="checkbox"
                                         class="role-checkbox form-checkbox"
@@ -109,7 +109,7 @@
                                         {{ $role->name === 'superadmin' ? 'disabled' : '' }}
                                     >
                                 </td>
-                                <td class="px-5 py-4 sm:px-6">
+                                <td class="table-td">
                                     @if (auth()->user()->can('role.edit'))
                                         <a href="{{ route('admin.roles.edit', $role->id) }}" data-tooltip-target="tooltip-role-name-{{ $role->id }}" class="text-gray-700 dark:text-white hover:text-primary dark:hover:text-primary">
                                             {{ $role->name }}
@@ -126,7 +126,7 @@
                                         {{ __('Total Permissions:') }} {{ $role->permissions->count() }}
                                     </div>
                                 </td>
-                                <td class="px-5 py-4 sm:px-6">
+                                <td class="table-td">
                                     <a href="{{ route('admin.users.index', ['role' => $role->name]) }}" class="inline-flex items-center gap-1 text-sm text-primary hover:underline" data-tooltip-target="tooltip-users-role-{{ $role->id }}">
                                         <span class="badge">{{ $role->user_count }}</span>
                                     </a>
@@ -135,7 +135,7 @@
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
                                 </td>
-                                <td class="px-5 py-4 sm:px-6">
+                                <td class="table-td">
                                     <div x-data="{ showAll: false }">
                                         <div>
                                             @foreach ($role->permissions->take(7) as $permission)
@@ -159,7 +159,7 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td class="px-5 py-4 sm:px-6 flex justify-center">
+                                <td class="table-td flex justify-center">
                                     <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
                                         @if (auth()->user()->can('role.edit') && $role->name != 'superadmin')
                                             <x-buttons.action-item
@@ -201,8 +201,8 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr class="border-b border-gray-100 dark:border-gray-800">
-                                <td colspan="5" class="px-5 py-4 sm:px-6 text-center">
+                            <tr class="table-tr">
+                                <td colspan="5" class="table-td text-center">
                                     <span class="text-gray-500 dark:text-gray-300">{{ __('No roles found') }}</span>
                                 </td>
                             </tr>
