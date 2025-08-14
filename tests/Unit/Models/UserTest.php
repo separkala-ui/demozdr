@@ -20,10 +20,12 @@ class UserTest extends TestCase
     {
         $user = new User();
         $this->assertEquals([
-            'name',
+            'first_name',
+            'last_name',
             'email',
             'password',
             'username',
+            'avatar_id',
         ], $user->getFillable());
     }
 

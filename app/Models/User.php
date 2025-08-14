@@ -6,15 +6,14 @@ namespace App\Models;
 
 use App\Notifications\AdminResetPasswordNotification;
 use App\Concerns\AuthorizationChecker;
-use App\Concerns\HasGravatar;
 use App\Concerns\QueryBuilderTrait;
 use Illuminate\Auth\Notifications\ResetPassword as DefaultResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use App\Models\Media;
 
 class User extends Authenticatable
 {
@@ -80,6 +79,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's metadata.
+     */
+    public function userMeta()
+    {
+        return $this->hasMany(UserMeta::class);
+    }
+
+    /**
      * Send the password reset notification.
      *
      * @param  string  $token
@@ -135,7 +142,7 @@ class User extends Authenticatable
     /**
      * Get the user's avatar media.
      */
-    public function avatar()
+    public function avatar(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'avatar_id', 'id');
     }

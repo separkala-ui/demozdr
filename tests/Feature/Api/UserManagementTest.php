@@ -53,7 +53,7 @@ class UserManagementTest extends TestCase
             ->assertJsonStructure([
                 'success',
                 'message',
-                'data' => ['*' => ['id', 'name', 'email']],
+                'data' => ['*' => ['id', 'full_name', 'email']],
             ]);
     }
 
@@ -255,7 +255,7 @@ class UserManagementTest extends TestCase
                 'message',
                 'data' => [
                     'id',
-                    'name',
+                    'full_name',
                     'email',
                 ],
             ]);
@@ -292,7 +292,7 @@ class UserManagementTest extends TestCase
                 'message',
                 'data' => [
                     'id',
-                    'name',
+                    'full_name',
                     'email',
                 ],
             ]);
@@ -436,7 +436,7 @@ class UserManagementTest extends TestCase
             ->assertJsonStructure([
                 'success',
                 'message',
-                'data' => ['*' => ['id', 'name', 'email']],
+                'data' => ['*' => ['id', 'full_name', 'email']],
             ]);
     }
 
@@ -452,7 +452,7 @@ class UserManagementTest extends TestCase
             ->assertJsonStructure([
                 'success',
                 'message',
-                'data' => ['*' => ['id', 'name', 'email']],
+                'data' => ['*' => ['id', 'full_name', 'email']],
             ]);
 
         // Verify we get exactly 5 users (per_page parameter)

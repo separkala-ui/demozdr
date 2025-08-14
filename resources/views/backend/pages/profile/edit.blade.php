@@ -15,12 +15,11 @@
             <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                 <div class="px-5 py-2.5 sm:px-6 sm:py-5">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">
-                        {{ $user->full_name }}</h3>
+                        {{ __("General Information") }}</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                         {{ __('Update your account profile information and email address.') }}</p>
                 </div>
                 <div class="p-5 space-y-6 border-t border-gray-100 dark:border-gray-800 sm:p-6">
-                    <x-messages />
                     <form action="{{ route('profile.update') }}" method="POST" class="space-y-6" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
@@ -65,6 +64,63 @@
                     </div>
                     {!! ld_apply_filters('profile_edit_after_fields', '', $user) !!}
                 </form>
+            </div>
+
+            <!-- Additional Metadata Section -->
+            <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+                <div class="px-5 py-2.5 sm:px-6 sm:py-5">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+                        {{ __('Additional Information') }}</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ __('Additional profile settings and preferences.') }}</p>
+                </div>
+                <div class="p-5 space-y-6 border-t border-gray-100 dark:border-gray-800 sm:p-6">
+                    <form action="{{ route('profile.update.additional') }}" method="POST" class="space-y-6">
+                        @method('PUT')
+                        @csrf
+
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div class="space-y-1">
+                                <label for="display_name"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Display Name') }}</label>
+                                <input type="text" name="display_name" id="display_name"
+                                    value="{{ $userMeta['display_name'] ?? '' }}"
+                                    placeholder="{{ __('Enter Display Name') }}" class="form-control">
+                            </div>
+
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="bio"
+                                       class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Bio') }}</label>
+                                <textarea name="bio" id="bio" rows="4"
+                                          placeholder="{{ __('Tell us about yourself...') }}" class="form-control">{{ $userMeta['bio'] ?? '' }}</textarea>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label for="timezone"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Timezone') }}</label>
+                                <select name="timezone" id="timezone" class="form-control">
+                                    <option value="">{{ __('Select Timezone') }}</option>
+                                    @foreach($timezones as $key => $timezone)
+                                        <option value="{{ $key }}" {{ ($userMeta['timezone'] ?? '') === $key ? 'selected' : '' }}>{{ $timezone }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label for="locale"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Locale') }}</label>
+                                <select name="locale" id="locale" class="form-control">
+                                    <option value="">{{ __('Select Locale') }}</option>
+                                    @foreach($locales as $key => $locale)
+                                        <option value="{{ $key }}" {{ ($userMeta['locale'] ?? '') === $key ? 'selected' : '' }}>{{ $locale }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <x-buttons.submit-buttons cancelUrl="{{ route('admin.dashboard') }}" />
+                    </form>
+                </div>
             </div>
         </div>
     </div>

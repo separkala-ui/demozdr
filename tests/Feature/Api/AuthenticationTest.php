@@ -58,7 +58,7 @@ class AuthenticationTest extends TestCase
                 'token',
                 'user' => [
                     'id',
-                    'name',
+                    'full_name',
                     'email',
                     'created_at',
                     'updated_at',
@@ -169,7 +169,7 @@ class AuthenticationTest extends TestCase
             ])
             ->assertJsonStructure([
                 'id',
-                'name',
+                'full_name',
                 'email',
                 'created_at',
                 'updated_at',

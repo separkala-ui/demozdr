@@ -68,7 +68,7 @@
                                     label="{{ __('Avatar') }}"
                                     :multiple="false"
                                     allowedTypes="images"
-                                    :existingMedia="[['id' => $user->avatar_id, 'url' => $user->avatar_url, 'name' => $user->avatar->name]]"
+                                    :existingMedia="$user->avatar_id ? [['id' => $user->avatar_id, 'url' => $user->avatar_url, 'name' => $user->avatar->name]] : []"
                                     :required="false"
                                     height="150px"
                                 />

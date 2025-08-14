@@ -5,21 +5,54 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: implement post management actions with Spatie Query Builder integration">
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Backend/ProfileController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/UserMeta.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Services/TimezoneService.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2025_08_13_153546_create_user_meta_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/laradashboard.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/laradashboard.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Concerns/HasGravatar.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Backend/ProfilesController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Backend/UsersController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Backend/UsersController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/factories/UserFactory.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/factories/UserFactory.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2025_08_13_140640_update_users_table_add_first_last_name.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2025_08_13_140640_update_users_table_add_first_last_name.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/seeders/TestUserProfileFieldsSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/TestUserProfileFieldsSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Enums/ActivityType.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Enums/ActivityType.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactGroupsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactGroupsController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactsController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailCampaignsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailCampaignsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Requests/ContactRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Requests/ContactRequest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Models/Contact.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Models/Contact.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Models/ContactGroup.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Models/ContactGroup.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_08_13_000000_add_reminder_date_to_contact_activities_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_08_13_000000_add_reminder_date_to_contact_activities_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_08_13_034521_add_missing_columns_to_contact_groups_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_08_13_034521_add_missing_columns_to_contact_groups_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000001_create_deal_comment_attachments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000001_create_deal_comment_attachments_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000002_create_deal_attachments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000002_create_deal_attachments_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactActivitiesControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactActivitiesControllerTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactGroupsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactGroupsControllerTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactsControllerTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/DealsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/DealsControllerTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/EmailCampaignsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/EmailCampaignsControllerTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/TicketsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/TicketsControllerTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/task-manager/app/Livewire/Components/StatusChangeButton.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/app/Livewire/Components/StatusChangeButton.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/task-manager/app/Models/Task.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/app/Models/Task.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/task-manager/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules_statuses.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules_statuses.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/user-avatar/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/user-avatar/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/profile/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/profile/edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/users/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/users/edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Feature/Admin/ContentManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Admin/ContentManagementTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Feature/Admin/RoleManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Admin/RoleManagementTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Feature/Api/AuthenticationTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/AuthenticationTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/BaseApiTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ApiTestUtils.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/ComprehensiveApiTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/ComprehensiveApiTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/PostManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/PostManagementTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/RolePermissionTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/RolePermissionTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Feature/Api/UserManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/UserManagementTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/Models/UserTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/Models/UserTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -190,6 +223,9 @@
       <path value="$PROJECT_DIR$/vendor/spatie/image-optimizer" />
       <path value="$PROJECT_DIR$/vendor/spatie/laravel-medialibrary" />
       <path value="$PROJECT_DIR$/vendor/maennchen/zipstream-php" />
+      <path value="$PROJECT_DIR$/vendor/laravel/mcp" />
+      <path value="$PROJECT_DIR$/vendor/laravel/boost" />
+      <path value="$PROJECT_DIR$/vendor/laravel/roster" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -208,6 +244,7 @@
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;fix/api-ready&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
@@ -217,7 +254,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMThirdPartyAiProvidersConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;junie.mcp&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -248,8 +285,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PS-251.27812.52" />
-        <option value="bundled-php-predefined-a98d8de5180a-e5747d4f5a45-com.jetbrains.php.sharedIndexes-PS-251.27812.52" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-PS-252.23892.419" />
+        <option value="bundled-php-predefined-a98d8de5180a-c72577f2c82f-com.jetbrains.php.sharedIndexes-PS-252.23892.419" />
       </set>
     </attachedChunks>
   </component>
@@ -286,6 +323,7 @@
       <workItem from="1754881417945" duration="2286000" />
       <workItem from="1754884425439" duration="10082000" />
       <workItem from="1754921781090" duration="2310000" />
+      <workItem from="1755099509987" duration="6403000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />
