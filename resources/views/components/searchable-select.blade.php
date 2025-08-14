@@ -57,7 +57,7 @@
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 translate-y-1"
             @click.away="closeDropdown"
-            class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-600 max-h-60 overflow-hidden"
+            class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-600 max-h-60 overflow-hidden mb-10"
         >
             <!-- Search input -->
             <div class="p-2 border-b border-gray-200 dark:border-gray-600">
@@ -100,6 +100,7 @@ function searchableSelect(config) {
         selectedText: '',
         options: [],
         filteredOptions: [],
+        searchPlaceholder: config.searchPlaceholder || 'Search...',
 
         init() {
             // Convert options object to array format
