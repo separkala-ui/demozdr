@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: update user model to include first and last name, add user metadata functionality">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2025_08_13_140640_update_users_table_add_first_last_name.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Enums/ActivityType.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Enums/ActivityType.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactGroupsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactGroupsController.php" afterDir="false" />
@@ -29,6 +31,7 @@
       <change beforePath="$PROJECT_DIR$/modules/task-manager/app/Models/Task.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/app/Models/Task.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/task-manager/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/composer.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/user-avatar/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/user-avatar/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Feature/Admin/RoleManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Admin/RoleManagementTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -300,6 +303,8 @@
       <workItem from="1754884425439" duration="10082000" />
       <workItem from="1754921781090" duration="2310000" />
       <workItem from="1755099509987" duration="6403000" />
+      <workItem from="1755145350284" duration="755000" />
+      <workItem from="1755154690866" duration="3859000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />
