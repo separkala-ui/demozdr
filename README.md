@@ -598,7 +598,7 @@ Visit the [Laravel Boost documentation](https://github.com/laravel/boost).
 
 ## 🔗 Live Demo
 
-https://demo.laradashboard.com
+https://laradashboard.com/try-demo/
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

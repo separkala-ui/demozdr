@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Concerns\HandlesMediaOperations;
+use App\Models\Media;
 use App\Support\Helper\MediaHelper;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Http\Request;
@@ -144,7 +145,7 @@ class MediaLibraryService
 
     public function deleteMedia(int $id): bool
     {
-        $media = SpatieMedia::findOrFail($id);
+        $media = Media::findOrFail($id);
 
         // Delete the physical file - construct path manually to avoid Spatie method issues
         $filePath = 'media/' . $media->file_name;
@@ -159,7 +160,7 @@ class MediaLibraryService
     public function bulkDeleteMedia(array $ids): int
     {
         $deleteCount = 0;
-        $media = SpatieMedia::whereIn('id', $ids)->get();
+        $media = Media::whereIn('id', $ids)->get();
 
         foreach ($media as $item) {
             // Delete the physical file - construct path manually to avoid Spatie method issues
