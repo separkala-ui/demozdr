@@ -1,0 +1,100 @@
+name: CRM Module Tests
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: testing
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - name: Checkout Core Repository
+      uses: actions/checkout@v4
+      with:
+        repository: laradashboard/laradashboard  # Public core repo
+        path: core
+
+    - name: Checkout CRM Module
+      uses: actions/checkout@v4
+      with:
+        path: core/modules/crm
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, pdo, pdo_mysql, zip, dom, curl, libxml, ctype, json, intl
+        coverage: xdebug
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: core/package-lock.json
+
+    - name: Copy environment file
+      run: |
+        cd core
+        cp .env.example .env
+        echo "DB_CONNECTION=mysql" >> .env
+        echo "DB_HOST=127.0.0.1" >> .env
+        echo "DB_PORT=3306" >> .env
+        echo "DB_DATABASE=testing" >> .env
+        echo "DB_USERNAME=root" >> .env
+        echo "DB_PASSWORD=" >> .env
+
+    - name: Install PHP Dependencies
+      run: |
+        cd core
+        composer install --no-progress --prefer-dist --optimize-autoloader
+
+    - name: Install NPM Dependencies
+      run: |
+        cd core
+        npm ci
+
+    - name: Build Assets
+      run: |
+        cd core
+        npm run build
+
+    - name: Generate Application Key
+      run: |
+        cd core
+        php artisan key:generate
+
+    - name: Run Database Migrations
+      run: |
+        cd core
+        php artisan migrate --env=testing
+
+    - name: Run Module Database Migrations
+      run: |
+        cd core
+        php artisan module:migrate
+
+    - name: Run CRM Module Tests
+      run: |
+        cd core
+        php artisan test --testsuite=Modules --filter="Modules\\\\Crm\\\\Tests"
+
+    - name: Upload Coverage Reports
+      if: always()
+      uses: codecov/codecov-action@v3
+      with:
+        file: core/coverage.xml
+        flags: crm-module
