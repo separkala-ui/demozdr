@@ -117,16 +117,15 @@ class AdminMenuService
             'priority' => 35,
             'permissions' => 'media.view',
         ]);
-
         $this->addMenuItem([
             'label' => __('Modules'),
             'icon' => 'lucide:boxes',
             'route' => route('admin.modules.index'),
             'active' => Route::is('admin.modules.index'),
             'id' => 'modules',
-            'priority' => 40,
+            'priority' => 25,
             'permissions' => 'module.view',
-        ]);
+        ], __('More'));
 
         $this->addMenuItem([
             'label' => __('Monitoring'),
@@ -152,7 +151,7 @@ class AdminMenuService
                     'permissions' => 'pulse.view',
                 ],
             ],
-        ]);
+        ], __('More'));
 
         $this->addMenuItem(
             [
