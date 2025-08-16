@@ -165,14 +165,14 @@ class AdminMenuService
                     [
                         'label' => __('Users'),
                         'route' => route('admin.users.index'),
-                        'active' => Route::is('admin.users.index') || Route::is('admin.users.edit'),
+                        'active' => Route::is('admin.users.index') || Route::is('admin.users.create') || Route::is('admin.users.edit'),
                         'priority' => 10,
                         'permissions' => 'user.view',
                     ],
                     [
                         'label' => __('Roles'),
                         'route' => route('admin.roles.index'),
-                        'active' => Route::is('admin.roles.index') || Route::is('admin.roles.edit'),
+                        'active' => Route::is('admin.roles.index') || Route::is('admin.roles.create') || Route::is('admin.roles.edit'),
                         'priority' => 20,
                         'permissions' => 'role.view',
                     ],
