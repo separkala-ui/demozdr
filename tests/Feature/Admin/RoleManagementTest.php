@@ -28,9 +28,10 @@ class RoleManagementTest extends TestCase
         Permission::create(['name' => 'role.edit', 'group_name' => 'role']);
         Permission::create(['name' => 'role.delete', 'group_name' => 'role']);
 
-        // Create admin user with full permissions
+        // Create an admin user with full permissions
         $this->admin = User::factory()->create([
-            'name' => 'Admin User',
+            'first_name' => 'Admin',
+            'last_name' => 'User',
             'email' => 'admin@example.com',
             'username' => 'admin',
         ]);
@@ -46,7 +47,8 @@ class RoleManagementTest extends TestCase
 
         // Create regular user with no permissions
         $this->regularUser = User::factory()->create([
-            'name' => 'Regular User',
+            'first_name' => 'Regular',
+            'last_name' => 'User',
             'email' => 'regular@example.com',
             'username' => 'regular',
         ]);

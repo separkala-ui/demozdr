@@ -21,7 +21,7 @@ class UserLoginAsController extends Controller
         Session::put('original_user_id', auth()->id());
         Auth::login($user);
 
-        session()->flash('success', __('You are now logged in as :name.', ['name' => $user->name]));
+        session()->flash('success', __('You are now logged in as :name.', ['name' => $user->full_name]));
 
         return redirect()->route('admin.dashboard');
     }

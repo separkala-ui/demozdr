@@ -1,1 +1,5 @@
-{}
+{
+    "Crm": true,
+    "TaskManager": true,
+    "UserAvatar": false
+}

@@ -27,7 +27,8 @@ class ContentManagementTest extends TestCase
 
         // Create admin user with permissions
         $this->admin = User::factory()->create([
-            'name' => 'Admin User',
+            'first_name' => 'Admin',
+            'last_name' => 'User',
             'email' => 'admin@example.com',
             'username' => 'admin',
         ]);

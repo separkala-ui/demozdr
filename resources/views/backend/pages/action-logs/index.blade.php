@@ -60,6 +60,7 @@
                         </thead>
                         <tbody>
                             @forelse ($actionLogs as $log)
+
                                 <tr class="{{ $loop->index + 1 != count($actionLogs) ?  'table-tr' : '' }}">
                                     <td class="table-td text-left">{{ $loop->index + 1 }}</td>
                                     <td class="table-td text-left">{{ __(ucfirst($log->type)) }}</td>

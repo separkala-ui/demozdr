@@ -20,10 +20,12 @@ class UserTest extends TestCase
     {
         $user = new User();
         $this->assertEquals([
-            'name',
+            'first_name',
+            'last_name',
             'email',
             'password',
             'username',
+            'avatar_id',
         ], $user->getFillable());
     }
 
@@ -102,7 +104,7 @@ class UserTest extends TestCase
         $method = $reflection->getMethod('getSearchableColumns');
         $method->setAccessible(true);
 
-        $this->assertEquals(['name', 'email', 'username'], $method->invoke($user));
+        $this->assertEquals(['first_name', 'last_name', 'email', 'username'], $method->invoke($user));
     }
 
     #[Test]
