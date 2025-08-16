@@ -4,22 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: implement post management actions with Spatie Query Builder integration">
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/Api/EmailCampaignController.php" afterDir="false" />
+    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/modules/crm/.github/workflows/test.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/tests.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactsController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailCampaignsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailCampaignsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000001_create_deal_comment_attachments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000001_create_deal_comment_attachments_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000002_create_deal_attachments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/database/migrations/2025_12_02_000002_create_deal_attachments_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/routes/api.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/task-manager/app/Livewire/Components/StatusChangeButton.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/app/Livewire/Components/StatusChangeButton.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/task-manager/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules_statuses.json" beforeDir="false" afterPath="$PROJECT_DIR$/modules_statuses.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/AuthenticationTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/AuthenticationTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/BaseApiTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ApiTestUtils.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/ComprehensiveApiTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/ComprehensiveApiTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/PostManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/PostManagementTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/RolePermissionTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/RolePermissionTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Feature/Api/UserManagementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Feature/Api/UserManagementTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailTemplatesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailTemplatesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Services/ContactService.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Services/ContactService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/resources/views/pages/contacts/partials/contact-sidebar-form.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/resources/views/pages/contacts/partials/contact-sidebar-form.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/resources/views/pages/deals/partials/deals-making-drawer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/resources/views/pages/deals/partials/deals-making-drawer.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/resources/views/pages/tickets/partials/ticket-making-drawer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/resources/views/pages/tickets/partials/ticket-making-drawer.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactActivitiesControllerTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactGroupsControllerTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactsControllerTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/DealsControllerTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/EmailCampaignsControllerTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/TicketsControllerTest.php" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +40,7 @@
     <execution />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/modules/crm" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
     <include_path>
