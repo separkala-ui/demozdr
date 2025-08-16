@@ -74,11 +74,29 @@ class MediaHelper
     public static function isDangerousFile(UploadedFile $file): bool
     {
         $dangerousExtensions = [
-            'php', 'php3', 'php4', 'php5', 'phtml', 'phps',
-            'asp', 'aspx', 'jsp', 'jspx',
-            'exe', 'com', 'bat', 'cmd', 'scr',
-            'vbs', 'vbe', 'js', 'jar',
-            'pl', 'py', 'rb', 'sh',
+            'php',
+            'php3',
+            'php4',
+            'php5',
+            'phtml',
+            'phps',
+            'asp',
+            'aspx',
+            'jsp',
+            'jspx',
+            'exe',
+            'com',
+            'bat',
+            'cmd',
+            'scr',
+            'vbs',
+            'vbe',
+            'js',
+            'jar',
+            'pl',
+            'py',
+            'rb',
+            'sh',
         ];
 
         $extension = strtolower($file->getClientOriginalExtension());
@@ -255,6 +273,13 @@ class MediaHelper
             'video/ogg',
             'video/3gpp',
             'video/x-ms-wmv',
+
+            // Audios
+            'audio/mpeg',
+            'audio/wav',
+            'audio/ogg',
+            'audio/aac',
+            'audio/flac',
 
             // PDFs
             'application/pdf',

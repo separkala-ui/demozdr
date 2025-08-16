@@ -142,191 +142,188 @@
                 </div>
             </div>
 
-            <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">
-                <div class="overflow-x-auto">
-                    <table id="dataTable" class="w-full dark:text-gray-300 min-w-full">
-                        <thead class="bg-light text-capitalize">
-                            <tr class="border-b border-gray-100 dark:border-gray-800">
-                                <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5 sm:px-6">
-                                    <div class="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            class="form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            x-model="selectAll"
-                                            @click="
-                                                selectAll = !selectAll;
-                                                selectedPosts = selectAll ?
-                                                    [...document.querySelectorAll('.post-checkbox')].map(cb => cb.value) :
-                                                    [];
-                                            "
-                                        >
-                                    </div>
-                                </th>
-                                <th width="30%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
-                                    <div class="flex items-center">
-                                        {{ __('Title') }}
-                                        <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'title' ? '-title' : 'title']) }}" class="ml-1">
-                                            @if(request()->sort === 'title')
-                                                <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
-                                            @elseif(request()->sort === '-title')
-                                                <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
-                                            @else
-                                                <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
-                                            @endif
-                                        </a>
-                                    </div>
-                                </th>
-                                <th width="15%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">{{ __('Author') }}</th>
-                                @if($postType === 'post')
-                                    <th width="20%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">{{ __('Categories') }}</th>
-                                @endif
-                                <th width="10%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
-                                    <div class="flex items-center">
-                                        {{ __('Status') }}
-                                        <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'status' ? '-status' : 'status']) }}" class="ml-1">
-                                            @if(request()->sort === 'status')
-                                                <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
-                                            @elseif(request()->sort === '-status')
-                                                <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
-                                            @else
-                                                <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
-                                            @endif
-                                        </a>
-                                    </div>
-                                </th>
-                                <th width="10%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
-                                    <div class="flex items-center">
-                                        {{ __('Date') }}
-                                        <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'created_at' ? '-created_at' : 'created_at']) }}" class="ml-1">
-                                            @if(request()->sort === 'created_at')
-                                                <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
-                                            @elseif(request()->sort === '-created_at')
-                                                <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
-                                            @else
-                                                <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
-                                            @endif
-                                        </a>
-                                    </div>
-                                </th>
-                                <th width="15%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-center px-5">{{ __('Action') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($posts as $post)
-                                <tr class="{{ $loop->index + 1 != count($posts) ?  'border-b border-gray-100 dark:border-gray-800' : '' }}">
-                                    <td class="px-5 py-4 sm:px-6">
-                                        <input
-                                            type="checkbox"
-                                            class="post-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            value="{{ $post->id }}"
-                                            x-model="selectedPosts"
-                                        >
-                                    </td>
-                                    <td class="px-5 py-4 sm:px-6">
-                                        <div class="flex gap-0.5 items-center">
-                                            @if($post->hasFeaturedImage())
-                                                <img src="{{ $post->getFeaturedImageUrl('thumb') }}" alt="{{ $post->title }}" class="w-12 object-cover rounded mr-3">
-                                            @else
-                                                <div class="bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center mr-2 h-10 w-10">
-                                                    <iconify-icon icon="lucide:image" class=" text-center text-gray-400"></iconify-icon>
-                                                </div>
-                                            @endif
-                                            @if (auth()->user()->can('post.edit'))
-                                                <a href="{{ route('admin.posts.edit', [$postType, $post->id]) }}" class="text-gray-700 dark:text-white font-medium hover:text-primary dark:hover:text-primary">
-                                                    {{ $post->title }}
-                                                </a>
-                                            @else
-                                                {{ $post->title }}
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-5 py-4 sm:px-6">
-                                        {{ $post->user->name }}
-                                    </td>
-                                    @if($postType === 'post')
-                                        <td class="px-5 py-4 sm:px-6">
-                                            @foreach($post->categories as $category)
-                                                <span class="badge">{{ $category->name }}</span>
-                                            @endforeach
-                                        </td>
-                                    @endif
-                                    <td class="px-5 py-4 sm:px-6">
-                                        <span class="{{ get_post_status_class($post->status) }}">{{ ucfirst($post->status) }}</span>
-                                    </td>
-                                    <td class="px-5 py-4 sm:px-6">
-                                        @if($post->published_at)
-                                            <span
-                                                class="cursor-help"
-                                                title="{{ $post->published_at->format('F d, Y \a\t g:i A') }}"
-                                            >
-                                                {{ $post->published_at->format('M d, Y') }}
-                                            </span>
+            <div class="table-responsive">
+                <table id="dataTable" class="table min-w-full">
+                    <thead class="table-thead">
+                        <tr class="table-tr">
+                            <th width="5%" class="table-thead-th">
+                                <div class="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        class="form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        x-model="selectAll"
+                                        @click="
+                                            selectAll = !selectAll;
+                                            selectedPosts = selectAll ?
+                                                [...document.querySelectorAll('.post-checkbox')].map(cb => cb.value) :
+                                                [];
+                                        "
+                                    >
+                                </div>
+                            </th>
+                            <th width="30%" class="table-thead-th">
+                                <div class="flex items-center">
+                                    {{ __('Title') }}
+                                    <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'title' ? '-title' : 'title']) }}" class="ml-1">
+                                        @if(request()->sort === 'title')
+                                            <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
+                                        @elseif(request()->sort === '-title')
+                                            <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
                                         @else
-                                            <span
-                                                class="cursor-help"
-                                                title="{{ $post->created_at->format('F d, Y \a\t g:i A') }}"
-                                            >
-                                                {{ $post->created_at->format('M d, Y') }}
-                                            </span>
+                                            <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
                                         @endif
+                                    </a>
+                                </div>
+                            </th>
+                            <th width="15%" class="table-thead-th">{{ __('Author') }}</th>
+                            @if($postType === 'post')
+                                <th width="20%" class="table-thead-th">{{ __('Categories') }}</th>
+                            @endif
+                            <th width="10%" class="table-thead-th">
+                                <div class="flex items-center">
+                                    {{ __('Status') }}
+                                    <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'status' ? '-status' : 'status']) }}" class="ml-1">
+                                        @if(request()->sort === 'status')
+                                            <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
+                                        @elseif(request()->sort === '-status')
+                                            <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
+                                        @else
+                                            <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
+                                        @endif
+                                    </a>
+                                </div>
+                            </th>
+                            <th width="10%" class="table-thead-th">
+                                <div class="flex items-center">
+                                    {{ __('Date') }}
+                                    <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'created_at' ? '-created_at' : 'created_at']) }}" class="ml-1">
+                                        @if(request()->sort === 'created_at')
+                                            <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
+                                        @elseif(request()->sort === '-created_at')
+                                            <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
+                                        @else
+                                            <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
+                                        @endif
+                                    </a>
+                                </div>
+                            </th>
+                            <th width="15%" class="table-thead-th table-thead-th-last">{{ __('Action') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($posts as $post)
+                            <tr class="{{ $loop->index + 1 != count($posts) ?  'table-tr' : '' }}">
+                                <td class="table-td">
+                                    <input
+                                        type="checkbox"
+                                        class="post-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        value="{{ $post->id }}"
+                                        x-model="selectedPosts"
+                                    >
+                                </td>
+                                <td class="table-td">
+                                    <div class="flex gap-0.5 items-center">
+                                        @if($post->hasFeaturedImage())
+                                            <img src="{{ $post->getFeaturedImageUrl('thumb') }}" alt="{{ $post->title }}" class="w-12 object-cover rounded mr-3">
+                                        @else
+                                            <div class="bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center mr-2 h-10 w-10">
+                                                <iconify-icon icon="lucide:image" class=" text-center text-gray-400"></iconify-icon>
+                                            </div>
+                                        @endif
+                                        @if (auth()->user()->can('post.edit'))
+                                            <a href="{{ route('admin.posts.edit', [$postType, $post->id]) }}" class="text-gray-700 dark:text-white font-medium hover:text-primary dark:hover:text-primary">
+                                                {{ $post->title }}
+                                            </a>
+                                        @else
+                                            {{ $post->title }}
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="table-td">
+                                    {{ $post->user->name }}
+                                </td>
+                                @if($postType === 'post')
+                                    <td class="table-td">
+                                        @foreach($post->categories as $category)
+                                            <span class="badge">{{ $category->name }}</span>
+                                        @endforeach
                                     </td>
-                                    <td class="px-5 py-4 sm:px-6 flex justify-center">
-                                        <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
-                                            @if (auth()->user()->can('post.edit'))
+                                @endif
+                                <td class="table-td">
+                                    <span class="{{ get_post_status_class($post->status) }}">{{ ucfirst($post->status) }}</span>
+                                </td>
+                                <td class="table-td">
+                                    @if($post->published_at)
+                                        <span
+                                            class="cursor-help"
+                                            title="{{ $post->published_at->format('F d, Y \a\t g:i A') }}"
+                                        >
+                                            {{ $post->published_at->format('M d, Y') }}
+                                        </span>
+                                    @else
+                                        <span
+                                            class="cursor-help"
+                                            title="{{ $post->created_at->format('F d, Y \a\t g:i A') }}"
+                                        >
+                                            {{ $post->created_at->format('M d, Y') }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="table-td flex justify-center">
+                                    <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
+                                        @if (auth()->user()->can('post.edit'))
+                                            <x-buttons.action-item
+                                                :href="route('admin.posts.edit', [$postType, $post->id])"
+                                                icon="pencil"
+                                                :label="__('Edit')"
+                                            />
+                                        @endif
+                                        {!! ld_apply_filters('admin_post_actions_after_edit', '', $post) !!}
+
+                                        @if (auth()->user()->can('post.view'))
+                                            <x-buttons.action-item
+                                                :href="route('admin.posts.show', [$postType, $post->id])"
+                                                icon="eye"
+                                                :label="__('View')"
+                                            />
+                                        @endif
+                                        {!! ld_apply_filters('admin_post_actions_after_view', '', $post) !!}
+
+                                        @if (auth()->user()->can('post.delete'))
+                                            <div x-data="{ deleteModalOpen: false }">
                                                 <x-buttons.action-item
-                                                    :href="route('admin.posts.edit', [$postType, $post->id])"
-                                                    icon="pencil"
-                                                    :label="__('Edit')"
+                                                    type="modal-trigger"
+                                                    modal-target="deleteModalOpen"
+                                                    icon="trash"
+                                                    :label="__('Delete')"
+                                                    class="text-red-600 dark:text-red-400"
                                                 />
-                                            @endif
-                                            {!! ld_apply_filters('admin_post_actions_after_edit', '', $post) !!}
 
-                                            @if (auth()->user()->can('post.view'))
-                                                <x-buttons.action-item
-                                                    :href="route('admin.posts.show', [$postType, $post->id])"
-                                                    icon="eye"
-                                                    :label="__('View')"
+                                                <x-modals.confirm-delete
+                                                    id="delete-modal-{{ $post->id }}"
+                                                    title="{{ __('Delete') }} {{ strtolower($postTypeModel->label_singular) }}"
+                                                    content="{{ __('Are you sure you want to delete this') }} {{ strtolower($postTypeModel->label_singular) }}?"
+                                                    formId="delete-form-{{ $post->id }}"
+                                                    formAction="{{ route('admin.posts.destroy', [$postType, $post->id]) }}"
+                                                    modalTrigger="deleteModalOpen"
+                                                    cancelButtonText="{{ __('No, cancel') }}"
+                                                    confirmButtonText="{{ __('Yes, Confirm') }}"
                                                 />
-                                            @endif
-                                            {!! ld_apply_filters('admin_post_actions_after_view', '', $post) !!}
-
-                                            @if (auth()->user()->can('post.delete'))
-                                                <div x-data="{ deleteModalOpen: false }">
-                                                    <x-buttons.action-item
-                                                        type="modal-trigger"
-                                                        modal-target="deleteModalOpen"
-                                                        icon="trash"
-                                                        :label="__('Delete')"
-                                                        class="text-red-600 dark:text-red-400"
-                                                    />
-
-                                                    <x-modals.confirm-delete
-                                                        id="delete-modal-{{ $post->id }}"
-                                                        title="{{ __('Delete') }} {{ strtolower($postTypeModel->label_singular) }}"
-                                                        content="{{ __('Are you sure you want to delete this') }} {{ strtolower($postTypeModel->label_singular) }}?"
-                                                        formId="delete-form-{{ $post->id }}"
-                                                        formAction="{{ route('admin.posts.destroy', [$postType, $post->id]) }}"
-                                                        modalTrigger="deleteModalOpen"
-                                                        cancelButtonText="{{ __('No, cancel') }}"
-                                                        confirmButtonText="{{ __('Yes, Confirm') }}"
-                                                    />
-                                                </div>
-                                            @endif
-                                            {!! ld_apply_filters('admin_post_actions_after_delete', '', $post) !!}
-                                        </x-buttons.action-buttons>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr class="border-b border-gray-100 dark:border-gray-800">
-                                    <td colspan="7" class="px-5 py-4 sm:px-6 text-center">
-                                        <span class="text-gray-500 dark:text-gray-300">{{ __('No') }} {{ strtolower($postTypeModel->label) }} {{ __('found') }}</span>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
+                                            </div>
+                                        @endif
+                                        {!! ld_apply_filters('admin_post_actions_after_delete', '', $post) !!}
+                                    </x-buttons.action-buttons>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr class="table-tr">
+                                <td colspan="7" class="table-td text-center">
+                                    <span class="text-gray-500 dark:text-gray-300">{{ __('No') }} {{ strtolower($postTypeModel->label) }} {{ __('found') }}</span>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
                 <div class="my-4 px-4 sm:px-6">
                     {{ $posts->links() }}
                 </div>

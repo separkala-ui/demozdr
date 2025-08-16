@@ -27,7 +27,8 @@ class UserService
     public function createUser(array $data): User
     {
         $user = User::create([
-            'name' => $data['name'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
             'email' => $data['email'],
             'username' => $data['username'],
             'password' => Hash::make($data['password']),
@@ -48,7 +49,8 @@ class UserService
     public function updateUser(User $user, array $data): User
     {
         $updateData = [
-            'name' => $data['name'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
             'email' => $data['email'],
             'username' => $data['username'],
         ];

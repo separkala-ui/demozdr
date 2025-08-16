@@ -58,11 +58,11 @@
                         ])
                     </div>
                 </div>
-                <div class="space-y-3 border-t border-gray-100 dark:border-gray-800 overflow-x-auto overflow-y-visible">
-                    <table id="dataTable" class="w-full dark:text-gray-300">
-                        <thead class="bg-light text-capitalize">
-                            <tr class="border-b border-gray-100 dark:border-gray-800">
-                                <th width="5%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5 sm:px-6">
+                <div class="table-responsive">
+                    <table id="dataTable" class="table">
+                        <thead class="table-thead">
+                            <tr class="table-tr">
+                                <th width="5%" class="table-thead-th">
                                     <div class="flex items-center">
                                         <input
                                             type="checkbox"
@@ -77,7 +77,7 @@
                                         >
                                     </div>
                                 </th>
-                                <th width="40%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+                                <th width="40%" class="table-thead-th">
                                     <div class="flex items-center">
                                         {{ __('Name') }}
                                         <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'name' ? '-name' : 'name']) }}" class="ml-1">
@@ -92,9 +92,9 @@
                                     </div>
                                 </th>
                                 @if($taxonomyModel->hierarchical)
-                                <th width="15%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">{{ __('Parent') }}</th>
+                                <th width="15%" class="table-thead-th">{{ __('Parent') }}</th>
                                 @endif
-                                <th width="10%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-left px-5">
+                                <th width="10%" class="table-thead-th">
                                     <div class="flex items-center">
                                         {{ __('Count') }}
                                         <a href="{{ request()->fullUrlWithQuery(['sort' => request()->sort === 'post_count' ? '-post_count' : 'post_count']) }}" class="ml-1">
@@ -108,13 +108,13 @@
                                         </a>
                                     </div>
                                 </th>
-                                <th width="10%" class="p-2 bg-gray-50 dark:bg-gray-800 dark:text-white text-center px-5">{{ __('Action') }}</th>
+                                <th width="10%" class="table-thead-th table-thead-th-last">{{ __('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($terms as $termItem)
-                                <tr class="{{ $loop->index + 1 != count($terms) ?  'border-b border-gray-100 dark:border-gray-800' : '' }}">
-                                    <td class="px-5 py-4 sm:px-6">
+                                <tr class="{{ $loop->index + 1 != count($terms) ?  'table-tr' : '' }}">
+                                    <td class="table-td">
                                         <input
                                             type="checkbox"
                                             class="term-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -122,7 +122,7 @@
                                             x-model="selectedTerms"
                                         >
                                     </td>
-                                    <td class="px-5 py-4 sm:px-6">
+                                    <td class="table-td">
                                         <div class="flex items-center">
                                             <div>
                                                 @if($taxonomyModel->show_featured_image && $termItem->hasFeaturedImage())
@@ -146,7 +146,7 @@
                                         </div>
                                     </td>
                                     @if($taxonomyModel->hierarchical)
-                                    <td class="px-5 py-4 sm:px-6">
+                                    <td class="table-td">
                                         @if($termItem->parent)
                                             @if (auth()->user()->can('term.edit'))
                                                 <a href="{{ route('admin.terms.edit', ['taxonomy' => $taxonomy, 'term' => $termItem->parent->id]) }}" class="text-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
@@ -160,10 +160,10 @@
                                         @endif
                                     </td>
                                     @endif
-                                    <td class="px-5 py-4 sm:px-6">
+                                    <td class="table-td">
                                         {{ $termItem->posts_count ?? $termItem->posts->count() }}
                                     </td>
-                                    <td class="px-5 py-4 sm:px-6 text-center">
+                                    <td class="table-td text-center">
                                         <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
                                             @if (auth()->user()->can('term.edit'))
                                                 <x-buttons.action-item
@@ -199,8 +199,8 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr class="border-b border-gray-100 dark:border-gray-800">
-                                    <td colspan="{{ $taxonomyModel->hierarchical ? '5' : '4' }}" class="px-5 py-4 sm:px-6 text-center">
+                                <tr class="table-tr">
+                                    <td colspan="{{ $taxonomyModel->hierarchical ? '5' : '4' }}" class="table-td text-center">
                                         <span class="text-gray-500 dark:text-gray-300">{{ __('No') }} {{ strtolower($taxonomyModel->label) }} {{ __('found') }}</span>
                                     </td>
                                 </tr>

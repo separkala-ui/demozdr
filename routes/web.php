@@ -10,7 +10,7 @@ use App\Http\Controllers\Backend\MediaController;
 use App\Http\Controllers\Backend\ModulesController;
 use App\Http\Controllers\Backend\PermissionsController;
 use App\Http\Controllers\Backend\PostsController;
-use App\Http\Controllers\Backend\ProfilesController;
+use App\Http\Controllers\Backend\ProfileController;
 use App\Http\Controllers\Backend\RolesController;
 use App\Http\Controllers\Backend\SettingsController;
 use App\Http\Controllers\Backend\TermsController;
@@ -113,8 +113,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
  * Profile routes.
  */
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['auth']], function () {
-    Route::get('/edit', [ProfilesController::class, 'edit'])->name('edit');
-    Route::put('/update', [ProfilesController::class, 'update'])->name('update');
+    Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+    Route::put('/update', [ProfileController::class, 'update'])->name('update');
+    Route::put('/update-additional', [ProfileController::class, 'updateAdditional'])->name('update.additional');
 });
 
 Route::get('/locale/{lang}', [LocaleController::class, 'switch'])->name('locale.switch');

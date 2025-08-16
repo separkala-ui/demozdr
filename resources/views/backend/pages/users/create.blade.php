@@ -5,7 +5,7 @@
 @endsection
 
 @section('admin-content')
-    <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+    <div class="p-4 mx-auto max-w-7xl md:p-6">
         <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
 
         {!! ld_apply_filters('users_after_breadcrumbs', '') !!}
@@ -17,12 +17,28 @@
                         @csrf
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div class="space-y-1">
-                                <label for="name"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Full Name') }}</label>
-                                <input type="text" name="name" id="name" required autofocus
-                                    value="{{ old('name') }}" placeholder="{{ __('Enter Full Name') }}"
+                                <label for="first_name"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('First Name') }}</label>
+                                <input type="text" name="first_name" id="first_name" required autofocus
+                                    value="{{ old('first_name') }}" placeholder="{{ __('Enter First Name') }}"
                                     class="form-control">
                             </div>
+                            <div class="space-y-1">
+                                <label for="last_name"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Last Name') }}</label>
+                                <input type="text" name="last_name" id="last_name" required
+                                    value="{{ old('last_name') }}" placeholder="{{ __('Enter Last Name') }}"
+                                    class="form-control">
+                            </div>
+
+                            <div class="space-y-1">
+                                <label for="username"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Username') }}</label>
+
+                                <input type="text" name="username" id="username" required value="{{ old('username') }}"
+                                    placeholder="{{ __('Enter Username') }}" class="form-control">
+                            </div>
+
                             <div class="space-y-1">
                                 <label for="email"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('User Email') }}</label>
@@ -45,12 +61,17 @@
                                         ->toArray()" :selected="old('roles', [])"
                                     :multiple="true" :searchable="false" />
                             </div>
-                            <div class="space-y-1">
-                                <label for="username"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Username') }}</label>
 
-                                <input type="text" name="username" id="username" required value="{{ old('username') }}"
-                                    placeholder="{{ __('Enter Username') }}" class="form-control">
+                            <div>
+                                <x-media-selector
+                                    name="avatar_id"
+                                    label="{{ __('Avatar') }}"
+                                    :multiple="false"
+                                    allowedTypes="images"
+                                    :existingMedia="null"
+                                    :required="false"
+                                    height="150px"
+                                />
                             </div>
                             {!! ld_apply_filters('after_username_field', '', null) !!}
                         </div>

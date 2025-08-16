@@ -1,5 +1,5 @@
 {
     "Crm": true,
     "TaskManager": true,
-    "UserAvatar": true
+    "UserAvatar": false
 }

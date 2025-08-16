@@ -25,8 +25,11 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return ld_apply_filters('user.store.validation.rules', [
-            /** @example "John Doe" */
-            'name' => 'required|max:50',
+            /** @example "John" */
+            'first_name' => 'required|max:50',
+
+            /** @example "Doe" */
+            'last_name' => 'required|max:50',
 
             /** @example "john.doe@example.com" */
             'email' => 'required|max:100|email|unique:users,email',
@@ -35,6 +38,9 @@ class StoreUserRequest extends FormRequest
             'username' => 'required|max:100|unique:users,username',
 
             'password' => 'required|min:6|confirmed',
+
+            /** @example "123" */
+            'avatar_id' => 'nullable|exists:media,id',
         ]);
     }
 }

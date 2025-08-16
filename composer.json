@@ -38,6 +38,7 @@
         "beyondcode/laravel-dump-server": "^2.1",
         "fakerphp/faker": "^1.24",
         "larastan/larastan": "^3.0",
+        "laravel/boost": "^1.0",
         "laravel/pint": "^1.22",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
@@ -89,7 +90,11 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],
+        "post-install-cmd": [
+            "@protect-local-files"
+        ],
         "post-update-cmd": [
+            "@protect-local-files",
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
             "@php artisan vendor:publish --tag=livewire:assets --ansi --force"
         ],
@@ -98,6 +103,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "protect-local-files": [
+            "bash scripts/protect-local-files.sh"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",

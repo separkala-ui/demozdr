@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Hash;
 
 class UserManagementTest extends TestCase
 {
@@ -55,7 +56,8 @@ class UserManagementTest extends TestCase
 
         $response = $this->actingAs($this->admin)
             ->post('/admin/users', [
-                'name' => 'John Doe',
+                'first_name' => 'John',
+                'last_name' => 'Doe',
                 'email' => 'john@example.com',
                 'username' => 'johndoe',
                 'password' => 'password123',
@@ -65,7 +67,8 @@ class UserManagementTest extends TestCase
 
         $response->assertRedirect();
         $this->assertDatabaseHas('users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'username' => 'johndoe',
         ]);
@@ -77,27 +80,32 @@ class UserManagementTest extends TestCase
     #[Test]
     public function admin_can_update_user(): void
     {
-        $user = User::factory()->create([
-            'name' => 'Original Name',
+        $user = User::create([
+            'first_name' => 'Original',
+            'last_name' => 'Name',
             'email' => 'original@example.com',
+            'username' => 'originaluser',
+            'password' => Hash::make('password'),
         ]);
 
         $role = Role::create(['name' => 'editor']);
 
         $response = $this->actingAs($this->admin)
             ->put("/admin/users/{$user->id}", [
-                'name' => 'Updated Name',
+                'first_name' => 'Updated',
+                'last_name' => 'Name',
                 'email' => 'updated@example.com',
-                'username' => 'updated_username',
+                'username' => 'updateduser',
                 'roles' => [$role->id],
             ]);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'name' => 'Updated Name',
+            'first_name' => 'Updated',
+            'last_name' => 'Name',
             'email' => 'updated@example.com',
-            'username' => 'updated_username',
+            'username' => 'updateduser',
         ]);
 
         $updatedUser = User::find($user->id);
@@ -137,8 +145,9 @@ class UserManagementTest extends TestCase
 
         $this->actingAs($regularUser)
             ->post('/admin/users', [
-                'name' => 'New User',
-                'email' => 'new@example.com',
+                'first_name' => 'New',
+                'last_name' => 'User',
+                'email' => 'newuser@example.com',
                 'password' => 'password123',
                 'password_confirmation' => 'password123',
             ])
@@ -150,12 +159,12 @@ class UserManagementTest extends TestCase
     {
         $response = $this->actingAs($this->admin)
             ->post('/admin/users', [
-                'name' => '',
-                'email' => 'not-an-email',
-                'password' => 'short',
-                'password_confirmation' => 'different',
+                'first_name' => '',
+                'last_name' => '',
+                'email' => '',
+                'password' => '',
             ]);
 
-        $response->assertSessionHasErrors(['name', 'email', 'password']);
+        $response->assertSessionHasErrors(['first_name', 'last_name', 'email', 'password']);
     }
 }

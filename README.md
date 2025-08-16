@@ -11,7 +11,7 @@
 
 **⚡ Lara Dashboard** CMS By Laravel (7.x - 12.x) - Manages Users, Roles, Permissions, Modules, Settings, Translations, Contents(Post, Page, Category, Tags), System logs, Monitoring, Rest API's and every actions of your Laravel application. A complete CMS solution for Laravel application with Tailwind CSS integrated with all starting features including modules, dark/lite mode, charts, tables, forms, lots of components and many more. By our preimium modules, you can get more features like CRM, HRM, Course Management and so on.
 
-**Demo:** https://demo.laradashboard.com/
+**Demo:** https://laradashboard.com/try-demo/
 
 ```
 Email - superadmin@example.com
@@ -48,35 +48,36 @@ password - 12345678
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 📝 Changelog
+
 **[v2.0.1] - 2025-07-27**
 
-- **Feat:** Refactor Lara Dashboard whole Admin UI - Icons, Accessibility, Components, Pages, Layouts and so on.
-- **Enhancement:** Keep search form design consistent as `form-control` height.
-- **Enhancement:** Global variable for editor script to handle from any module.
-- **Enhancement:** Cleanup many codes to separate service to keep business logics separated.
-- **Enhancement:** Fixed several unit tests.
-- **Fix:** User chart data with SQLite supported.
-- **Fix:** Remove some unnecessary console logs.
-- **Doc:** Added Coding standard docs.
+-   **Feat:** Refactor Lara Dashboard whole Admin UI - Icons, Accessibility, Components, Pages, Layouts and so on.
+-   **Enhancement:** Keep search form design consistent as `form-control` height.
+-   **Enhancement:** Global variable for editor script to handle from any module.
+-   **Enhancement:** Cleanup many codes to separate service to keep business logics separated.
+-   **Enhancement:** Fixed several unit tests.
+-   **Fix:** User chart data with SQLite supported.
+-   **Fix:** Remove some unnecessary console logs.
+-   **Doc:** Added Coding standard docs.
 
 **[v2.0] - 2025-07-20**
 
-- **Feat:** Refactor Lara Dashboard whole Admin UI - Icons, Accessibility, Components, Pages, Layouts and so on.
-- **Enhancement:** Improve components, reusibility, and code quality.
-- **Fix:**  Some random UI fixes.
+-   **Feat:** Refactor Lara Dashboard whole Admin UI - Icons, Accessibility, Components, Pages, Layouts and so on.
+-   **Enhancement:** Improve components, reusibility, and code quality.
+-   **Fix:** Some random UI fixes.
 
 **[v1.7.0] - 2025-07-13**
 
-- **Feat:** Rest API For Lara Dashboard, Scramble API documentation.
-- **Enhancement:** Cleanup class names to use more standard class names.
-- **Fix:**  Some random UI fixes.
+-   **Feat:** Rest API For Lara Dashboard, Scramble API documentation.
+-   **Enhancement:** Cleanup class names to use more standard class names.
+-   **Fix:** Some random UI fixes.
 
 **[v1.6.0] - 2025-06-21**
 
-- **Enhancement:** Write/Update Standard Unit Tests, pint, rector, phpstan for the project.
-- **Fix:** Potential fix for code scanning alert no. 1: Workflow does not contain permissions.
-- **Fix:** Language switcher if no icon is selected.
-- **Fix:** Non-Translated keys keep empty instead the placeholder.
+-   **Enhancement:** Write/Update Standard Unit Tests, pint, rector, phpstan for the project.
+-   **Fix:** Potential fix for code scanning alert no. 1: Workflow does not contain permissions.
+-   **Fix:** Language switcher if no icon is selected.
+-   **Fix:** Non-Translated keys keep empty instead the placeholder.
 
 **[v1.5.0] - 2025-06-01**
 
@@ -189,6 +190,7 @@ npm install
 
 -   Create database called - `laradashboard`
 -   Create `.env` file by copying `.env.example` file
+
 ```bash
 cp .env.example .env
 ```
@@ -268,6 +270,7 @@ MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS=dev@example.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
+
 Browse Emails - http://localhost:8025
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -277,6 +280,7 @@ Browse Emails - http://localhost:8025
 https://laradashboard.com/docs/
 
 ## 🔗 Rest API Documentation
+
 We've used [Scramble](https://github.com/dedoc/scramble) to automatically generate the Rest API documentation for Lara Dashboard. You can find the API documentation at:
 
 http://localhost:8000/docs/api
@@ -310,6 +314,15 @@ composer run pint
 composer run phpstan
 composer run phpunit
 ```
+
+## 🚀 Laravel Boost
+
+Laravel Boost is already installed in this project to provide enhanced development and debugging tools for Lara Dashboard.
+
+**How to use Boost:**
+
+Visit the [Laravel Boost documentation](https://github.com/laravel/boost).
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 📸 Screenshots
@@ -585,7 +598,7 @@ composer run phpunit
 
 ## 🔗 Live Demo
 
-https://demo.laradashboard.com
+https://laradashboard.com/try-demo/
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
