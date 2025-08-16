@@ -177,6 +177,7 @@
                                 </td>
                                 @php ld_apply_filters('user_list_page_table_row_before_action', '', $user) @endphp
                                 <td class="table-td flex justify-center">
+                                    @if (auth()->user()->canBeModified($user) || auth()->user()->can('user.login_as') || auth()->user()->canBeModified($user, 'user.delete'))
                                     <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
                                         @if (auth()->user()->canBeModified($user))
                                             <x-buttons.action-item
@@ -217,6 +218,7 @@
                                             />
                                         @endif
                                     </x-buttons.action-buttons>
+                                    @endif
                                 </td>
                                 @php ld_apply_filters('user_list_page_table_row_after_action', '', $user) @endphp
                             </tr>
