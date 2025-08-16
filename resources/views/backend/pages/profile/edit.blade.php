@@ -102,6 +102,7 @@
                                 searchPlaceholder="{{ __('Search timezones...') }}"
                                 :options="$timezones"
                                 :selected="$userMeta['timezone'] ?? ''"
+                                position="top"
                             />
 
                             <x-searchable-select
@@ -111,6 +112,7 @@
                                 searchPlaceholder="{{ __('Search locales...') }}"
                                 :options="$locales"
                                 :selected="$userMeta['locale'] ?? ''"
+                                position="top"
                             />
                         </div>
 

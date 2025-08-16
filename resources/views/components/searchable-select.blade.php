@@ -7,6 +7,7 @@
     'selected' => '',
     'required' => false,
     'disabled' => false,
+    'position' => 'bottom', // 'top' or 'bottom'
 ])
 
 <div class="space-y-1" x-data="searchableSelect({
@@ -51,13 +52,13 @@
         <div
             x-show="isOpen"
             x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-start="opacity-0 {{ $position === 'top' ? '-translate-y-1' : 'translate-y-1' }}"
             x-transition:enter-end="opacity-100 translate-y-0"
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 translate-y-0"
-            x-transition:leave-end="opacity-0 translate-y-1"
+            x-transition:leave-end="opacity-0 {{ $position === 'top' ? '-translate-y-1' : 'translate-y-1' }}"
             @click.away="closeDropdown"
-            class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-600 max-h-60 overflow-hidden mb-10"
+            class="absolute z-50 w-full {{ $position === 'top' ? 'bottom-full mb-1' : 'top-full mt-1' }} bg-white border border-gray-300 rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-600 max-h-60 overflow-hidden"
         >
             <!-- Search input -->
             <div class="p-2 border-b border-gray-200 dark:border-gray-600">

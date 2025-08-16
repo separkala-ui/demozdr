@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="refactor: update form classes for consistency and improve styling">
+    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="refactor: enhance searchable select component with improved styling and search placeholder">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/pages/profile/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/pages/profile/edit.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/components/searchable-select.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/components/searchable-select.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -291,6 +293,7 @@
       <workItem from="1755099509987" duration="6403000" />
       <workItem from="1755145350284" duration="755000" />
       <workItem from="1755154690866" duration="3859000" />
+      <workItem from="1755328769777" duration="433000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />
@@ -446,7 +449,8 @@
     <MESSAGE value="feat: implement post management actions with Spatie Query Builder integration" />
     <MESSAGE value="feat: update user model to include first and last name, add user metadata functionality" />
     <MESSAGE value="refactor: update form classes for consistency and improve styling" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: update form classes for consistency and improve styling" />
+    <MESSAGE value="refactor: enhance searchable select component with improved styling and search placeholder" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: enhance searchable select component with improved styling and search placeholder" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
