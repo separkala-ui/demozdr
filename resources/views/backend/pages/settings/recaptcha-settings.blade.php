@@ -11,15 +11,22 @@
             <label class="form-label" for="recaptcha_site_key">
                 {{ __('reCAPTCHA Site Key') }}
             </label>
-            <input
-                type="text"
-                name="recaptcha_site_key"
-                id="recaptcha_site_key"
-                placeholder="{{ __('Enter your reCAPTCHA site key') }}"
-                @if (config('app.demo_mode', false)) disabled @endif
-                class="form-control"
-                value="{{ config('settings.recaptcha_site_key') ?? '' }}"
-            />
+            <div class="relative">
+                <input
+                    type="text"
+                    name="recaptcha_site_key"
+                    id="recaptcha_site_key"
+                    placeholder="{{ __('Enter your reCAPTCHA site key') }}"
+                    @if (config('app.demo_mode', false)) disabled @endif
+                    class="form-control pr-14"
+                    value="{{ config('settings.recaptcha_site_key') ?? '' }}"
+                />
+                <button type="button"
+                    onclick="copyToClipboard('recaptcha_site_key')"
+                    class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-300 flex items-center justify-center w-6 h-6 hover:text-gray-700 dark:hover:text-gray-100 transition-colors">
+                    <iconify-icon icon="lucide:copy" width="18" height="18"></iconify-icon>
+                </button>
+            </div>
 
             @if (config('app.demo_mode', false))
             <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -32,16 +39,15 @@
             <label class="form-label" for="recaptcha_secret_key">
                 {{ __('reCAPTCHA Secret Key') }}
             </label>
-            <input
-                type="password"
+            <x-inputs.password
                 name="recaptcha_secret_key"
                 id="recaptcha_secret_key"
+                :value="config('settings.recaptcha_secret_key') ?? ''"
                 placeholder="{{ __('Enter your reCAPTCHA secret key') }}"
-                @if (config('app.demo_mode', false)) disabled @endif
-                class="form-control"
-                value="{{ config('settings.recaptcha_secret_key') ?? '' }}"
+                :required="false"
+                :disabled="config('app.demo_mode', false)"
+                :showTooltip="__('Show reCAPTCHA secret')"
             />
-
             @if (config('app.demo_mode', false))
             <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ __('Editing this field is disabled in demo mode.') }}
@@ -111,3 +117,31 @@
     </div>
 </div>
 @php echo ld_apply_filters('settings_recaptcha_integrations_tab_before_section_end', ''); @endphp
+
+<script>
+function copyToClipboard(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input || !input.value.trim()) {
+        if (typeof window.showToast === 'function') {
+            window.showToast('warning', 'Warning', 'No key to copy');
+        }
+        return;
+    }
+    const textarea = document.createElement('textarea');
+    textarea.value = input.value;
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+        if (typeof window.showToast === 'function') {
+            window.showToast('success', 'Copied!', 'Key copied to clipboard');
+        }
+    } catch (err) {
+        if (typeof window.showToast === 'function') {
+            window.showToast('error', 'Error', 'Failed to copy to clipboard');
+        }
+    } finally {
+        document.body.removeChild(textarea);
+    }
+}
+</script>

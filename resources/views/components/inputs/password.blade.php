@@ -7,7 +7,8 @@
     'class' => '',
     'id' => null,
     'autocomplete' => 'new-password',
-    'showAutoGenerate' => false, // new prop
+    'showAutoGenerate' => false,
+    'showTooltip' => __('Show password'),
 ])
 
 @php
@@ -47,7 +48,7 @@
         />
 
         <div class="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2 z-30">
-            <x-tooltip title="{{ __('Show password') }}">
+            <x-tooltip :title="$showTooltip">
                 <button type="button" @click="showPassword = !showPassword" class="text-gray-500 cursor-pointer dark:text-gray-300 flex items-center justify-center w-6 h-6">
                     <iconify-icon x-show="!showPassword" icon="lucide:eye" width="20" height="20" class="text-[#98A2B3]"></iconify-icon>
                     <iconify-icon x-show="showPassword" icon="lucide:eye-off" width="20" height="20" class="text-[#98A2B3]" style="display: none;"></iconify-icon>
