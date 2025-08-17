@@ -21,8 +21,18 @@
           <x-messages />
 
           <div>
-            <label class="form-label">{{ __('Email') }}</label>
-            <input autofocus type="text" id="email" name="email" autocomplete="username" placeholder="{{ __('Enter your email') }}" class="dark:bg-dark-900 h-11 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-700 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" value="{{ old('email') ?? config('app.demo_mode', false) ? 'superadmin@example.com' : '' }}" required>
+            <label class="form-label" for="email">{{ __('Email') }}</label>
+            <input
+              autofocus
+              type="text"
+              id="email"
+              name="email"
+              autocomplete="username"
+              placeholder="{{ __('Enter your email') }}"
+              class="form-control"
+              value="{{ old('email') ?? config('app.demo_mode', false) ? 'superadmin@example.com' : '' }}"
+              required
+            />
           </div>
 
           <x-inputs.password 
@@ -45,6 +55,8 @@
             </label>
             <a href="{{ route('admin.password.request') }}" class="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400">{{ __('Forgot password?') }}</a>
           </div>
+
+          <x-recaptcha page="login" />
 
           <div>
             <button type="submit" class="btn-primary w-full ">

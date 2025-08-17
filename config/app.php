@@ -149,6 +149,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Skip Recaptcha in Demo
+    |--------------------------------------------------------------------------
+    |
+    | This value determines if the application should skip the recaptcha
+    | verification in demo mode. If enabled, the recaptcha will be bypassed.
+    |
+    */
+
+    'skip_recaptcha_in_demo' => env('SKIP_RECAPTCHA_IN_DEMO', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
@@ -204,6 +216,7 @@ return [
         App\Providers\ContentServiceProvider::class,
         App\Providers\MenuServiceProvider::class,
         App\Providers\ModuleServiceProvider::class,
+        App\Providers\AdminRoutingServiceProvider::class,
     ],
 
     /*

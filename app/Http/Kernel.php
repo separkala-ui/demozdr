@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ModuleTranslationMiddleware::class,
+            \App\Http\Middleware\AdminRedirectMiddleware::class,
         ],
 
         'api' => [
@@ -66,5 +67,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check.upload.limits' => \App\Http\Middleware\CheckPhpUploadLimits::class,
+        'recaptcha' => \App\Http\Middleware\VerifyRecaptcha::class,
     ];
 }

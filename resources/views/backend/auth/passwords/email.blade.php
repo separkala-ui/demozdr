@@ -28,6 +28,9 @@
                         placeholder="{{ __('Enter your email address') }}"
                         class="form-control">
                 </div>
+                
+                <x-recaptcha page="forgot_password" />
+
                 <div>
                     <button type="submit" class="btn-primary w-full">
                         {{ __('Send Reset Link') }}
