@@ -125,9 +125,9 @@
                                         <div class="flex items-center">
                                             <div>
                                                 @if($taxonomyModel->show_featured_image && $termItem->hasFeaturedImage())
-                                                    <img src="{{ $termItem->getFeaturedImageUrl('thumb') }}" alt="{{ $termItem->name }}" class="w-10 rounded mr-3">
+                                                    <img src="{{ $termItem->getFeaturedImageUrl('thumb') }}" alt="{{ $termItem->name }}" class="w-10 rounded mr-3 min-w-10">
                                                 @elseif($taxonomyModel->show_featured_image)
-                                                    <div class="w-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center mr-3">
+                                                    <div class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center mr-3 min-w-10">
                                                         <iconify-icon icon="lucide:image" class="text-gray-400"></iconify-icon>
                                                     </div>
                                                 @endif
