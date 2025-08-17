@@ -38,7 +38,3 @@
 <div class="mt-6">
     @include('backend.pages.settings.ai-settings')
 </div>
-
-<div class="mt-6">
-   @include('backend.pages.settings.recaptcha-settings')
-</div>

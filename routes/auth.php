@@ -11,13 +11,6 @@ use App\Http\Controllers\Auth\ForgotPasswordController as UserForgotPasswordCont
 use App\Http\Controllers\Auth\VerificationController as UserVerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController as UserResetPasswordController;
 
-/**
- * Admin auth imports.
- */
-use App\Http\Controllers\Backend\Auth\ForgotPasswordController;
-use App\Http\Controllers\Backend\Auth\LoginController;
-use App\Http\Controllers\Backend\Auth\ResetPasswordController;
-
 /*
 |--------------------------------------------------------------------------
 | Auth Routes
@@ -57,23 +50,5 @@ Route::group(['middleware' => 'guest'], function () {
 // User Logout Route.
 Route::post('logout', [UserLoginController::class, 'logout'])->name('logout');
 
-// User authentication routes.
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'guest'], function () {
-    // Login Routes.
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login'])
-        ->middleware(['recaptcha:login', 'throttle:20,1'])->name('login.submit');
-
-    // Reset Password Routes.
-    Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('/password/reset', [ResetPasswordController::class, 'reset'])
-        ->middleware('throttle:20,1')->name('password.reset.submit');
-
-    // Forget Password Routes.
-    Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-    Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])
-        ->middleware(['recaptcha:forgot_password', 'throttle:20,1'])->name('password.email');
-});
-
-// Admin Logout Route.
-Route::post('/admin/logout/submit', [LoginController::class, 'logout'])->name('admin.logout.submit');
+// Admin authentication routes are now handled by AdminRoutingServiceProvider
+// to support dynamic admin login URLs

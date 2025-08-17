@@ -51,6 +51,8 @@ class SettingsController extends Controller
                 'recaptcha_secret_key',
                 'recaptcha_enabled_pages',
                 'recaptcha_score_threshold',
+                'admin_login_route',
+                'disable_default_admin_redirect',
             ]);
             $fields = $request->except($restrictedFields);
         } else {
@@ -59,7 +61,30 @@ class SettingsController extends Controller
 
         $this->checkAuthorization(Auth::user(), ['settings.edit']);
 
+        // Validate admin login route if provided
+        if ($request->has('admin_login_route')) {
+            $request->validate([
+                'admin_login_route' => 'required|regex:/^[a-zA-Z0-9\-\_\/]+$/|min:3|max:50',
+            ], [
+                'admin_login_route.regex' => 'The admin login route can only contain letters, numbers, hyphens, underscores and forward slashes.',
+            ]);
+        }
+
         $uploadPath = 'uploads/settings';
+
+        // Handle checkbox fields that might not be present when unchecked
+        $checkboxFields = ['disable_default_admin_redirect'];
+        foreach ($checkboxFields as $checkboxField) {
+            // Skip restricted fields in demo mode
+            if (config('app.demo_mode', false) && in_array($checkboxField, $restrictedFields ?? [])) {
+                continue;
+            }
+
+            if (! isset($fields[$checkboxField]) && $request->has('_token')) {
+                // If the form was submitted but checkbox wasn't checked, set to 0
+                $fields[$checkboxField] = '0';
+            }
+        }
 
         foreach ($fields as $fieldName => $fieldValue) {
             if ($request->hasFile($fieldName)) {

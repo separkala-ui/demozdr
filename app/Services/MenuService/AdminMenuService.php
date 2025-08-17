@@ -197,7 +197,7 @@ class AdminMenuService
             'permissions' => ['settings.edit', 'translations.view'],
             'children' => [
                 [
-                    'label' => __('General Settings'),
+                    'label' => __('Settings'),
                     'route' => route('admin.settings.index'),
                     'active' => Route::is('admin.settings.index'),
                     'priority' => 20,
@@ -222,7 +222,7 @@ class AdminMenuService
             'priority' => 10000,
             'html' => '
                 <li>
-                    <form method="POST" action="' . route('logout') . '">
+                    <form method="POST" action="' . route('admin.logout.submit') . '">
                         ' . csrf_field() . '
                         <button type="submit" class="menu-item group w-full text-left menu-item-inactive text-gray-700 dark:text-white hover:text-gray-700">
                             <iconify-icon icon="lucide:log-out" class="menu-item-icon " width="16" height="16"></iconify-icon>

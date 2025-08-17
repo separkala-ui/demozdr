@@ -33,6 +33,10 @@
                                     'title' => __('Integrations'),
                                     'view' => 'backend.pages.settings.integration-settings',
                                 ],
+                                'performance-security' => [
+                                    'title' => __('Performance & Security'),
+                                    'view' => 'backend.pages.settings.performance-security-tab',
+                                ],
                             ]),
                         ])
 
@@ -48,6 +52,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const tabButtons = document.querySelectorAll('[role="tab"]');
+        const controllerTab = "{{ $tab }}";
 
         function setActiveTab(tabKey) {
             tabButtons.forEach(button => {
@@ -79,9 +84,10 @@
             });
         });
 
-        // On page load, set active tab from URL
-        const urlTab = new URL(window.location).searchParams.get('tab') || 'general';
-        setActiveTab(urlTab);
+        // On page load, set active tab from URL or controller
+        const urlTab = new URL(window.location).searchParams.get('tab');
+        const activeTab = urlTab || controllerTab || 'general';
+        setActiveTab(activeTab);
     });
 </script>
 @endpush

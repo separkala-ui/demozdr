@@ -216,6 +216,7 @@ return [
         App\Providers\ContentServiceProvider::class,
         App\Providers\MenuServiceProvider::class,
         App\Providers\ModuleServiceProvider::class,
+        App\Providers\AdminRoutingServiceProvider::class,
     ],
 
     /*
