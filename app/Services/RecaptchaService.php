@@ -30,7 +30,7 @@ class RecaptchaService
         }
 
         $isEnabled = in_array($page, $this->enabledPages);
-        
+
         // Apply filter hook to allow modifications
         return ld_apply_filters('recaptcha_is_enabled_for_page', $isEnabled, $page, $this->enabledPages);
     }
@@ -62,7 +62,7 @@ class RecaptchaService
 
         try {
             $verifyUrl = ld_apply_filters('recaptcha_verify_url', 'https://www.google.com/recaptcha/api/siteverify');
-            
+
             $response = Http::asForm()->post($verifyUrl, [
                 'secret' => $this->secretKey,
                 'response' => $recaptchaResponse,

@@ -43,11 +43,11 @@ class SettingsController extends Controller
         // Restrict specific fields in demo mode.
         if (config('app.demo_mode', false)) {
             $restrictedFields = ld_apply_filters('settings_restricted_fields', [
-                'app_name', 
+                'app_name',
                 'google_analytics_script',
                 'recaptcha_site_key',
                 'recaptcha_secret_key',
-                'recaptcha_enabled_pages'
+                'recaptcha_enabled_pages',
             ]);
             $fields = $request->except($restrictedFields);
         } else {

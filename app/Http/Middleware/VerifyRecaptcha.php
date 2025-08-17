@@ -22,7 +22,7 @@ class VerifyRecaptcha
     public function handle(Request $request, Closure $next, string $page): Response
     {
         // Skip verification if reCAPTCHA is not enabled for this page
-        if (!$this->recaptchaService->isEnabledForPage($page)) {
+        if (! $this->recaptchaService->isEnabledForPage($page)) {
             return $next($request);
         }
 
@@ -37,7 +37,7 @@ class VerifyRecaptcha
         }
 
         // Verify reCAPTCHA
-        if (!$this->recaptchaService->verify($request)) {
+        if (! $this->recaptchaService->verify($request)) {
             return back()->withErrors([
                 'recaptcha' => __('reCAPTCHA verification failed. Please try again.'),
             ])->withInput();
