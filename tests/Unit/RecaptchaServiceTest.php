@@ -86,6 +86,7 @@ class RecaptchaServiceTest extends TestCase
         $pages = RecaptchaService::getAvailablePages();
 
         $this->assertArrayHasKey('login', $pages);
+        $this->assertArrayHasKey('register', $pages);
         $this->assertArrayHasKey('forgot_password', $pages);
     }
 
@@ -139,13 +140,5 @@ class RecaptchaServiceTest extends TestCase
         $scriptTag = $service->getScriptTag();
 
         $this->assertStringContainsString('https://www.google.com/recaptcha/api.js?render=test-site-key', $scriptTag);
-    }
-
-    public function test_get_html_returns_empty_for_v3()
-    {
-        $service = new RecaptchaService();
-        $html = $service->getHtml();
-
-        $this->assertEquals('', $html);
     }
 }

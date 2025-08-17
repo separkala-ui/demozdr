@@ -55,29 +55,56 @@
             @endif
         </div>
 
-        <div class="relative">
-            <label class="form-label" for="recaptcha_score_threshold">
-                {{ __('reCAPTCHA Score Threshold') }}
-            </label>
-            <input
-                type="number"
-                name="recaptcha_score_threshold"
-                id="recaptcha_score_threshold"
-                placeholder="{{ __('0.5') }}"
-                @if (config('app.demo_mode', false)) disabled @endif
-                class="form-control"
-                value="{{ config('settings.recaptcha_score_threshold', '0.5') }}"
-                min="0" max="1" step="0.1"
-            />
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                {{ __('Set the minimum score (0.0-1.0) required to pass reCAPTCHA v3 verification. Default: 0.5') }}
-            </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="relative">
+                <label class="form-label" for="recaptcha_score_threshold">
+                    {{ __('reCAPTCHA Score Threshold') }}
+                </label>
+                <input
+                    type="number"
+                    name="recaptcha_score_threshold"
+                    id="recaptcha_score_threshold"
+                    placeholder="{{ __('0.5') }}"
+                    @if (config('app.demo_mode', false)) disabled @endif
+                    class="form-control"
+                    value="{{ config('settings.recaptcha_score_threshold', '0.5') }}"
+                    min="0" max="1" step="0.1"
+                />
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {{ __('Set the minimum score (0.0-1.0) required to pass reCAPTCHA v3 verification. Default: 0.5') }}
+                </p>
 
-            @if (config('app.demo_mode', false))
-            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                {{ __('Editing this field is disabled in demo mode.') }}
+                @if (config('app.demo_mode', false))
+                <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {{ __('Editing this field is disabled in demo mode.') }}
+                </div>
+                @endif
             </div>
-            @endif
+            <div class="relative">
+                <label class="form-label" for="recaptcha_badge_position">
+                    {{ __('reCAPTCHA Badge Position') }}
+                </label>
+                @php
+                    $badgePosition = config('settings.recaptcha_badge_position', 'left');
+                @endphp
+                <select
+                    name="recaptcha_badge_position"
+                    id="recaptcha_badge_position"
+                    class="form-control"
+                    @if (config('app.demo_mode', false)) disabled @endif
+                >
+                    <option value="left" @if($badgePosition === 'left') selected @endif>{{ __('Left Corner') }}</option>
+                    <option value="right" @if($badgePosition === 'right') selected @endif>{{ __('Right Corner') }}</option>
+                </select>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {{ __('Choose where the reCAPTCHA badge appears on the screen.') }}
+                </p>
+                @if (config('app.demo_mode', false))
+                <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {{ __('Editing this field is disabled in demo mode.') }}
+                </div>
+                @endif
+            </div>
         </div>
 
         <div class="relative">

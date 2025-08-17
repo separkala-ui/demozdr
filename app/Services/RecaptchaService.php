@@ -100,15 +100,6 @@ class RecaptchaService
     }
 
     /**
-     * Get reCAPTCHA HTML for frontend (v3 doesn't need visible widget)
-     */
-    public function getHtml(): string
-    {
-        // v3 doesn't require a visible widget
-        return '';
-    }
-
-    /**
      * Get reCAPTCHA v3 script tag
      */
     public function getScriptTag(): string
@@ -138,6 +129,7 @@ class RecaptchaService
     {
         return ld_apply_filters('recaptcha_available_pages', [
             'login' => __('Login'),
+            'register' => __('Register'),
             'forgot_password' => __('Forgot Password'),
         ]);
     }

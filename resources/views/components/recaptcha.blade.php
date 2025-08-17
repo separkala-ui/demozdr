@@ -4,10 +4,10 @@
     $recaptchaService = app(\App\Services\RecaptchaService::class);
     $isEnabled = $recaptchaService->isEnabledForPage($page);
     $siteKey = $recaptchaService->getSiteKey();
+    $badgePosition = config('settings.recaptcha_badge_position', 'left');
 @endphp
 
 @if($isEnabled && $siteKey)
-    {{-- Hidden input field for reCAPTCHA v3 token --}}
     <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response-{{ $page }}">
     
     @error('recaptcha')
@@ -19,10 +19,15 @@
 
         <style>
             .grecaptcha-badge {
-                left: 20px !important;
-                right: auto !important;
+                @if($badgePosition === 'left')
+                    left: 20px !important;
+                    right: auto !important;
+                @else
+                    right: 20px !important;
+                    left: auto !important;
+                @endif
                 bottom: 20px !important;
-                z-index: 1000;
+                z-index: 100;
             }
         </style>
         
