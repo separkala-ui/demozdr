@@ -138,7 +138,6 @@ class RecaptchaService
     {
         return ld_apply_filters('recaptcha_available_pages', [
             'login' => __('Login'),
-            'registration' => __('Registration'),
             'forgot_password' => __('Forgot Password'),
         ]);
     }

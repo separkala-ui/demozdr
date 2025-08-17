@@ -8,13 +8,18 @@
 
     <div class="space-y-6 border-t border-gray-100 p-5 sm:p-6 dark:border-gray-800">
         <div class="relative">
-            <label class="form-label">
+            <label class="form-label" for="recaptcha_site_key">
                 {{ __('reCAPTCHA Site Key') }}
             </label>
-            <input type="text" name="recaptcha_site_key" placeholder="{{ __('Enter your reCAPTCHA site key') }}"
+            <input
+                type="text"
+                name="recaptcha_site_key"
+                id="recaptcha_site_key"
+                placeholder="{{ __('Enter your reCAPTCHA site key') }}"
                 @if (config('app.demo_mode', false)) disabled @endif
                 class="form-control"
-                value="{{ config('settings.recaptcha_site_key') ?? '' }}">
+                value="{{ config('settings.recaptcha_site_key') ?? '' }}"
+            />
 
             @if (config('app.demo_mode', false))
             <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -24,13 +29,18 @@
         </div>
 
         <div class="relative">
-            <label class="form-label">
+            <label class="form-label" for="recaptcha_secret_key">
                 {{ __('reCAPTCHA Secret Key') }}
             </label>
-            <input type="password" name="recaptcha_secret_key" placeholder="{{ __('Enter your reCAPTCHA secret key') }}"
+            <input
+                type="password"
+                name="recaptcha_secret_key"
+                id="recaptcha_secret_key"
+                placeholder="{{ __('Enter your reCAPTCHA secret key') }}"
                 @if (config('app.demo_mode', false)) disabled @endif
                 class="form-control"
-                value="{{ config('settings.recaptcha_secret_key') ?? '' }}">
+                value="{{ config('settings.recaptcha_secret_key') ?? '' }}"
+            />
 
             @if (config('app.demo_mode', false))
             <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -40,15 +50,19 @@
         </div>
 
         <div class="relative">
-            <label class="form-label">
+            <label class="form-label" for="recaptcha_score_threshold">
                 {{ __('reCAPTCHA Score Threshold') }}
             </label>
-            <input type="number" name="recaptcha_score_threshold" 
+            <input
+                type="number"
+                name="recaptcha_score_threshold"
+                id="recaptcha_score_threshold"
                 placeholder="{{ __('0.5') }}"
                 @if (config('app.demo_mode', false)) disabled @endif
                 class="form-control"
                 value="{{ config('settings.recaptcha_score_threshold', '0.5') }}"
-                min="0" max="1" step="0.1">
+                min="0" max="1" step="0.1"
+            />
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ __('Set the minimum score (0.0-1.0) required to pass reCAPTCHA v3 verification. Default: 0.5') }}
             </p>
