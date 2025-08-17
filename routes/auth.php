@@ -69,4 +69,3 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'guest'], f
 
 // Admin Logout Route.
 Route::post('/admin/logout/submit', [LoginController::class, 'logout'])->name('admin.logout.submit');
-
