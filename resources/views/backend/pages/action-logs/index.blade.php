@@ -65,7 +65,7 @@
                                     <td class="table-td">{{ __(ucfirst($log->type)) }}</td>
                                     <td class="table-td">{{ $log->title }}</td>
                                     <td class="table-td">
-                                        {{ $log->user->name . ' (' . $log->user->username . ')' ?? '' }}</td>
+                                        {{ $log->user->full_name . ' (' . $log->user->username . ')' ?? '' }}</td>
                                     <td class="table-td">
                                         <button id="expand-btn-{{ $log->id }}" class="text-primary text-sm mt-2"
                                             data-modal-target="json-modal-{{ $log->id }}"

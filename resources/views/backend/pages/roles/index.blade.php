@@ -105,7 +105,7 @@
                                         class="role-checkbox form-checkbox"
                                         value="{{ $role->id }}"
                                         x-model="selectedRoles"
-                                        {{ $role->name === 'superadmin' ? 'disabled' : '' }}
+                                        {{ $role->name === 'Superadmin' ? 'disabled' : '' }}
                                     >
                                 </td>
                                 <td class="table-td">

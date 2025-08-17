@@ -85,7 +85,7 @@ x-init="init()"
                     style="display: none">
                     <div class="border-b border-gray-200 pb-2 dark:border-gray-800 mb-2">
                         <span class="block font-medium text-gray-700 dark:text-gray-300">
-                            {{ auth()->user()->name }}
+                            {{ auth()->user()->full_name }}
                         </span>
                         <span class="mt-0.5 block text-theme-sm text-gray-700 dark:text-gray-300">
                             {{ auth()->user()->email }}

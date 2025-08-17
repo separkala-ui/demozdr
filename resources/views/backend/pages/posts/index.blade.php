@@ -237,7 +237,7 @@
                                     </div>
                                 </td>
                                 <td class="table-td">
-                                    {{ $post->user->name }}
+                                    {{ $post->user->full_name }}
                                 </td>
                                 @if($postType === 'post')
                                     <td class="table-td">
