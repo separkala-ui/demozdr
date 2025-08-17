@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Enums\ActionType;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\LanguageService;
 use App\Services\TimezoneService;
 use Illuminate\Contracts\Support\Renderable;
@@ -25,6 +26,9 @@ class ProfileController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['profile.edit'], true);
 
+        /**
+         * @var User $user
+         */
         $user = Auth::user();
 
         // Load user metadata
@@ -49,6 +53,9 @@ class ProfileController extends Controller
         // Prevent modification of super admin in demo mode.
         $this->preventSuperAdminModification(auth()->user(), ['profile.edit']);
 
+        /**
+         * @var User $user
+         */
         $user = Auth::user();
 
         $request->validate([
@@ -85,6 +92,9 @@ class ProfileController extends Controller
         // Prevent modification of super admin in demo mode.
         $this->preventSuperAdminModification(auth()->user(), ['profile.edit']);
 
+        /**
+         * @var User $user
+         */
         $user = Auth::user();
 
         $request->validate([
@@ -94,9 +104,23 @@ class ProfileController extends Controller
             'locale' => 'nullable|string|max:10',
         ]);
 
-        // Update user metadata only
+        // Update user metadata only.
         $metaFields = ['display_name', 'bio', 'timezone', 'locale'];
         foreach ($metaFields as $field) {
+            if ($request->has($field)) {
+                $user->userMeta()->updateOrCreate(
+                    ['meta_key' => $field],
+                    [
+                        'meta_value' => $request->input($field) ?? '',
+                        'type' => 'string',
+                    ]
+                );
+            }
+        }
+
+        // Update social links metadata.
+        $socialFields = ['social_facebook', 'social_x', 'social_youtube', 'social_linkedin', 'social_website'];
+        foreach ($socialFields as $field) {
             if ($request->has($field)) {
                 $user->userMeta()->updateOrCreate(
                     ['meta_key' => $field],

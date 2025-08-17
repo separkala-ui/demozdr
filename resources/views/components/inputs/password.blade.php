@@ -6,6 +6,7 @@
     'required' => false,
     'class' => '',
     'id' => null,
+    'autocomplete' => 'new-password'
 ])
 
 @php
@@ -25,7 +26,9 @@
             value="{{ $value }}"
             placeholder="{{ $placeholder }}"
             @if($required) required @endif
-            class="form-control {{ $class }}" />
+            class="form-control {{ $class }}"
+            autocomplete="{{ $autocomplete }}"
+        />
 
         <button type="button" @click="showPassword = !showPassword" class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-300 flex items-center justify-center w-6 h-6">
             <iconify-icon x-show="!showPassword" icon="lucide:eye" width="20" height="20" class="text-[#98A2B3]"></iconify-icon>

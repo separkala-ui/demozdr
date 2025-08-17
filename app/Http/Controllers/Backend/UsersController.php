@@ -96,6 +96,18 @@ class UsersController extends Controller
             }
         }
 
+        // Handle social links metadata
+        $socialFields = ['social_facebook', 'social_x', 'social_youtube', 'social_linkedin', 'social_website'];
+        foreach ($socialFields as $field) {
+            if ($request->has($field) && $request->input($field)) {
+                $user->userMeta()->create([
+                    'meta_key' => $field,
+                    'meta_value' => $request->input($field),
+                    'type' => 'string',
+                ]);
+            }
+        }
+
         if ($request->roles) {
             $roles = array_filter($request->roles);
             $user->assignRole($roles);
@@ -159,6 +171,20 @@ class UsersController extends Controller
         // Update user metadata for additional information
         $metaFields = ['display_name', 'bio', 'timezone', 'locale'];
         foreach ($metaFields as $field) {
+            if ($request->has($field)) {
+                $user->userMeta()->updateOrCreate(
+                    ['meta_key' => $field],
+                    [
+                        'meta_value' => $request->input($field) ?? '',
+                        'type' => 'string',
+                    ]
+                );
+            }
+        }
+
+        // Update social links metadata
+        $socialFields = ['social_facebook', 'social_x', 'social_youtube', 'social_linkedin', 'social_website'];
+        foreach ($socialFields as $field) {
             if ($request->has($field)) {
                 $user->userMeta()->updateOrCreate(
                     ['meta_key' => $field],

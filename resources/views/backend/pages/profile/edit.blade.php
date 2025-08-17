@@ -22,7 +22,7 @@
                             'roles' => [],
                             'timezones' => $timezones ?? [],
                             'locales' => $locales ?? [],
-                            'userMeta' => [],
+                            'userMeta' => $userMeta ?? [],
                             'mode' => 'profile',
                             'showUsername' => true,
                             'showRoles' => false,

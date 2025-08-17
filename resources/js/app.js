@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to focus the search input
     function focusSearchInput() {
-        searchInput.focus();
+        searchInput?.focus();
     }
 
     if (searchInput) {
@@ -188,7 +188,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Add keyboard event listener for "/" key
     document.addEventListener("keydown", function (event) {
-        if (event.key === "/" && document.activeElement !== searchInput) {
+        // Check if the active element is an input, textarea, or contenteditable element
+        const activeElement = document.activeElement;
+        const isInputField = activeElement.tagName === 'INPUT' ||
+            activeElement.tagName === 'TEXTAREA' ||
+            activeElement.contentEditable === 'true';
+
+        if (event.key === "/" && !isInputField) {
             event.preventDefault(); // Prevent the "/" character from being typed
             focusSearchInput();
         }
@@ -196,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Toast notification helper function
-window.showToast = function(variant, title, message) {
+window.showToast = function (variant, title, message) {
     // Dispatch the notify event that the toast component listens for
     window.dispatchEvent(new CustomEvent('notify', {
         detail: {

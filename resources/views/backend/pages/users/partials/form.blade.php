@@ -75,6 +75,15 @@
                 </p>
             @endif
         </div>
+
+        {{-- Social Links Section - Only show in edit and profile modes --}}
+        @if(($isEdit || $isProfile) && $user)
+            <x-users.social-links 
+                :user="$user" 
+                :userMeta="$userMeta"
+                :showEdit="true"
+            />
+        @endif
     </div>
     @endif
 
@@ -107,7 +116,9 @@
                     <input type="text" name="username" id="username" required
                         value="{{ old('username', $user?->username) }}"
                         placeholder="{{ __('Enter Username') }}"
-                        class="form-control">
+                        class="form-control"
+                        autocomplete="username"
+                    >
                 </div>
             @endif
             <div>
