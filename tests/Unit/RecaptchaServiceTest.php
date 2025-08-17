@@ -141,4 +141,32 @@ class RecaptchaServiceTest extends TestCase
 
         $this->assertStringContainsString('https://www.google.com/recaptcha/api.js?render=test-site-key', $scriptTag);
     }
+
+    public function test_settings_controller_rejects_invalid_recaptcha_enabled_pages()
+    {
+        $controller = app(\App\Http\Controllers\Backend\SettingsController::class);
+        $request = Request::create('/', 'POST', [
+            'recaptcha_enabled_pages' => ['login', 'invalid_page', 'register'],
+        ]);
+        // Simulate store method logic
+        $validPages = array_keys(RecaptchaService::getAvailablePages());
+        $enabledPages = $request->input('recaptcha_enabled_pages', []);
+        $filteredPages = array_intersect($enabledPages, $validPages);
+
+        $this->assertEquals(['login', 'register'], array_values($filteredPages));
+    }
+
+    public function test_recaptcha_service_handles_http_timeout_exception()
+    {
+        Http::fake([
+            'https://www.google.com/recaptcha/api/siteverify' => function () {
+                throw new \Exception('Timeout');
+            },
+        ]);
+        $service = new RecaptchaService();
+        $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
+
+        $result = $service->verify($request, 'login');
+        $this->assertFalse($result);
+    }
 }

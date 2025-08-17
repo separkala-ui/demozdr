@@ -65,7 +65,7 @@ class RecaptchaService
         try {
             $verifyUrl = ld_apply_filters('recaptcha_verify_url', 'https://www.google.com/recaptcha/api/siteverify');
 
-            $response = Http::asForm()->post($verifyUrl, [
+            $response = Http::timeout(10)->asForm()->post($verifyUrl, [
                 'secret' => $this->secretKey,
                 'response' => $recaptchaResponse,
                 'remoteip' => $request->ip(),
@@ -94,6 +94,11 @@ class RecaptchaService
             $filteredResult = ld_apply_filters('recaptcha_post_verification', $isValid, $result);
             return (bool) $filteredResult;
         } catch (\Exception $e) {
+            \Log::error('Recaptcha verification failed', [
+                'exception' => $e,
+                'ip' => $request->ip(),
+                'action' => $action,
+            ]);
             $exceptionResult = ld_apply_filters('recaptcha_verification_exception', false, $e);
             return (bool) $exceptionResult;
         }

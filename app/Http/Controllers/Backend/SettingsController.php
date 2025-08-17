@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Services\CacheService;
 use App\Services\EnvWriter;
 use App\Services\ImageService;
+use App\Services\RecaptchaService;
 use App\Services\SettingService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ class SettingsController extends Controller
         private readonly EnvWriter $envWriter,
         private readonly CacheService $cacheService,
         private readonly ImageService $imageService,
+        private readonly RecaptchaService $recaptchaService,
     ) {
     }
 
@@ -65,9 +67,11 @@ class SettingsController extends Controller
                 $fileUrl = $this->imageService->storeImageAndGetUrl($request, $fieldName, $uploadPath);
                 $this->settingService->addSetting($fieldName, $fileUrl);
             } elseif ($fieldName === 'recaptcha_enabled_pages') {
-                // Handle checkbox array for reCAPTCHA enabled pages
+                // Validate enabled pages against allowed list.
                 $enabledPages = $request->input('recaptcha_enabled_pages', []);
-                $this->settingService->addSetting($fieldName, json_encode($enabledPages));
+                $validPages = array_keys($this->recaptchaService::getAvailablePages());
+                $enabledPages = array_intersect($enabledPages, $validPages);
+                $this->settingService->addSetting($fieldName, json_encode(array_values($enabledPages)));
             } else {
                 $this->settingService->addSetting($fieldName, $fieldValue);
             }
