@@ -101,7 +101,9 @@
                 <input type="text" name="first_name" id="first_name" required
                     value="{{ old('first_name', $user?->first_name) }}"
                     placeholder="{{ __('Enter First Name') }}"
-                    class="form-control">
+                    class="form-control"
+                    autofocus
+                >
             </div>
             <div>
                 <label for="last_name" class="form-label">{{ $lastNameLabel }}</label>

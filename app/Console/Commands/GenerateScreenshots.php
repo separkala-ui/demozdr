@@ -172,13 +172,13 @@ class GenerateScreenshots extends Command
                 'mode' => 'lite',
             ],
             [
-                'name' => '11-User-List-Dark-Mode',
-                'url' => '/admin/users',
+                'name' => '11-User-Create-Dark-Mode',
+                'url' => '/admin/users/create',
                 'mode' => 'dark',
             ],
             [
-                'name' => '12-User-Create-Lite-Mode',
-                'url' => '/admin/users/create',
+                'name' => '12-Profile-Edit-Lite-Mode',
+                'url' => '/profile/edit',
                 'mode' => 'lite',
             ],
 

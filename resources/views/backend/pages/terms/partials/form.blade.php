@@ -35,21 +35,24 @@
             class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Description') }}</label>
         <textarea name="description" id="description" rows="3" class="form-control !h-30">{{ old('description', $term ? $term->description : '') }}</textarea>
     </div>
-    @if ($taxonomyModel->show_featured_image)
-        <div class="mt-2">
-            <x-media-selector 
-                name="featured_image" 
-                label="{{ __('Featured Image') }}"
-                :multiple="false"
-                allowedTypes="images"
-                :existingMedia="($term && $term->hasFeaturedImage()) ? $term->getFeaturedImageUrl() : null"
-                :existingAltText="$term ? $term->featured_image_alt_text : ''"
-                removeCheckboxName="remove_featured_image"
-                removeCheckboxLabel="{{ __('Remove featured image') }}"
-                :showPreview="true"
-            />
-        </div>
-    @endif
+
+    <div class="flex">
+        @if ($taxonomyModel->show_featured_image)
+            <div class="mt-2">
+                <x-media-selector
+                    name="featured_image"
+                    label="{{ __('Featured Image') }}"
+                    :multiple="false"
+                    allowedTypes="images"
+                    :existingMedia="($term && $term->hasFeaturedImage()) ? $term->getFeaturedImageUrl() : null"
+                    :existingAltText="$term ? $term->featured_image_alt_text : ''"
+                    removeCheckboxName="remove_featured_image"
+                    removeCheckboxLabel="{{ __('Remove featured image') }}"
+                    :showPreview="true"
+                />
+            </div>
+        @endif
+    </div>
 
     @if ($taxonomyModel->hierarchical)
         <div class="mt-2">

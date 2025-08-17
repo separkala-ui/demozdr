@@ -221,9 +221,9 @@
                                 <td class="table-td">
                                     <div class="flex gap-0.5 items-center">
                                         @if($post->hasFeaturedImage())
-                                            <img src="{{ $post->getFeaturedImageUrl('thumb') }}" alt="{{ $post->title }}" class="w-12 object-cover rounded mr-3">
+                                            <img src="{{ $post->getFeaturedImageUrl('thumb') }}" alt="{{ $post->title }}" class="w-12 object-cover rounded mr-3 min-w-10">
                                         @else
-                                            <div class="bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center mr-2 h-10 w-10">
+                                            <div class="bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center mr-2 h-10 w-10 min-w-10">
                                                 <iconify-icon icon="lucide:image" class=" text-center text-gray-400"></iconify-icon>
                                             </div>
                                         @endif
