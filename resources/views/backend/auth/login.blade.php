@@ -46,6 +46,8 @@
             <a href="{{ route('admin.password.request') }}" class="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400">{{ __('Forgot password?') }}</a>
           </div>
 
+          <x-recaptcha page="login" />
+
           <div>
             <button type="submit" class="btn-primary w-full ">
               {{ __('Sign In') }}

@@ -29,7 +29,75 @@
                 </a>
             </p>
         </div>
-    </div>
+        
+        <!-- reCAPTCHA Settings Section -->
+        <div class="relative">
+            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {{ __('reCAPTCHA Site Key') }}
+            </label>
+            <input type="text" name="recaptcha_site_key" placeholder="{{ __('Enter your reCAPTCHA site key') }}"
+                @if (config('app.demo_mode', false)) disabled @endif
+                class="form-control"
+                value="{{ config('settings.recaptcha_site_key') ?? '' }}">
+            
+            @if (config('app.demo_mode', false))
+            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {{ __('Editing this field is disabled in demo mode.') }}
+            </div>
+            @endif
+        </div>
+
+        <div class="relative">
+            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {{ __('reCAPTCHA Secret Key') }}
+            </label>
+            <input type="password" name="recaptcha_secret_key" placeholder="{{ __('Enter your reCAPTCHA secret key') }}"
+                @if (config('app.demo_mode', false)) disabled @endif
+                class="form-control"
+                value="{{ config('settings.recaptcha_secret_key') ?? '' }}">
+            
+            @if (config('app.demo_mode', false))
+            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {{ __('Editing this field is disabled in demo mode.') }}
+            </div>
+            @endif
+        </div>
+
+        <div class="relative">
+            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {{ __('Enable reCAPTCHA on Pages') }}
+            </label>
+            @php
+                $availablePages = \App\Services\RecaptchaService::getAvailablePages();
+                $enabledPages = json_decode(config('settings.recaptcha_enabled_pages', '[]'), true) ?: [];
+            @endphp
+            
+            <div class="space-y-2">
+                @foreach($availablePages as $page => $label)
+                <label class="flex items-center">
+                    <input type="checkbox" name="recaptcha_enabled_pages[]" value="{{ $page }}"
+                        @if(in_array($page, $enabledPages)) checked @endif
+                        @if (config('app.demo_mode', false)) disabled @endif
+                        class="form-checkbox rounded border-gray-300 text-brand-600 shadow-sm focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700">
+                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ $label }}</span>
+                </label>
+                @endforeach
+            </div>
+            
+            @if (config('app.demo_mode', false))
+            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {{ __('Editing these options is disabled in demo mode.') }}
+            </div>
+            @endif
+
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
+                {{ __('Learn more about Google reCAPTCHA and how to set it up:') }}
+                <a href="https://www.google.com/recaptcha/" target="_blank" class="text-primary hover:underline">
+                    {{ __('Google reCAPTCHA') }}
+                </a>
+            </p>
+        </div>
+
     @php echo ld_apply_filters('settings_integrations_tab_before_section_end', '') @endphp
 </div>
 @php echo ld_apply_filters('settings_integrations_tab_after_section_end', '') @endphp
