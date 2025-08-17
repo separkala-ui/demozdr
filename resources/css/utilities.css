@@ -25,7 +25,7 @@
 
     /* Screen reader only utility */
     .sr-only {
-        @apply absolute w-px h-px p-0 m-[-1px] overflow-hidden clip-rect-0 whitespace-nowrap border-0;
+        @apply absolute w-px h-px p-0 m-[-1px] overflow-hidden whitespace-nowrap border-0;
     }
 }
 

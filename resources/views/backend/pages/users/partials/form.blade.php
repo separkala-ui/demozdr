@@ -134,14 +134,18 @@
                     name="password"
                     label="{{ $passwordLabel }}"
                     placeholder="{{ __('Enter Password') }}"
-                    :required="$isCreate" />
+                    :required="$isCreate"
+                    :showAutoGenerate="true"
+                />
             </div>
             <div>
                 <x-inputs.password
                     name="password_confirmation"
                     label="{{ $confirmPasswordLabel }}"
                     placeholder="{{ __('Confirm Password') }}"
-                    :required="$isCreate" />
+                    :required="$isCreate"
+                    :showAutoGenerate="true"
+                />
             </div>
 
             @if($showRoles || $showDisplayName)
