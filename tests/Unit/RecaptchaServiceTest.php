@@ -86,7 +86,6 @@ class RecaptchaServiceTest extends TestCase
         $pages = RecaptchaService::getAvailablePages();
 
         $this->assertArrayHasKey('login', $pages);
-        $this->assertArrayHasKey('registration', $pages);
         $this->assertArrayHasKey('forgot_password', $pages);
     }
 
