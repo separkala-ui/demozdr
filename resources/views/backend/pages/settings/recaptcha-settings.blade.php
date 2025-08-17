@@ -2,7 +2,7 @@
 <div class="rounded-md border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03]">
     <div class="px-5 py-4 sm:px-6 sm:py-5">
         <h3 class="text-base font-medium text-gray-700 dark:text-white/90">
-            {{ __('reCAPTCHA Integrations') }}
+            {{ __('reCAPTCHA v3 Integration') }}
         </h3>
     </div>
 
@@ -41,6 +41,27 @@
 
         <div class="relative">
             <label class="form-label">
+                {{ __('reCAPTCHA Score Threshold') }}
+            </label>
+            <input type="number" name="recaptcha_score_threshold" 
+                placeholder="{{ __('0.5') }}"
+                @if (config('app.demo_mode', false)) disabled @endif
+                class="form-control"
+                value="{{ config('settings.recaptcha_score_threshold', '0.5') }}"
+                min="0" max="1" step="0.1">
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {{ __('Set the minimum score (0.0-1.0) required to pass reCAPTCHA v3 verification. Default: 0.5') }}
+            </p>
+
+            @if (config('app.demo_mode', false))
+            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {{ __('Editing this field is disabled in demo mode.') }}
+            </div>
+            @endif
+        </div>
+
+        <div class="relative">
+            <label class="form-label">
                 {{ __('Enable reCAPTCHA on Pages') }}
             </label>
             @php
@@ -68,8 +89,8 @@
 
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
                 {{ __('Learn more about Google reCAPTCHA and how to set it up:') }}
-                <a href="https://www.google.com/recaptcha/" target="_blank" class="text-primary hover:underline">
-                    {{ __('Google reCAPTCHA') }}
+                <a href="https://www.google.com/recaptcha/admin" target="_blank" class="text-primary hover:underline">
+                    {{ __('Google reCAPTCHA v3') }}
                 </a>
             </p>
         </div>

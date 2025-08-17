@@ -20,6 +20,7 @@ class RecaptchaServiceTest extends TestCase
         Config::set('settings.recaptcha_site_key', 'test-site-key');
         Config::set('settings.recaptcha_secret_key', 'test-secret-key');
         Config::set('settings.recaptcha_enabled_pages', json_encode(['login', 'registration']));
+        Config::set('settings.recaptcha_score_threshold', 0.5);
     }
 
     public function test_is_enabled_for_page_returns_true_when_configured()
@@ -53,7 +54,7 @@ class RecaptchaServiceTest extends TestCase
         $service = new RecaptchaService();
         $request = Request::create('/', 'POST');
 
-        $this->assertFalse($service->verify($request));
+        $this->assertFalse($service->verify($request, 'login'));
     }
 
     public function test_verify_makes_http_request_when_response_present()
@@ -61,13 +62,15 @@ class RecaptchaServiceTest extends TestCase
         Http::fake([
             'https://www.google.com/recaptcha/api/siteverify' => Http::response([
                 'success' => true,
+                'score' => 0.8,
+                'action' => 'login',
             ]),
         ]);
 
         $service = new RecaptchaService();
         $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
 
-        $result = $service->verify($request);
+        $result = $service->verify($request, 'login');
 
         $this->assertTrue($result);
 
@@ -85,5 +88,65 @@ class RecaptchaServiceTest extends TestCase
         $this->assertArrayHasKey('login', $pages);
         $this->assertArrayHasKey('registration', $pages);
         $this->assertArrayHasKey('forgot_password', $pages);
+    }
+
+    public function test_verify_fails_when_score_below_threshold()
+    {
+        Http::fake([
+            'https://www.google.com/recaptcha/api/siteverify' => Http::response([
+                'success' => true,
+                'score' => 0.3,
+                'action' => 'login',
+            ]),
+        ]);
+
+        $service = new RecaptchaService();
+        $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
+
+        $result = $service->verify($request, 'login');
+
+        $this->assertFalse($result);
+    }
+
+    public function test_verify_fails_when_action_mismatch()
+    {
+        Http::fake([
+            'https://www.google.com/recaptcha/api/siteverify' => Http::response([
+                'success' => true,
+                'score' => 0.8,
+                'action' => 'registration',
+            ]),
+        ]);
+
+        $service = new RecaptchaService();
+        $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
+
+        $result = $service->verify($request, 'login');
+
+        $this->assertFalse($result);
+    }
+
+    public function test_get_score_threshold_returns_configured_value()
+    {
+        Config::set('settings.recaptcha_score_threshold', 0.7);
+        $service = new RecaptchaService();
+
+        $this->assertEquals(0.7, $service->getScoreThreshold());
+    }
+
+    public function test_get_script_tag_returns_v3_script()
+    {
+        $service = new RecaptchaService();
+        $scriptTag = $service->getScriptTag();
+
+        $this->assertStringContainsString('https://www.google.com/recaptcha/api.js?render=test-site-key', $scriptTag);
+    }
+
+    public function test_get_html_returns_empty_for_v3()
+    {
+        $service = new RecaptchaService();
+        $html = $service->getHtml();
+
+        $this->assertEquals('', $html);
     }
 }

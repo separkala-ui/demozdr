@@ -48,6 +48,7 @@ class SettingsController extends Controller
                 'recaptcha_site_key',
                 'recaptcha_secret_key',
                 'recaptcha_enabled_pages',
+                'recaptcha_score_threshold',
             ]);
             $fields = $request->except($restrictedFields);
         } else {

@@ -36,8 +36,8 @@ class VerifyRecaptcha
             return $next($request);
         }
 
-        // Verify reCAPTCHA
-        if (! $this->recaptchaService->verify($request)) {
+        // Verify reCAPTCHA with action based on page.
+        if (! $this->recaptchaService->verify($request, $page)) {
             return back()->withErrors([
                 'recaptcha' => __('reCAPTCHA verification failed. Please try again.'),
             ])->withInput();
