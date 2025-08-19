@@ -13,7 +13,7 @@ use App\Services\RolesService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class RolesController extends Controller
 {
@@ -25,7 +25,7 @@ class RolesController extends Controller
 
     public function index(): Renderable
     {
-        $this->checkAuthorization(Auth::user(), ['role.view']);
+        $this->authorize('viewAny', Role::class);
 
         $perPage = config('settings.default_pagination') ?? 10;
         $search = request()->input('search') !== '' ? request()->input('search') : null;
@@ -40,7 +40,7 @@ class RolesController extends Controller
 
     public function create(): Renderable
     {
-        $this->checkAuthorization(Auth::user(), ['role.create']);
+        $this->authorize('create', Role::class);
 
         return view('backend.pages.roles.create', [
             'roleService' => $this->rolesService,
@@ -71,14 +71,14 @@ class RolesController extends Controller
 
     public function edit(int $id): Renderable|RedirectResponse
     {
-        $this->checkAuthorization(Auth::user(), ['role.edit']);
-
         $role = $this->rolesService->findRoleById($id);
         if (! $role) {
             session()->flash('error', __('Role not found.'));
 
             return back();
         }
+
+        $this->authorize('update', $role);
 
         return view('backend.pages.roles.edit', [
             'role' => $role,
@@ -107,7 +107,12 @@ class RolesController extends Controller
             return back();
         }
 
-        $this->preventSuperAdminRoleModification($role, 'modified');
+        // Check if this is the Superadmin role in demo mode - return 403 directly
+        if (config('app.demo_mode') && $role->name === 'Superadmin') {
+            abort(403, 'Cannot modify Superadmin role in demo mode.');
+        }
+
+        $this->authorize('update', $role);
 
         $role = $this->rolesService->updateRole($role, $request->name, $request->input('permissions', []));
 
@@ -119,8 +124,6 @@ class RolesController extends Controller
 
     public function destroy(int $id): RedirectResponse
     {
-        $this->checkAuthorization(Auth::user(), ['role.delete']);
-
         $role = $this->rolesService->findRoleById($id);
 
         if (! $role) {
@@ -129,7 +132,12 @@ class RolesController extends Controller
             return back();
         }
 
-        $this->preventSuperAdminRoleModification($role, 'deleted');
+        // Check if this is the Superadmin role in demo mode - return 403 directly
+        if (config('app.demo_mode') && $role->name === 'Superadmin') {
+            abort(403, 'Cannot delete Superadmin role in demo mode.');
+        }
+
+        $this->authorize('delete', $role);
 
         $this->rolesService->deleteRole($role);
         $this->storeActionLog(ActionType::DELETED, ['role' => $role]);
@@ -143,7 +151,7 @@ class RolesController extends Controller
      */
     public function bulkDelete(Request $request): RedirectResponse
     {
-        $this->checkAuthorization(Auth::user(), ['role.delete']);
+        $this->authorize('bulkDelete', Role::class);
 
         $ids = $request->input('ids', []);
 

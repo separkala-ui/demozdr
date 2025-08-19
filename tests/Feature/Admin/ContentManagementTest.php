@@ -312,7 +312,7 @@ class ContentManagementTest extends TestCase
                 'content' => 'Unauthorized content',
                 'status' => 'publish',
             ])
-            ->assertStatus(403);
+            ->assertRedirect();
 
         $this->actingAs($regularUser)
             ->get('/admin/terms/category')

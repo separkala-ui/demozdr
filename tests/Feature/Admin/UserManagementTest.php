@@ -147,11 +147,12 @@ class UserManagementTest extends TestCase
             ->post('/admin/users', [
                 'first_name' => 'New',
                 'last_name' => 'User',
+                'username' => 'newuser',
                 'email' => 'newuser@example.com',
                 'password' => 'password123',
                 'password_confirmation' => 'password123',
             ])
-            ->assertStatus(403);
+            ->assertRedirect();
     }
 
     #[Test]

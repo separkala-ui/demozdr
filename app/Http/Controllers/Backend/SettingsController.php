@@ -10,6 +10,7 @@ use App\Services\CacheService;
 use App\Services\EnvWriter;
 use App\Services\ImageService;
 use App\Services\RecaptchaService;
+use App\Models\Setting;
 use App\Services\SettingService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class SettingsController extends Controller
 
     public function index($tab = null): Renderable
     {
-        $this->checkAuthorization(Auth::user(), ['settings.edit']);
+        $this->authorize('manage', Setting::class);
 
         $tab = $tab ?? request()->input('tab', 'general');
 
@@ -42,6 +43,7 @@ class SettingsController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('manage', Setting::class);
         // Restrict specific fields in demo mode.
         if (config('app.demo_mode', false)) {
             $restrictedFields = ld_apply_filters('settings_restricted_fields', [

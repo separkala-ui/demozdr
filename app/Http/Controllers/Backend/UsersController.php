@@ -29,7 +29,7 @@ class UsersController extends Controller
 
     public function index(): Renderable
     {
-        $this->checkAuthorization(Auth::user(), ['user.view']);
+        $this->authorize('viewAny', User::class);
 
         $filters = [
             'search' => request('search'),
@@ -49,7 +49,7 @@ class UsersController extends Controller
 
     public function create(): Renderable
     {
-        $this->checkAuthorization(Auth::user(), ['user.create']);
+        $this->authorize('create', User::class);
 
         ld_do_action('user_create_page_before');
 
@@ -124,9 +124,8 @@ class UsersController extends Controller
 
     public function edit(int $id): Renderable
     {
-        $this->checkAuthorization(Auth::user(), ['user.edit']);
-
         $user = User::with('avatar')->findOrFail($id);
+        $this->authorize('update', $user);
 
         ld_do_action('user_edit_page_before');
 
@@ -150,9 +149,7 @@ class UsersController extends Controller
     public function update(UpdateUserRequest $request, int $id): RedirectResponse
     {
         $user = User::findOrFail($id);
-
-        // Prevent editing of super admin in demo mode
-        $this->preventSuperAdminModification($user);
+        $this->authorize('update', $user);
 
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
@@ -213,17 +210,15 @@ class UsersController extends Controller
 
     public function destroy(int $id): RedirectResponse
     {
-        $this->checkAuthorization(Auth::user(), ['user.delete']);
         $user = $this->userService->getUserById($id);
 
-        // Prevent deletion of super admin in demo mode
-        $this->preventSuperAdminModification($user);
-
-        // Prevent users from deleting themselves.
+        // Check if user is trying to delete themselves
         if (Auth::id() === $user->id) {
             session()->flash('error', __('You cannot delete your own account.'));
             return back();
         }
+
+        $this->authorize('delete', $user);
 
         $user = ld_apply_filters('user_delete_before', $user);
         $user->delete();
@@ -239,7 +234,7 @@ class UsersController extends Controller
 
     public function bulkDelete(Request $request): RedirectResponse
     {
-        $this->checkAuthorization(Auth::user(), ['user.delete']);
+        $this->authorize('bulkDelete', User::class);
 
         $ids = $request->input('ids', []);
 
