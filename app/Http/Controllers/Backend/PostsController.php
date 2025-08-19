@@ -110,6 +110,8 @@ class PostsController extends Controller
 
     public function store(StorePostRequest $request, string $postType = 'post'): RedirectResponse
     {
+        $this->authorize('create', Post::class);
+
         // Get post type.
         $postTypeModel = $this->contentService->getPostType($postType);
 

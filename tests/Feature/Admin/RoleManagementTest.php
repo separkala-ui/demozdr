@@ -237,7 +237,7 @@ class RoleManagementTest extends TestCase
                 'name' => 'NewRole',
                 'permissions' => ['role.view'],
             ])
-            ->assertRedirect();
+            ->assertStatus(403);
 
         // Create a role for testing edit and delete
         $role = Role::create(['name' => 'TestRole']);

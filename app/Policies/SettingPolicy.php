@@ -36,7 +36,7 @@ class SettingPolicy extends BasePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Setting $setting): bool
+    public function update(User $user, ?Setting $setting = null): bool
     {
         return $this->checkPermission($user, 'settings.edit');
     }

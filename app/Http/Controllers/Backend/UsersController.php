@@ -71,6 +71,8 @@ class UsersController extends Controller
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
+        $this->authorize('create', User::class);
+
         $user = new User();
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;

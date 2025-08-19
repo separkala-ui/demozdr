@@ -157,6 +157,8 @@ class RoleController extends ApiController
      */
     public function bulkDelete(BulkDeleteRoleRequest $request): JsonResponse
     {
+        $this->authorize('bulkDelete', Role::class);
+
         $roleIds = $request->input('ids');
 
         $rolesWithUsers = Role::whereIn('id', $roleIds)

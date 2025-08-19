@@ -152,7 +152,7 @@ class UserManagementTest extends TestCase
                 'password' => 'password123',
                 'password_confirmation' => 'password123',
             ])
-            ->assertRedirect();
+            ->assertStatus(403);
     }
 
     #[Test]

@@ -101,6 +101,14 @@ class UserPolicy extends BasePolicy
     }
 
     /**
+     * Determine whether the user can login as another user.
+     */
+    public function loginAs(User $user, User $model): bool
+    {
+        return $this->checkPermission($user, 'user.login_as');
+    }
+
+    /**
      * Check if super admin can be modified based on demo mode.
      */
     private function canModifySuperAdmin(User $model): bool

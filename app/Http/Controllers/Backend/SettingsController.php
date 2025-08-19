@@ -14,7 +14,6 @@ use App\Models\Setting;
 use App\Services\SettingService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class SettingsController extends Controller
 {
@@ -44,6 +43,7 @@ class SettingsController extends Controller
     public function store(Request $request)
     {
         $this->authorize('manage', Setting::class);
+
         // Restrict specific fields in demo mode.
         if (config('app.demo_mode', false)) {
             $restrictedFields = ld_apply_filters('settings_restricted_fields', [
@@ -60,8 +60,6 @@ class SettingsController extends Controller
         } else {
             $fields = $request->all();
         }
-
-        $this->checkAuthorization(Auth::user(), ['settings.edit']);
 
         // Validate admin login route if provided
         if ($request->has('admin_login_route')) {

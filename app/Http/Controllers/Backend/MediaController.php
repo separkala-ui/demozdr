@@ -11,7 +11,6 @@ use App\Http\Requests\Backend\MediaUploadRequest;
 use App\Models\Media;
 use App\Services\MediaLibraryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class MediaController extends Controller
 {
@@ -219,7 +218,7 @@ class MediaController extends Controller
      */
     public function getUploadLimits()
     {
-        $this->checkAuthorization(Auth::user(), ['media.view']);
+        $this->authorize('viewAny', Media::class);
 
         $limits = MediaHelper::getUploadLimits();
 

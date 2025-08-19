@@ -300,21 +300,21 @@ class ContentManagementTest extends TestCase
     #[Test]
     public function user_without_permission_cannot_manage_content(): void
     {
-        $regularUser = User::factory()->create();
+        $user = User::factory()->create();
 
-        $this->actingAs($regularUser)
+        $this->actingAs($user)
             ->get("/admin/posts/{$this->postType}")
             ->assertStatus(403);
 
-        $this->actingAs($regularUser)
+        $this->actingAs($user)
             ->post("/admin/posts/{$this->postType}", [
                 'title' => 'Unauthorized Post',
                 'content' => 'Unauthorized content',
                 'status' => 'publish',
             ])
-            ->assertRedirect();
+            ->assertStatus(403);
 
-        $this->actingAs($regularUser)
+        $this->actingAs($user)
             ->get('/admin/terms/category')
             ->assertStatus(403);
     }

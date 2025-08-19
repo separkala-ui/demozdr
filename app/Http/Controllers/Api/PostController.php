@@ -154,6 +154,8 @@ class PostController extends ApiController
      */
     public function bulkDelete(BulkDeletePostRequest $request, string $postType): JsonResponse
     {
+        $this->authorize('bulkDelete', Post::class);
+
         $postIds = $request->input('ids');
 
         $deletedCount = Post::where('post_type', $postType)

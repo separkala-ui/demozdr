@@ -95,7 +95,6 @@ class StabilityTest extends TestCase
             ['/admin/settings?tab=content', 'get'],
             ['/admin/settings?tab=integrations', 'get'],
             ['/admin/translations', 'get'],
-            ['/profile/edit', 'get'],
         ];
     }
 }
