@@ -45,6 +45,10 @@ class UpdateUserRequest extends FormRequest
 
             /** @example "123" */
             'avatar_id' => 'nullable|exists:media,id',
+
+            /** @example [1, 2, 3] */
+            'roles' => 'nullable|array',
+            'roles.*' => 'nullable|exists:roles,name',
         ], $userId);
     }
 }

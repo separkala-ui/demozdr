@@ -62,12 +62,12 @@ class UserController extends ApiController
     {
         $this->authorize('create', User::class);
 
-        $user = $this->userService->createUser($request->validated());
+        $user = $this->userService->createUserWithRelations($request->validated());
 
         $this->logAction('User Created', $user);
 
         return $this->resourceResponse(
-            new UserResource($user->load('roles')),
+            new UserResource($user),
             'User created successfully',
             201
         );
@@ -99,12 +99,12 @@ class UserController extends ApiController
         $user = User::findOrFail($id);
         $this->authorize('update', $user);
 
-        $updatedUser = $this->userService->updateUser($user, $request->validated());
+        $updatedUser = $this->userService->updateUserWithRelations($user, $request->validated());
 
         $this->logAction('User Updated', $updatedUser);
 
         return $this->resourceResponse(
-            new UserResource($updatedUser->load('roles')),
+            new UserResource($updatedUser),
             'User updated successfully'
         );
     }
