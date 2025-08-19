@@ -137,13 +137,16 @@ class UserController extends ApiController
      */
     public function bulkDelete(BulkDeleteUserRequest $request): JsonResponse
     {
-        $this->authorize('delete', User::class);
-
         $userIds = $request->input('ids');
 
         // Prevent deletion of current user
         if (in_array(Auth::id(), $userIds)) {
             return $this->errorResponse('You cannot delete yourself', 400);
+        }
+
+        $users = User::whereIn('id', $userIds)->get();
+        foreach ($users as $user) {
+            $this->authorize('delete', $user);
         }
 
         $deletedCount = User::whereIn('id', $userIds)->delete();
