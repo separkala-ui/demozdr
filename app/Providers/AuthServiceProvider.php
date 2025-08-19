@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\ActionLog;
 use App\Models\Media;
 use App\Models\Module;
 use App\Models\Post;
 use App\Models\Setting;
 use App\Models\Term;
 use App\Models\User;
+use App\Policies\ActionLogPolicy;
 use App\Policies\MediaPolicy;
 use App\Policies\ModulePolicy;
 use App\Policies\PermissionPolicy;
@@ -36,6 +38,7 @@ class AuthServiceProvider extends ServiceProvider
         Media::class => MediaPolicy::class,
         Setting::class => SettingPolicy::class,
         Module::class => ModulePolicy::class,
+        ActionLog::class => ActionLogPolicy::class,
     ];
 
     /**

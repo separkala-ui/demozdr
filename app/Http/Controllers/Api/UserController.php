@@ -34,7 +34,7 @@ class UserController extends ApiController
     #[QueryParameter('sort', description: 'Sort users by field (prefix with - for descending).', type: 'string', example: '-created_at')]
     public function index(Request $request): JsonResponse
     {
-        $this->checkAuthorization(Auth::user(), ['user.view']);
+        $this->authorize('viewAny', User::class);
         $filters = $request->only(['search', 'status', 'role', 'per_page', 'date_from', 'date_to', 'sort']);
         $users = $this->userService->getUsers($filters);
 
@@ -60,6 +60,8 @@ class UserController extends ApiController
      */
     public function store(StoreUserRequest $request): JsonResponse
     {
+        $this->authorize('create', User::class);
+
         $user = $this->userService->createUser($request->validated());
 
         $this->logAction('User Created', $user);
@@ -78,9 +80,8 @@ class UserController extends ApiController
      */
     public function show(int $id): JsonResponse
     {
-        $this->checkAuthorization(Auth::user(), ['user.view']);
-
         $user = User::with(['roles.permissions'])->findOrFail($id);
+        $this->authorize('view', $user);
 
         return $this->resourceResponse(
             new UserResource($user),
@@ -96,6 +97,8 @@ class UserController extends ApiController
     public function update(UpdateUserRequest $request, int $id): JsonResponse
     {
         $user = User::findOrFail($id);
+        $this->authorize('update', $user);
+
         $updatedUser = $this->userService->updateUser($user, $request->validated());
 
         $this->logAction('User Updated', $updatedUser);
@@ -113,9 +116,8 @@ class UserController extends ApiController
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->checkAuthorization(Auth::user(), ['user.delete']);
-
         $user = User::findOrFail($id);
+        $this->authorize('delete', $user);
 
         if ($user->id === Auth::id()) {
             return $this->errorResponse('You cannot delete yourself', 400);
@@ -135,6 +137,8 @@ class UserController extends ApiController
      */
     public function bulkDelete(BulkDeleteUserRequest $request): JsonResponse
     {
+        $this->authorize('delete', User::class);
+
         $userIds = $request->input('ids');
 
         // Prevent deletion of current user
