@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/modules/crm/.github/workflows/test.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/tests.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/ContactsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailCampaignsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailCampaignsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailTemplatesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Http/Controllers/EmailTemplatesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/app/Services/ContactService.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Services/ContactService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/resources/views/pages/contacts/partials/contact-sidebar-form.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/resources/views/pages/contacts/partials/contact-sidebar-form.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/resources/views/pages/deals/partials/deals-making-drawer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/resources/views/pages/deals/partials/deals-making-drawer.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/resources/views/pages/tickets/partials/ticket-making-drawer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/resources/views/pages/tickets/partials/ticket-making-drawer.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactActivitiesControllerTest.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactGroupsControllerTest.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactsControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/tests/Feature/ContactsControllerTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/DealsControllerTest.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/EmailCampaignsControllerTest.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/crm/tests/Feature/TicketsControllerTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/resources/js/contact-form-ajax.js" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/resources/js/contact-form-ajax.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +29,18 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/modules/crm" />
+  </component>
+  <component name="McpProjectState">
+    <option name="mcpServerConfigStates">
+      <list>
+        <McpServerConfigState>
+          <option name="args" value="$PROJECT_DIR$/../../../../maniruzzamanakash/workspace/laradashboard/artisan boost:mcp" />
+          <option name="command" value="php" />
+          <option name="name" value="laravel-boost" />
+          <option name="path" value="$PROJECT_DIR$/.junie/mcp/mcp.json" />
+        </McpServerConfigState>
+      </list>
+    </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
     <include_path>
@@ -190,6 +190,9 @@
       <path value="$PROJECT_DIR$/vendor/spatie/image-optimizer" />
       <path value="$PROJECT_DIR$/vendor/spatie/laravel-medialibrary" />
       <path value="$PROJECT_DIR$/vendor/maennchen/zipstream-php" />
+      <path value="$PROJECT_DIR$/vendor/laravel/mcp" />
+      <path value="$PROJECT_DIR$/vendor/laravel/boost" />
+      <path value="$PROJECT_DIR$/vendor/laravel/roster" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -248,8 +251,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PS-251.27812.52" />
-        <option value="bundled-php-predefined-a98d8de5180a-e5747d4f5a45-com.jetbrains.php.sharedIndexes-PS-251.27812.52" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-PS-252.23892.419" />
+        <option value="bundled-php-predefined-a98d8de5180a-c72577f2c82f-com.jetbrains.php.sharedIndexes-PS-252.23892.419" />
       </set>
     </attachedChunks>
   </component>
@@ -286,6 +289,7 @@
       <workItem from="1754881417945" duration="2286000" />
       <workItem from="1754884425439" duration="10082000" />
       <workItem from="1754921781090" duration="2310000" />
+      <workItem from="1755757789827" duration="1120000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />
