@@ -11,15 +11,17 @@ use TorMorten\Eventy\Facades\Events as Eventy;
  *
  * @see https://github.com/tormjens/eventy
  *
+ * @param  \BackedEnum|string  $hookName
  * @param  mixed  $callback
  * @param  mixed  $priority
  * @param  mixed  $args
  * @return void
  */
 if (! function_exists('ld_add_action')) {
-    function ld_add_action(string $hookName, $callback, $priority = 20, $args = 1)
+    function ld_add_action(\BackedEnum|string $hookName, $callback, $priority = 20, $args = 1)
     {
-        Eventy::addAction($hookName, $callback, $priority, $args);
+        $hook = $hookName instanceof \BackedEnum ? $hookName->value : $hookName;
+        Eventy::addAction($hook, $callback, $priority, $args);
     }
 }
 
@@ -30,18 +32,21 @@ if (! function_exists('ld_add_action')) {
  *
  * @see https://github.com/tormjens/eventy
  *
+ * @param  \BackedEnum|string  $hookName
  * @param  mixed  ...$args
  */
 if (! function_exists('ld_do_action')) {
-    function ld_do_action(string $hookName, ...$args): void
+    function ld_do_action(\BackedEnum|string $hookName, ...$args): void
     {
+        $hook = $hookName instanceof \BackedEnum ? $hookName->value : $hookName;
+
         if (count($args) === 0) {
-            Eventy::action($hookName);
+            Eventy::action($hook);
         } elseif (count($args) === 1) {
-            Eventy::action($hookName, $args[0]);
+            Eventy::action($hook, $args[0]);
         } else {
             // Handle multiple arguments by passing them as an array
-            Eventy::action($hookName, $args);
+            Eventy::action($hook, $args);
         }
     }
 }
@@ -53,14 +58,16 @@ if (! function_exists('ld_do_action')) {
  *
  * @see https://github.com/tormjens/eventy
  *
+ * @param  \BackedEnum|string  $hookName
  * @param  mixed  $value
  * @param  mixed  $args
  * @return mixed
  */
 if (! function_exists('ld_apply_filters')) {
-    function ld_apply_filters(string $hookName, $value, $args = null)
+    function ld_apply_filters(\BackedEnum|string $hookName, $value, $args = null)
     {
-        return Eventy::filter($hookName, $value, $args);
+        $hook = $hookName instanceof \BackedEnum ? $hookName->value : $hookName;
+        return Eventy::filter($hook, $value, $args);
     }
 }
 
@@ -71,14 +78,16 @@ if (! function_exists('ld_apply_filters')) {
  *
  * @see https://github.com/tormjens/eventy
  *
+ * @param  \BackedEnum|string  $hookName
  * @param  mixed  $callback
  * @param  mixed  $priority
  * @param  mixed  $args
  * @return mixed
  */
 if (! function_exists('ld_add_filter')) {
-    function ld_add_filter(string $hookName, $callback, $priority = 20, $args = 1)
+    function ld_add_filter(\BackedEnum|string $hookName, $callback, $priority = 20, $args = 1)
     {
-        return Eventy::addFilter($hookName, $callback, $priority, $args);
+        $hook = $hookName instanceof \BackedEnum ? $hookName->value : $hookName;
+        return Eventy::addFilter($hook, $callback, $priority, $args);
     }
 }
