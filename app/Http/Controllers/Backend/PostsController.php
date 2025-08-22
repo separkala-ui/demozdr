@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backend;
 
+use App\Enums\Hooks\PostHook;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
@@ -138,7 +139,7 @@ class PostsController extends Controller
             $post->published_at = now();
         }
 
-        $post = ld_apply_filters('before_post_save', $post, $request);
+        $post = ld_apply_filters(PostHook::BEFORE_SAVE, $post, $request);
 
         $post->save();
 
@@ -154,7 +155,7 @@ class PostsController extends Controller
             }
         }
 
-        $post = ld_apply_filters('after_post_save', $post, $request);
+        $post = ld_apply_filters(PostHook::AFTER_SAVE, $post, $request);
 
         // Handle post meta.
         $this->handlePostMeta($request, $post);

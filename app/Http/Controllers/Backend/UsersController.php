@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Backend;
 
 use App\Enums\ActionType;
+use App\Enums\Hooks\UserHook;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -51,7 +52,7 @@ class UsersController extends Controller
     {
         $this->checkAuthorization(Auth::user(), ['user.create']);
 
-        ld_do_action('user_create_page_before');
+        ld_do_action(UserHook::CREATE_PAGE_BEFORE);
 
         return view('backend.pages.users.create', [
             'roles' => $this->rolesService->getRolesDropdown(),
@@ -79,10 +80,10 @@ class UsersController extends Controller
         $user->password = Hash::make($request->password);
         $user->avatar_id = $request->avatar_id;
 
-        $user = ld_apply_filters('user_store_before_save', $user, $request);
+        $user = ld_apply_filters(UserHook::STORE_BEFORE_SAVE, $user, $request);
         $user->save();
         /** @var User $user */
-        $user = ld_apply_filters('user_store_after_save', $user, $request);
+        $user = ld_apply_filters(UserHook::STORE_AFTER_SAVE, $user, $request);
 
         // Save user metadata for additional information
         $metaFields = ['display_name', 'bio', 'timezone', 'locale'];
@@ -117,7 +118,7 @@ class UsersController extends Controller
 
         session()->flash('success', __('User has been created.'));
 
-        ld_do_action('user_store_after', $user);
+        ld_do_action(UserHook::STORE_AFTER, $user);
 
         return redirect()->route('admin.users.index');
     }
@@ -128,9 +129,9 @@ class UsersController extends Controller
 
         $user = User::with('avatar')->findOrFail($id);
 
-        ld_do_action('user_edit_page_before');
+        ld_do_action(UserHook::EDIT_PAGE_BEFORE);
 
-        $user = ld_apply_filters('user_edit_page_before_with_user', $user);
+        $user = ld_apply_filters(UserHook::EDIT_PAGE_BEFORE_WITH_USER, $user);
 
         return view('backend.pages.users.edit', [
             'user' => $user,
@@ -162,11 +163,11 @@ class UsersController extends Controller
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }
-        $user = ld_apply_filters('user_update_before_save', $user, $request);
+        $user = ld_apply_filters(UserHook::UPDATE_BEFORE_SAVE, $user, $request);
         $user->save();
 
         /** @var User $user */
-        $user = ld_apply_filters('user_update_after_save', $user, $request);
+        $user = ld_apply_filters(UserHook::UPDATE_AFTER_SAVE, $user, $request);
 
         // Update user metadata for additional information
         $metaFields = ['display_name', 'bio', 'timezone', 'locale'];
@@ -196,7 +197,7 @@ class UsersController extends Controller
             }
         }
 
-        ld_do_action('user_update_after', $user);
+        ld_do_action(UserHook::UPDATE_AFTER, $user);
 
         $user->roles()->detach();
         if ($request->roles) {
@@ -225,14 +226,14 @@ class UsersController extends Controller
             return back();
         }
 
-        $user = ld_apply_filters('user_delete_before', $user);
+        $user = ld_apply_filters(UserHook::DELETE_BEFORE, $user);
         $user->delete();
-        $user = ld_apply_filters('user_delete_after', $user);
+        $user = ld_apply_filters(UserHook::DELETE_AFTER, $user);
         session()->flash('success', __('User has been deleted.'));
 
         $this->storeActionLog(ActionType::DELETED, ['user' => $user]);
 
-        ld_do_action('user_delete_after', $user);
+        ld_do_action(UserHook::DELETE_AFTER, $user);
 
         return back();
     }
@@ -268,12 +269,12 @@ class UsersController extends Controller
                 continue;
             }
 
-            $user = ld_apply_filters('user_delete_before', $user);
+            $user = ld_apply_filters(UserHook::DELETE_BEFORE, $user);
             $user->delete();
-            ld_apply_filters('user_delete_after', $user);
+            ld_apply_filters(UserHook::DELETE_AFTER, $user);
 
             $this->storeActionLog(ActionType::DELETED, ['user' => $user]);
-            ld_do_action('user_delete_after', $user);
+            ld_do_action(UserHook::DELETE_AFTER, $user);
 
             $deletedCount++;
         }
