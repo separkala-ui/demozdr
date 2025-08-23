@@ -138,7 +138,7 @@ class UsersController extends Controller
         $this->authorize('delete', $user);
 
         $user = ld_apply_filters('user_delete_before', $user);
-      
+
         $user->delete();
         $user = ld_apply_filters(UserHook::DELETE_AFTER, $user);
         session()->flash('success', __('User has been deleted.'));
