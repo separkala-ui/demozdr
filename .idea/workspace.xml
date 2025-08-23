@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: implement hooks for contact, content, post, task, and user actions">
-      <change beforePath="$PROJECT_DIR$/app/Enums/Hooks/PostHook.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Enums/Hooks/PostHook.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Backend/PostsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Backend/PostsController.php" afterDir="false" />
+    <list default="true" id="6cadf016-0aae-48a6-86dc-29b055ce6180" name="Changes" comment="feat: add before and after save hooks for posts and users">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Enums/Hooks/ContentHook.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Enums/Hooks/TaskHook.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/crm/app/Providers/CrmServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/crm/app/Providers/CrmServiceProvider.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/task-manager/app/Providers/TaskManagerServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/modules/task-manager/app/Providers/TaskManagerServiceProvider.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,25 +210,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "fix/api-ready",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/mostafizur/Code/projects/laradashboard/app",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "Errors",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;fix/api-ready&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mostafizur/Code/projects/laradashboard/app&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app" />
@@ -290,7 +294,8 @@
       <workItem from="1754884425439" duration="10082000" />
       <workItem from="1754921781090" duration="2310000" />
       <workItem from="1755757789827" duration="1120000" />
-      <workItem from="1755828967840" duration="3972000" />
+      <workItem from="1755828967840" duration="4302000" />
+      <workItem from="1755859529376" duration="1175000" />
     </task>
     <task id="LOCAL-00001" summary="fix: update various files for improved functionality and structure">
       <option name="closed" value="true" />
@@ -420,7 +425,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755835072856</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="feat: add before and after save hooks for posts and users">
+      <option name="closed" value="true" />
+      <created>1755835661820</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1755835661820</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -445,7 +458,8 @@
     <MESSAGE value="refactor: add ModuleServiceProvider to application service providers" />
     <MESSAGE value="feat: implement post management actions with Spatie Query Builder integration" />
     <MESSAGE value="feat: implement hooks for contact, content, post, task, and user actions" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: implement hooks for contact, content, post, task, and user actions" />
+    <MESSAGE value="feat: add before and after save hooks for posts and users" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add before and after save hooks for posts and users" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
