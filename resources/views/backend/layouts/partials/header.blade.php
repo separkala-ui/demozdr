@@ -37,8 +37,11 @@ x-init="init()"
                 id="sidebar-toggle-button"
                 @click.stop="sidebarToggle = !sidebarToggle; localStorage.setItem('sidebarToggle', sidebarToggle);">
                 <iconify-icon
-                 :icon="sidebarToggle ? 'mdi:menu-close' : 'mdi:menu-open'"
-                width="26" height="26" class=""></iconify-icon>
+                    :icon="sidebarToggle ? 'mdi:menu-close' : 'mdi:menu-open'"
+                    width="26" height="26" class="hidden md:inline-block"></iconify-icon>
+                <iconify-icon
+                    :icon="sidebarToggle ? 'feather:menu' : 'feather:menu'"
+                    width="26" height="26" class="md:hidden"></iconify-icon>
             </button>
 
             <a href="{{ route('admin.dashboard') }}" class="lg:hidden">
