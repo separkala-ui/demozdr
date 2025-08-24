@@ -25,10 +25,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-inputs.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/input.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-inputs')
+                @include('demo.forms.input')
             </div>
         </div>
     </div>
@@ -50,10 +50,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-password.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/password.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-password')
+                @include('demo.forms.password')
             </div>
         </div>
     </div>
@@ -75,10 +75,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-file-input.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/file-input.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-file-input')
+                @include('demo.forms.file-input')
             </div>
         </div>
     </div>
@@ -100,10 +100,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-media-selector.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/media-selector.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-media-selector')
+                @include('demo.forms.media-selector')
             </div>
         </div>
     </div>
@@ -125,10 +125,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-select.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/select.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-select')
+                @include('demo.forms.select')
             </div>
         </div>
     </div>
@@ -150,10 +150,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-combobox.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/combobox.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-combobox')
+                @include('demo.forms.combobox')
             </div>
         </div>
     </div>
@@ -175,10 +175,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-checkbox.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/checkbox.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-checkbox')
+                @include('demo.forms.checkbox')
             </div>
         </div>
     </div>
@@ -200,10 +200,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-radio.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/radio.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-radio')
+                @include('demo.forms.radio')
             </div>
         </div>
     </div>
@@ -225,10 +225,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-textarea.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/textarea.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-textarea')
+                @include('demo.forms.textarea')
             </div>
         </div>
     </div>
@@ -250,10 +250,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-date-picker.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/date-picker.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-date-picker')
+                @include('demo.forms.date-picker')
             </div>
         </div>
     </div>
@@ -275,10 +275,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-datetime-picker.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/datetime-picker.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-datetime-picker')
+                @include('demo.forms.datetime-picker')
             </div>
         </div>
     </div>
@@ -300,10 +300,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-range-input.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/range-input.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-range-input')
+                @include('demo.forms.range-input')
             </div>
         </div>
     </div>
@@ -325,10 +325,10 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-input-group.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/input-group.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.example-parts.x-input-group')
+                @include('demo.forms.input-group')
             </div>
         </div>
     </div>

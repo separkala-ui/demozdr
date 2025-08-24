@@ -1,4 +1,4 @@
-<div class="grid md:grid-cols-2 gap-4 mb-2">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <x-inputs.input
         name="first_name"
         label="First name"
@@ -10,9 +10,6 @@
         label="Last name"
         placeholder="Enter your last name"
     />
-</div>
-
-<div class="grid md:grid-cols-2 gap-4 mb-2">
     <x-inputs.input
         name="username"
         type="username"

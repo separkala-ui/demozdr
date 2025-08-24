@@ -116,6 +116,9 @@
                 <section id="forms-demo">
                     @include('demo.forms')
                 </section>
+                <section id="alerts-demo" class="mt-10">
+                    @include('demo.alerts')
+                </section>
             </div>
         </div>
 
