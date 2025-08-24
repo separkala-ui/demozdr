@@ -15,11 +15,11 @@
                 <button type="button"
                     class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
                     @click="showCode = !showCode">
-                    <span x-show="!showCode">
+                    <span x-show="!showCode" class="flex justify-center items-center">
                         <iconify-icon icon="mdi:code-tags" class="mr-1"></iconify-icon>
                         {{ __('Code') }}
                     </span>
-                    <span x-show="showCode">
+                    <span x-show="showCode" class="flex justify-center items-center">
                         <iconify-icon icon="mdi:eye" class="mr-1"></iconify-icon>
                         {{ __('Preview') }}
                     </span>
