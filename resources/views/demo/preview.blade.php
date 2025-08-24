@@ -59,18 +59,14 @@
     </head>
 
     <body>
-
-        <!-- Beautiful Demo Header -->
-        <header
-            class="sticky top-0 flex w-full items-center justify-between px-6 py-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm rounded-b-lg z-10 mb-6"
-        >
+        <header class="sticky top-0 flex w-full items-center justify-between px-6 py-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm rounded-b-lg z-10 mb-6">
             <div class="flex items-center gap-3">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold text-lg hover:underline">
                     <img src="{{ asset('favicon.ico') }}" alt="{{ config('app.name', 'Admin Dashboard') }}" class="h-6 w-6">
                     {{ config('app.name', 'Admin Dashboard') }}
                 </a>
                 <span class="hidden md:inline-block text-gray-400 dark:text-gray-500 mx-2">|</span>
-                <span class="text-base font-medium text-gray-700 dark:text-gray-300">
+                <span class="hidden md:inline-block text-base font-medium text-gray-700 dark:text-gray-300">
                     {{ __('Demo Preview') }}
                 </span>
             </div>
@@ -88,26 +84,26 @@
             <!-- Sub-sidebar for component navigation -->
             <aside class="w-full md:w-64 md:min-w-[220px] md:max-w-xs border-r border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-lg shadow-sm h-fit md:sticky md:top-20">
                 <nav class="py-6 px-4">
-                    <h3 class="font-bold text-lg mb-4">Components</h3>
+                    <h3 class="font-bold mb-4">Components</h3>
                     <ul class="space-y-2">
-                        <li><a href="#forms-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Forms</a></li>
-                        <li><a href="#table-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Table</a></li>
-                        <li><a href="#alerts-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Alerts</a></li>
-                        <li><a href="#drawer-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Drawer</a></li>
-                        <li><a href="#media-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Media</a></li>
+                        <li><a href="#forms-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Forms</a></li>
+                        <!-- <li><a href="#table-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Table</a></li> -->
+                        <li><a href="#alerts-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Alerts</a></li>
+                        <!-- <li><a href="#drawer-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Drawer</a></li> -->
+                        <!-- <li><a href="#media-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Media</a></li> -->
                     </ul>
                 </nav>
 
                 <nav class="py-6 px-4">
-                    <h3 class="font-bold text-lg mb-4">
+                    <h3 class="font-bold mb-4">
                         {{ __('Other usage') }}
                     </h3>
                     <ul class="space-y-2">
-                        <li>
+                        <!-- <li>
                             <a href="#" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
                                 {{ __('Render a page') }}
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </nav>
             </aside>

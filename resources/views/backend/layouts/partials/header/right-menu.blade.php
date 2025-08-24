@@ -1,21 +1,40 @@
 <div class="flex items-center gap-1">
-    @include('backend.layouts.partials.demo-mode-notice')
-    @include('backend.layouts.partials.locale-switcher')
+    <x-tooltip title="{{ __('Demo Mode Enabled') }}">
+        @include('backend.layouts.partials.demo-mode-notice')
+    </x-tooltip>
+
+    <x-tooltip title="{{ __('Change locale') }}" position="bottom">
+        @include('backend.layouts.partials.locale-switcher')
+    </x-tooltip>
+
     @php echo ld_apply_filters('dark_mode_toggler_before_button', ''); @endphp
-    <button id="darkModeToggle"
-        class="hover:text-dark-900 relative flex items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white p-2 dark-mode-toggle"
-        @click.prevent="darkMode = !darkMode" @click="menuToggle = true">
-        <iconify-icon icon="lucide:moon" width="24" height="24" class="hidden dark:block"></iconify-icon>
-        <iconify-icon icon="lucide:sun" width="24" height="24" class="dark:hidden"></iconify-icon>
-    </button>
+
+    <x-tooltip title="{{ __('Toggle theme mode') }}" position="bottom">
+        <button id="darkModeToggle"
+            class="hover:text-dark-900 relative flex items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white p-2 dark-mode-toggle"
+            @click.prevent="darkMode = !darkMode" @click="menuToggle = true">
+            <iconify-icon icon="lucide:moon" width="24" height="24" class="hidden dark:block"></iconify-icon>
+            <iconify-icon icon="lucide:sun" width="24" height="24" class="dark:hidden"></iconify-icon>
+        </button>
+    </x-tooltip>
     @php ld_apply_filters('dark_mode_toggler_after_button', '') @endphp
 
-    @if (env('GITHUB_LINK') )
-        <a href="{{ env('GITHUB_LINK') }}" target="_blank"
-            class="hover:text-dark-900 relative flex p-2 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
-            <iconify-icon icon="lucide:github" width="22" height="22"
-                class=""></iconify-icon>
-        </a>
+    @if (env('SHOW_DEMO_COMPONENT_PREVIEW'))
+        <x-tooltip title="{{ __('Preview demo components') }}" position="bottom">
+            <a href="{{ route('demo.preview') }}" class="hover:text-dark-900 relative flex p-2 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
+                <iconify-icon icon="lucide:view" width="22" height="22"></iconify-icon>
+            </a>
+        </x-tooltip>
+    @endif
+
+    @if (env('GITHUB_LINK'))
+        <x-tooltip title="{{ __('Go to Github') }}" position="bottom">
+            <a href="{{ env('GITHUB_LINK') }}" target="_blank"
+                class="hover:text-dark-900 relative flex p-2 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
+                <iconify-icon icon="lucide:github" width="22" height="22"
+                    class=""></iconify-icon>
+            </a>
+        </x-tooltip>
     @endif
 </div>
 
