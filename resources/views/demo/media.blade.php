@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/media/media-modal-example.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/media/media-modal-example.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.media.media-modal-example')
@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/media/media-selector-example.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/media/media-selector-example.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.media.media-selector-example')

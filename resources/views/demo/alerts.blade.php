@@ -15,7 +15,7 @@
             </div>
         </div>
         <div x-show="showCode">
-            {!! ld_render_code_block(resource_path('views/demo/alerts/error.blade.php'), 'html') !!}
+            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/error.blade.php'), 'html') !!}
         </div>
         <div x-show="!showCode">
             @include('demo.alerts.error')
@@ -34,7 +34,7 @@
             </div>
         </div>
         <div x-show="showCode">
-            {!! ld_render_code_block(resource_path('views/demo/alerts/errors.blade.php'), 'html') !!}
+            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/errors.blade.php'), 'html') !!}
         </div>
         <div x-show="!showCode">
             @include('demo.alerts.errors')
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div x-show="showCode">
-            {!! ld_render_code_block(resource_path('views/demo/alerts/success.blade.php'), 'html') !!}
+            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/success.blade.php'), 'html') !!}
         </div>
         <div x-show="!showCode">
             @include('demo.alerts.success')
@@ -72,7 +72,7 @@
             </div>
         </div>
         <div x-show="showCode">
-            {!! ld_render_code_block(resource_path('views/demo/alerts/info.blade.php'), 'html') !!}
+            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/info.blade.php'), 'html') !!}
         </div>
         <div x-show="!showCode">
             @include('demo.alerts.info')
@@ -91,7 +91,7 @@
             </div>
         </div>
         <div x-show="showCode">
-            {!! ld_render_code_block(resource_path('views/demo/alerts/warning.blade.php'), 'html') !!}
+            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/warning.blade.php'), 'html') !!}
         </div>
         <div x-show="!showCode">
             @include('demo.alerts.warning')
@@ -110,7 +110,7 @@
             </div>
         </div>
         <div x-show="showCode">
-            {!! ld_render_code_block(resource_path('views/demo/alerts/default.blade.php'), 'html') !!}
+            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/default.blade.php'), 'html') !!}
         </div>
         <div x-show="!showCode">
             @include('demo.alerts.default')

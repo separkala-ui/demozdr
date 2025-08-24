@@ -40,8 +40,8 @@
         </style>
 
         @php
-            if (!function_exists('ld_render_code_block')) {
-                function ld_render_code_block($input, $lang = 'php', $isFile = true) {
+            if (!function_exists('ld_render_demo_code_block')) {
+                function ld_render_demo_code_block($input, $lang = 'php', $isFile = true) {
                     if ($isFile) {
                         $code = file_exists($input) ? file_get_contents($input) : '';
                     } else {

@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/buttons/button.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/buttons/button.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.buttons.button')
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/buttons/action-buttons.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/buttons/action-buttons.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.buttons.action-buttons')
@@ -75,7 +75,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/buttons/submit-buttons.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/buttons/submit-buttons.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.buttons.submit-buttons')
@@ -100,7 +100,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/buttons/drawer-close.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/buttons/drawer-close.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.buttons.drawer-close')
@@ -125,7 +125,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/buttons/action-item.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/buttons/action-item.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.buttons.action-item')

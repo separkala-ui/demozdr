@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/input.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/input.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.input')
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/password.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/password.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.password')
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/file-input.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/file-input.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.file-input')
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/media-selector.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/media-selector.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.media-selector')
@@ -123,7 +123,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/select.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/select.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.select')
@@ -148,7 +148,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/single-select.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/single-select.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.single-select')
@@ -173,7 +173,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/multi-select.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/multi-select.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.multi-select')
@@ -198,7 +198,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/checkbox.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/checkbox.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.checkbox')
@@ -223,7 +223,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/radio.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/radio.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.radio')
@@ -248,7 +248,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/textarea.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/textarea.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.textarea')
@@ -273,7 +273,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/date-picker.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/date-picker.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.date-picker')
@@ -298,7 +298,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/datetime-picker.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/datetime-picker.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.datetime-picker')
@@ -323,7 +323,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/range-input.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/range-input.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.range-input')
@@ -348,7 +348,7 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/input-group.blade.php'), 'html') !!}
+                {!! ld_render_demo_code_block(resource_path('views/demo/forms/input-group.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
                 @include('demo.forms.input-group')
