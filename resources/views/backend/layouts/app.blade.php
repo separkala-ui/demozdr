@@ -74,115 +74,17 @@ x-init="
         </div>
     </div>
 
+    <x-toast-notifications />
+
     {!! ld_apply_filters('admin_footer_before', '') !!}
 
     @stack('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const html = document.documentElement;
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const header = document.getElementById('appHeader');
-
-            // Update header background based on current mode
-            function updateHeaderBg() {
-                if (!header) return;
-                const isDark = html.classList.contains('dark');
-            }
-
-            // Initialize dark mode
-            const savedDarkMode = localStorage.getItem('darkMode');
-            if (savedDarkMode === 'true') {
-                html.classList.add('dark');
-            } else if (savedDarkMode === 'false') {
-                html.classList.remove('dark');
-            }
-
-            updateHeaderBg();
-
-            const observer = new MutationObserver(updateHeaderBg);
-            observer.observe(html, {
-                attributes: true,
-                attributeFilter: ['class']
-            });
-
-            if (darkModeToggle) {
-                darkModeToggle.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const isDark = html.classList.toggle('dark');
-                    localStorage.setItem('darkMode', isDark);
-                    updateHeaderBg();
-                });
-            }
-
-            // Initialize sidebar state from localStorage if it exists
-            if (window.Alpine) {
-                const sidebarState = localStorage.getItem('sidebarToggle');
-                if (sidebarState !== null) {
-                    document.addEventListener('alpine:initialized', () => {
-                        // Ensure the Alpine.js instance is ready
-                        setTimeout(() => {
-                            const alpineData = document.querySelector('body').__x;
-                            if (alpineData && typeof alpineData.$data !== 'undefined') {
-                                alpineData.$data.sidebarToggle = JSON.parse(sidebarState);
-                            }
-                        }, 0);
-                    });
-                }
-            }
-        });
-    </script>
 
     @if (!empty(config('settings.global_custom_js')))
     <script>
         {!! config('settings.global_custom_js') !!}
     </script>
     @endif
-
-    <!-- Global drawer handling script -->
-    <script>
-        // Define the global drawer opener function
-        window.openDrawer = function(drawerId) {
-            // Method 1: Try using the LaraDrawers registry if available
-            if (window.LaraDrawers && window.LaraDrawers[drawerId]) {
-                window.LaraDrawers[drawerId].open = true;
-                return;
-            }
-
-            // Method 2: Try using Alpine.js directly
-            const drawerEl = document.querySelector(`[data-drawer-id="${drawerId}"]`);
-            if (drawerEl && window.Alpine) {
-                try {
-                    const alpineInstance = Alpine.getComponent(drawerEl);
-                    if (alpineInstance) {
-                        alpineInstance.open = true;
-                        return;
-                    }
-                } catch (e) {
-                    console.error('Alpine error:', e);
-                }
-            }
-
-            // Method 3: Dispatch a custom event as fallback
-            console.log('Opening drawer via event dispatch');
-            window.dispatchEvent(new CustomEvent('open-drawer-' + drawerId));
-        };
-
-        // Initialize all drawer triggers on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('[data-drawer-trigger]').forEach(function(element) {
-                element.addEventListener('click', function(e) {
-                    const drawerId = this.getAttribute('data-drawer-trigger');
-                    if (drawerId) {
-                        e.preventDefault();
-                        window.openDrawer(drawerId);
-                        return false;
-                    }
-                });
-            });
-        });
-    </script>
-
-    <x-toast-notifications />
 
     @livewireScriptConfig
     {!! ld_apply_filters('admin_footer_after', '') !!}

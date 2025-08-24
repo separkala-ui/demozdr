@@ -93,28 +93,99 @@ Alpine.data('advancedFields', (initialMeta = {}) => {
 Alpine.plugin(focus);
 window.Alpine = Alpine;
 
-// Init flatpickr
-flatpickr(".datepicker", {
-    mode: "range",
-    static: true,
-    monthSelectorType: "static",
-    dateFormat: "M j, Y",
-    defaultDate: [new Date().setDate(new Date().getDate() - 6), new Date()],
-    prevArrow:
-        '<svg class="stroke-current" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.25 6L9 12.25L15.25 18.5" stroke="" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    nextArrow:
-        '<svg class="stroke-current" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.75 19L15 12.75L8.75 6.5" stroke="" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    onReady: (selectedDates, dateStr, instance) => {
-        // eslint-disable-next-line no-param-reassign
-        instance.element.value = dateStr.replace("to", "-");
-        const customClass = instance.element.getAttribute("data-class");
-        instance.calendarContainer.classList.add(customClass);
-    },
-    onChange: (selectedDates, dateStr, instance) => {
-        // eslint-disable-next-line no-param-reassign
-        instance.element.value = dateStr.replace("to", "-");
-    },
+// Global drawers.
+window.openDrawer = function (drawerId) {
+    // Try using the LaraDrawers registry if available.
+    if (window.LaraDrawers && window.LaraDrawers[drawerId]) {
+        window.LaraDrawers[drawerId].open = true;
+        return;
+    }
+
+    // Try using Alpine.js directly.
+    const drawerEl = document.querySelector(`[data-drawer-id="${drawerId}"]`);
+    if (drawerEl && window.Alpine) {
+        try {
+            const alpineInstance = Alpine.getComponent(drawerEl);
+            if (alpineInstance) {
+                alpineInstance.open = true;
+                return;
+            }
+        } catch (e) {
+            console.error('Alpine error:', e);
+        }
+    }
+
+    window.dispatchEvent(new CustomEvent('open-drawer-' + drawerId));
+};
+
+// Dark mode toggle.
+document.addEventListener('DOMContentLoaded', function () {
+    const html = document.documentElement;
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const header = document.getElementById('appHeader');
+
+    // Update header background based on current mode
+    function updateHeaderBg() {
+        if (!header) return;
+        const isDark = html.classList.contains('dark');
+    }
+
+    // Initialize dark mode
+    const savedDarkMode = localStorage.getItem('darkMode');
+    if (savedDarkMode === 'true') {
+        html.classList.add('dark');
+    } else if (savedDarkMode === 'false') {
+        html.classList.remove('dark');
+    }
+
+    updateHeaderBg();
+
+    const observer = new MutationObserver(updateHeaderBg);
+    observer.observe(html, {
+        attributes: true,
+        attributeFilter: ['class']
+    });
+
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('darkMode', isDark);
+            updateHeaderBg();
+        });
+    }
+
+    // Initialize sidebar state from localStorage if it exists
+    if (window.Alpine) {
+        const sidebarState = localStorage.getItem('sidebarToggle');
+        if (sidebarState !== null) {
+            document.addEventListener('alpine:initialized', () => {
+                // Ensure the Alpine.js instance is ready
+                setTimeout(() => {
+                    const alpineData = document.querySelector('body').__x;
+                    if (alpineData && typeof alpineData.$data !== 'undefined') {
+                        alpineData.$data.sidebarToggle = JSON.parse(sidebarState);
+                    }
+                }, 0);
+            });
+        }
+    }
 });
+
+// Initialize all drawer triggers on page load
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-drawer-trigger]').forEach(function (element) {
+        element.addEventListener('click', function (e) {
+            const drawerId = this.getAttribute('data-drawer-trigger');
+            if (drawerId) {
+                e.preventDefault();
+                window.openDrawer(drawerId);
+                return false;
+            }
+        });
+    });
+});
+
 
 // Init Dropzone
 const dropzoneArea = document.querySelectorAll("#demo-upload");
@@ -130,16 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
     chart03();
     userGrowthChart();
     map01();
-});
 
-// Get the current year
-const year = document.getElementById("year");
-if (year) {
-    year.textContent = new Date().getFullYear();
-}
-
-// For Copy//
-document.addEventListener("DOMContentLoaded", () => {
     const copyInput = document.getElementById("copy-input");
     if (copyInput) {
         // Select the copy button and input field
@@ -162,6 +224,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// Get the current year
+const year = document.getElementById("year");
+if (year) {
+    year.textContent = new Date().getFullYear();
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search-input");
