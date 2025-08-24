@@ -168,7 +168,7 @@
                             ->toArray()"
                         :selected="old('roles', $user?->roles?->pluck('name')->toArray() ?? [])"
                         :multiple="true"
-                        :searchable="false" />
+                        :searchable="true" />
                 </div>
                 @endif
 

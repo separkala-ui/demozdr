@@ -102,8 +102,15 @@
                     $currentStatus = old('status', $post->status ?? 'draft');
                 @endphp
 
-                <x-inputs.combobox name="status" label="{{ __('Status') }}" :options="$statusOptions" :selected="$currentStatus"
-                    :multiple="false" :searchable="false" x-model="status" />
+                <x-inputs.combobox
+                    name="status"
+                    label="{{ __('Status') }}"
+                    :options="$statusOptions"
+                    :selected="$currentStatus"
+                    :multiple="false"
+                    :searchable="false"
+                    x-model="status"
+                />
 
                 {!! ld_apply_filters('post_form_after_status', '') !!}
 
@@ -179,11 +186,14 @@
                         }
                     @endphp
 
-                    <x-inputs.combobox name="parent_id"
-                    :label="__('Parent ' . $postTypeModel->label_singular)"
-                    :placeholder="__('Select Parent')" :options="$parentOptions"
-                    :selected="old('parent_id', $post->parent_id ?? '')"
-                    :searchable="false" />
+                    <x-inputs.combobox
+                        name="parent_id"
+                        :label="__('Parent ' . $postTypeModel->label_singular)"
+                        :placeholder="__('Select Parent')"
+                        :options="$parentOptions"
+                        :selected="old('parent_id', $post->parent_id ?? '')"
+                        :searchable="true"
+                    />
                 </div>
             </div>
         @endif
