@@ -1,5 +1,3 @@
-
-
 <h3 class="text-lg mb-3 font-bold p-3">
     {{ __('Form Components') }}
 </h3>

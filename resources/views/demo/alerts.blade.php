@@ -2,8 +2,6 @@
     {{ __('Alert Components') }}
 </h3>
 
-
-
 <div class="space-y-6 mb-12">
     <!-- Error Alert -->
     <div x-data="{ showCode: false }" class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">

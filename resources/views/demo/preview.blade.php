@@ -93,7 +93,7 @@
                         <li><a href="#alerts-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Alerts</a></li>
                         <li><a href="#buttons-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Buttons</a></li>
                         <!-- <li><a href="#drawer-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Drawer</a></li> -->
-                        <!-- <li><a href="#media-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Media</a></li> -->
+                        <li><a href="#media-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Media</a></li>
                     </ul>
                 </nav>
 
@@ -121,6 +121,9 @@
                 <section id="buttons-demo" class="mt-10">
                     @include('demo.buttons')
                 </section>
+                <section id="media-demo" class="mt-10">
+                    @include('demo.media')
+                </section>
             </div>
         </div>
 
@@ -138,9 +141,8 @@
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Improved scroll-based sidebar highlighting (works up & down)
-            var sectionIds = ['forms-demo', 'table-demo', 'alerts-demo', 'drawer-demo', 'media-demo'];
-            var sidebarLinks = Array.from(document.querySelectorAll('.sidebar-link'));
+            const sectionIds = ['forms-demo', 'alerts-demo', 'buttons-demo', 'media-demo', 'drawer-demo'];
+            const sidebarLinks = Array.from(document.querySelectorAll('.sidebar-link'));
 
             function setActiveSidebar(hash) {
                 sidebarLinks.forEach(function(link) {
@@ -153,14 +155,14 @@
             }
 
             function updateSidebarOnScroll() {
-                var scrollPosition = window.scrollY || window.pageYOffset;
-                var offset = 120; // adjust for sticky header
-                var found = false;
-                for (var i = sectionIds.length - 1; i >= 0; i--) {
-                    var section = document.getElementById(sectionIds[i]);
+                const scrollPosition = window.scrollY || window.pageYOffset;
+                const offset = 120; // adjust for sticky header
+                let found = false;
+                for (let i = sectionIds.length - 1; i >= 0; i--) {
+                    const section = document.getElementById(sectionIds[i]);
                     if (section) {
-                        var rect = section.getBoundingClientRect();
-                        var top = rect.top + window.scrollY - offset;
+                        const rect = section.getBoundingClientRect();
+                        const top = rect.top + window.scrollY - offset;
                         if (scrollPosition >= top) {
                             setActiveSidebar('#' + sectionIds[i]);
                             history.replaceState(null, '', '#' + sectionIds[i]);
