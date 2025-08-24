@@ -90,11 +90,11 @@
                 <nav class="py-6 px-4">
                     <h3 class="font-bold text-lg mb-4">Components</h3>
                     <ul class="space-y-2">
-                        <li><a href="#forms-demo" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Forms</a></li>
-                        <li><a href="#table-demo" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Table</a></li>
-                        <li><a href="#alerts-demo" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Alerts</a></li>
-                        <li><a href="#drawer-demo" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Drawer</a></li>
-                        <li><a href="#media-demo" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Media</a></li>
+                        <li><a href="#forms-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Forms</a></li>
+                        <li><a href="#table-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Table</a></li>
+                        <li><a href="#alerts-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Alerts</a></li>
+                        <li><a href="#drawer-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Drawer</a></li>
+                        <li><a href="#media-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Media</a></li>
                     </ul>
                 </nav>
 
@@ -104,7 +104,7 @@
                     </h3>
                     <ul class="space-y-2">
                         <li>
-                            <a href="#forms-demo" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
+                            <a href="#" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
                                 {{ __('Render a page') }}
                             </a>
                         </li>
@@ -136,6 +136,52 @@
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Improved scroll-based sidebar highlighting (works up & down)
+            var sectionIds = ['forms-demo', 'table-demo', 'alerts-demo', 'drawer-demo', 'media-demo'];
+            var sidebarLinks = Array.from(document.querySelectorAll('.sidebar-link'));
+
+            function setActiveSidebar(hash) {
+                sidebarLinks.forEach(function(link) {
+                    if (link.getAttribute('href') === hash) {
+                        link.classList.add('bg-gray-200', 'dark:bg-gray-700', 'font-bold');
+                    } else {
+                        link.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'font-bold');
+                    }
+                });
+            }
+
+            function updateSidebarOnScroll() {
+                var scrollPosition = window.scrollY || window.pageYOffset;
+                var offset = 120; // adjust for sticky header
+                var found = false;
+                for (var i = sectionIds.length - 1; i >= 0; i--) {
+                    var section = document.getElementById(sectionIds[i]);
+                    if (section) {
+                        var rect = section.getBoundingClientRect();
+                        var top = rect.top + window.scrollY - offset;
+                        if (scrollPosition >= top) {
+                            setActiveSidebar('#' + sectionIds[i]);
+                            history.replaceState(null, '', '#' + sectionIds[i]);
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if (!found) {
+                    setActiveSidebar('');
+                }
+            }
+
+            window.addEventListener('scroll', updateSidebarOnScroll);
+            window.addEventListener('resize', updateSidebarOnScroll);
+            window.addEventListener('hashchange', function() {
+                setActiveSidebar(window.location.hash);
+            });
+            // Initial highlight
+            setActiveSidebar(window.location.hash);
+            updateSidebarOnScroll();
+
+            // Copy button logic
             document.querySelectorAll('.copy-btn').forEach(function(btn) {
                 btn.addEventListener('click', function() {
                     var targetId = btn.getAttribute('data-target');
