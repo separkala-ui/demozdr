@@ -3,356 +3,102 @@
 </h3>
 
 <div class="flex flex-col gap-5">
-    <!-- Text Inputs -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Text Inputs') }}</h4>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ __('Use the following component for text inputs: text, email, number, phone, search') }}
-                    </p>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/input.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.input')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Text Inputs') }}"
+        description="{{ __('Use the following component for text inputs: text, email, number, phone, search') }}"
+        path="views/demo/forms/input.blade.php"
+        include="demo.forms.input"
+        language="html"
+    />
 
-    <!-- Password Input -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Password Input') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/password.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.password')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Password Input') }}"
+        path="views/demo/forms/password.blade.php"
+        include="demo.forms.password"
+        language="html"
+    />
 
-    <!-- File Input -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('File Input') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/file-input.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.file-input')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('File Input') }}"
+        path="views/demo/forms/file-input.blade.php"
+        include="demo.forms.file-input"
+        language="html"
+    />
 
-    <!-- Media Selector -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Media Selector') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/media-selector.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.media-selector')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Media Selector') }}"
+        path="views/demo/forms/media-selector.blade.php"
+        include="demo.forms.media-selector"
+        language="html"
+    />
 
-    <!-- Select -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Select') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/select.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.select')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Select') }}"
+        path="views/demo/forms/select.blade.php"
+        include="demo.forms.select"
+        language="html"
+    />
 
-    <!-- Single Select with Search -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Single select with search') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/single-select.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.single-select')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Single select with search') }}"
+        path="views/demo/forms/single-select.blade.php"
+        include="demo.forms.single-select"
+        language="html"
+    />
 
-    <!-- Multi Select with Search -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Multi select with search') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/multi-select.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.multi-select')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Multi select') }}"
+        path="views/demo/forms/multi-select.blade.php"
+        include="demo.forms.multi-select"
+        language="html"
+    />
 
-    <!-- Checkbox -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Checkbox') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/checkbox.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.checkbox')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Checkbox') }}"
+        path="views/demo/forms/checkbox.blade.php"
+        include="demo.forms.checkbox"
+        language="html"
+    />
 
-    <!-- Radio -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Radio') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/radio.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.radio')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Radio') }}"
+        path="views/demo/forms/radio.blade.php"
+        include="demo.forms.radio"
+        language="html"
+    />
 
-    <!-- Textarea -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Textarea') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/textarea.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.textarea')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Textarea') }}"
+        path="views/demo/forms/textarea.blade.php"
+        include="demo.forms.textarea"
+        language="html"
+    />
 
-    <!-- Date Picker -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Date Picker') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/date-picker.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.date-picker')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Date Picker') }}"
+        path="views/demo/forms/date-picker.blade.php"
+        include="demo.forms.date-picker"
+        language="html"
+    />
 
-    <!-- DateTime Picker -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('DateTime Picker') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/datetime-picker.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.datetime-picker')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('DateTime Picker') }}"
+        path="views/demo/forms/datetime-picker.blade.php"
+        include="demo.forms.datetime-picker"
+        language="html"
+    />
 
-    <!-- Range Input -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Range Input') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/range-input.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.range-input')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Range Input') }}"
+        path="views/demo/forms/range-input.blade.php"
+        include="demo.forms.range-input"
+        language="html"
+    />
 
-    <!-- Input Group -->
-    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div x-data="{ showCode: false }">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h4 class="text-lg">{{ __('Input Group') }}</h4>
-                </div>
-                <div>
-                    <button type="button"
-                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                        @click="showCode = !showCode">
-                        <span x-show="!showCode">{{ __('Code') }}</span>
-                        <span x-show="showCode">{{ __('Preview') }}</span>
-                    </button>
-                </div>
-            </div>
-            <div x-show="showCode">
-                {!! ld_render_demo_code_block(resource_path('views/demo/forms/input-group.blade.php'), 'html') !!}
-            </div>
-            <div x-show="!showCode">
-                @include('demo.forms.input-group')
-            </div>
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Input Group') }}"
+        path="views/demo/forms/input-group.blade.php"
+        include="demo.forms.input-group"
+        language="html"
+    />
 </div>
