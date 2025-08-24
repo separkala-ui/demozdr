@@ -3,117 +3,45 @@
 </h3>
 
 <div class="space-y-6 mb-12">
-    <!-- Error Alert -->
-    <div x-data="{ showCode: false }" class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div class="flex justify-between items-center mb-4">
-            <div><h4 class="text-lg">Error Alert</h4></div>
-            <div>
-                <button type="button" class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition" @click="showCode = !showCode">
-                    <span x-show="!showCode">Code</span>
-                    <span x-show="showCode">Preview</span>
-                </button>
-            </div>
-        </div>
-        <div x-show="showCode">
-            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/error.blade.php'), 'html') !!}
-        </div>
-        <div x-show="!showCode">
-            @include('demo.alerts.error')
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Error Alert') }}"
+        description="{{ __('Shows an error alert message.') }}"
+        path="views/demo/alerts/error.blade.php"
+        include="demo.alerts.error"
+    />
 
-    <!-- Errors Alert (Validation) -->
-    <div x-data="{ showCode: false }" class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div class="flex justify-between items-center mb-4">
-            <div><h4 class="text-lg">Errors Alert (Validation)</h4></div>
-            <div>
-                <button type="button" class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition" @click="showCode = !showCode">
-                    <span x-show="!showCode">Code</span>
-                    <span x-show="showCode">Preview</span>
-                </button>
-            </div>
-        </div>
-        <div x-show="showCode">
-            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/errors.blade.php'), 'html') !!}
-        </div>
-        <div x-show="!showCode">
-            @include('demo.alerts.errors')
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Errors Alert (Validation)') }}"
+        description="{{ __('Shows validation errors alert.') }}"
+        path="views/demo/alerts/errors.blade.php"
+        include="demo.alerts.errors"
+    />
 
-    <!-- Success Alert -->
-    <div x-data="{ showCode: false }" class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div class="flex justify-between items-center mb-4">
-            <div><h4 class="text-lg">Success Alert</h4></div>
-            <div>
-                <button type="button" class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition" @click="showCode = !showCode">
-                    <span x-show="!showCode">Code</span>
-                    <span x-show="showCode">Preview</span>
-                </button>
-            </div>
-        </div>
-        <div x-show="showCode">
-            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/success.blade.php'), 'html') !!}
-        </div>
-        <div x-show="!showCode">
-            @include('demo.alerts.success')
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Success Alert') }}"
+        description="{{ __('Shows a success alert message.') }}"
+        path="views/demo/alerts/success.blade.php"
+        include="demo.alerts.success"
+    />
 
-    <!-- Info Alert -->
-    <div x-data="{ showCode: false }" class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div class="flex justify-between items-center mb-4">
-            <div><h4 class="text-lg">Info Alert</h4></div>
-            <div>
-                <button type="button" class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition" @click="showCode = !showCode">
-                    <span x-show="!showCode">Code</span>
-                    <span x-show="showCode">Preview</span>
-                </button>
-            </div>
-        </div>
-        <div x-show="showCode">
-            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/info.blade.php'), 'html') !!}
-        </div>
-        <div x-show="!showCode">
-            @include('demo.alerts.info')
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Info Alert') }}"
+        description="{{ __('Shows an info alert message.') }}"
+        path="views/demo/alerts/info.blade.php"
+        include="demo.alerts.info"
+    />
 
-    <!-- Warning Alert -->
-    <div x-data="{ showCode: false }" class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div class="flex justify-between items-center mb-4">
-            <div><h4 class="text-lg">Warning Alert</h4></div>
-            <div>
-                <button type="button" class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition" @click="showCode = !showCode">
-                    <span x-show="!showCode">Code</span>
-                    <span x-show="showCode">Preview</span>
-                </button>
-            </div>
-        </div>
-        <div x-show="showCode">
-            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/warning.blade.php'), 'html') !!}
-        </div>
-        <div x-show="!showCode">
-            @include('demo.alerts.warning')
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Warning Alert') }}"
+        description="{{ __('Shows a warning alert message.') }}"
+        path="views/demo/alerts/warning.blade.php"
+        include="demo.alerts.warning"
+    />
 
-    <!-- Default Alert -->
-    <div x-data="{ showCode: false }" class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
-        <div class="flex justify-between items-center mb-4">
-            <div><h4 class="text-lg">Default Alert</h4></div>
-            <div>
-                <button type="button" class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition" @click="showCode = !showCode">
-                    <span x-show="!showCode">Code</span>
-                    <span x-show="showCode">Preview</span>
-                </button>
-            </div>
-        </div>
-        <div x-show="showCode">
-            {!! ld_render_demo_code_block(resource_path('views/demo/alerts/default.blade.php'), 'html') !!}
-        </div>
-        <div x-show="!showCode">
-            @include('demo.alerts.default')
-        </div>
-    </div>
+    <x-demo.preview-component
+        title="{{ __('Default Alert') }}"
+        description="{{ __('Shows a default alert message.') }}"
+        path="views/demo/alerts/default.blade.php"
+        include="demo.alerts.default"
+    />
 </div>
