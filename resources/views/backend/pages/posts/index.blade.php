@@ -268,30 +268,30 @@
                                 </td>
                                 <td class="table-td flex justify-center">
                                     <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
-                                        @if (auth()->user()->can('post.edit'))
+                                        @can('post.edit')
                                             <x-buttons.action-item
                                                 :href="route('admin.posts.edit', [$postType, $post->id])"
-                                                icon="pencil"
+                                                icon="lucide:pencil"
                                                 :label="__('Edit')"
                                             />
-                                        @endif
+                                        @endcan
                                         {!! ld_apply_filters('admin_post_actions_after_edit', '', $post) !!}
 
-                                        @if (auth()->user()->can('post.view'))
+                                        @can('post.view')
                                             <x-buttons.action-item
                                                 :href="route('admin.posts.show', [$postType, $post->id])"
-                                                icon="eye"
+                                                icon="lucide:eye"
                                                 :label="__('View')"
                                             />
-                                        @endif
+                                        @endcan
                                         {!! ld_apply_filters('admin_post_actions_after_view', '', $post) !!}
 
-                                        @if (auth()->user()->can('post.delete'))
+                                        @can('post.delete')
                                             <div x-data="{ deleteModalOpen: false }">
                                                 <x-buttons.action-item
                                                     type="modal-trigger"
                                                     modal-target="deleteModalOpen"
-                                                    icon="trash"
+                                                    icon="lucide:trash"
                                                     :label="__('Delete')"
                                                     class="text-red-600 dark:text-red-400"
                                                 />
@@ -307,7 +307,7 @@
                                                     confirmButtonText="{{ __('Yes, Confirm') }}"
                                                 />
                                             </div>
-                                        @endif
+                                        @endcan
                                         {!! ld_apply_filters('admin_post_actions_after_delete', '', $post) !!}
                                     </x-buttons.action-buttons>
                                 </td>

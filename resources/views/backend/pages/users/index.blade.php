@@ -180,8 +180,16 @@
                                         @if (auth()->user()->canBeModified($user))
                                             <x-buttons.action-item
                                                 :href="route('admin.users.edit', $user->id)"
-                                                icon="pencil"
+                                                icon="lucide:pencil"
                                                 :label="__('Edit')"
+                                            />
+                                        @endif
+
+                                        @if (auth()->user()->can('user.login_as') && $user->id != auth()->user()->id)
+                                            <x-buttons.action-item
+                                                :href="route('admin.users.login-as', $user->id)"
+                                                icon="lucide:log-in"
+                                                :label="__('Login as')"
                                             />
                                         @endif
 
@@ -190,7 +198,7 @@
                                                 <x-buttons.action-item
                                                     type="modal-trigger"
                                                     modal-target="deleteModalOpen"
-                                                    icon="trash"
+                                                    icon="lucide:trash"
                                                     :label="__('Delete')"
                                                     class="text-red-600 dark:text-red-400"
                                                 />
@@ -206,14 +214,6 @@
                                                     confirmButtonText="{{ __('Yes, Confirm') }}"
                                                 />
                                             </div>
-                                        @endif
-
-                                        @if (auth()->user()->can('user.login_as') && $user->id != auth()->user()->id)
-                                            <x-buttons.action-item
-                                                :href="route('admin.users.login-as', $user->id)"
-                                                icon="box-arrow-in-right"
-                                                :label="__('Login as')"
-                                            />
                                         @endif
                                     </x-buttons.action-buttons>
                                     @endif

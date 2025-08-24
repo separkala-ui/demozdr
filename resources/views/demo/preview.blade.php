@@ -40,20 +40,22 @@
         </style>
 
         @php
-            function ld_render_code_block($input, $lang = 'php', $isFile = true) {
-                if ($isFile) {
-                    $code = file_exists($input) ? file_get_contents($input) : '';
-                } else {
-                    $code = $input;
+            if (!function_exists('ld_render_code_block')) {
+                function ld_render_code_block($input, $lang = 'php', $isFile = true) {
+                    if ($isFile) {
+                        $code = file_exists($input) ? file_get_contents($input) : '';
+                    } else {
+                        $code = $input;
+                    }
+                    $escaped = htmlspecialchars($code);
+                    $id = 'codeblock_' . uniqid();
+                    return '
+                        <div class="relative mb-2">
+                            <button type="button" class="absolute right-2 top-2 px-2 py-1 text-xs bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition copy-btn" data-target="' . $id . '">Copy</button>
+                            <pre class="border rounded-md border-gray-100 dark:border-gray-800"><code id="' . $id . '" class="language-' . $lang . '">' . $escaped . '</code></pre>
+                        </div>
+                    ';
                 }
-                $escaped = htmlspecialchars($code);
-                $id = 'codeblock_' . uniqid();
-                return '
-                    <div class="relative mb-2">
-                        <button type="button" class="absolute right-2 top-2 px-2 py-1 text-xs bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition copy-btn" data-target="' . $id . '">Copy</button>
-                        <pre class="border rounded-md border-gray-100 dark:border-gray-800"><code id="' . $id . '" class="language-' . $lang . '">' . $escaped . '</code></pre>
-                    </div>
-                ';
             }
         @endphp
     </head>
@@ -89,15 +91,16 @@
                         <li><a href="#forms-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Forms</a></li>
                         <!-- <li><a href="#table-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Table</a></li> -->
                         <li><a href="#alerts-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Alerts</a></li>
+                        <li><a href="#buttons-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Buttons</a></li>
                         <!-- <li><a href="#drawer-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Drawer</a></li> -->
                         <!-- <li><a href="#media-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Media</a></li> -->
                     </ul>
                 </nav>
 
                 <nav class="py-6 px-4">
-                    <h3 class="font-bold mb-4">
+                    <!-- <h3 class="font-bold mb-4">
                         {{ __('Other usage') }}
-                    </h3>
+                    </h3> -->
                     <ul class="space-y-2">
                         <!-- <li>
                             <a href="#" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -114,6 +117,9 @@
                 </section>
                 <section id="alerts-demo" class="mt-10">
                     @include('demo.alerts')
+                </section>
+                <section id="buttons-demo" class="mt-10">
+                    @include('demo.buttons')
                 </section>
             </div>
         </div>

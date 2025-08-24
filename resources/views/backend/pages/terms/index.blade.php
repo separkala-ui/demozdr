@@ -167,7 +167,7 @@
                                             @if (auth()->user()->can('term.edit'))
                                                 <x-buttons.action-item
                                                     :href="route('admin.terms.edit', ['taxonomy' => $taxonomy, 'term' => $termItem->id])"
-                                                    icon="pencil"
+                                                    icon="lucide:pencil"
                                                     :label="__('Edit')"
                                                 />
                                             @endif
@@ -177,7 +177,7 @@
                                                     <x-buttons.action-item
                                                         type="modal-trigger"
                                                         modal-target="deleteModalOpen"
-                                                        icon="trash"
+                                                        icon="lucide:trash"
                                                         :label="__('Delete')"
                                                         class="text-red-600 dark:text-red-400"
                                                     />
