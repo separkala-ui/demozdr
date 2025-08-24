@@ -67,7 +67,7 @@
     }
 
     .form-control-file {
-        @apply cursor-pointer focus:file:ring-primary ring-1 ring-gray-200 w-full overflow-hidden rounded-md border border-gray-300 bg-transparent text-sm text-gray-500 transition-colors file:mr-5 file:border-collapse file:cursor-pointer file:rounded-l-lg file:border-0 file:border-r file:border-solid file:border-gray-200 file:bg-gray-50 file:py-3 file:px-4 file:text-sm file:text-gray-700 placeholder:text-gray-400 hover:file:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:file:border-gray-800 dark:file:bg-white/[0.03] dark:file:text-gray-400 px-4 focus:ring-2 focus:outline-none focus:ring-primary focus:ring-offset-2 focus-visible:ring-2 focus-visible:ring-primary;
+        @apply cursor-pointer border-0 file:border-0 focus:file:ring-primary ring-1 ring-gray-200 h-10 w-full overflow-hidden rounded-md bg-transparent text-sm text-gray-500 transition-colors file:mr-5 file:-mt-0.5 file:border-collapse file:cursor-pointer dark:ring-gray-700 file:rounded-l-lg file:py-3 file:px-4 file:text-sm file:text-gray-700 placeholder:text-gray-400 file:bg-gray-100 hover:file:bg-gray-100 dark:bg-gray-900 dark:text-gray-300 dark:file:bg-white/[0.03] dark:file:text-gray-400 focus:ring-2 focus:ring-primary focus-visible:ring-2 focus-visible:ring-primary;
     }
 
     .form-control-textarea {

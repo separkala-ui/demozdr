@@ -137,7 +137,7 @@
                     label="{{ $passwordLabel }}"
                     placeholder="{{ __('Enter Password') }}"
                     :required="$isCreate"
-                    :showAutoGenerate="true"
+                    :autogenerate="true"
                 />
             </div>
             <div>
@@ -146,7 +146,7 @@
                     label="{{ $confirmPasswordLabel }}"
                     placeholder="{{ __('Confirm Password') }}"
                     :required="$isCreate"
-                    :showAutoGenerate="true"
+                    :autogenerate="true"
                 />
             </div>
 

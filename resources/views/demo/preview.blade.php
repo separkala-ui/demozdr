@@ -30,15 +30,34 @@
     </head>
 
     <body>
-        <div class="flex gap-8 p-4 mx-auto md:p-6 pb-0">
-            <h2 class="text-xl font-bold">
-                {{ __('Demo Preview Components / Usage') }}
-            </h2>
-        </div>
+
+        <!-- Beautiful Demo Header -->
+        <header
+            class="sticky top-0 flex w-full items-center justify-between px-6 py-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm rounded-b-lg z-10 mb-6"
+        >
+            <div class="flex items-center gap-3">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold text-lg hover:underline">
+                    <img src="{{ asset('favicon.ico') }}" alt="{{ config('app.name', 'Admin Dashboard') }}" class="h-6 w-6">
+                    {{ config('app.name', 'Admin Dashboard') }}
+                </a>
+                <span class="hidden md:inline-block text-gray-400 dark:text-gray-500 mx-2">|</span>
+                <span class="text-base font-medium text-gray-700 dark:text-gray-300">
+                    {{ __('Demo Preview') }}
+                </span>
+            </div>
+            <nav class="flex gap-4">
+                <a href="{{ route('admin.dashboard') }}" class="px-3 py-2 rounded text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                    {{ __('Dashboard') }}
+                </a>
+                <a href="https://laradashboard.com/docs" target="_blank" class="px-3 py-2 rounded text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                    {{ __('Docs') }}
+                </a>
+            </nav>
+        </header>
 
         <div class="flex flex-col md:flex-row gap-8 p-4 mx-auto max-w-screen-2xl md:p-6 pt-0">
             <!-- Sub-sidebar for component navigation -->
-            <aside class="w-full md:w-64 md:min-w-[220px] md:max-w-xs border-r border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-lg shadow-sm h-fit md:sticky md:top-10">
+            <aside class="w-full md:w-64 md:min-w-[220px] md:max-w-xs border-r border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-lg shadow-sm h-fit md:sticky md:top-20">
                 <nav class="py-6 px-4">
                     <h3 class="font-bold text-lg mb-4">Components</h3>
                     <ul class="space-y-2">

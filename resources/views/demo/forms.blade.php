@@ -12,8 +12,8 @@
 
 	{{-- Password --}}
     <div class="grid md:grid-cols-2 gap-4">
-        <x-inputs.password name="password" label="Password" placeholder="Enter password" hint="Choose a strong password." required />
-        <x-inputs.password name="confirm_password" label="Confirm Password" placeholder="Re-enter password" required />
+        <x-inputs.password name="password" label="Password" :autogenerate="true" placeholder="Enter password" hint="Choose a strong password." required />
+        <x-inputs.password name="confirm_password" label="Confirm Password" :autogenerate="true" placeholder="Re-enter password" required />
     </div>
 
 	{{-- Email --}}
@@ -23,7 +23,9 @@
     </div>
 
 	{{-- File Input --}}
-	<x-inputs.file-input name="avatar" label="Profile Picture" hint="Upload your avatar." />
+    <div class="flex mb-0">
+	    <x-inputs.file-input name="avatar" label="Profile Picture" hint="Upload your avatar." />
+    </div>
     <div class="flex">
         <x-media-selector
             name="featured_image"
