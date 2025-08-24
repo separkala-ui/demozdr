@@ -133,12 +133,12 @@
         </div>
     </div>
 
-    <!-- Combobox -->
+    <!-- Single Select with Search -->
     <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
         <div x-data="{ showCode: false }">
             <div class="flex justify-between items-center mb-4">
                 <div>
-                    <h4 class="text-lg">{{ __('Combobox') }}</h4>
+                    <h4 class="text-lg">{{ __('Single select with search') }}</h4>
                 </div>
                 <div>
                     <button type="button"
@@ -150,10 +150,35 @@
                 </div>
             </div>
             <div x-show="showCode">
-                {!! ld_render_code_block(resource_path('views/demo/forms/combobox.blade.php'), 'html') !!}
+                {!! ld_render_code_block(resource_path('views/demo/forms/single-select.blade.php'), 'html') !!}
             </div>
             <div x-show="!showCode">
-                @include('demo.forms.combobox')
+                @include('demo.forms.single-select')
+            </div>
+        </div>
+    </div>
+
+    <!-- Multi Select with Search -->
+    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
+        <div x-data="{ showCode: false }">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h4 class="text-lg">{{ __('Multi select with search') }}</h4>
+                </div>
+                <div>
+                    <button type="button"
+                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                        @click="showCode = !showCode">
+                        <span x-show="!showCode">{{ __('Code') }}</span>
+                        <span x-show="showCode">{{ __('Preview') }}</span>
+                    </button>
+                </div>
+            </div>
+            <div x-show="showCode">
+                {!! ld_render_code_block(resource_path('views/demo/forms/multi-select.blade.php'), 'html') !!}
+            </div>
+            <div x-show="!showCode">
+                @include('demo.forms.multi-select')
             </div>
         </div>
     </div>
