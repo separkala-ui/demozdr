@@ -26,7 +26,36 @@
 
         @include('backend.layouts.partials.integration-scripts')
 
-        @php echo ld_apply_filters('admin_head', ''); @endphp
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/markdown.min.js"></script>
+        <script>document.addEventListener('DOMContentLoaded', function() { document.querySelectorAll('pre code').forEach((el) => { hljs.highlightElement(el); }); });</script>
+
+        <style>
+            pre code.hljs {
+                border-radius: 6px;
+                font-size: 12px;
+            }
+        </style>
+
+        @php
+            function ld_render_code_block($input, $lang = 'php', $isFile = true) {
+                if ($isFile) {
+                    $code = file_exists($input) ? file_get_contents($input) : '';
+                } else {
+                    $code = $input;
+                }
+                $escaped = htmlspecialchars($code);
+                $id = 'codeblock_' . uniqid();
+                return '
+                    <div class="relative mb-2">
+                        <button type="button" class="absolute right-2 top-2 px-2 py-1 text-xs bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition copy-btn" data-target="' . $id . '">Copy</button>
+                        <pre class="border rounded-md border-gray-100 dark:border-gray-800"><code id="' . $id . '" class="language-' . $lang . '">' . $escaped . '</code></pre>
+                    </div>
+                ';
+            }
+        @endphp
     </head>
 
     <body>
@@ -84,7 +113,7 @@
             </aside>
 
             <div class="flex-1">
-                <section id="forms-demo" class="mb-12 px-4 py-5 bg-white dark:bg-gray-800">
+                <section id="forms-demo">
                     @include('demo.forms')
                 </section>
             </div>
@@ -101,6 +130,24 @@
             {!! config('settings.global_custom_js') !!}
         </script>
         @endif
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.copy-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var targetId = btn.getAttribute('data-target');
+                    var code = document.getElementById(targetId);
+                    if (code) {
+                        var text = code.innerText;
+                        navigator.clipboard.writeText(text).then(function() {
+                            btn.textContent = 'Copied!';
+                            setTimeout(function() { btn.textContent = 'Copy'; }, 1200);
+                        });
+                    }
+                });
+            });
+        });
+        </script>
 
         @livewireScriptConfig
         {!! ld_apply_filters('admin_footer_after', '') !!}

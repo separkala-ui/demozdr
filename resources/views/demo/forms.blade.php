@@ -1,28 +1,49 @@
-<h2 class="flex justify-between items-center text-xl font-bold mb-6">
-    {{ __('Forms Demo') }}
-    <code class="text-xs font-normal">resources/views/demo/forms.blade.php</code>
-</h2>
 
-<form class="space-y-6">
-	{{-- Inputs --}}
-	<div class="grid md:grid-cols-2 gap-4">
-        <x-inputs.input name="first_name" label="First name" placeholder="Enter your first name" required />
-        <x-inputs.input name="last_name" label="Last name" placeholder="Enter your last name" />
+<h3 class="text-lg mb-3 font-bold p-3">
+    {{ __('Form Components') }}
+</h3>
+
+<div class="space-y-6 mb-12">
+    <div class="px-4 py-5 bg-white dark:bg-gray-800 rounded-md shadow-sm">
+        <div x-data="{ showCode: false }">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h4 class="text-lg">{{ __('Text Inputs') }}</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ __('Use the following component for text inputs:') }}
+                    </p>
+                </div>
+                <div>
+                    <button type="button"
+                        class="px-3 py-1 rounded bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                        @click="showCode = !showCode">
+                        <span x-show="!showCode">{{ __('Code') }}</span>
+                        <span x-show="showCode">{{ __('Preview') }}</span>
+                    </button>
+                </div>
+            </div>
+
+            <div x-show="showCode">
+                {!! ld_render_code_block(resource_path('views/demo/example-parts/x-inputs.blade.php'), 'html') !!}
+            </div>
+            <div x-show="!showCode">
+                @include('demo.example-parts.x-inputs')
+            </div>
+        </div>
     </div>
 
-	{{-- Password --}}
-    <div class="grid md:grid-cols-2 gap-4">
+
+    <div class="border-b bg-gray-50 dark:bg-gray-800 p-4 mb-2">
+        <h4 class="text-lg">{{ __('Input - Password') }}</h4>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            <code>&lt;x-inputs.password ... /&gt;</code>
+        </p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 mb-2">
         <x-inputs.password name="password" label="Password" :autogenerate="true" placeholder="Enter password" hint="Choose a strong password." required />
         <x-inputs.password name="confirm_password" label="Confirm Password" :autogenerate="true" placeholder="Re-enter password" required />
     </div>
 
-	{{-- Email --}}
-    <div class="grid md:grid-cols-2 gap-4">
-        <x-inputs.input name="username" type="username" label="Username" placeholder="Enter your username" required />
-        <x-inputs.input name="email" type="email" label="Email" placeholder="Enter your email" required />
-    </div>
-
-	{{-- File Input --}}
     <div class="flex mb-0">
 	    <x-inputs.file-input name="avatar" label="Profile Picture" hint="Upload your avatar." />
     </div>
@@ -74,6 +95,4 @@
 	<x-inputs.input-group label="Twitter Handle" prepend="@" >
 		<x-inputs.input name="twitter" placeholder="yourhandle" />
 	</x-inputs.input-group>
-
-	<button type="submit" class="btn btn-primary w-full mt-6">Submit</button>
-</form>
+</div>
