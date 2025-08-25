@@ -90,13 +90,15 @@
                                     @endif
                                 </td>
                                 <td class="table-td flex justify-center">
+                                    @can('role.view')
                                     <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
                                         <x-buttons.action-item
                                             :href="route('admin.permissions.show', $permission->id)"
-                                            icon="eye"
+                                            icon="lucide:eye"
                                             :label="__('View Details')"
                                         />
                                     </x-buttons.action-buttons>
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

@@ -163,17 +163,23 @@
                                         @if (auth()->user()->can('role.edit') && $role->name != 'superadmin')
                                             <x-buttons.action-item
                                                 :href="route('admin.roles.edit', $role->id)"
-                                                icon="pencil"
+                                                icon="lucide:pencil"
                                                 :label="__('Edit')"
                                             />
                                         @endif
+
+                                        <x-buttons.action-item
+                                            :href="route('admin.users.index', ['role' => $role->name])"
+                                            icon="lucide:users"
+                                            :label="__('View Users')"
+                                        />
 
                                         @if (auth()->user()->can('role.delete') && $role->name != 'superadmin')
                                             <div x-data="{ deleteModalOpen: false }">
                                                 <x-buttons.action-item
                                                     type="modal-trigger"
                                                     modal-target="deleteModalOpen"
-                                                    icon="trash"
+                                                    icon="lucide:trash"
                                                     :label="__('Delete')"
                                                     class="text-red-600 dark:text-red-400"
                                                 />
@@ -190,12 +196,6 @@
                                                 />
                                             </div>
                                         @endif
-
-                                        <x-buttons.action-item
-                                            :href="route('admin.users.index', ['role' => $role->name])"
-                                            icon="people"
-                                            :label="__('View Users')"
-                                        />
                                     </x-buttons.action-buttons>
                                 </td>
                             </tr>

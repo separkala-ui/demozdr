@@ -83,7 +83,7 @@
                                 <div class="flex items-center">
                                     <input
                                         type="checkbox"
-                                        class="form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        class="form-checkbox"
                                         x-model="selectAll"
                                         @click="
                                             selectAll = !selectAll;
@@ -134,7 +134,7 @@
                                 <td class="table-td table-td-checkbox">
                                     <input
                                         type="checkbox"
-                                        class="user-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        class="user-checkbox form-checkbox"
                                         value="{{ $user->id }}"
                                         x-model="selectedUsers"
                                         {{ !auth()->user()->canBeModified($user, 'user.delete') ? 'disabled' : '' }}
@@ -180,8 +180,16 @@
                                         @if (auth()->user()->canBeModified($user))
                                             <x-buttons.action-item
                                                 :href="route('admin.users.edit', $user->id)"
-                                                icon="pencil"
+                                                icon="lucide:pencil"
                                                 :label="__('Edit')"
+                                            />
+                                        @endif
+
+                                        @if (auth()->user()->can('user.login_as') && $user->id != auth()->user()->id)
+                                            <x-buttons.action-item
+                                                :href="route('admin.users.login-as', $user->id)"
+                                                icon="lucide:log-in"
+                                                :label="__('Login as')"
                                             />
                                         @endif
 
@@ -190,7 +198,7 @@
                                                 <x-buttons.action-item
                                                     type="modal-trigger"
                                                     modal-target="deleteModalOpen"
-                                                    icon="trash"
+                                                    icon="lucide:trash"
                                                     :label="__('Delete')"
                                                     class="text-red-600 dark:text-red-400"
                                                 />
@@ -206,14 +214,6 @@
                                                     confirmButtonText="{{ __('Yes, Confirm') }}"
                                                 />
                                             </div>
-                                        @endif
-
-                                        @if (auth()->user()->can('user.login_as') && $user->id != auth()->user()->id)
-                                            <x-buttons.action-item
-                                                :href="route('admin.users.login-as', $user->id)"
-                                                icon="box-arrow-in-right"
-                                                :label="__('Login as')"
-                                            />
                                         @endif
                                     </x-buttons.action-buttons>
                                     @endif

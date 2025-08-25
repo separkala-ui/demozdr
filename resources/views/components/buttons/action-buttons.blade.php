@@ -74,7 +74,7 @@
             style="position: fixed; z-index: 9999;"
             role="menu"
         >
-            {{ $slot }}
+            {{ $slot ?? '' }}
         </div>
     </template>
 </div>

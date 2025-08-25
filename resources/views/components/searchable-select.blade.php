@@ -85,7 +85,7 @@
 
                 <!-- No results message -->
                 <div x-show="filteredOptions.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-                    No results found
+                    {{ __('No results found') }}
                 </div>
             </div>
         </div>
@@ -104,7 +104,7 @@ function searchableSelect(config) {
         searchPlaceholder: config.searchPlaceholder || 'Search...',
 
         init() {
-            // Convert options object to array format
+            // Convert options object to array format.
             this.options = Object.entries(config.options).map(([key, value]) => ({
                 key: key,
                 value: value

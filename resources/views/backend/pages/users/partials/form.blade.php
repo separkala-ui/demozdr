@@ -137,7 +137,7 @@
                     label="{{ $passwordLabel }}"
                     placeholder="{{ __('Enter Password') }}"
                     :required="$isCreate"
-                    :showAutoGenerate="true"
+                    :autogenerate="true"
                 />
             </div>
             <div>
@@ -146,7 +146,7 @@
                     label="{{ $confirmPasswordLabel }}"
                     placeholder="{{ __('Confirm Password') }}"
                     :required="$isCreate"
-                    :showAutoGenerate="true"
+                    :autogenerate="true"
                 />
             </div>
 
@@ -168,7 +168,7 @@
                             ->toArray()"
                         :selected="old('roles', $user?->roles?->pluck('name')->toArray() ?? [])"
                         :multiple="true"
-                        :searchable="false" />
+                        :searchable="true" />
                 </div>
                 @endif
 

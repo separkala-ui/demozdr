@@ -7,7 +7,7 @@
     'class' => '',
     'id' => null,
     'autocomplete' => 'new-password',
-    'showAutoGenerate' => false,
+    'autogenerate' => false,
     'showTooltip' => __('Show password'),
 ])
 
@@ -54,7 +54,7 @@
                     <iconify-icon x-show="showPassword" icon="lucide:eye-off" width="20" height="20" class="text-[#98A2B3]" style="display: none;"></iconify-icon>
                 </button>
             </x-tooltip>
-            @if($showAutoGenerate)
+            @if($autogenerate)
             <x-tooltip title="{{ __('Autogenerate password') }}">
                 <button type="button" @click="autogenerate" class="text-gray-500 cursor-pointer dark:text-gray-300 flex items-center justify-center w-6 h-6">
                     <iconify-icon icon="lucide:wand-sparkles" width="20" height="20" class="text-[#98A2B3]"></iconify-icon>

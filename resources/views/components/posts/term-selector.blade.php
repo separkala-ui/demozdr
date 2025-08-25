@@ -5,7 +5,7 @@
     'parentTerms' => [],
     'placeholder' => __('Select'),
     'label' => null,
-    'searchable' => false,
+    'searchable' => true,
 ])
 
 @php

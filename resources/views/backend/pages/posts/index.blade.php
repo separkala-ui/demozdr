@@ -147,7 +147,7 @@
                                 <div class="flex items-center">
                                     <input
                                         type="checkbox"
-                                        class="form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        class="form-checkbox"
                                         x-model="selectAll"
                                         @click="
                                             selectAll = !selectAll;
@@ -213,7 +213,7 @@
                                 <td class="table-td table-td-checkbox">
                                     <input
                                         type="checkbox"
-                                        class="post-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        class="post-checkbox form-checkbox"
                                         value="{{ $post->id }}"
                                         x-model="selectedPosts"
                                     >
@@ -268,30 +268,30 @@
                                 </td>
                                 <td class="table-td flex justify-center">
                                     <x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
-                                        @if (auth()->user()->can('post.edit'))
+                                        @can('post.edit')
                                             <x-buttons.action-item
                                                 :href="route('admin.posts.edit', [$postType, $post->id])"
-                                                icon="pencil"
+                                                icon="lucide:pencil"
                                                 :label="__('Edit')"
                                             />
-                                        @endif
+                                        @endcan
                                         {!! ld_apply_filters('admin_post_actions_after_edit', '', $post) !!}
 
-                                        @if (auth()->user()->can('post.view'))
+                                        @can('post.view')
                                             <x-buttons.action-item
                                                 :href="route('admin.posts.show', [$postType, $post->id])"
-                                                icon="eye"
+                                                icon="lucide:eye"
                                                 :label="__('View')"
                                             />
-                                        @endif
+                                        @endcan
                                         {!! ld_apply_filters('admin_post_actions_after_view', '', $post) !!}
 
-                                        @if (auth()->user()->can('post.delete'))
+                                        @can('post.delete')
                                             <div x-data="{ deleteModalOpen: false }">
                                                 <x-buttons.action-item
                                                     type="modal-trigger"
                                                     modal-target="deleteModalOpen"
-                                                    icon="trash"
+                                                    icon="lucide:trash"
                                                     :label="__('Delete')"
                                                     class="text-red-600 dark:text-red-400"
                                                 />
@@ -307,7 +307,7 @@
                                                     confirmButtonText="{{ __('Yes, Confirm') }}"
                                                 />
                                             </div>
-                                        @endif
+                                        @endcan
                                         {!! ld_apply_filters('admin_post_actions_after_delete', '', $post) !!}
                                     </x-buttons.action-buttons>
                                 </td>

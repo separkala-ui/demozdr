@@ -1,4 +1,4 @@
-@props(['message'])
+@props(['message', 'autoDismiss' => true])
 
 <div id="success-message" class="relative w-full overflow-hidden mb-2" role="alert">
     <div class="flex w-full items-center gap-2 bg-green-500/10 p-4 border border-green-500 rounded-sm">
@@ -19,6 +19,7 @@
         </button>
     </div>
 </div>
+@if ($autoDismiss)
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         setTimeout(function () {
@@ -29,3 +30,4 @@
         }, 5000);
     });
 </script>
+@endif

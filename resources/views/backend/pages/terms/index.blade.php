@@ -35,7 +35,7 @@
                     <div class="flex items-center gap-2">
                         <!-- Bulk Actions dropdown -->
                         <div class="relative flex items-center justify-center" x-show="selectedTerms.length > 0" x-data="{ open: false }">
-                            <button @click="open = !open" class="btn-danger flex items-center justify-center gap-2 text-sm" type="button">
+                            <button @click="open = !open" class="btn-default flex items-center justify-center gap-2 text-sm" type="button">
                                 <iconify-icon icon="lucide:trash"></iconify-icon>
                                 <span>{{ __('Bulk Actions') }} (<span x-text="selectedTerms.length"></span>)</span>
                                 <iconify-icon icon="lucide:chevron-down"></iconify-icon>
@@ -65,7 +65,7 @@
                                     <div class="flex items-center">
                                         <input
                                             type="checkbox"
-                                            class="form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                            class="form-checkbox"
                                             x-model="selectAll"
                                             @click="
                                                 selectAll = !selectAll;
@@ -116,7 +116,7 @@
                                     <td class="table-td table-td-checkbox">
                                         <input
                                             type="checkbox"
-                                            class="term-checkbox form-checkbox h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                            class="term-checkbox form-checkbox"
                                             value="{{ $termItem->id }}"
                                             x-model="selectedTerms"
                                         >
@@ -167,7 +167,7 @@
                                             @if (auth()->user()->can('term.edit'))
                                                 <x-buttons.action-item
                                                     :href="route('admin.terms.edit', ['taxonomy' => $taxonomy, 'term' => $termItem->id])"
-                                                    icon="pencil"
+                                                    icon="lucide:pencil"
                                                     :label="__('Edit')"
                                                 />
                                             @endif
@@ -177,7 +177,7 @@
                                                     <x-buttons.action-item
                                                         type="modal-trigger"
                                                         modal-target="deleteModalOpen"
-                                                        icon="trash"
+                                                        icon="lucide:trash"
                                                         :label="__('Delete')"
                                                         class="text-red-600 dark:text-red-400"
                                                     />
