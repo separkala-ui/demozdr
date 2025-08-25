@@ -139,7 +139,7 @@ class UserController extends ApiController
     {
         $userIds = $request->input('ids');
 
-        // Prevent deletion of current user
+        // Prevent deletion of the current user
         if (in_array(Auth::id(), $userIds)) {
             return $this->errorResponse('You cannot delete yourself', 400);
         }

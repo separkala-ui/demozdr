@@ -8,7 +8,7 @@
             {{ __('User Growth') }}
         </h3>
 
-        @include('components.filters.date-filter', ['currentFilter' => $currentFilter])
+        <x-filters.date-filter :currentFilter="$currentFilter" />
     </div>
 
     <div class="max-w-full overflow-x-auto custom-scrollbar">

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Backend;
 
 use App\Enums\ActionType;
+use App\Enums\Hooks\UserHook;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -50,7 +51,7 @@ class UsersController extends Controller
     {
         $this->authorize('create', User::class);
 
-        ld_do_action('user_create_page_before');
+        ld_do_action(UserHook::CREATE_PAGE_BEFORE);
 
         return view('backend.pages.users.create', [
             'roles' => $this->rolesService->getRolesDropdown(),
@@ -70,6 +71,7 @@ class UsersController extends Controller
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
+
         $this->authorize('create', User::class);
 
         $user = $this->userService->createUserWithMetadata($request->validated(), $request);
@@ -78,7 +80,7 @@ class UsersController extends Controller
 
         session()->flash('success', __('User has been created.'));
 
-        ld_do_action('user_store_after', $user);
+        ld_do_action(UserHook::STORE_AFTER, $user);
 
         return redirect()->route('admin.users.index');
     }
@@ -88,9 +90,9 @@ class UsersController extends Controller
         $user = User::with('avatar')->findOrFail($id);
         $this->authorize('update', $user);
 
-        ld_do_action('user_edit_page_before');
+        ld_do_action(UserHook::EDIT_PAGE_BEFORE);
 
-        $user = ld_apply_filters('user_edit_page_before_with_user', $user);
+        $user = ld_apply_filters(UserHook::EDIT_PAGE_BEFORE_WITH_USER, $user);
 
         return view('backend.pages.users.edit', [
             'user' => $user,
@@ -114,7 +116,7 @@ class UsersController extends Controller
 
         $user = $this->userService->updateUserWithMetadata($user, $request->validated(), $request);
 
-        ld_do_action('user_update_after', $user);
+        ld_do_action(UserHook::UPDATE_AFTER, $user);
 
         $this->storeActionLog(ActionType::UPDATED, ['user' => $user]);
 
@@ -136,13 +138,14 @@ class UsersController extends Controller
         $this->authorize('delete', $user);
 
         $user = ld_apply_filters('user_delete_before', $user);
+
         $user->delete();
-        $user = ld_apply_filters('user_delete_after', $user);
+        $user = ld_apply_filters(UserHook::DELETE_AFTER, $user);
         session()->flash('success', __('User has been deleted.'));
 
         $this->storeActionLog(ActionType::DELETED, ['user' => $user]);
 
-        ld_do_action('user_delete_after', $user);
+        ld_do_action(UserHook::DELETE_AFTER, $user);
 
         return back();
     }
@@ -178,12 +181,12 @@ class UsersController extends Controller
                 continue;
             }
 
-            $user = ld_apply_filters('user_delete_before', $user);
+            $user = ld_apply_filters(UserHook::DELETE_BEFORE, $user);
             $user->delete();
-            ld_apply_filters('user_delete_after', $user);
+            ld_apply_filters(UserHook::DELETE_AFTER, $user);
 
             $this->storeActionLog(ActionType::DELETED, ['user' => $user]);
-            ld_do_action('user_delete_after', $user);
+            ld_do_action(UserHook::DELETE_AFTER, $user);
 
             $deletedCount++;
         }

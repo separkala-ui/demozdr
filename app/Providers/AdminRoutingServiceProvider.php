@@ -52,7 +52,7 @@ class AdminRoutingServiceProvider extends ServiceProvider
             });
         });
 
-        // Admin logout route (always at standard location)
+        // Admin logout route (always at the standard location)
         Route::middleware('web')->post('/admin/logout/submit', [LoginController::class, 'logout'])->name('admin.logout.submit');
     }
 }

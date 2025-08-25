@@ -26,6 +26,7 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/user-avatar/database/factories" isTestSource="false" packagePrefix="Modules\UserAvatar\Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/user-avatar/database/seeders" isTestSource="false" packagePrefix="Modules\UserAvatar\Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/user-avatar/tests" isTestSource="true" packagePrefix="Modules\UserAvatar\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/site/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/storage/app" />
