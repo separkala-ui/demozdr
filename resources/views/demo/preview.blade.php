@@ -89,7 +89,7 @@
                     <h3 class="font-bold mb-4">Components</h3>
                     <ul class="space-y-2">
                         <li><a href="#forms-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Forms</a></li>
-                        <!-- <li><a href="#table-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Table</a></li> -->
+                        <li><a href="#dropdown-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Dropdown</a></li>
                         <li><a href="#alerts-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Alerts</a></li>
                         <li><a href="#buttons-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Buttons</a></li>
                         <li><a href="#media-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Media</a></li>
@@ -100,6 +100,9 @@
             <div class="flex-1">
                 <section id="forms-demo">
                     @include('demo.forms')
+                </section>
+                <section id="dropdown-demo" class="mt-10">
+                    @include('demo.dropdown')
                 </section>
                 <section id="alerts-demo" class="mt-10">
                     @include('demo.alerts')
@@ -127,7 +130,7 @@
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const sectionIds = ['forms-demo', 'alerts-demo', 'buttons-demo', 'media-demo', 'drawer-demo'];
+            const sectionIds = ['forms-demo', 'dropdown-demo', 'alerts-demo', 'buttons-demo', 'media-demo', 'drawer-demo'];
             const sidebarLinks = Array.from(document.querySelectorAll('.sidebar-link'));
 
             function setActiveSidebar(hash) {
