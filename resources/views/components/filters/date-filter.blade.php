@@ -1,3 +1,5 @@
+@props(['currentFilter' => 'last_6_months'])
+
 <div class="flex items-center space-x-4" x-data="{ open: false }">
     <span
         class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 dark:bg-gray-700 dark:text-gray-200"

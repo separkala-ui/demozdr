@@ -27,8 +27,8 @@ class UserChartService extends ChartService
 
         $formattedData = $labels->mapWithKeys(function ($label) use ($userGrowth, $format, $dbFormat) {
             $dbKey = Carbon::createFromFormat($format, $label)->format($dbFormat);
-
-            return [$label => $userGrowth[$dbKey] ?? 0]; // Default to 0 if not found
+            $value = $userGrowth[$dbKey] ?? 0;
+            return [$label => intval(round($value))];
         });
 
         return response()->json([
@@ -76,6 +76,7 @@ class UserChartService extends ChartService
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy($groupBy)
             ->orderBy($groupBy)
-            ->pluck('total', $groupBy);
+            ->pluck('total', $groupBy)
+            ->map(fn ($total) => (int) $total);
     }
 }
