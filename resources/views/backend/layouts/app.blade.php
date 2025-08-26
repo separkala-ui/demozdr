@@ -64,11 +64,11 @@ x-init="
 
             <!-- Main Content -->
             <main>
-                @yield('admin-content')
-
-                @isset($slot)
-                    {{ $slot }}
-                @endisset
+                @hasSection('admin-content')
+                    @yield('admin-content')
+                @else
+                    @isset($slot) {{ $slot }} @endisset
+                @endif
             </main>
             <!-- End Main Content -->
         </div>
