@@ -1,172 +1,139 @@
 <?php
 
 declare(strict_types=1);
-
-namespace Tests\Unit;
-
 use App\Services\RecaptchaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
-use Tests\TestCase;
 
-class RecaptchaServiceTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        parent::setUp();
+beforeEach(function () {
+    // Set up mock configuration
+    Config::set('settings.recaptcha_site_key', 'test-site-key');
+    Config::set('settings.recaptcha_secret_key', 'test-secret-key');
+    Config::set('settings.recaptcha_enabled_pages', json_encode(['login', 'registration']));
+    Config::set('settings.recaptcha_score_threshold', 0.5);
+});
+test('is enabled for page returns true when configured', function () {
+    $service = new RecaptchaService();
 
-        // Set up mock configuration
-        Config::set('settings.recaptcha_site_key', 'test-site-key');
-        Config::set('settings.recaptcha_secret_key', 'test-secret-key');
-        Config::set('settings.recaptcha_enabled_pages', json_encode(['login', 'registration']));
-        Config::set('settings.recaptcha_score_threshold', 0.5);
-    }
+    expect($service->isEnabledForPage('login'))->toBeTrue();
+    expect($service->isEnabledForPage('registration'))->toBeTrue();
+    expect($service->isEnabledForPage('forgot_password'))->toBeFalse();
+});
+test('is enabled for page returns false when no keys', function () {
+    Config::set('settings.recaptcha_site_key', '');
+    Config::set('settings.recaptcha_secret_key', '');
 
-    public function test_is_enabled_for_page_returns_true_when_configured()
-    {
-        $service = new RecaptchaService();
+    $service = new RecaptchaService();
 
-        $this->assertTrue($service->isEnabledForPage('login'));
-        $this->assertTrue($service->isEnabledForPage('registration'));
-        $this->assertFalse($service->isEnabledForPage('forgot_password'));
-    }
+    expect($service->isEnabledForPage('login'))->toBeFalse();
+});
+test('get site key returns configured key', function () {
+    $service = new RecaptchaService();
 
-    public function test_is_enabled_for_page_returns_false_when_no_keys()
-    {
-        Config::set('settings.recaptcha_site_key', '');
-        Config::set('settings.recaptcha_secret_key', '');
+    expect($service->getSiteKey())->toEqual('test-site-key');
+});
+test('verify returns false when no response', function () {
+    $service = new RecaptchaService();
+    $request = Request::create('/', 'POST');
 
-        $service = new RecaptchaService();
+    expect($service->verify($request, 'login'))->toBeFalse();
+});
+test('verify makes http request when response present', function () {
+    Http::fake([
+        'https://www.google.com/recaptcha/api/siteverify' => Http::response([
+            'success' => true,
+            'score' => 0.8,
+            'action' => 'login',
+        ]),
+    ]);
 
-        $this->assertFalse($service->isEnabledForPage('login'));
-    }
+    $service = new RecaptchaService();
+    $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
 
-    public function test_get_site_key_returns_configured_key()
-    {
-        $service = new RecaptchaService();
+    $result = $service->verify($request, 'login');
 
-        $this->assertEquals('test-site-key', $service->getSiteKey());
-    }
+    expect($result)->toBeTrue();
 
-    public function test_verify_returns_false_when_no_response()
-    {
-        $service = new RecaptchaService();
-        $request = Request::create('/', 'POST');
+    Http::assertSent(function ($request) {
+        return $request->url() === 'https://www.google.com/recaptcha/api/siteverify'
+            && $request['secret'] === 'test-secret-key'
+            && $request['response'] === 'test-response';
+    });
+});
+test('get available pages returns expected pages', function () {
+    $pages = RecaptchaService::getAvailablePages();
 
-        $this->assertFalse($service->verify($request, 'login'));
-    }
+    expect($pages)->toHaveKey('login');
+    expect($pages)->toHaveKey('register');
+    expect($pages)->toHaveKey('forgot_password');
+});
+test('verify fails when score below threshold', function () {
+    Http::fake([
+        'https://www.google.com/recaptcha/api/siteverify' => Http::response([
+            'success' => true,
+            'score' => 0.3,
+            'action' => 'login',
+        ]),
+    ]);
 
-    public function test_verify_makes_http_request_when_response_present()
-    {
-        Http::fake([
-            'https://www.google.com/recaptcha/api/siteverify' => Http::response([
-                'success' => true,
-                'score' => 0.8,
-                'action' => 'login',
-            ]),
-        ]);
+    $service = new RecaptchaService();
+    $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
 
-        $service = new RecaptchaService();
-        $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
+    $result = $service->verify($request, 'login');
 
-        $result = $service->verify($request, 'login');
+    expect($result)->toBeFalse();
+});
+test('verify fails when action mismatch', function () {
+    Http::fake([
+        'https://www.google.com/recaptcha/api/siteverify' => Http::response([
+            'success' => true,
+            'score' => 0.8,
+            'action' => 'registration',
+        ]),
+    ]);
 
-        $this->assertTrue($result);
+    $service = new RecaptchaService();
+    $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
 
-        Http::assertSent(function ($request) {
-            return $request->url() === 'https://www.google.com/recaptcha/api/siteverify'
-                && $request['secret'] === 'test-secret-key'
-                && $request['response'] === 'test-response';
-        });
-    }
+    $result = $service->verify($request, 'login');
 
-    public function test_get_available_pages_returns_expected_pages()
-    {
-        $pages = RecaptchaService::getAvailablePages();
+    expect($result)->toBeFalse();
+});
+test('get score threshold returns configured value', function () {
+    Config::set('settings.recaptcha_score_threshold', 0.7);
+    $service = new RecaptchaService();
 
-        $this->assertArrayHasKey('login', $pages);
-        $this->assertArrayHasKey('register', $pages);
-        $this->assertArrayHasKey('forgot_password', $pages);
-    }
+    expect($service->getScoreThreshold())->toEqual(0.7);
+});
+test('get script tag returns v3 script', function () {
+    $service = new RecaptchaService();
+    $scriptTag = $service->getScriptTag();
 
-    public function test_verify_fails_when_score_below_threshold()
-    {
-        Http::fake([
-            'https://www.google.com/recaptcha/api/siteverify' => Http::response([
-                'success' => true,
-                'score' => 0.3,
-                'action' => 'login',
-            ]),
-        ]);
+    $this->assertStringContainsString('https://www.google.com/recaptcha/api.js?render=test-site-key', $scriptTag);
+});
+test('settings controller rejects invalid recaptcha enabled pages', function () {
+    $controller = app(\App\Http\Controllers\Backend\SettingsController::class);
+    $request = Request::create('/', 'POST', [
+        'recaptcha_enabled_pages' => ['login', 'invalid_page', 'register'],
+    ]);
 
-        $service = new RecaptchaService();
-        $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
+    // Simulate store method logic
+    $validPages = array_keys(RecaptchaService::getAvailablePages());
+    $enabledPages = $request->input('recaptcha_enabled_pages', []);
+    $filteredPages = array_intersect($enabledPages, $validPages);
 
-        $result = $service->verify($request, 'login');
+    expect(array_values($filteredPages))->toEqual(['login', 'register']);
+});
+test('recaptcha service handles http timeout exception', function () {
+    Http::fake([
+        'https://www.google.com/recaptcha/api/siteverify' => function () {
+            throw new \Exception('Timeout');
+        },
+    ]);
+    $service = new RecaptchaService();
+    $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
 
-        $this->assertFalse($result);
-    }
-
-    public function test_verify_fails_when_action_mismatch()
-    {
-        Http::fake([
-            'https://www.google.com/recaptcha/api/siteverify' => Http::response([
-                'success' => true,
-                'score' => 0.8,
-                'action' => 'registration',
-            ]),
-        ]);
-
-        $service = new RecaptchaService();
-        $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
-
-        $result = $service->verify($request, 'login');
-
-        $this->assertFalse($result);
-    }
-
-    public function test_get_score_threshold_returns_configured_value()
-    {
-        Config::set('settings.recaptcha_score_threshold', 0.7);
-        $service = new RecaptchaService();
-
-        $this->assertEquals(0.7, $service->getScoreThreshold());
-    }
-
-    public function test_get_script_tag_returns_v3_script()
-    {
-        $service = new RecaptchaService();
-        $scriptTag = $service->getScriptTag();
-
-        $this->assertStringContainsString('https://www.google.com/recaptcha/api.js?render=test-site-key', $scriptTag);
-    }
-
-    public function test_settings_controller_rejects_invalid_recaptcha_enabled_pages()
-    {
-        $controller = app(\App\Http\Controllers\Backend\SettingsController::class);
-        $request = Request::create('/', 'POST', [
-            'recaptcha_enabled_pages' => ['login', 'invalid_page', 'register'],
-        ]);
-        // Simulate store method logic
-        $validPages = array_keys(RecaptchaService::getAvailablePages());
-        $enabledPages = $request->input('recaptcha_enabled_pages', []);
-        $filteredPages = array_intersect($enabledPages, $validPages);
-
-        $this->assertEquals(['login', 'register'], array_values($filteredPages));
-    }
-
-    public function test_recaptcha_service_handles_http_timeout_exception()
-    {
-        Http::fake([
-            'https://www.google.com/recaptcha/api/siteverify' => function () {
-                throw new \Exception('Timeout');
-            },
-        ]);
-        $service = new RecaptchaService();
-        $request = Request::create('/', 'POST', ['g-recaptcha-response' => 'test-response']);
-
-        $result = $service->verify($request, 'login');
-        $this->assertFalse($result);
-    }
-}
+    $result = $service->verify($request, 'login');
+    expect($result)->toBeFalse();
+});

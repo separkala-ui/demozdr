@@ -1,171 +1,143 @@
 <?php
 
-namespace Tests\Feature\Admin;
+declare(strict_types=1);
 
+use App\Http\Middleware\VerifyCsrfToken;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Permission;
-use Tests\TestCase;
 use Illuminate\Support\Facades\Hash;
 
-class UserManagementTest extends TestCase
-{
-    use RefreshDatabase;
+pest()->use(RefreshDatabase::class);
 
-    protected $admin;
+beforeEach(function () {
+    // Disable CSRF protection for tests.
+    $this->withoutMiddleware(VerifyCsrfToken::class);
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+    // Create admin user with permissions
+    $this->admin = User::factory()->create();
+    $adminRole = Role::create(['name' => 'Superadmin', 'guard_name' => 'web']);
 
-        // Create admin user with permissions
-        $this->admin = User::factory()->create();
-        $adminRole = Role::create(['name' => 'Superadmin', 'guard_name' => 'web']);
+    // Create necessary permissions
+    Permission::create(['name' => 'user.view']);
+    Permission::create(['name' => 'user.create']);
+    Permission::create(['name' => 'user.edit']);
+    Permission::create(['name' => 'user.delete']);
 
-        // Create necessary permissions
-        Permission::create(['name' => 'user.view']);
-        Permission::create(['name' => 'user.create']);
-        Permission::create(['name' => 'user.edit']);
-        Permission::create(['name' => 'user.delete']);
+    $adminRole->syncPermissions([
+        'user.view',
+        'user.create',
+        'user.edit',
+        'user.delete',
+    ]);
 
-        $adminRole->syncPermissions([
-            'user.view',
-            'user.create',
-            'user.edit',
-            'user.delete',
-        ]);
+    $this->admin->assignRole($adminRole);
+});
 
-        $this->admin->assignRole($adminRole);
-    }
+test('admin can view users list', function () {
+    $response = $this->actingAs($this->admin)->get('/admin/users');
+    $response->assertStatus(200);
+    $response->assertViewIs('backend.pages.users.index');
+});
 
-    #[Test]
-    public function admin_can_view_users_list(): void
-    {
-        $this->actingAs($this->admin)
-            ->get('/admin/users')
-            ->assertStatus(200)
-            ->assertViewIs('backend.pages.users.index');
-    }
+test('admin can create user', function () {
+    $role = Role::create(['name' => 'editor']);
 
-    #[Test]
-    public function admin_can_create_user(): void
-    {
-        $role = Role::create(['name' => 'editor']);
+    $response = $this->actingAs($this->admin)->post('/admin/users', [
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'john@example.com',
+        'username' => 'johndoe',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+        'roles' => ['editor'],
+    ]);
 
-        $response = $this->actingAs($this->admin)
-            ->post('/admin/users', [
-                'first_name' => 'John',
-                'last_name' => 'Doe',
-                'email' => 'john@example.com',
-                'username' => 'johndoe',
-                'password' => 'password123',
-                'password_confirmation' => 'password123',
-                'roles' => ['editor'],
-            ]);
+    $response->assertRedirect();
+    $this->assertDatabaseHas('users', [
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'john@example.com',
+        'username' => 'johndoe',
+    ]);
 
-        $response->assertRedirect();
-        $this->assertDatabaseHas('users', [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'john@example.com',
-            'username' => 'johndoe',
-        ]);
+    $user = User::where('email', 'john@example.com')->first();
+    expect($user->hasRole('editor'))->toBeTrue();
+});
 
-        $user = User::where('email', 'john@example.com')->first();
-        $this->assertTrue($user->hasRole('editor'));
-    }
+test('admin can update user', function () {
+    $user = User::create([
+        'first_name' => 'Original',
+        'last_name' => 'Name',
+        'email' => 'original@example.com',
+        'username' => 'originaluser',
+        'password' => Hash::make('password'),
+    ]);
 
-    #[Test]
-    public function admin_can_update_user(): void
-    {
-        $user = User::create([
-            'first_name' => 'Original',
-            'last_name' => 'Name',
-            'email' => 'original@example.com',
-            'username' => 'originaluser',
-            'password' => Hash::make('password'),
-        ]);
+    $role = Role::create(['name' => 'editor']);
 
-        $role = Role::create(['name' => 'editor']);
+    $response = $this->actingAs($this->admin)->put("/admin/users/{$user->id}", [
+        'first_name' => 'Updated',
+        'last_name' => 'Name',
+        'email' => 'updated@example.com',
+        'username' => 'updateduser',
+        'roles' => ['editor'],
+    ]);
 
-        $response = $this->actingAs($this->admin)
-            ->put("/admin/users/{$user->id}", [
-                'first_name' => 'Updated',
-                'last_name' => 'Name',
-                'email' => 'updated@example.com',
-                'username' => 'updateduser',
-                'roles' => ['editor'],
-            ]);
+    $response->assertRedirect();
+    $this->assertDatabaseHas('users', [
+        'id' => $user->id,
+        'first_name' => 'Updated',
+        'last_name' => 'Name',
+        'email' => 'updated@example.com',
+        'username' => 'updateduser',
+    ]);
 
-        $response->assertRedirect();
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
-            'first_name' => 'Updated',
-            'last_name' => 'Name',
-            'email' => 'updated@example.com',
-            'username' => 'updateduser',
-        ]);
+    $updatedUser = User::find($user->id);
+    expect($updatedUser->hasRole('editor'))->toBeTrue();
+});
 
-        $updatedUser = User::find($user->id);
-        $this->assertTrue($updatedUser->hasRole('editor'));
-    }
+test('admin can delete user', function () {
+    $user = User::factory()->create();
 
-    #[Test]
-    public function admin_can_delete_user(): void
-    {
-        $user = User::factory()->create();
+    $response = $this->actingAs($this->admin)->delete("/admin/users/{$user->id}");
 
-        $response = $this->actingAs($this->admin)
-            ->delete("/admin/users/{$user->id}");
+    $response->assertRedirect();
+    $this->assertDatabaseMissing('users', ['id' => $user->id]);
+});
 
-        $response->assertRedirect();
-        $this->assertDatabaseMissing('users', ['id' => $user->id]);
-    }
+test('admin cannot delete themselves', function () {
+    $response = $this->actingAs($this->admin)->delete("/admin/users/{$this->admin->id}");
 
-    #[Test]
-    public function admin_cannot_delete_themselves(): void
-    {
-        $response = $this->actingAs($this->admin)
-            ->delete("/admin/users/{$this->admin->id}");
+    $response->assertRedirect();
+    $this->assertDatabaseHas('users', ['id' => $this->admin->id]);
+});
 
-        $response->assertRedirect();
-        $this->assertDatabaseHas('users', ['id' => $this->admin->id]);
-    }
+test('user without permission cannot manage users', function () {
+    $regularUser = User::factory()->create();
 
-    #[Test]
-    public function user_without_permission_cannot_manage_users(): void
-    {
-        $regularUser = User::factory()->create();
+    $response = $this->actingAs($regularUser)->get('/admin/users');
+    $response->assertStatus(403);
 
-        $this->actingAs($regularUser)
-            ->get('/admin/users')
-            ->assertStatus(403);
+    $response = $this->actingAs($regularUser)->post('/admin/users', [
+        'first_name' => 'New',
+        'last_name' => 'User',
+        'username' => 'newuser',
+        'email' => 'newuser@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ]);
+    $response->assertStatus(403);
+});
 
-        $this->actingAs($regularUser)
-            ->post('/admin/users', [
-                'first_name' => 'New',
-                'last_name' => 'User',
-                'username' => 'newuser',
-                'email' => 'newuser@example.com',
-                'password' => 'password123',
-                'password_confirmation' => 'password123',
-            ])
-            ->assertStatus(403);
-    }
+test('validation works when creating user', function () {
+    $response = $this->actingAs($this->admin)->post('/admin/users', [
+        'first_name' => '',
+        'last_name' => '',
+        'email' => '',
+        'password' => '',
+    ]);
 
-    #[Test]
-    public function validation_works_when_creating_user(): void
-    {
-        $response = $this->actingAs($this->admin)
-            ->post('/admin/users', [
-                'first_name' => '',
-                'last_name' => '',
-                'email' => '',
-                'password' => '',
-            ]);
-
-        $response->assertSessionHasErrors(['first_name', 'last_name', 'email', 'password']);
-    }
-}
+    $response->assertSessionHasErrors(['first_name', 'last_name', 'email', 'password']);
+});

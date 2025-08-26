@@ -14,6 +14,9 @@
         <testsuite name="Smoke">
             <directory>tests/Smoke</directory>
         </testsuite>
+        <testsuite name="Browser">
+            <directory>tests/Browser</directory>
+        </testsuite>
         <testsuite name="Modules">
             <directory suffix="Test.php">./modules/*/tests/Feature</directory>
             <directory suffix="Test.php">./modules/*/tests/Unit</directory>

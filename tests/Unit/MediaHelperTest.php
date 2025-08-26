@@ -1,43 +1,31 @@
 <?php
 
 declare(strict_types=1);
-
-namespace Tests\Unit;
-
 use App\Support\Helper\MediaHelper;
-use PHPUnit\Framework\TestCase;
 
-class MediaHelperTest extends TestCase
-{
-    public function test_can_get_upload_limits()
-    {
-        $limits = MediaHelper::getUploadLimits();
+test('can get upload limits', function () {
+    $limits = MediaHelper::getUploadLimits();
 
-        $this->assertArrayHasKey('upload_max_filesize', $limits);
-        $this->assertArrayHasKey('post_max_size', $limits);
-        $this->assertArrayHasKey('effective_max_filesize', $limits);
-        $this->assertArrayHasKey('max_file_uploads', $limits);
+    expect($limits)->toHaveKey('upload_max_filesize');
+    expect($limits)->toHaveKey('post_max_size');
+    expect($limits)->toHaveKey('effective_max_filesize');
+    expect($limits)->toHaveKey('max_file_uploads');
 
-        // Check that effective limit is correct
-        $expected = min($limits['upload_max_filesize'], $limits['post_max_size']);
-        $this->assertEquals($expected, $limits['effective_max_filesize']);
-    }
-
-    public function test_can_parse_php_size_strings()
-    {
-        $this->assertEquals(1024, MediaHelper::parseSize('1K'));
-        $this->assertEquals(1024 * 1024, MediaHelper::parseSize('1M'));
-        $this->assertEquals(1024 * 1024 * 1024, MediaHelper::parseSize('1G'));
-        $this->assertEquals(2048, MediaHelper::parseSize('2K'));
-        $this->assertEquals(10 * 1024 * 1024, MediaHelper::parseSize('10M'));
-    }
-
-    public function test_format_file_size()
-    {
-        $this->assertEquals('1024 B', MediaHelper::formatFileSize(1024));
-        $this->assertEquals('2 KB', MediaHelper::formatFileSize(2048));
-        $this->assertEquals('1024 KB', MediaHelper::formatFileSize(1024 * 1024));
-        $this->assertEquals('1024 MB', MediaHelper::formatFileSize(1024 * 1024 * 1024));
-        $this->assertEquals('500 B', MediaHelper::formatFileSize(500));
-    }
-}
+    // Check that effective limit is correct
+    $expected = min($limits['upload_max_filesize'], $limits['post_max_size']);
+    expect($limits['effective_max_filesize'])->toEqual($expected);
+});
+test('can parse php size strings', function () {
+    expect(MediaHelper::parseSize('1K'))->toEqual(1024);
+    expect(MediaHelper::parseSize('1M'))->toEqual(1024 * 1024);
+    expect(MediaHelper::parseSize('1G'))->toEqual(1024 * 1024 * 1024);
+    expect(MediaHelper::parseSize('2K'))->toEqual(2048);
+    expect(MediaHelper::parseSize('10M'))->toEqual(10 * 1024 * 1024);
+});
+test('format file size', function () {
+    expect(MediaHelper::formatFileSize(1024))->toEqual('1024 B');
+    expect(MediaHelper::formatFileSize(2048))->toEqual('2 KB');
+    expect(MediaHelper::formatFileSize(1024 * 1024))->toEqual('1024 KB');
+    expect(MediaHelper::formatFileSize(1024 * 1024 * 1024))->toEqual('1024 MB');
+    expect(MediaHelper::formatFileSize(500))->toEqual('500 B');
+});

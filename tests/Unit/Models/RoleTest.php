@@ -1,76 +1,52 @@
 <?php
 
-namespace Tests\Unit\Models;
+declare(strict_types=1);
 
 use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
+use Spatie\Permission\Models\Permission;
+use App\Models\User;
 
-class RoleTest extends TestCase
-{
-    use RefreshDatabase;
+pest()->use(RefreshDatabase::class);
 
-    #[Test]
-    public function it_extends_spatie_role(): void
-    {
-        $role = new Role();
-        $this->assertInstanceOf(\Spatie\Permission\Models\Role::class, $role);
-    }
+it('extends spatie role', function () {
+    $role = new Role();
+    expect($role)->toBeInstanceOf(Spatie\Permission\Models\Role::class);
+});
 
-    #[Test]
-    public function it_uses_query_builder_trait(): void
-    {
-        $role = new Role();
-        $this->assertTrue(in_array('App\Concerns\QueryBuilderTrait', class_uses_recursive($role)));
-    }
+it('uses query builder trait', function () {
+    $role = new Role();
+    expect(in_array('App\Concerns\QueryBuilderTrait', class_uses_recursive($role)))->toBeTrue();
+});
 
-    #[Test]
-    public function it_has_searchable_columns(): void
-    {
-        $role = new Role();
-        $reflection = new \ReflectionClass($role);
-        $method = $reflection->getMethod('getSearchableColumns');
-        $method->setAccessible(true);
+it('has searchable columns', function () {
+    $role = new Role();
+    $reflection = new \ReflectionClass($role);
+    $method = $reflection->getMethod('getSearchableColumns');
+    $method->setAccessible(true);
+    expect($method->invoke($role))->toEqual(['name']);
+});
 
-        $this->assertEquals(['name'], $method->invoke($role));
-    }
+it('has excluded sort columns', function () {
+    $role = new Role();
+    $reflection = new \ReflectionClass($role);
+    $method = $reflection->getMethod('getExcludedSortColumns');
+    $method->setAccessible(true);
+    expect($method->invoke($role))->toEqual(['user_count']);
+});
 
-    #[Test]
-    public function it_has_excluded_sort_columns(): void
-    {
-        $role = new Role();
-        $reflection = new \ReflectionClass($role);
-        $method = $reflection->getMethod('getExcludedSortColumns');
-        $method->setAccessible(true);
+it('can create role with permissions', function () {
+    $permission1 = Permission::create(['name' => 'test.permission1']);
+    $permission2 = Permission::create(['name' => 'test.permission2']);
+    $role = Role::create(['name' => 'test-role']);
+    $role->syncPermissions([$permission1->id, $permission2->id]);
+    expect($role->hasPermissionTo('test.permission1', 'web'))->toBeTrue();
+    expect($role->hasPermissionTo('test.permission2', 'web'))->toBeTrue();
+});
 
-        $this->assertEquals(['user_count'], $method->invoke($role));
-    }
-
-    #[Test]
-    public function it_can_create_role_with_permissions(): void
-    {
-        // Create permissions
-        $permission1 = \Spatie\Permission\Models\Permission::create(['name' => 'test.permission1']);
-        $permission2 = \Spatie\Permission\Models\Permission::create(['name' => 'test.permission2']);
-
-        // Create role with permissions
-        $role = Role::create(['name' => 'test-role']);
-        $role->syncPermissions([$permission1->id, $permission2->id]);
-
-        // Assert role has permissions
-        $this->assertTrue($role->hasPermissionTo('test.permission1', 'web'));
-        $this->assertTrue($role->hasPermissionTo('test.permission2', 'web'));
-    }
-
-    #[Test]
-    public function it_can_be_assigned_to_users(): void
-    {
-        $role = Role::create(['name' => 'test-role']);
-        $user = \App\Models\User::factory()->create();
-
-        $user->assignRole($role);
-
-        $this->assertTrue($user->hasRole('test-role'));
-    }
-}
+it('can be assigned to users', function () {
+    $role = Role::create(['name' => 'test-role']);
+    $user = User::factory()->create();
+    $user->assignRole($role);
+    expect($user->hasRole('test-role'))->toBeTrue();
+});

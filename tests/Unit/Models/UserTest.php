@@ -1,120 +1,85 @@
 <?php
 
-namespace Tests\Unit\Models;
+declare(strict_types=1);
 
 use App\Models\User;
 use App\Notifications\AdminResetPasswordNotification;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Permission;
-use Tests\TestCase;
 
-class UserTest extends TestCase
-{
-    use RefreshDatabase;
+pest()->use(RefreshDatabase::class);
 
-    #[Test]
-    public function it_has_fillable_attributes(): void
-    {
-        $user = new User();
-        $this->assertEquals([
-            'first_name',
-            'last_name',
-            'email',
-            'password',
-            'username',
-            'avatar_id',
-        ], $user->getFillable());
-    }
+it('has fillable attributes', function () {
+    $user = new User();
+    expect($user->getFillable())->toEqual([
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+        'username',
+        'avatar_id',
+    ]);
+});
 
-    #[Test]
-    public function it_has_hidden_attributes(): void
-    {
-        $user = new User();
-        $this->assertEquals([
-            'password',
-            'remember_token',
-            'email_verified_at',
-        ], $user->getHidden());
-    }
+it('has hidden attributes', function () {
+    $user = new User();
+    expect($user->getHidden())->toEqual([
+        'password',
+        'remember_token',
+        'email_verified_at',
+    ]);
+});
 
-    #[Test]
-    public function it_has_casted_attributes(): void
-    {
-        $user = new User();
-        $casts = $user->getCasts();
-        $this->assertArrayHasKey('email_verified_at', $casts);
-        $this->assertEquals('datetime', $casts['email_verified_at']);
-    }
+it('has casted attributes', function () {
+    $user = new User();
+    $casts = $user->getCasts();
+    expect($casts)->toHaveKey('email_verified_at');
+    expect($casts['email_verified_at'])->toEqual('datetime');
+});
 
-    #[Test]
-    public function it_sends_admin_reset_password_notification_for_admin_routes(): void
-    {
-        Notification::fake();
+it('sends admin reset password notification for admin routes', function () {
+    Notification::fake();
+    $user = User::factory()->create();
+    app('request')->headers->set('referer', 'http://localhost/admin/login');
+    app('request')->server->set('REQUEST_URI', '/admin/password/reset');
+    $user->sendPasswordResetNotification('token');
+    Notification::assertSentTo($user, AdminResetPasswordNotification::class);
+});
 
-        $user = User::factory()->create();
+it('sends default reset password notification for non admin routes', function () {
+    Notification::fake();
+    $user = User::factory()->create();
+    app('request')->headers->set('referer', 'http://localhost:8000/login');
+    app('request')->server->set('REQUEST_URI', '/password/reset');
+    $user->sendPasswordResetNotification('token');
+    Notification::assertSentTo($user, ResetPassword::class);
+});
 
-        // Mock the request to be an admin route
-        $this->app['request']->headers->set('referer', 'http://localhost/admin/login');
-        $this->app['request']->server->set('REQUEST_URI', '/admin/password/reset');
+it('can check if user has any permission', function () {
+    $user = User::factory()->create();
+    $permission1 = Permission::create(['name' => 'test.permission1']);
+    $permission2 = Permission::create(['name' => 'test.permission2']);
+    $user->givePermissionTo($permission1);
+    expect($user->hasAnyPermission(['test.permission1', 'test.permission2']))->toBeTrue();
+    expect($user->hasAnyPermission('test.permission1'))->toBeTrue();
+    expect($user->hasAnyPermission('test.permission2'))->toBeFalse();
+    expect($user->hasAnyPermission([]))->toBeTrue();
+});
 
-        $user->sendPasswordResetNotification('token');
+it('has searchable columns', function () {
+    $user = new User();
+    $reflection = new \ReflectionClass($user);
+    $method = $reflection->getMethod('getSearchableColumns');
+    $method->setAccessible(true);
+    expect($method->invoke($user))->toEqual(['first_name', 'last_name', 'email', 'username']);
+});
 
-        Notification::assertSentTo($user, AdminResetPasswordNotification::class);
-    }
-
-    #[Test]
-    public function it_sends_default_reset_password_notification_for_non_admin_routes(): void
-    {
-        Notification::fake();
-
-        $user = User::factory()->create();
-
-        // Mock the request to be a non-admin route
-        $this->app['request']->headers->set('referer', 'http://localhost:8000/login');
-        $this->app['request']->server->set('REQUEST_URI', '/password/reset');
-
-        $user->sendPasswordResetNotification('token');
-
-        Notification::assertSentTo($user, ResetPassword::class);
-    }
-
-    #[Test]
-    public function it_can_check_if_user_has_any_permission(): void
-    {
-        $user = User::factory()->create();
-        $permission1 = Permission::create(['name' => 'test.permission1']);
-        $permission2 = Permission::create(['name' => 'test.permission2']);
-
-        $user->givePermissionTo($permission1);
-
-        $this->assertTrue($user->hasAnyPermission(['test.permission1', 'test.permission2']));
-        $this->assertTrue($user->hasAnyPermission('test.permission1'));
-        $this->assertFalse($user->hasAnyPermission('test.permission2'));
-        $this->assertTrue($user->hasAnyPermission([])); // Empty permissions should return true
-    }
-
-    #[Test]
-    public function it_has_searchable_columns(): void
-    {
-        $user = new User();
-        $reflection = new \ReflectionClass($user);
-        $method = $reflection->getMethod('getSearchableColumns');
-        $method->setAccessible(true);
-
-        $this->assertEquals(['first_name', 'last_name', 'email', 'username'], $method->invoke($user));
-    }
-
-    #[Test]
-    public function it_has_excluded_sort_columns(): void
-    {
-        $user = new User();
-        $reflection = new \ReflectionClass($user);
-        $method = $reflection->getMethod('getExcludedSortColumns');
-        $method->setAccessible(true);
-
-        $this->assertEquals([], $method->invoke($user));
-    }
-}
+it('has excluded sort columns', function () {
+    $user = new User();
+    $reflection = new \ReflectionClass($user);
+    $method = $reflection->getMethod('getExcludedSortColumns');
+    $method->setAccessible(true);
+    expect($method->invoke($user))->toEqual([]);
+});
