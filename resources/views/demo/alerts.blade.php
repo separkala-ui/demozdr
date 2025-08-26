@@ -1,4 +1,4 @@
-<h3 class="text-lg mb-3 font-bold p-3">
+<h3 class="text-lg mb-3 font-bold p-3 pl-0">
     {{ __('Alert Components') }}
 </h3>
 
