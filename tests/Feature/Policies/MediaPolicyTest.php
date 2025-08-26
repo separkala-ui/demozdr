@@ -2,38 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Policies;
-
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class MediaPolicyTest extends TestCase
-{
-    use RefreshDatabase;
+pest()->use(RefreshDatabase::class);
 
-    /** @test */
-    public function user_with_media_create_can_create(): void
-    {
-        $user = User::factory()->create();
+test('user with media create can create', function () {
+    $user = User::factory()->create();
 
-        \Spatie\Permission\Models\Permission::firstOrCreate([
-            'name' => 'media.create',
-            'guard_name' => 'web',
-        ]);
+    \Spatie\Permission\Models\Permission::firstOrCreate([
+        'name' => 'media.create',
+        'guard_name' => 'web',
+    ]);
 
-        $user->givePermissionTo('media.create');
+    $user->givePermissionTo('media.create');
 
-        $policy = app(\App\Policies\MediaPolicy::class);
-        $this->assertTrue($policy->create($user));
-    }
+    $policy = app(\App\Policies\MediaPolicy::class);
+    expect($policy->create($user))->toBeTrue();
+});
 
-    /** @test */
-    public function user_without_media_create_cannot_create(): void
-    {
-        $user = User::factory()->create();
+test('user without media create cannot create', function () {
+    $user = User::factory()->create();
 
-        $policy = app(\App\Policies\MediaPolicy::class);
-        $this->assertFalse($policy->create($user));
-    }
-}
+    $policy = app(\App\Policies\MediaPolicy::class);
+    expect($policy->create($user))->toBeFalse();
+});

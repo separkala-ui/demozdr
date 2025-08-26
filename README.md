@@ -21,7 +21,7 @@ password - 12345678
 ## 📋 Requirements:
 
 -   Spatie role permission package `^6.4`
--   PHPUnit test package `^11.x`
+-   Pest test package `^4.x`
 -   Tailwind CSS >= 4.x
 -   Laravel Modules - https://laravelmodules.com/docs/12/getting-started/introduction
 -   Laravel Events (A WordPress like action/filter hooks) - https://github.com/tormjens/eventy
@@ -297,7 +297,12 @@ http://localhost:8000/docs/api
 
 ## Tests
 
-We've used Laravel Pint, Larastan(PHPstan), PHPUnit for formatting, static analysis and testing.
+We've used Laravel Pint, Rector, Larastan(PHPstan) - static analysis and Pest for unit tests, e2e (browser) tests.
+
+```bash
+composer run test
+```
+
 
 ```bash
 composer run test
@@ -320,7 +325,7 @@ You can also run individual commands for each tool (optional):
 ```bash
 composer run pint
 composer run phpstan
-composer run phpunit
+composer run pest
 ```
 
 ## 🚀 Laravel Boost
@@ -602,8 +607,8 @@ Visit the [Laravel Boost documentation](https://github.com/laravel/boost).
   </tr>
   <tr>
     <td width="50%">
-      <strong>PHPUnit, Pint, Rector, PHPstan tests</strong><br/>
-      <img width="100%" alt="PHPUnit, Pint, Rector, PHPstan tests" src="/demo-screenshots/103-Unit-Tests-Demo.png"/>
+      <strong>Pest, Pint, Rector, PHPstan tests</strong><br/>
+      <img width="100%" alt="Pest, Pint, Rector, PHPstan tests" src="/demo-screenshots/103-Unit-Tests-Demo.png"/>
     </td>
   </tr>
 </table>

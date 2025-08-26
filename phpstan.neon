@@ -9,7 +9,6 @@ parameters:
         - config
         - database
         - routes
-        - tests
 
     # Level 5 is a good starting point
     level: 5

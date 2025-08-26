@@ -1,347 +1,316 @@
 <?php
 
-namespace Tests\Unit\Models;
+declare(strict_types=1);
 
 use App\Models\Post;
 use App\Models\PostMeta;
 use App\Models\Term;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
 
-class PostTest extends TestCase
-{
-    use RefreshDatabase;
+pest()->use(RefreshDatabase::class);
 
-    #[Test]
-    public function it_has_fillable_attributes(): void
-    {
-        $post = new Post();
-        $this->assertEquals([
-            'user_id',
-            'post_type',
-            'title',
-            'slug',
-            'excerpt',
-            'content',
-            'status',
-            'meta',
-            'parent_id',
-            'published_at',
-        ], $post->getFillable());
+it('has fillable attributes', function () {
+    $post = new Post();
+    expect($post->getFillable())->toEqual([
+        'user_id',
+        'post_type',
+        'title',
+        'slug',
+        'excerpt',
+        'content',
+        'status',
+        'meta',
+        'parent_id',
+        'published_at',
+    ]);
+});
+
+it('has casted attributes', function () {
+    $post = new Post();
+    $casts = $post->getCasts();
+    expect($casts)->toHaveKey('meta');
+    expect($casts['meta'])->toEqual('array');
+    expect($casts)->toHaveKey('published_at');
+    expect($casts['published_at'])->toEqual('datetime');
+});
+
+it('auto generates slug when creating', function () {
+    $user = User::factory()->create();
+
+    $post = Post::create([
+        'title' => 'Test Post Title',
+        'post_type' => 'post',
+        'content' => 'Test content',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
+
+    expect($post->slug)->toEqual('test-post-title');
+});
+
+it('sets user id from authenticated user when creating', function () {
+    $user = User::factory()->create();
+
+    $post = Post::create([
+        'title' => 'Test Post Title',
+        'post_type' => 'post',
+        'content' => 'Test content',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
+
+    expect($post->user_id)->toEqual($user->id);
+});
+
+it('has user relationship', function () {
+    $user = User::factory()->create();
+    $post = Post::create([
+        'title' => 'Test Post Title',
+        'post_type' => 'post',
+        'content' => 'Test content',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
+
+    expect($post->user)->toBeInstanceOf(User::class);
+    expect($post->user->id)->toEqual($user->id);
+});
+
+it('has parent and children relationships', function () {
+    $user = User::factory()->create();
+
+    $parent = Post::create([
+        'title' => 'Parent Post',
+        'post_type' => 'post',
+        'content' => 'Parent content',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
+
+    $child = Post::create([
+        'title' => 'Child Post',
+        'post_type' => 'post',
+        'content' => 'Child content',
+        'status' => 'publish',
+        'parent_id' => $parent->id,
+        'user_id' => $user->id,
+    ]);
+
+    expect($child->parent)->toBeInstanceOf(Post::class);
+    expect($child->parent->id)->toEqual($parent->id);
+
+    expect($parent->children)->toHaveCount(1);
+    expect($parent->children->first()->id)->toEqual($child->id);
+});
+
+it('has terms relationship', function () {
+    $user = User::factory()->create();
+
+    $post = Post::create([
+        'title' => 'Test Post',
+        'post_type' => 'post',
+        'content' => 'Test content',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
+
+    $category = Term::create([
+        'name' => 'Test Category',
+        'taxonomy' => 'category',
+    ]);
+
+    $tag = Term::create([
+        'name' => 'Test Tag',
+        'taxonomy' => 'tag',
+    ]);
+
+    // Use attach with explicit model ID to avoid undefined property error
+    if ($post->id && $category->id && $tag->id) {
+        $post->terms()->attach([$category->id, $tag->id]);
     }
 
-    #[Test]
-    public function it_has_casted_attributes(): void
-    {
-        $post = new Post();
-        $casts = $post->getCasts();
-        $this->assertArrayHasKey('meta', $casts);
-        $this->assertEquals('array', $casts['meta']);
-        $this->assertArrayHasKey('published_at', $casts);
-        $this->assertEquals('datetime', $casts['published_at']);
-    }
+    expect($post->terms)->toHaveCount(2);
 
-    #[Test]
-    public function it_auto_generates_slug_when_creating(): void
-    {
-        $user = User::factory()->create();
+    // Test categories relationship
+    $categories = $post->terms()->where('taxonomy', 'category')->get();
+    expect($categories)->toHaveCount(1);
 
-        $post = Post::create([
-            'title' => 'Test Post Title',
-            'post_type' => 'post',
-            'content' => 'Test content',
-            'status' => 'publish',
-            'user_id' => $user->id,
-        ]);
+    // Test tags relationship
+    $tags = $post->terms()->where('taxonomy', 'tag')->get();
+    expect($tags)->toHaveCount(1);
+});
 
-        $this->assertEquals('test-post-title', $post->slug);
-    }
+it('can manage post meta', function () {
+    $user = User::factory()->create();
 
-    #[Test]
-    public function it_sets_user_id_from_authenticated_user_when_creating(): void
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+    $post = Post::create([
+        'title' => 'Test Post',
+        'post_type' => 'post',
+        'content' => 'Test content',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
 
-        $post = Post::create([
-            'title' => 'Test Post Title',
-            'post_type' => 'post',
-            'content' => 'Test content',
-            'status' => 'publish',
-        ]);
+    // Ensure post was created successfully.
+    expect($post)->not->toBeNull();
+    expect($post)->toBeInstanceOf(Post::class);
 
-        $this->assertEquals($user->id, $post->user_id);
-    }
+    // Get the ID safely.
+    $postId = $post->getKey();
+    expect($postId)->not->toBeNull();
 
-    #[Test]
-    public function it_has_user_relationship(): void
-    {
-        $user = User::factory()->create();
-        $post = Post::create([
-            'title' => 'Test Post Title',
-            'post_type' => 'post',
-            'content' => 'Test content',
-            'status' => 'publish',
-            'user_id' => $user->id,
-        ]);
+    // Set meta
+    $meta = $post->setMeta('test_key', 'test_value');
+    expect($meta)->toBeInstanceOf(PostMeta::class);
 
-        $this->assertInstanceOf(User::class, $post->user);
-        $this->assertEquals($user->id, $post->user->id);
-    }
+    // Get meta
+    expect($post->getMeta('test_key'))->toEqual('test_value');
+    expect($post->getMeta('non_existent_key'))->toBeNull();
+    expect($post->getMeta('non_existent_key', 'default'))->toEqual('default');
 
-    #[Test]
-    public function it_has_parent_and_children_relationships(): void
-    {
-        $user = User::factory()->create();
+    // Update meta
+    $post->setMeta('test_key', 'updated_value');
+    expect($post->getMeta('test_key'))->toEqual('updated_value');
 
-        $parent = Post::create([
-            'title' => 'Parent Post',
-            'post_type' => 'post',
-            'content' => 'Parent content',
-            'status' => 'publish',
-            'user_id' => $user->id,
-        ]);
+    // Get all meta
+    $allMeta = $post->getAllMetaValues();
+    expect($allMeta['test_key'])->toEqual('updated_value');
 
-        $child = Post::create([
-            'title' => 'Child Post',
-            'post_type' => 'post',
-            'content' => 'Child content',
-            'status' => 'publish',
-            'parent_id' => $parent->id,
-            'user_id' => $user->id,
-        ]);
+    // Delete meta
+    expect($post->deleteMeta('test_key'))->toBeTrue();
+    expect($post->getMeta('test_key'))->toBeNull();
+});
 
-        $this->assertInstanceOf(Post::class, $child->parent);
-        $this->assertEquals($parent->id, $child->parent->id);
+it('can filter by published status', function () {
+    $user = User::factory()->create();
 
-        $this->assertCount(1, $parent->children);
-        $this->assertEquals($child->id, $parent->children->first()->id);
-    }
+    // Create published post
+    Post::create([
+        'title' => 'Published Post',
+        'post_type' => 'post',
+        'content' => 'Published content',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
 
-    #[Test]
-    public function it_has_terms_relationship(): void
-    {
-        $user = User::factory()->create();
+    // Create draft post
+    Post::create([
+        'title' => 'Draft Post',
+        'post_type' => 'post',
+        'content' => 'Draft content',
+        'status' => 'draft',
+        'user_id' => $user->id,
+    ]);
 
-        $post = Post::create([
-            'title' => 'Test Post',
-            'post_type' => 'post',
-            'content' => 'Test content',
-            'status' => 'publish',
-            'user_id' => $user->id,
-        ]);
+    // Create scheduled post
+    Post::create([
+        'title' => 'Scheduled Post',
+        'post_type' => 'post',
+        'content' => 'Scheduled content',
+        'status' => 'publish',
+        'published_at' => now()->addDays(1),
+        'user_id' => $user->id,
+    ]);
 
-        $category = Term::create([
-            'name' => 'Test Category',
-            'taxonomy' => 'category',
-        ]);
+    $publishedPosts = Post::published()->get();
 
-        $tag = Term::create([
-            'name' => 'Test Tag',
-            'taxonomy' => 'tag',
-        ]);
+    expect($publishedPosts)->toHaveCount(1);
+    expect($publishedPosts->first()->title)->toEqual('Published Post');
+});
 
-        // Use attach with explicit model ID to avoid undefined property error
-        if ($post->id && $category->id && $tag->id) {
-            $post->terms()->attach([$category->id, $tag->id]);
-        }
+it('can filter by post type', function () {
+    $user = User::factory()->create();
 
-        $this->assertCount(2, $post->terms);
+    // Create post
+    Post::create([
+        'title' => 'Blog Post',
+        'post_type' => 'post',
+        'content' => 'Blog content',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
 
-        // Test categories relationship
-        $categories = $post->terms()->where('taxonomy', 'category')->get();
-        $this->assertCount(1, $categories);
+    // Create page
+    Post::create([
+        'title' => 'About Page',
+        'post_type' => 'page',
+        'content' => 'About content',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
 
-        // Test tags relationship
-        $tags = $post->terms()->where('taxonomy', 'tag')->get();
-        $this->assertCount(1, $tags);
-    }
+    $posts = Post::type('post')->get();
+    $pages = Post::type('page')->get();
 
-    #[Test]
-    public function it_can_manage_post_meta(): void
-    {
-        $user = User::factory()->create();
+    expect($posts)->toHaveCount(1);
+    expect($posts->first()->title)->toEqual('Blog Post');
 
-        $post = Post::create([
-            'title' => 'Test Post',
-            'post_type' => 'post',
-            'content' => 'Test content',
-            'status' => 'publish',
-            'user_id' => $user->id,
-        ]);
+    expect($pages)->toHaveCount(1);
+    expect($pages->first()->title)->toEqual('About Page');
+});
 
-        // Ensure post was created successfully.
-        $this->assertNotNull($post);
-        $this->assertInstanceOf(Post::class, $post);
+it('can filter by category and tag', function () {
+    $user = User::factory()->create();
 
-        // Get the ID safely.
-        $postId = $post->getKey();
-        $this->assertNotNull($postId);
+    // Create posts
+    $post1 = Post::create([
+        'title' => 'Post 1',
+        'post_type' => 'post',
+        'content' => 'Content 1',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
 
-        // Set meta
-        $meta = $post->setMeta('test_key', 'test_value');
-        $this->assertInstanceOf(PostMeta::class, $meta);
+    $post2 = Post::create([
+        'title' => 'Post 2',
+        'post_type' => 'post',
+        'content' => 'Content 2',
+        'status' => 'publish',
+        'user_id' => $user->id,
+    ]);
 
-        // Get meta
-        $this->assertEquals('test_value', $post->getMeta('test_key'));
-        $this->assertNull($post->getMeta('non_existent_key'));
-        $this->assertEquals('default', $post->getMeta('non_existent_key', 'default'));
+    // Create category and tag
+    $category = Term::create([
+        'name' => 'Test Category',
+        'taxonomy' => 'category',
+    ]);
 
-        // Update meta
-        $post->setMeta('test_key', 'updated_value');
-        $this->assertEquals('updated_value', $post->getMeta('test_key'));
+    $tag = Term::create([
+        'name' => 'Test Tag',
+        'taxonomy' => 'tag',
+    ]);
 
-        // Get all meta
-        $allMeta = $post->getAllMetaValues();
-        $this->assertEquals('updated_value', $allMeta['test_key']);
+    // Attach terms
+    $post1->terms()->attach($category->id);
+    $post2->terms()->attach($tag->id);
 
-        // Delete meta
-        $this->assertTrue($post->deleteMeta('test_key'));
-        $this->assertNull($post->getMeta('test_key'));
-    }
+    // Filter by category
+    $categoryPosts = Post::filterByCategory($category->id)->get();
+    expect($categoryPosts)->toHaveCount(1);
+    expect($categoryPosts->first()->title)->toEqual('Post 1');
 
-    #[Test]
-    public function it_can_filter_by_published_status(): void
-    {
-        $user = User::factory()->create();
+    // Filter by tag
+    $tagPosts = Post::filterByTag($tag->id)->get();
+    expect($tagPosts)->toHaveCount(1);
+    expect($tagPosts->first()->title)->toEqual('Post 2');
+});
 
-        // Create published post
-        Post::create([
-            'title' => 'Published Post',
-            'post_type' => 'post',
-            'content' => 'Published content',
-            'status' => 'publish',
-            'user_id' => $user->id,
-        ]);
+it('has searchable columns', function () {
+    $post = new Post();
+    $reflection = new \ReflectionClass($post);
+    $method = $reflection->getMethod('getSearchableColumns');
+    $method->setAccessible(true);
 
-        // Create draft post
-        Post::create([
-            'title' => 'Draft Post',
-            'post_type' => 'post',
-            'content' => 'Draft content',
-            'status' => 'draft',
-            'user_id' => $user->id,
-        ]);
+    $searchableColumns = $method->invoke($post);
+    expect($searchableColumns)->toEqual(['title', 'excerpt', 'content']);
+});
 
-        // Create scheduled post
-        Post::create([
-            'title' => 'Scheduled Post',
-            'post_type' => 'post',
-            'content' => 'Scheduled content',
-            'status' => 'publish',
-            'published_at' => now()->addDays(1),
-            'user_id' => $user->id,
-        ]);
+it('has excluded sort columns', function () {
+    $post = new Post();
+    $reflection = new \ReflectionClass($post);
+    $method = $reflection->getMethod('getExcludedSortColumns');
+    $method->setAccessible(true);
 
-        $publishedPosts = Post::published()->get();
-
-        $this->assertCount(1, $publishedPosts);
-        $this->assertEquals('Published Post', $publishedPosts->first()->title);
-    }
-
-    #[Test]
-    public function it_can_filter_by_post_type(): void
-    {
-        $user = User::factory()->create();
-
-        // Create post
-        Post::create([
-            'title' => 'Blog Post',
-            'post_type' => 'post',
-            'content' => 'Blog content',
-            'status' => 'publish',
-            'user_id' => $user->id,
-        ]);
-
-        // Create page
-        Post::create([
-            'title' => 'About Page',
-            'post_type' => 'page',
-            'content' => 'About content',
-            'status' => 'publish',
-            'user_id' => $user->id,
-        ]);
-
-        $posts = Post::type('post')->get();
-        $pages = Post::type('page')->get();
-
-        $this->assertCount(1, $posts);
-        $this->assertEquals('Blog Post', $posts->first()->title);
-
-        $this->assertCount(1, $pages);
-        $this->assertEquals('About Page', $pages->first()->title);
-    }
-
-    #[Test]
-    public function it_can_filter_by_category_and_tag(): void
-    {
-        $user = User::factory()->create();
-
-        // Create posts
-        $post1 = Post::create([
-            'title' => 'Post 1',
-            'post_type' => 'post',
-            'content' => 'Content 1',
-            'status' => 'publish',
-            'user_id' => $user->id,
-        ]);
-
-        $post2 = Post::create([
-            'title' => 'Post 2',
-            'post_type' => 'post',
-            'content' => 'Content 2',
-            'status' => 'publish',
-            'user_id' => $user->id,
-        ]);
-
-        // Create category and tag
-        $category = Term::create([
-            'name' => 'Test Category',
-            'taxonomy' => 'category',
-        ]);
-
-        $tag = Term::create([
-            'name' => 'Test Tag',
-            'taxonomy' => 'tag',
-        ]);
-
-        // Attach terms
-        $post1->terms()->attach($category->id);
-        $post2->terms()->attach($tag->id);
-
-        // Filter by category
-        $categoryPosts = Post::filterByCategory($category->id)->get();
-        $this->assertCount(1, $categoryPosts);
-        $this->assertEquals('Post 1', $categoryPosts->first()->title);
-
-        // Filter by tag
-        $tagPosts = Post::filterByTag($tag->id)->get();
-        $this->assertCount(1, $tagPosts);
-        $this->assertEquals('Post 2', $tagPosts->first()->title);
-    }
-
-    #[Test]
-    public function it_has_searchable_columns(): void
-    {
-        $post = new Post();
-        $reflection = new \ReflectionClass($post);
-        $method = $reflection->getMethod('getSearchableColumns');
-        $method->setAccessible(true);
-
-        $searchableColumns = $method->invoke($post);
-        $this->assertEquals(['title', 'excerpt', 'content'], $searchableColumns);
-    }
-
-    #[Test]
-    public function it_has_excluded_sort_columns(): void
-    {
-        $post = new Post();
-        $reflection = new \ReflectionClass($post);
-        $method = $reflection->getMethod('getExcludedSortColumns');
-        $method->setAccessible(true);
-
-        $this->assertEquals(['content', 'excerpt', 'meta'], $method->invoke($post));
-    }
-}
+    expect($method->invoke($post))->toEqual(['content', 'excerpt', 'meta']);
+});
