@@ -97,20 +97,20 @@
                 </nav>
             </aside>
 
-            <div class="flex-1">
-                <section id="forms-demo">
+            <div class="flex-1 preview-content">
+                <section id="forms-demo" class="scroll-mt-20">
                     @include('demo.forms')
                 </section>
-                <section id="dropdown-demo" class="mt-10">
+                <section id="dropdown-demo" class="scroll-mt-20 mt-10">
                     @include('demo.dropdown')
                 </section>
-                <section id="alerts-demo" class="mt-10">
+                <section id="alerts-demo" class="scroll-mt-20 mt-10">
                     @include('demo.alerts')
                 </section>
-                <section id="buttons-demo" class="mt-10">
+                <section id="buttons-demo" class="scroll-mt-20 mt-10">
                     @include('demo.buttons')
                 </section>
-                <section id="media-demo" class="mt-10">
+                <section id="media-demo" class="scroll-mt-20 mt-10">
                     @include('demo.media')
                 </section>
             </div>
