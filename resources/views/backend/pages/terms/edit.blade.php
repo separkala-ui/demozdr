@@ -18,7 +18,12 @@
                 </h3>
             </div>
             <div class="p-5 space-y-5 sm:p-6">
-                <form action="{{ route('admin.terms.update', [$taxonomy, $term->id]) }}" method="POST" enctype="multipart/form-data">
+                <form
+                    action="{{ route('admin.terms.update', [$taxonomy, $term->id]) }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    data-prevent-unsaved-changes
+                >
                     @method('PUT')
                     @include('backend.pages.terms.partials.form')
                 </form>
@@ -26,8 +31,8 @@
         </div>
     </div>
 </div>
+@endsection
 
 @push('scripts')
 <x-quill-editor :editor-id="'description'" />
 @endpush
-@endsection

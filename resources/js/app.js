@@ -282,3 +282,6 @@ window.showToast = function (variant, title, message) {
 
 // Import term drawer functionality
 import './term-drawer.js';
+
+// Prevent navigation if form is dirty (unsaved changes).
+import './prevent-dirty-form-changes.js';

@@ -20,7 +20,12 @@
                     </h3>
                 </div>
                 <div class="p-5 space-y-5 sm:p-6">
-                    <form action="{{ route('admin.terms.store', $taxonomy) }}" method="POST" enctype="multipart/form-data">
+                    <form
+                        action="{{ route('admin.terms.store', $taxonomy) }}"
+                        method="POST"
+                        enctype="multipart/form-data"
+                        data-prevent-unsaved-changes
+                    >
                         @include('backend.pages.terms.partials.form')
                     </form>
                 </div>

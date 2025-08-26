@@ -1,9 +1,9 @@
 @if(config('app.demo_mode', false))
 <x-popover position="bottom" width="w-[250px]">
     <x-slot name="trigger">
-        <span class="rounded-radius border border-warning bg-warning px-2 py-1 text-xs font-medium text-warning-500 dark:border-gray-900 dark:bg-gray-800 dark:text-warning-500 p-3 min-w-25 flex justify-center items-center gap-1 cursor-pointer">
+        <span class="rounded-radius border border-warning bg-warning px-2 py-1 text-xs font-medium text-warning-500 dark:border-gray-900 dark:bg-gray-800 dark:text-warning-500 p-3 min-w-16 flex justify-center items-center gap-1 cursor-pointer">
             <iconify-icon icon="lucide:alert-triangle"></iconify-icon>
-            {{ __("Demo Mode") }}
+            {{ __("Demo") }}
         </span>
     </x-slot>
 

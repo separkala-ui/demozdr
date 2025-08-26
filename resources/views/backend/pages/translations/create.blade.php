@@ -16,7 +16,11 @@
             </div>
             <!-- Modal body -->
             <div class="p-6 space-y-6">
-                <form action="{{ route('admin.translations.create') }}" method="POST" id="add-language-form">
+                <form
+                    action="{{ route('admin.translations.create') }}"
+                    method="POST"
+                    id="add-language-form"
+                >
                     @csrf
                     <div class="mb-4">
                         <label for="language-code" class="block mb-2 text-sm font-medium text-gray-700 dark:text-white">

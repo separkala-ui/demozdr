@@ -1,5 +1,7 @@
 <div class="flex items-center gap-1">
-    @include('backend.layouts.partials.demo-mode-notice')
+    <div class="hidden md:block">
+        @include('backend.layouts.partials.demo-mode-notice')
+    </div>
 
     <x-tooltip title="{{ __('Change locale') }}" position="bottom">
         @include('backend.layouts.partials.locale-switcher')

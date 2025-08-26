@@ -46,7 +46,7 @@
             </button>
         </div>
 
-        <div class="flex gap-2 lg:justify-end">
+        <div class="flex gap-2 lg:justify-end items-center">
             @include('backend.layouts.partials.header.right-menu')
         </div>
     </div>

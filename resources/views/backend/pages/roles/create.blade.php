@@ -10,7 +10,11 @@
 
         {!! ld_apply_filters('roles_create_after_breadcrumbs', '') !!}
 
-        <form action="{{ route('admin.roles.store') }}" method="POST">
+        <form
+            action="{{ route('admin.roles.store') }}"
+            method="POST"
+            data-prevent-unsaved-changes
+        >
             @csrf
             <div class="space-y-8">
                 <!-- Role Details Section -->

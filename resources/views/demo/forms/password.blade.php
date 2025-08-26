@@ -1,4 +1,4 @@
-<div class="flex justify-between gap-4">
+<div class="flex flex-col md:flex-row justify-between gap-4">
     <x-inputs.password
         name="password"
         label="Password"
