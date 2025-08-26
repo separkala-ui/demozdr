@@ -50,8 +50,8 @@
                     $escaped = htmlspecialchars($code);
                     $id = 'codeblock_' . uniqid();
                     return '
-                        <div class="relative mb-2">
-                            <button type="button" class="absolute right-2 top-2 px-2 py-1 text-xs bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition copy-btn" data-target="' . $id . '">Copy</button>
+                        <div class="relative mb-2 group">
+                            <button type="button" class="absolute right-2 top-2 px-2 py-1 text-xs bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition copy-btn hidden group-hover:block" data-target="' . $id . '">Copy</button>
                             <pre class="border rounded-md border-gray-100 dark:border-gray-800"><code id="' . $id . '" class="language-' . $lang . '">' . $escaped . '</code></pre>
                         </div>
                     ';
@@ -73,26 +73,27 @@
                 </span>
             </div>
             <nav class="flex gap-4">
-                <a href="{{ route('admin.dashboard') }}" class="px-3 py-2 rounded text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                <a href="{{ route('admin.dashboard') }}" class="flex justify-center gap-1 items-center px-3 py-2 rounded text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                     {{ __('Dashboard') }}
+                    <iconify-icon icon="lucide:layout-dashboard" class="inline-block ml-1" />
                 </a>
-                <a href="https://laradashboard.com/docs" target="_blank" class="px-3 py-2 rounded text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                <a href="https://laradashboard.com/docs" target="_blank" class="flex justify-center gap-1 items-center px-3 py-2 rounded text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                     {{ __('Docs') }}
+                    <iconify-icon icon="lucide:external-link" class="inline-block ml-1" />
                 </a>
             </nav>
         </header>
 
         <div class="flex flex-col md:flex-row gap-8 p-4 mx-auto max-w-screen-2xl md:p-6 pt-0">
-            <!-- Sub-sidebar for component navigation -->
             <aside class="w-full md:w-64 md:min-w-[220px] md:max-w-xs border-r border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-lg shadow-sm h-fit md:sticky md:top-20">
                 <nav class="py-6 px-4">
-                    <h3 class="font-bold mb-4">Components</h3>
+                    <h3 class="font-bold mb-4">{{ __('Components') }}</h3>
                     <ul class="space-y-2">
-                        <li><a href="#forms-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Forms</a></li>
-                        <li><a href="#dropdown-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Dropdown</a></li>
-                        <li><a href="#alerts-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Alerts</a></li>
-                        <li><a href="#buttons-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">Buttons</a></li>
-                        <li><a href="#media-demo" class="sidebar-link block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800">Media</a></li>
+                        <li><a href="#forms-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:form-input" class="inline-block mr-2"></iconify-icon> {{ __('Forms') }}</a></li>
+                        <li><a href="#dropdown-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:chevron-down" class="inline-block mr-2"></iconify-icon> {{ __('Dropdown') }}</a></li>
+                        <li><a href="#alerts-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:alert-circle" class="inline-block mr-2"></iconify-icon> {{ __('Alerts') }}</a></li>
+                        <li><a href="#buttons-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:mouse-pointer-click" class="inline-block mr-2"></iconify-icon> {{ __('Buttons') }}</a></li>
+                        <li><a href="#media-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:image" class="inline-block mr-2"></iconify-icon> {{ __('Media') }}</a></li>
                     </ul>
                 </nav>
             </aside>
