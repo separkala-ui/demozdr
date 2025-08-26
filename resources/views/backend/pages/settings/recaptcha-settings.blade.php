@@ -130,7 +130,7 @@
 
             @if (config('app.demo_mode', false))
             <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                {{ __('Editing these options is disabled in demo mode.') }}
+                {{ __('Editing these options are disabled in demo mode.') }}
             </div>
             @endif
 

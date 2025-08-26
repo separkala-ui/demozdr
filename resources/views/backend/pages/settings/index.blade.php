@@ -13,7 +13,12 @@
         <div class="space-y-6">
             <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                 <div class="px-5 py-4 sm:px-6 sm:py-5">
-                    <form method="POST" action="{{ route('admin.settings.store') }}" enctype="multipart/form-data">
+                    <form
+                        method="POST"
+                        action="{{ route('admin.settings.store') }}"
+                        enctype="multipart/form-data"
+                        data-prevent-unsaved-changes
+                    >
                         @csrf
                         @include('backend.pages.settings.tabs', [
                             'tabs' => ld_apply_filters('settings_tabs', [

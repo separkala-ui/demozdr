@@ -11,9 +11,13 @@
 
     {!! ld_apply_filters('roles_edit_after_breadcrumbs', '') !!}
 
-    <form action="{{ route('admin.roles.update', $role->id) }}" method="POST">
-        @method('PUT')
+    <form
+        action="{{ route('admin.roles.update', $role->id) }}"
+        method="POST"
+        data-prevent-unsaved-changes
+    >
         @csrf
+        @method('PUT')
         <div class="space-y-8">
             <!-- Role Details Section -->
             <div class="rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-800 dark:bg-gray-900">

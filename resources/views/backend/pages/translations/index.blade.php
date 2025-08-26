@@ -63,7 +63,11 @@
             </div>
 
             @if($selectedLang !== 'en' || ($selectedLang === 'en' && $selectedGroup !== 'json'))
-                <form action="{{ route('admin.translations.update') }}" method="POST">
+                <form
+                    action="{{ route('admin.translations.update') }}"
+                    method="POST"
+                    data-prevent-unsaved-changes
+                >
                     @csrf
                     <input type="hidden" name="lang" value="{{ $selectedLang }}">
                     <input type="hidden" name="group" value="{{ $selectedGroup }}">

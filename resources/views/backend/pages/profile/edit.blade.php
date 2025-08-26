@@ -13,9 +13,15 @@
         <div class="space-y-6">
             <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                 <div class="p-5 space-y-6 border-t border-gray-100 dark:border-gray-800 sm:p-6">
-                    <form action="{{ route('profile.update') }}" method="POST" class="space-y-6" enctype="multipart/form-data">
-                        @method('PUT')
+                    <form
+                        action="{{ route('profile.update') }}"
+                        method="POST"
+                        class="space-y-6"
+                        enctype="multipart/form-data"
+                        data-prevent-unsaved-changes
+                    >
                         @csrf
+                        @method('PUT')
                         
                         @include('backend.pages.users.partials.form', [
                             'user' => $user,
