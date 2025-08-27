@@ -1,11 +1,14 @@
-<form action="{{ url()->current() }}" method="GET" class="flex items-center">
+<form
+    action="{{ url()->current() }}" method="GET" class="flex items-center"
+    name="search"
+>
     @foreach(request()->except('search') as $key => $value)
         @if(is_array($value))
             @foreach($value as $subKey => $subValue)
-                <input type="hidden" name="{{ $key }}[{{ $subKey }}]" value="{{ $subValue }}">
+                <input type="hidden" name="{{ $key }}[{{ $subKey }}]" value="{{ is_array($subValue) ? json_encode($subValue) : $subValue }}">
             @endforeach
         @else
-            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+            <input type="hidden" name="{{ $key }}" value="{{ is_array($value) ? json_encode($value) : $value }}">
         @endif
     @endforeach
 
