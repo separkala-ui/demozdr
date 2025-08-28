@@ -43,6 +43,7 @@ class UserDatatable extends Datatable
                 'icon' => 'feather:key',
                 'allLabel' => __('All Roles'),
                 'options' => app(RolesService::class)->getRolesDropdown(),
+                'selected' => $this->role
             ],
         ];
     }

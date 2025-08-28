@@ -182,7 +182,7 @@
                                         </li>
                                         @foreach ($filter['options'] as $key => $value)
                                             <li
-                                                class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ $filter['id'] === $key ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
+                                                class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ $filter['selected'] == $key ? 'bg-gray-200 dark:bg-gray-600 font-bold' : '' }}"
                                                 wire:click="$set('{{ $filter['id'] }}', '{{ $key }}')"
                                                 @click="open = false"
                                             >
