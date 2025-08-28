@@ -28,6 +28,7 @@
         'headers' => []
     ],
     'sort' => '',
+    'perPage' => 10,
     'perPageOptions' => [10, 20, 50, 100, __('All')],
 ])
 
@@ -323,7 +324,7 @@
                         <select
                             id="perPage"
                             wire:model.live="perPage"
-                            class="form-select text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            class="form-control w-20"
                         >
                             @foreach($perPageOptions as $option)
                                 <option value="{{ $option == 'All' ? 999999 : $option }}">
