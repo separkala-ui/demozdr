@@ -10,7 +10,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Models\User;
+use App\Services\LanguageService;
 use App\Services\RolesService;
+use App\Services\TimezoneService;
 use App\Services\UserService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
@@ -22,8 +24,8 @@ class UsersController extends Controller
     public function __construct(
         private readonly UserService $userService,
         private readonly RolesService $rolesService,
-        private readonly \App\Services\LanguageService $languageService,
-        private readonly \App\Services\TimezoneService $timezoneService,
+        private readonly LanguageService $languageService,
+        private readonly TimezoneService $timezoneService,
     ) {
     }
 
@@ -31,16 +33,7 @@ class UsersController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        $filters = [
-            'search' => request('search'),
-            'role' => request('role'),
-            'sort_field' => null,
-            'sort_direction' => null,
-        ];
-
         return view('backend.pages.users.index', [
-            'users' => $this->userService->getUsers($filters),
-            'roles' => $this->rolesService->getRolesDropdown(),
             'breadcrumbs' => [
                 'title' => __('Users'),
             ],
