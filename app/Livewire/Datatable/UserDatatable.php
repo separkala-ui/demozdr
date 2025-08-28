@@ -30,7 +30,7 @@ class UserDatatable extends Datatable
 
     protected function getNewResourceLinkLabel(): string
     {
-        return __('New User2');
+        return __('New User');
     }
 
     public function getFilters(): array
@@ -137,7 +137,6 @@ class UserDatatable extends Datatable
     {
         return view('backend.pages.users.partials.action-buttons', compact('user'));
     }
-
 
     public function renderNameCell($user, $header): Renderable
     {
