@@ -163,7 +163,7 @@ class UsersController extends Controller
 
         if (in_array(Auth::id(), $ids)) {
             // Remove current user from the deletion list.
-            $ids = array_filter($ids, fn ($id) => $id != Auth::id());
+            $ids = array_filter($ids, fn($id) => $id != Auth::id());
             session()->flash('error', __('You cannot delete your own account. Other selected users will be processed.'));
 
             // If no users left to delete after filtering out current user.

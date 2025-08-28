@@ -1,0 +1,9 @@
+<x-datatable
+    :searchbarPlaceholder="$searchbarPlaceholder"
+    :filters="$filters"
+    :table="$table"
+    :data="$data"
+    :newResourceLinkPermission="$newResourceLinkPermission"
+    :newResourceLinkRouteName="$newResourceLinkRouteName"
+    :newResourceLinkLabel="$newResourceLinkLabel"
+/>

@@ -5,7 +5,18 @@
 @endsection
 
 @section('admin-content')
-<livewire:tables.user lazy />
+<div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6" x-data="{ selectedUsers: [], selectAll: false, bulkDeleteModalOpen: false }">
+    <x-breadcrumbs :breadcrumbs="$breadcrumbs">
+        <x-slot name="title_after">
+            @if (request('role'))
+                <span class="badge">{{ ucfirst(request('role')) }}</span>
+            @endif
+        </x-slot>
+    </x-breadcrumbs>
+
+    {!! ld_apply_filters('users_after_breadcrumbs', '') !!}
+    @livewire('datatable.user-datatable', ['lazy' => true])
+</div>
 @endsection
 
 @push('scripts')
