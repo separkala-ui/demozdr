@@ -1,6 +1,7 @@
 <x-datatable
     :searchbarPlaceholder="$searchbarPlaceholder"
     :filters="$filters"
+    :perPageOptions="$perPageOptions"
     :table="$table"
     :data="$data"
     :newResourceLinkPermission="$newResourceLinkPermission"

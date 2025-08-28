@@ -28,6 +28,7 @@
         'headers' => []
     ],
     'sort' => '',
+    'perPageOptions' => [10, 20, 50, 100, __('All')],
 ])
 
 @php
@@ -237,7 +238,11 @@
                                     @if($enableLivewire)
                                         wire:click="sortBy('{{ $header['sortBy'] ?? strtolower(str_replace(' ', '_', $header['title'])) }}')"
                                     @else
-                                        onclick="window.location='{{ request()->fullUrlWithQuery(['sort' => ($sort === ($header['sortBy'] ?? strtolower(str_replace(' ', '_', $header['title']))) && $direction === 'asc') ? ($header['sortBy'] ?? strtolower(str_replace(' ', '_', $header['title']))) . '_desc' : ($header['sortBy'] ?? strtolower(str_replace(' ', '_', $header['title'])))] ) }}'"
+                                        @php
+                                            $sortKey = $header['sortBy'] ?? strtolower(str_replace(' ', '_', $header['title']));
+                                            $nextDirection = ($sort === $sortKey && $direction === 'asc') ? 'desc' : 'asc';
+                                        @endphp
+                                        onclick="window.location='{{ request()->fullUrlWithQuery(['sort' => $sortKey, 'direction' => $nextDirection]) }}'"
                                     @endif
                                     class="ml-1 focus:outline-none"
                                 >
@@ -312,8 +317,24 @@
             </table>
 
             @if($table['enablePagination'] ?? true)
-                <div class="my-4 px-4 sm:px-6">
-                    {{ $data->links() }}
+                <div class="my-4 px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-2">
+                        <label for="perPage" class="text-sm text-gray-600 dark:text-gray-300">{{ __('Per page') }}</label>
+                        <select
+                            id="perPage"
+                            wire:model.live="perPage"
+                            class="form-select text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                        >
+                            @foreach($perPageOptions as $option)
+                                <option value="{{ $option == 'All' ? 999999 : $option }}">
+                                    {{ $option }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="flex gap-3">
+                        {{ $data->links() }}
+                    </div>
                 </div>
             @endif
         </div>

@@ -17,10 +17,11 @@ abstract class Datatable extends Component
     public string $newResourceLinkPermission = '';
     public string $newResourceLinkRouteName = '';
     public string $newResourceLinkLabel = '';
-
     public string $sort = '';
     public string $direction = 'asc';
     public int $page = 1;
+    public int|string $perPage = 10;
+    public array $perPageOptions = [];
     public array $filters = [];
 
     public array $queryString = [
@@ -29,7 +30,12 @@ abstract class Datatable extends Component
         'sort' => ['except' => 'first_name'],
         'direction' => ['except' => 'asc'],
         'page' => ['except' => 1],
+        'perPage' => ['except' => 10],
     ];
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
 
     public array $table = [];
 
@@ -61,6 +67,12 @@ abstract class Datatable extends Component
         $this->newResourceLinkPermission = $this->getNewResourceLinkPermission();
         $this->newResourceLinkRouteName = $this->getNewResourceLinkRouteName();
         $this->newResourceLinkLabel = $this->getNewResourceLinkLabel();
+        $this->perPageOptions = $this->getPerPageOptions();
+    }
+
+    protected function getPerPageOptions(): array
+    {
+        return [10, 20, 50, 100, __('All')];
     }
 
     protected function getSearchbarPlaceholder(): string
@@ -96,10 +108,11 @@ abstract class Datatable extends Component
     public function render(): Renderable
     {
         $this->table = $this->getTable();
-
         return view('components.datatable', [
             'table' => $this->table,
             'data' => $this->data,
+            'perPage' => $this->perPage,
+            'perPageOptions' => $this->perPageOptions,
         ]);
     }
 }

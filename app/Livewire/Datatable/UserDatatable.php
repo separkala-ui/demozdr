@@ -120,11 +120,12 @@ class UserDatatable extends Datatable
             $this->direction = 'asc';
         }
 
-        $users = $query->orderBy($this->sort, $this->direction)->paginate(10);
+        $users = $query->orderBy($this->sort, $this->direction)
+            ->paginate($this->perPage == __('All') ? 999999 : $this->perPage);
 
         return view('backend.livewire.datatable.datatable', [
             'data' => $users,
-            'table' => $this->table
+            'table' => $this->table,
         ]);
     }
 
