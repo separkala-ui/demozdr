@@ -135,6 +135,10 @@ class UserDatatable extends Datatable
 
     public function renderAfterActionEdit($user): string|Renderable
     {
+        if (! Auth::user()->can('user.login_as') || $user->id === Auth::id()) {
+            return '';
+        }
+
         return view('backend.pages.users.partials.action-button-login-as', compact('user'));
     }
 }
