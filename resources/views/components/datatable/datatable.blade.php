@@ -38,7 +38,7 @@
 
 <div class="space-y-6"
      x-data="{
-        selectedItems: [],
+        selectedItems: Array.isArray($wire.selectedItems) ? $wire.selectedItems : [],
         selectAll: false,
         allIds: {{ json_encode($allIds) }},
         bulkDeleteModalOpen: false,
@@ -52,9 +52,17 @@
             document.querySelectorAll('.item-checkbox').forEach(checkbox => {
                 checkbox.checked = this.selectAll;
             });
+            // Sync with Livewire
+            if (@json($enableLivewire)) {
+                $wire.set('selectedItems', this.selectedItems);
+            }
         },
         updateSelectAll() {
             this.selectAll = this.selectedItems.length === this.allIds.length && this.allIds.length > 0;
+            // Sync with Livewire
+            if (@json($enableLivewire)) {
+                $wire.set('selectedItems', this.selectedItems);
+            }
         },
         // Method to refresh allIds when Livewire updates
         refreshIds(newIds) {
@@ -62,6 +70,12 @@
             // Filter selectedItems to only include items that still exist
             this.selectedItems = this.selectedItems.filter(id => newIds.includes(id));
             this.updateSelectAll();
+        },
+        init() {
+            window.addEventListener('resetSelectedItems', () => {
+                this.selectedItems = [];
+                this.selectAll = false;
+            });
         }
      }"
 >
@@ -149,14 +163,31 @@
                                         </p>
                                     </div>
                                     <div class="flex items-center justify-end gap-3 border-t border-gray-100 p-4 dark:border-gray-800">
-                                        <form id="bulk-delete-form" action="{{ $this->getBulkDeleteAction()['url'] }}" method="POST">
-                                            @method($this->getBulkDeleteAction()['method'])
-                                            @csrf
+                                        @if($this->getBulkDeleteAction()['url'])
+                                            <form id="bulk-delete-form" action="{{ $this->getBulkDeleteAction()['url'] }}" method="POST">
+                                                @method($this->getBulkDeleteAction()['method'])
+                                                @csrf
 
-                                            <template x-for="id in selectedItems" :key="id">
-                                                <input type="hidden" name="ids[]" :value="id">
-                                            </template>
+                                                <template x-for="id in selectedItems" :key="id">
+                                                    <input type="hidden" name="ids[]" :value="id">
+                                                </template>
 
+                                                <button
+                                                    type="button"
+                                                    x-on:click="bulkDeleteModalOpen = false"
+                                                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+                                                >
+                                                    {{ __('No, Cancel') }}
+                                                </button>
+
+                                                <button
+                                                    type="submit"
+                                                    class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-300 dark:focus:ring-red-800"
+                                                >
+                                                    {{ __('Yes, Delete') }}
+                                                </button>
+                                            </form>
+                                        @else
                                             <button
                                                 type="button"
                                                 x-on:click="bulkDeleteModalOpen = false"
@@ -164,14 +195,18 @@
                                             >
                                                 {{ __('No, Cancel') }}
                                             </button>
-
                                             <button
-                                                type="submit"
+                                                type="button"
+                                                @click="bulkDeleteModalOpen = false"
+                                                @if($enableLivewire)
+                                                    wire:click="bulkDelete"
+                                                    wire:loading.attr="disabled"
+                                                @endif
                                                 class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-300 dark:focus:ring-red-800"
                                             >
                                                 {{ __('Yes, Delete') }}
                                             </button>
-                                        </form>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

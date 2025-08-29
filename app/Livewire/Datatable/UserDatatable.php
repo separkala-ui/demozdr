@@ -27,6 +27,16 @@ class UserDatatable extends Datatable
         return $routes;
     }
 
+    public function mount(): void
+    {
+        parent::mount();
+
+
+        $this->queryString = array_merge($this->queryString, [
+            'role' => ['except' => ''],
+        ]);
+    }
+
     public function getFilters(): array
     {
         return [
@@ -141,4 +151,20 @@ class UserDatatable extends Datatable
 
         return view('backend.pages.users.partials.action-button-login-as', compact('user'));
     }
+
+    // protected function handleBulkDelete(array $ids): int
+    // {
+    //     $ids = array_filter($ids, fn ($id) => $id != Auth::id()); // Prevent self-deletion.
+    //     $users = User::whereIn('id', $ids)->get();
+    //     $deletedCount = 0;
+    //     foreach ($users as $user) {
+    //         if ($user->hasRole('superadmin')) {
+    //             continue;
+    //         }
+    //         $user->delete();
+    //         $deletedCount++;
+    //     }
+
+    //     return $deletedCount;
+    // }
 }
