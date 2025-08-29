@@ -22,8 +22,8 @@ abstract class Datatable extends Component
     public string $newResourceLinkPermission = '';
     public string $newResourceLinkRouteName = '';
     public string $newResourceLinkLabel = '';
-    public string $sort = '';
-    public string $direction = 'asc';
+    public string $sort = 'created_at';
+    public string $direction = 'desc';
     public bool $enableLivewireBulkDelete = true;
     public int $page = 1;
     public int|string $perPage = 10;
@@ -35,7 +35,7 @@ abstract class Datatable extends Component
 
     public array $queryString = [
         'search' => ['except' => ''],
-        'sort' => [],
+        'sort' => ['except' => 'created_at'],
         'direction' => ['except' => 'asc'],
         'page' => ['except' => 1],
         'perPage' => ['except' => 10],
@@ -48,13 +48,13 @@ abstract class Datatable extends Component
             $this->dispatch('notify', [
                 'variant' => 'error',
                 'title' => __('Bulk Delete Failed'),
-                'message' => __('No items selected for deletion.')
+                'message' => __('No items selected for deletion.'),
             ]);
             return;
         }
 
         $bulkDeleteAction = $this->getBulkDeleteAction();
-        if (!empty($bulkDeleteAction['url'])) {
+        if (! empty($bulkDeleteAction['url'])) {
             // If a bulk delete route is defined, redirect or make an HTTP request (could be AJAX in JS, here just emit event)
             $this->dispatch('bulkDeleteRequest', [
                 'url' => $bulkDeleteAction['url'],
@@ -70,13 +70,13 @@ abstract class Datatable extends Component
             $this->dispatch('notify', [
                 'variant' => 'success',
                 'title' => __('Bulk Delete Successful'),
-                'message' => __(':count items deleted successfully', ['count' => $deletedCount])
+                'message' => __(':count items deleted successfully', ['count' => $deletedCount]),
             ]);
         } else {
             $this->dispatch('notify', [
                 'variant' => 'error',
                 'title' => __('Bulk Delete Failed'),
-                'message' => __('No items were deleted. Selected items may include protected records.')
+                'message' => __('No items were deleted. Selected items may include protected records.'),
             ]);
         }
 
@@ -145,6 +145,7 @@ abstract class Datatable extends Component
         $this->newResourceLinkLabel = $this->getNewResourceLinkLabel();
         $this->perPageOptions = $this->getPerPageOptions();
         $this->table = $this->getTable();
+        $this->perPage = request()->per_page ?? config('settings.default_pagination', 10);
     }
 
     protected function getModelClass(): string
@@ -227,7 +228,7 @@ abstract class Datatable extends Component
         if ($this->enableLivewireBulkDelete) {
             return [
                 'url' => '', // No need to specify a URL for Livewire bulk delete.
-                'method' => 'DELETE'
+                'method' => 'DELETE',
             ];
         }
 
@@ -267,7 +268,7 @@ abstract class Datatable extends Component
         }
 
         foreach ($this->filters as $filter) {
-            if (!empty($filter['selected'])) {
+            if (! empty($filter['selected'])) {
                 $query->where($filter['id'], $filter['selected']);
             }
         }
@@ -298,12 +299,22 @@ abstract class Datatable extends Component
 
     public function renderCreatedAtCell($item): string
     {
-        return array_key_exists('created_at', $item->getAttributes()) ? $item->created_at->format('Y-m-d H:i:s') : '';
+        if (! array_key_exists('created_at', $item->getAttributes()) || ! $item->created_at) {
+            return '';
+        }
+        $short = $item->created_at->format('d M Y');
+        $full = $item->created_at->format('Y-m-d H:i:s');
+        return '<span class="text-sm" title="' . e($full) . '">' . e($short) . '</span>';
     }
 
     public function renderUpdatedAtCell($item): string
     {
-        return array_key_exists('updated_at', $item->getAttributes()) ? $item->updated_at->format('Y-m-d H:i:s') : '';
+        if (!array_key_exists('updated_at', $item->getAttributes()) || !$item->updated_at) {
+            return '';
+        }
+        $short = $item->updated_at->format('d M Y');
+        $full = $item->updated_at->format('Y-m-d H:i:s');
+        return '<span class="text-sm" title="' . e($full) . '">' . e($short) . '</span>';
     }
 
     public function getActionCellPermissions($item): array

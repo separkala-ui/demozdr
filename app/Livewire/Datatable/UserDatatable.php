@@ -14,6 +14,7 @@ class UserDatatable extends Datatable
 {
     public string $role = '';
     public string $model = User::class;
+    public bool $enableLivewireBulkDelete = false;
 
     public function getSearchbarPlaceholder(): string
     {
@@ -30,7 +31,6 @@ class UserDatatable extends Datatable
     public function mount(): void
     {
         parent::mount();
-
 
         $this->queryString = array_merge($this->queryString, [
             'role' => ['except' => ''],
@@ -145,26 +145,26 @@ class UserDatatable extends Datatable
 
     public function renderAfterActionEdit($user): string|Renderable
     {
-        if (! Auth::user()->can('user.login_as') || $user->id === Auth::id()) {
+        if (!Auth::user()->can('user.login_as') || $user->id === Auth::id()) {
             return '';
         }
 
         return view('backend.pages.users.partials.action-button-login-as', compact('user'));
     }
 
-    // protected function handleBulkDelete(array $ids): int
-    // {
-    //     $ids = array_filter($ids, fn ($id) => $id != Auth::id()); // Prevent self-deletion.
-    //     $users = User::whereIn('id', $ids)->get();
-    //     $deletedCount = 0;
-    //     foreach ($users as $user) {
-    //         if ($user->hasRole('superadmin')) {
-    //             continue;
-    //         }
-    //         $user->delete();
-    //         $deletedCount++;
-    //     }
+    protected function handleBulkDelete(array $ids): int
+    {
+        $ids = array_filter($ids, fn($id) => $id != Auth::id()); // Prevent self-deletion.
+        $users = User::whereIn('id', $ids)->get();
+        $deletedCount = 0;
+        foreach ($users as $user) {
+            if ($user->hasRole('superadmin')) {
+                continue;
+            }
+            $user->delete();
+            $deletedCount++;
+        }
 
-    //     return $deletedCount;
-    // }
+        return $deletedCount;
+    }
 }

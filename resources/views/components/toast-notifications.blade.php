@@ -10,8 +10,6 @@
         addNotification({ variant = 'info', title = null, message = null }) {
             const id = Date.now();
             // Use provided title/message if present, fallback only if both missing.
-            console.log('title', title);
-            console.log('message', message);
             if (!title && !message) {
                 title = variant.charAt(0).toUpperCase() + variant.slice(1);
                 message = '';

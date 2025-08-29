@@ -75,6 +75,11 @@
             window.addEventListener('resetSelectedItems', () => {
                 this.selectedItems = [];
                 this.selectAll = false;
+
+                // Uncheck all checkboxes.
+                document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
             });
         }
      }"
