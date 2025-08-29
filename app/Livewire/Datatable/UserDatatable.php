@@ -18,7 +18,7 @@ class UserDatatable extends Datatable
     public array $disabledRoutes = ['view'];
     public function getSearchbarPlaceholder(): string
     {
-        return __('Search by name or email');
+        return __('Search by name or email...');
     }
 
     public function mount(): void

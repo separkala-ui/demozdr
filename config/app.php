@@ -274,5 +274,6 @@ return [
          */
         'Eventy' => TorMorten\Eventy\Facades\Events::class,
         'Hook' => App\Support\Facades\Hook::class,
+        'DatatableHook' => App\Enums\Hooks\DatatableHook::class,
     ],
 ];
