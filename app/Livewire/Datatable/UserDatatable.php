@@ -4,33 +4,27 @@ declare(strict_types=1);
 
 namespace App\Livewire\Datatable;
 
-use App\Livewire\Datatable\Datatable;
 use App\Services\RolesService;
-use App\Models\User as UserModel;
+use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\Auth;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class UserDatatable extends Datatable
 {
     public string $role = '';
+    public string $model = User::class;
 
     public function getSearchbarPlaceholder(): string
     {
         return __('Search by name or email');
     }
 
-    protected function getNewResourceLinkPermission(): string
+    public function getRoutes(): array
     {
-        return 'user.create';
-    }
-
-    protected function getNewResourceLinkRouteName(): string
-    {
-        return 'admin.users.create';
-    }
-
-    protected function getNewResourceLinkLabel(): string
-    {
-        return __('New User');
+        $routes = parent::getRoutes();
+        unset($routes['view']);
+        return $routes;
     }
 
     public function getFilters(): array
@@ -43,7 +37,7 @@ class UserDatatable extends Datatable
                 'icon' => 'feather:key',
                 'allLabel' => __('All Roles'),
                 'options' => app(RolesService::class)->getRolesDropdown(),
-                'selected' => $this->role
+                'selected' => $this->role,
             ],
         ];
     }
@@ -93,9 +87,9 @@ class UserDatatable extends Datatable
         ];
     }
 
-    public function render(): Renderable
+    protected function buildQuery(): QueryBuilder
     {
-        $query = UserModel::query();
+        $query = QueryBuilder::for($this->model);
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -118,18 +112,7 @@ class UserDatatable extends Datatable
             $this->direction = 'asc';
         }
 
-        $users = $query->orderBy($this->sort, $this->direction)
-            ->paginate($this->perPage == __('All') ? 999999 : $this->perPage);
-
-        return view('backend.livewire.datatable.datatable', [
-            'data' => $users,
-            'table' => $this->table,
-        ]);
-    }
-
-    public function renderActionsCell($user): Renderable
-    {
-        return view('backend.pages.users.partials.action-buttons', compact('user'));
+        return $this->sortQuery($query);
     }
 
     public function renderNameCell($user): Renderable
@@ -140,5 +123,18 @@ class UserDatatable extends Datatable
     public function renderRolesCell($user): Renderable
     {
         return view('backend.pages.users.partials.user-roles', compact('user'));
+    }
+
+    public function getActionCellPermissions($item): array
+    {
+        return [
+            ...parent::getActionCellPermissions($item),
+            'user.login_as' => Auth::user()->canBeModified($item, $this->getPermissions()['login_as'] ?? ''),
+        ];
+    }
+
+    public function renderAfterActionEdit($user): string|Renderable
+    {
+        return view('backend.pages.users.partials.action-button-login-as', compact('user'));
     }
 }
