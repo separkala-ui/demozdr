@@ -33,10 +33,38 @@
 ])
 
 @php
-// dd($table);
+    $allIds = collect($data)->pluck('id')->toArray();
 @endphp
 
-<div class="space-y-6">
+<div class="space-y-6"
+     x-data="{
+        selectedItems: [],
+        selectAll: false,
+        allIds: {{ json_encode($allIds) }},
+        bulkDeleteModalOpen: false,
+        toggleSelectAll() {
+            if (this.selectAll) {
+                this.selectedItems = [...this.allIds];
+            } else {
+                this.selectedItems = [];
+            }
+            // Update all checkboxes
+            document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+                checkbox.checked = this.selectAll;
+            });
+        },
+        updateSelectAll() {
+            this.selectAll = this.selectedItems.length === this.allIds.length && this.allIds.length > 0;
+        },
+        // Method to refresh allIds when Livewire updates
+        refreshIds(newIds) {
+            this.allIds = newIds;
+            // Filter selectedItems to only include items that still exist
+            this.selectedItems = this.selectedItems.filter(id => newIds.includes(id));
+            this.updateSelectAll();
+        }
+     }"
+>
     <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div class="table-td sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
             @if($enableSearchbar)
@@ -50,16 +78,19 @@
                 @endif
             @endif
 
-            <div class="flex items-center gap-3">
+            <div
+                class="flex items-center gap-3"
+                @if($enableLivewire) wire:ignore @endif
+            >
                 <div class="flex items-center gap-2">
                     @if($enableBulkActions)
                         @if($customBulkActions)
                             {!! $customBulkActions !!}
                         @else
-                            <div class="relative flex items-center justify-center" x-show="selectedUsers.length > 0" x-data="{ open: false }">
+                            <div class="relative flex items-center justify-center" x-show="selectedItems.length > 0" x-data="{ open: false }">
                                 <button @click="open = !open" class="btn-secondary flex items-center justify-center gap-2 text-sm" type="button">
                                     <iconify-icon icon="lucide:more-vertical"></iconify-icon>
-                                    <span>{{ __('Bulk Actions') }} (<span x-text="selectedUsers.length"></span>)</span>
+                                    <span>{{ __('Bulk Actions') }} (<span x-text="selectedItems.length"></span>)</span>
                                     <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                                 </button>
                                 <div x-show="open" @click.outside="open = false" x-transition
@@ -99,7 +130,7 @@
                                             </svg>
                                         </div>
                                         <h3 id="bulk-delete-modal-title" class="font-semibold tracking-wide text-gray-700 dark:text-white">
-                                            {{ __('Delete Selected Users') }}
+                                            {{ __('Delete Selected Items') }}
                                         </h3>
                                         <button
                                             x-on:click="bulkDeleteModalOpen = false"
@@ -113,16 +144,16 @@
                                     </div>
                                     <div class="px-4 text-center">
                                         <p class="text-gray-500 dark:text-gray-300">
-                                            {{ __('Are you sure you want to delete the selected users?') }}
+                                            {{ __('Are you sure you want to delete the selected items?') }}
                                             {{ __('This action cannot be undone.') }}
                                         </p>
                                     </div>
                                     <div class="flex items-center justify-end gap-3 border-t border-gray-100 p-4 dark:border-gray-800">
-                                        <form id="bulk-delete-form" action="{{ route('admin.users.bulk-delete') }}" method="POST">
-                                            @method('DELETE')
+                                        <form id="bulk-delete-form" action="{{ $this->getBulkDeleteAction()['url'] }}" method="POST">
+                                            @method($this->getBulkDeleteAction()['method'])
                                             @csrf
 
-                                            <template x-for="id in selectedUsers" :key="id">
+                                            <template x-for="id in selectedItems" :key="id">
                                                 <input type="hidden" name="ids[]" :value="id">
                                             </template>
 
@@ -215,13 +246,13 @@
                 <thead class="table-thead">
                     <tr class="table-tr">
                         @if($table['enableCheckbox'] ?? true)
-                            <th width="3%" class="table-thead-th">
+                            <th width="3%" class="table-thead-th" wire:ignore>
                                 <div class="flex items-center">
                                     <input
                                         type="checkbox"
                                         class="form-checkbox"
                                         x-model="selectAll"
-                                        @click=""
+                                        @change="toggleSelectAll()"
                                     >
                                 </div>
                             </th>
@@ -266,12 +297,21 @@
                     @forelse ($data as $item)
                         <tr class="{{ $loop->index + 1 != count($data) ?  'table-tr' : '' }}">
                             @if($table['enableCheckbox'] ?? true)
-                                <td class="table-td table-td-checkbox">
+                                <td class="table-td table-td-checkbox" wire:ignore>
                                     <input
                                         type="checkbox"
-                                        class="user-checkbox form-checkbox"
+                                        class="item-checkbox form-checkbox"
                                         value="{{ $item->id }}"
-                                        x-model="selectedUsers"
+                                        @change="
+                                            if ($event.target.checked) {
+                                                if (!selectedItems.includes({{ $item->id }})) {
+                                                    selectedItems.push({{ $item->id }});
+                                                }
+                                            } else {
+                                                selectedItems = selectedItems.filter(id => id !== {{ $item->id }});
+                                            }
+                                            updateSelectAll();
+                                        "
                                         {{ !auth()->user()->canBeModified($item, 'user.delete') ? 'disabled' : '' }}
                                     />
                                 </td>

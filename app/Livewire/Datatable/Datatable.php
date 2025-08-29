@@ -160,6 +160,14 @@ abstract class Datatable extends Component
         ];
     }
 
+    public function getBulkDeleteAction(): array
+    {
+        return [
+            'url' => route('admin.' . Str::lower($this->getModelNamePlural()) . '.bulk-delete'),
+            'method' => 'DELETE',
+        ];
+    }
+
     protected function getTable(): array
     {
         return [];
