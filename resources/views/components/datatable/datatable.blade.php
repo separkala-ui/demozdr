@@ -373,7 +373,7 @@
                                         $content = null;
                                         // Convert snake_case to PascalCase for method name discovery
                                         $pascalCaseId = collect(explode('_', $header['id']))->map(fn($part) => ucfirst($part))->implode('');
-                                        $autoDiscoverableMethodName = 'render' . $pascalCaseId . 'Cell';
+                                        $autoDiscoverableMethodName = 'render' . $pascalCaseId . 'Column';
 
                                         // Custom Blade include/component.
                                         if (isset($header['renderContent']) && is_string($header['renderContent'])) {

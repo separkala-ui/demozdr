@@ -223,7 +223,7 @@ abstract class Datatable extends Component
         ];
 
         // Exclude the disabled routes.
-        if (!empty($this->disabledRoutes)) {
+        if (! empty($this->disabledRoutes)) {
             foreach ($this->disabledRoutes as $disabledRoute) {
                 unset($routes[$disabledRoute]);
             }
@@ -306,7 +306,7 @@ abstract class Datatable extends Component
         return array_key_exists('id', $item->getAttributes()) ? (string) $item->id : '';
     }
 
-    public function renderCreatedAtCell($item): string
+    public function renderCreatedAtColumn($item): string
     {
         if (! array_key_exists('created_at', $item->getAttributes()) || ! $item->created_at) {
             return '';
@@ -316,9 +316,9 @@ abstract class Datatable extends Component
         return '<span class="text-sm" title="' . e($full) . '">' . e($short) . '</span>';
     }
 
-    public function renderUpdatedAtCell($item): string
+    public function renderUpdatedAtColumn($item): string
     {
-        if (!array_key_exists('updated_at', $item->getAttributes()) || !$item->updated_at) {
+        if (! array_key_exists('updated_at', $item->getAttributes()) || ! $item->updated_at) {
             return '';
         }
         $short = $item->updated_at->format('d M Y');
@@ -349,7 +349,7 @@ abstract class Datatable extends Component
         return $permissionsCheck;
     }
 
-    public function renderActionsCell($item): string|Renderable
+    public function renderActionsColumn($item): string|Renderable
     {
         if ($this->showActionItems($item) === false) {
             return '';

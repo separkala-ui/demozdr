@@ -113,12 +113,12 @@ class UserDatatable extends Datatable
         return $this->sortQuery($query);
     }
 
-    public function renderNameCell($user): Renderable
+    public function renderNameColumn($user): Renderable
     {
         return view('backend.pages.users.partials.user-name', compact('user'));
     }
 
-    public function renderRolesCell($user): Renderable
+    public function renderRolesColumn($user): Renderable
     {
         return view('backend.pages.users.partials.user-roles', compact('user'));
     }
@@ -133,7 +133,7 @@ class UserDatatable extends Datatable
 
     public function renderAfterActionEdit($user): string|Renderable
     {
-        if (!Auth::user()->can('user.login_as') || $user->id === Auth::id()) {
+        if (! Auth::user()->can('user.login_as') || $user->id === Auth::id()) {
             return '';
         }
 
@@ -142,7 +142,7 @@ class UserDatatable extends Datatable
 
     protected function handleBulkDelete(array $ids): int
     {
-        $ids = array_filter($ids, fn($id) => $id != Auth::id()); // Prevent self-deletion.
+        $ids = array_filter($ids, fn ($id) => $id != Auth::id()); // Prevent self-deletion.
         $users = User::whereIn('id', $ids)->get();
         $deletedCount = 0;
         foreach ($users as $user) {
