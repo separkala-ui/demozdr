@@ -115,4 +115,22 @@ abstract class Datatable extends Component
             'perPageOptions' => $this->perPageOptions,
         ]);
     }
+
+    public function renderCreatedAtCell($model): string
+    {
+        if (!array_key_exists('created_at', $model->getAttributes())) {
+            return '';
+        }
+
+        return $model->created_at->format('Y-m-d H:i:s');
+    }
+
+    public function renderUpdatedAtCell($model): string
+    {
+        if (!array_key_exists('updated_at', $model->getAttributes())) {
+            return '';
+        }
+
+        return $model->updated_at->format('Y-m-d H:i:s');
+    }
 }

@@ -61,7 +61,6 @@ class UserDatatable extends Datatable
                     'width' => null,
                     'sortable' => true,
                     'sortBy' => 'first_name',
-                    'renderContentView' => 'renderNameCell',
                 ],
                 [
                     'id' => 'email',
@@ -75,7 +74,6 @@ class UserDatatable extends Datatable
                     'title' => __('Roles'),
                     'width' => null,
                     'sortable' => false,
-                    'renderContentView' => 'renderRolesCell',
                 ],
                 [
                     'id' => 'created_at',
@@ -90,7 +88,6 @@ class UserDatatable extends Datatable
                     'width' => null,
                     'sortable' => false,
                     'is_action' => true,
-                    'renderContentView' => 'renderActionsCell',
                 ],
             ],
         ];
@@ -130,22 +127,17 @@ class UserDatatable extends Datatable
         ]);
     }
 
-    public function updatingRole()
-    {
-        $this->resetPage();
-    }
-
-    public function renderActionsCell($user, $header): Renderable
+    public function renderActionsCell($user): Renderable
     {
         return view('backend.pages.users.partials.action-buttons', compact('user'));
     }
 
-    public function renderNameCell($user, $header): Renderable
+    public function renderNameCell($user): Renderable
     {
         return view('backend.pages.users.partials.user-name', compact('user'));
     }
 
-    public function renderRolesCell($user, $header): Renderable
+    public function renderRolesCell($user): Renderable
     {
         return view('backend.pages.users.partials.user-roles', compact('user'));
     }

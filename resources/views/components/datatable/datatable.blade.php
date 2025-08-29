@@ -281,20 +281,19 @@
                                 <td class="table-td">
                                     @php
                                         $content = null;
+                                        // Convert snake_case to PascalCase for method name discovery
+                                        $pascalCaseId = collect(explode('_', $header['id']))->map(fn($part) => ucfirst($part))->implode('');
+                                        $autoDiscoverableMethodName = 'render' . $pascalCaseId . 'Cell';
+
                                         // Custom Blade include/component.
-                                        if (isset($header['contentComponent']) && is_string($header['contentComponent'])) {
-                                            // Blade component rendering.
-                                            $content = app('blade.compiler')->compileString('<x-' . $header['contentComponent'] . ' :item="$item" :header="$header" />');
-                                            $content = eval('?>' . $content);
-                                        } elseif (isset($header['renderContentView']) && is_string($header['renderContentView'])) {
-                                            $content = $this->{$header['renderContentView']}($item, $header);
-                                        } elseif (isset($header['renderContent']) && is_string($header['renderContent']) && isset($this) && method_exists($this, $header['renderContent'])) {
-                                            // Call Livewire method for cell rendering.
+                                        if (isset($header['renderContent']) && is_string($header['renderContent'])) {
                                             $content = $this->{$header['renderContent']}($item, $header);
                                         } elseif (isset($header['renderRawContent'])) {
                                             $content = $header['renderRawContent'];
-                                        } elseif (isset($item->{$header['id']})) {
-                                            $content = $item->{$header['id']};
+                                        } elseif (method_exists($this, $autoDiscoverableMethodName)) { // Auto-discovered method - `render[Id]Cell()`
+                                            $content = $this->{$autoDiscoverableMethodName}($item, $header);
+                                        } elseif (isset($item->{$header['id']})) { // model property
+                                            $content = $item->{$header['id']} ?? '';
                                         }
                                     @endphp
                                     {!! $content !!}
