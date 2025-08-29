@@ -29,10 +29,10 @@ abstract class Datatable extends Component
     public int|string $perPage = 10;
     public array $perPageOptions = [];
     public array $filters = [];
+    public $customFilters = null;
     public array $permissions = [];
-
     public array $selectedItems = [];
-
+    public array $disabledRoutes = [];
     public array $queryString = [
         'search' => ['except' => ''],
         'sort' => ['except' => 'created_at'],
@@ -215,12 +215,21 @@ abstract class Datatable extends Component
 
     public function getRoutes(): array
     {
-        return [
+        $routes = [
             'create' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.create',
             'view' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.view',
             'edit' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.edit',
             'delete' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.destroy',
         ];
+
+        // Exclude the disabled routes.
+        if (!empty($this->disabledRoutes)) {
+            foreach ($this->disabledRoutes as $disabledRoute) {
+                unset($routes[$disabledRoute]);
+            }
+        }
+
+        return $routes;
     }
 
     public function getBulkDeleteAction(): array

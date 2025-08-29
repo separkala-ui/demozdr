@@ -14,18 +14,11 @@ class UserDatatable extends Datatable
 {
     public string $role = '';
     public string $model = User::class;
-    public bool $enableLivewireBulkDelete = false;
-
+    public bool $enableLivewireBulkDelete = false; //  cause it needs to modify some more things.
+    public array $disabledRoutes = ['view'];
     public function getSearchbarPlaceholder(): string
     {
         return __('Search by name or email');
-    }
-
-    public function getRoutes(): array
-    {
-        $routes = parent::getRoutes();
-        unset($routes['view']); // Exclude view route, as we don't support view route for it.
-        return $routes;
     }
 
     public function mount(): void

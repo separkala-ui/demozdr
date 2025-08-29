@@ -217,6 +217,7 @@ return [
         App\Providers\MenuServiceProvider::class,
         App\Providers\ModuleServiceProvider::class,
         App\Providers\AdminRoutingServiceProvider::class,
+        App\Providers\HookServiceProvider::class,
     ],
 
     /*
@@ -272,5 +273,6 @@ return [
          * Package Aliases
          */
         'Eventy' => TorMorten\Eventy\Facades\Events::class,
+        'Hook' => App\Support\Facades\Hook::class,
     ],
 ];

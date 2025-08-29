@@ -86,6 +86,8 @@
 >
     <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div class="table-td sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
+
+            {!! Hook::applyFilters(App\Enums\Hooks\DatatableHook::BEFORE_SEARCHBOX, '', $searchbarPlaceholder) !!}
             @if($enableSearchbar)
                 @if($customSeachForm)
                     {!! $customSeachForm !!}
@@ -96,6 +98,7 @@
                     />
                 @endif
             @endif
+            {!! Hook::applyFilters(App\Enums\Hooks\DatatableHook::AFTER_SEARCHBOX, '', $searchbarPlaceholder) !!}
 
             <div
                 class="flex items-center gap-3"
