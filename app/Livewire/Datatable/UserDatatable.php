@@ -24,7 +24,7 @@ class UserDatatable extends Datatable
     public function getRoutes(): array
     {
         $routes = parent::getRoutes();
-        unset($routes['view']);
+        unset($routes['view']); // Exclude view route, as we don't support view route for it.
         return $routes;
     }
 
@@ -33,7 +33,7 @@ class UserDatatable extends Datatable
         parent::mount();
 
         $this->queryString = array_merge($this->queryString, [
-            'role' => ['except' => ''],
+            'role' => [],
         ]);
     }
 
@@ -44,7 +44,7 @@ class UserDatatable extends Datatable
                 'id' => 'role',
                 'label' => __('Role'),
                 'filterLabel' => __('Filter by Role'),
-                'icon' => 'feather:key',
+                'icon' => '',
                 'allLabel' => __('All Roles'),
                 'options' => app(RolesService::class)->getRolesDropdown(),
                 'selected' => $this->role,
@@ -116,11 +116,6 @@ class UserDatatable extends Datatable
         }
 
         $query->with('roles');
-
-        if ($this->sort === '') {
-            $this->sort = 'first_name';
-            $this->direction = 'asc';
-        }
 
         return $this->sortQuery($query);
     }

@@ -225,15 +225,18 @@
                     @else
                         @if(isset($filters))
                             @foreach($filters as $filter)
-                            <div class="flex items-center justify-center relative" x-data="{ open: false }" wire:ignore>
+                            <div class="flex items-center justify-center relative" x-data="{ open: false }">
                                 <button
                                     @click="open = !open"
                                     class="btn-secondary flex items-center justify-center gap-2"
                                     type="button"
                                 >
-                                    <iconify-icon icon="{{ $filter['icon'] }}"></iconify-icon>
+                                    @if($filter['icon'] ?? false)
+                                        <iconify-icon icon="{{ $filter['icon'] }}"></iconify-icon>
+                                    @endif
+
                                     {{ $filter['filterLabel'] }}
-                                    <iconify-icon icon="lucide:chevron-down"></iconify-icon>
+                                    <iconify-icon icon="lucide:chevron-down" class="transition-transform duration-200" :class="{'rotate-180': open}"></iconify-icon>
                                 </button>
 
                                 <div
@@ -254,7 +257,11 @@
                                         @foreach ($filter['options'] as $key => $value)
                                             <li
                                                 class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ $filter['selected'] == $key ? 'bg-gray-200 dark:bg-gray-600 font-bold' : '' }}"
-                                                wire:click="$set('{{ $filter['id'] }}', '{{ $key }}')"
+                                                @if($enableLivewire)
+                                                    wire:click="$set('{{ $filter['id'] }}', '{{ $key }}')"
+                                                @else
+                                                    onclick="window.location.href = '{{ $filter['route'] }}?{{ $filter['id'] }}={{ $key }}';"
+                                                @endif
                                                 @click="open = false"
                                             >
                                                 {{ ucfirst($value) }}
