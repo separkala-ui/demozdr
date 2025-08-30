@@ -19,7 +19,7 @@
     </x-tooltip>
     @php ld_apply_filters('dark_mode_toggler_after_button', '') @endphp
 
-    @if (env('SHOW_DEMO_COMPONENT_PREVIEW'))
+    @if (config('app.show_demo_component_preview', false))
         <x-tooltip title="{{ __('Preview demo components') }}" position="bottom">
             <a href="{{ route('demo.preview') }}" class="hover:text-dark-900 relative flex p-2 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
                 <iconify-icon icon="lucide:view" width="22" height="22"></iconify-icon>

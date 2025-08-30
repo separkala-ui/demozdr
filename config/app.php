@@ -159,6 +159,20 @@ return [
 
     'skip_recaptcha_in_demo' => env('SKIP_RECAPTCHA_IN_DEMO', true),
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Show demo component preview
+    |--------------------------------------------------------------------------
+    |
+    | This value determines if the application should show the demo component
+    | preview in demo mode. If enabled, the demo component button will be displayed at top navbar.
+    |
+    */
+
+    'show_demo_component_preview' => env('SHOW_DEMO_COMPONENT_PREVIEW', false),
+
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
