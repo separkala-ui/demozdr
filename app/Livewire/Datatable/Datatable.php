@@ -7,6 +7,7 @@ namespace App\Livewire\Datatable;
 use App\Concerns\Datatable\HasDatatableActionItems;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -81,7 +82,7 @@ abstract class Datatable extends Component
             ]);
         }
 
-        $this->selectedItems = array_values([]);
+        $this->selectedItems = [];
         $this->dispatch('resetSelectedItems');
         $this->resetPage();
     }
@@ -123,7 +124,7 @@ abstract class Datatable extends Component
         }
     }
 
-    public function sortQuery(QueryBuilder $query): QueryBuilder
+    public function sortQuery(QueryBuilder $query): QueryBuilder | Builder
     {
         if ($this->sort) {
             return $query->orderBy($this->sort, $this->direction);
