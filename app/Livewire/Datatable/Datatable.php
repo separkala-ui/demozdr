@@ -6,6 +6,7 @@ namespace App\Livewire\Datatable;
 
 use App\Concerns\Datatable\HasDatatableActionItems;
 use App\Concerns\Datatable\HasDatatableDelete;
+use App\Concerns\Hookable;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -21,6 +22,7 @@ abstract class Datatable extends Component
     use WithPagination;
     use HasDatatableActionItems;
     use HasDatatableDelete;
+    use Hookable;
 
     public string $model = '';
     public string $search = '';

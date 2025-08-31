@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Datatable;
 
+use App\Enums\Hooks\UserActionHook;
+use App\Enums\Hooks\UserFilterHook;
 use App\Models\Role;
 use App\Services\RolesService;
 use App\Models\User;
@@ -147,7 +149,20 @@ class UserDatatable extends Datatable
 
             $this->authorize('delete', $user);
 
+            $user = $this->addHooks(
+                $user,
+                UserActionHook::USER_DELETED_BEFORE,
+                UserFilterHook::USER_DELETED_BEFORE
+            );
+
             $user->delete();
+
+            $this->addHooks(
+                $user,
+                UserActionHook::USER_DELETED_AFTER,
+                UserFilterHook::USER_DELETED_AFTER
+            );
+
             $deletedCount++;
         }
 
@@ -166,8 +181,22 @@ class UserDatatable extends Datatable
             throw new \Exception(__('You cannot delete your own account.'));
         }
 
+        $user = $this->addHooks(
+            $user,
+            UserActionHook::USER_DELETED_BEFORE,
+            UserFilterHook::USER_DELETED_BEFORE
+        );
+
         $this->authorize('delete', $user);
 
-        return $user->delete();
+        $deleted = $user->delete();
+
+        $this->addHooks(
+            $user,
+            UserActionHook::USER_DELETED_AFTER,
+            UserFilterHook::USER_DELETED_AFTER
+        );
+
+        return $deleted;
     }
 }

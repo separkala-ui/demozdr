@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Datatable;
 
+use App\Enums\Hooks\RoleActionHook;
+use App\Enums\Hooks\RoleFilterHook;
 use App\Models\Role;
-use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class RoleDatatable extends Datatable
@@ -116,7 +116,22 @@ class RoleDatatable extends Datatable
 
             $this->authorize('delete', $role);
 
+            $this->authorize('delete', $role);
+
+            $this->addHooks(
+                $role,
+                RoleActionHook::ROLE_DELETED_BEFORE,
+                RoleFilterHook::ROLE_DELETED_BEFORE
+            );
+
             $role->delete();
+
+            $this->addHooks(
+                $role,
+                RoleActionHook::ROLE_DELETED_AFTER,
+                RoleFilterHook::ROLE_DELETED_AFTER
+            );
+
             $deletedCount++;
         }
 
@@ -131,6 +146,20 @@ class RoleDatatable extends Datatable
 
         $this->authorize('delete', $role);
 
-        return $role->delete();
+        $this->addHooks(
+            $role,
+            RoleActionHook::ROLE_DELETED_BEFORE,
+            RoleFilterHook::ROLE_DELETED_BEFORE
+        );
+
+        $deleted = $role->delete();
+
+        $this->addHooks(
+            $role,
+            RoleActionHook::ROLE_DELETED_AFTER,
+            RoleFilterHook::ROLE_DELETED_AFTER
+        );
+
+        return $deleted;
     }
 }

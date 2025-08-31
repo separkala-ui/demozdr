@@ -6,9 +6,19 @@ namespace App\Enums\Hooks;
 
 enum DatatableHook: string
 {
-    // Actions
-
-    // Filters
     case BEFORE_SEARCHBOX = 'datatable_before_searchbox';
     case AFTER_SEARCHBOX = 'datatable_after_searchbox';
+
+    // Delete
+    case BEFORE_DELETE_ACTION = 'datatable_action_before_delete';
+    case BEFORE_DELETE_FILTER = 'datatable_filter_before_delete';
+
+    case AFTER_DELETE_ACTION = 'datatable_action_after_delete';
+    case AFTER_DELETE_FILTER = 'datatable_filter_after_delete';
+
+    case BEFORE_BULK_DELETE_ACTION = 'datatable_action_before_bulk_delete';
+    case BEFORE_BULK_DELETE_FILTER = 'datatable_filter_before_bulk_delete';
+
+    case AFTER_BULK_DELETE_ACTION = 'datatable_action_after_bulk_delete';
+    case AFTER_BULK_DELETE_FILTER = 'datatable_filter_after_bulk_delete';
 }

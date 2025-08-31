@@ -9,6 +9,8 @@ use App\Http\Requests\Role\StoreRoleRequest;
 use App\Http\Requests\Role\UpdateRoleRequest;
 use App\Services\PermissionService;
 use App\Services\RolesService;
+use App\Enums\Hooks\RoleActionHook;
+use App\Enums\Hooks\RoleFilterHook;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,7 +51,19 @@ class RoleController extends Controller
     {
         $this->authorize('create', Role::class);
 
-        $role = $this->rolesService->createRole($request->name, $request->input('permissions', []));
+        $data = $this->addHooks(
+            $request->validated(),
+            RoleActionHook::ROLE_CREATED_BEFORE,
+            RoleFilterHook::ROLE_CREATED_BEFORE
+        );
+
+        $role = $this->rolesService->createRole($data['name'] ?? $request->name, $data['permissions'] ?? $request->input('permissions', []));
+
+        $role = $this->addHooks(
+            $role,
+            RoleActionHook::ROLE_CREATED_AFTER,
+            RoleFilterHook::ROLE_CREATED_AFTER
+        );
 
         session()->flash('success', __('Role has been created.'));
 
@@ -95,7 +109,19 @@ class RoleController extends Controller
 
         $this->authorize('update', $role);
 
-        $role = $this->rolesService->updateRole($role, $request->name, $request->input('permissions', []));
+        $data = $this->addHooks(
+            $request->validated(),
+            RoleActionHook::ROLE_UPDATED_BEFORE,
+            RoleFilterHook::ROLE_UPDATED_BEFORE
+        );
+
+        $role = $this->rolesService->updateRole($role, $data['name'] ?? $request->name, $data['permissions'] ?? $request->input('permissions', []));
+
+        $role = $this->addHooks(
+            $role,
+            RoleActionHook::ROLE_UPDATED_AFTER,
+            RoleFilterHook::ROLE_UPDATED_AFTER
+        );
 
         session()->flash('success', __('Role has been updated.'));
 
@@ -119,7 +145,19 @@ class RoleController extends Controller
 
         $this->authorize('delete', $role);
 
+        $role = $this->addHooks(
+            $role,
+            RoleActionHook::ROLE_DELETED_BEFORE,
+            RoleFilterHook::ROLE_DELETED_BEFORE
+        );
+
         $this->rolesService->deleteRole($role);
+
+        $this->addHooks(
+            $role,
+            RoleActionHook::ROLE_DELETED_AFTER,
+            RoleFilterHook::ROLE_DELETED_AFTER
+        );
 
         session()->flash('success', __('Role has been deleted.'));
 
@@ -140,24 +178,32 @@ class RoleController extends Controller
                 ->with('error', __('No roles selected for deletion'));
         }
 
+        $ids = $this->addHooks(
+            $ids,
+            RoleActionHook::ROLE_BULK_DELETED_BEFORE,
+            RoleFilterHook::ROLE_BULK_DELETED_BEFORE
+        );
+
         $deletedCount = 0;
 
         foreach ($ids as $id) {
             $role = $this->rolesService->findRoleById((int) $id);
-
             if (! $role) {
                 continue;
             }
-
             // Skip Superadmin role.
             if ($role->name === Role::SUPERADMIN) {
                 continue;
             }
-
             $this->rolesService->deleteRole($role);
-
             $deletedCount++;
         }
+
+        $deletedCount = $this->addHooks(
+            $deletedCount,
+            RoleActionHook::ROLE_BULK_DELETED_AFTER,
+            RoleFilterHook::ROLE_BULK_DELETED_AFTER
+        );
 
         if ($deletedCount > 0) {
             session()->flash('success', __(':count roles deleted successfully', ['count' => $deletedCount]));

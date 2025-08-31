@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Concerns\Datatable;
 
+use App\Enums\Hooks\DatatableHook;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -80,6 +81,8 @@ trait HasDatatableDelete
     public function bulkDelete(): void
     {
         $ids = $this->selectedItems;
+        $ids = array_filter($ids, 'is_numeric');
+
         if (empty($ids)) {
             $this->dispatch('notify', [
                 'variant' => 'error',
@@ -100,8 +103,18 @@ trait HasDatatableDelete
             return;
         }
 
-        // Otherwise, handle deletion in component (generic, override for custom logic)
-        $deletedCount = $this->handleBulkDelete($ids);
+        $ids = $this->addHooks(
+            $ids,
+            DatatableHook::BEFORE_BULK_DELETE_ACTION,
+            DatatableHook::BEFORE_BULK_DELETE_FILTER
+        );
+
+        $deletedCount = $this->addHooks(
+            $this->handleBulkDelete($ids),
+            DatatableHook::AFTER_BULK_DELETE_ACTION,
+            DatatableHook::AFTER_BULK_DELETE_FILTER
+        );
+
         if ($deletedCount > 0) {
             $this->dispatch('notify', [
                 'variant' => 'success',
@@ -142,6 +155,20 @@ trait HasDatatableDelete
     {
         $this->authorize('delete', $item);
 
-        return $item->delete();
+        $this->addHooks(
+            $item,
+            DatatableHook::BEFORE_DELETE_ACTION,
+            DatatableHook::BEFORE_DELETE_FILTER
+        );
+
+        $deleted = $item->delete();
+
+        $this->addHooks(
+            $item,
+            DatatableHook::AFTER_DELETE_ACTION,
+            DatatableHook::AFTER_DELETE_FILTER
+        );
+
+        return $deleted;
     }
 }
