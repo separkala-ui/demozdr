@@ -41,7 +41,7 @@ trait HasDatatableDelete
             $this->dispatch('notify', [
                 'variant' => 'error',
                 'title' => __('Delete Failed'),
-                'message' => __('No item selected for deletion.'),
+                'message' => __('No :item selected for deletion.', ['item' => $this->getModelNameSingular()]),
             ]);
             return;
         }
@@ -52,7 +52,7 @@ trait HasDatatableDelete
             $this->dispatch('notify', [
                 'variant' => 'error',
                 'title' => __('Delete Failed'),
-                'message' => __('Item not found.'),
+                'message' => __(':item not found.', ['item' => $this->getModelNameSingular()]),
             ]);
             return;
         }
@@ -64,7 +64,7 @@ trait HasDatatableDelete
             $this->dispatch('notify', [
                 'variant' => 'success',
                 'title' => __('Delete Successful'),
-                'message' => __('Item deleted successfully.'),
+                'message' => __(':item deleted successfully.', ['item' => $this->getModelNameSingular()]),
             ]);
         } catch (\Exception $exception) {
             $this->dispatch('notify', [
@@ -84,7 +84,7 @@ trait HasDatatableDelete
             $this->dispatch('notify', [
                 'variant' => 'error',
                 'title' => __('Bulk Delete Failed'),
-                'message' => __('No items selected for deletion.'),
+                'message' => __('No :items selected for deletion.', ['items' => $this->getModelNamePlural()]),
             ]);
             return;
         }
@@ -112,7 +112,7 @@ trait HasDatatableDelete
             $this->dispatch('notify', [
                 'variant' => 'error',
                 'title' => __('Bulk Delete Failed'),
-                'message' => __('No items were deleted. Selected items may include protected records.'),
+                'message' => __('No :items were deleted. Selected items may include protected records.', ['items' => $this->getModelNamePlural()]),
             ]);
         }
 

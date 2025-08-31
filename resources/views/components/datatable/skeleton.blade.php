@@ -20,11 +20,11 @@
                 @endforeach
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-tbody">
             @foreach(range(1, $rows) as $row)
-                <tr class="animate-pulse bg-gray-100 dark:bg-gray-800">
+                <tr class="animate-pulse bg-gray-100 dark:bg-gray-800 table-tr">
                     @if($enableCheckbox)
-                    <td class="table-td">
+                    <td class="table-td table-td-checkbox">
                         <div class="h-4 w-4 bg-gray-300 dark:bg-gray-700 rounded"></div>
                     </td>
                     @endif
