@@ -422,7 +422,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="flex gap-3">
+                    <div class="pagination-links">
                         {{ $data->links() }}
                     </div>
                 </div>

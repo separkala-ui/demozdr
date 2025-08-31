@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Livewire\Datatable;
 
 use App\Concerns\Datatable\HasDatatableActionItems;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
@@ -30,6 +32,7 @@ abstract class Datatable extends Component
     public int $page = 1;
     public int|string $perPage = 10;
     public array $perPageOptions = [];
+    public int $paginateOnEachSlide = 0;
     public array $filters = [];
     public $customFilters = null;
     public array $permissions = [];
@@ -56,7 +59,7 @@ abstract class Datatable extends Component
         }
 
         $bulkDeleteAction = $this->getBulkDeleteAction();
-        if (! empty($bulkDeleteAction['url'])) {
+        if (!empty($bulkDeleteAction['url'])) {
             // If a bulk delete route is defined, redirect or make an HTTP request (could be AJAX in JS, here just emit event)
             $this->dispatch('bulkDeleteRequest', [
                 'url' => $bulkDeleteAction['url'],
@@ -124,7 +127,7 @@ abstract class Datatable extends Component
         }
     }
 
-    public function sortQuery(QueryBuilder $query): QueryBuilder | Builder
+    public function sortQuery(QueryBuilder $query): QueryBuilder|Builder
     {
         if ($this->sort) {
             return $query->orderBy($this->sort, $this->direction);
@@ -149,6 +152,7 @@ abstract class Datatable extends Component
         $this->perPageOptions = $this->getPerPageOptions();
         $this->table = $this->getTable();
         $this->perPage = request()->per_page ?? config('settings.default_pagination', 10);
+        $this->paginateOnEachSlide = 0;
     }
 
     protected function getModelClass(): string
@@ -226,7 +230,7 @@ abstract class Datatable extends Component
         ];
 
         // Exclude the disabled routes.
-        if (! empty($this->disabledRoutes)) {
+        if (!empty($this->disabledRoutes)) {
             foreach ($this->disabledRoutes as $disabledRoute) {
                 unset($routes[$disabledRoute]);
             }
@@ -255,10 +259,31 @@ abstract class Datatable extends Component
         return [];
     }
 
-    protected function getData(): LengthAwarePaginator
+    protected function getSettingsPaginatorUi(): string
     {
-        return $this->buildQuery()
-            ->paginate($this->perPage == __('All') ? 999999 : $this->perPage);
+        return config('settings.default_pagination_ui', 'default');
+    }
+
+    protected function getPaginatedData($query)
+    {
+        $paginationUi = $this->getSettingsPaginatorUi();
+        $perPage = $this->perPage == __('All') ? 999999 : (int)$this->perPage;
+
+        switch ($paginationUi) {
+            case 'cursor':
+                return $query->cursorPaginate($perPage);
+            case 'simple':
+                return $query->simplePaginate($perPage);
+            case 'default':
+            default:
+                return $query->paginate($perPage);
+        }
+    }
+
+    protected function getData(): CursorPaginator|LengthAwarePaginator|Paginator
+    {
+        return $this->getPaginatedData($this->buildQuery())
+            ->onEachSide($this->paginateOnEachSlide);
     }
 
     protected function buildQuery(): QueryBuilder
@@ -280,7 +305,7 @@ abstract class Datatable extends Component
         }
 
         foreach ($this->filters as $filter) {
-            if (! empty($filter['selected'])) {
+            if (!empty($filter['selected'])) {
                 $query->where($filter['id'], $filter['selected']);
             }
         }
@@ -311,7 +336,7 @@ abstract class Datatable extends Component
 
     public function renderCreatedAtColumn($item): string
     {
-        if (! array_key_exists('created_at', $item->getAttributes()) || ! $item->created_at) {
+        if (!array_key_exists('created_at', $item->getAttributes()) || !$item->created_at) {
             return '';
         }
         $short = $item->created_at->format('d M Y');
@@ -321,7 +346,7 @@ abstract class Datatable extends Component
 
     public function renderUpdatedAtColumn($item): string
     {
-        if (! array_key_exists('updated_at', $item->getAttributes()) || ! $item->updated_at) {
+        if (!array_key_exists('updated_at', $item->getAttributes()) || !$item->updated_at) {
             return '';
         }
         $short = $item->updated_at->format('d M Y');
