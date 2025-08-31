@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Livewire\Datatable;
 
 use App\Models\Role;
-use App\Services\RolesService;
 use App\Models\User;
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -39,19 +39,13 @@ class RoleDatatable extends Datatable
                 'sortable' => true,
                 'sortBy' => 'users_count',
             ],
-            // [
-            //     'id' => 'roles',
-            //     'title' => __('Roles'),
-            //     'width' => null,
-            //     'sortable' => false,
-            // ],
-            // [
-            //     'id' => 'created_at',
-            //     'title' => __('Created At'),
-            //     'width' => null,
-            //     'sortable' => true,
-            //     'sortBy' => 'created_at',
-            // ],
+            [
+                'id' => 'permissions',
+                'title' => __('Permissions'),
+                'width' => null,
+                'sortable' => true,
+                'sortBy' => 'permissions_count',
+            ],
             [
                 'id' => 'actions',
                 'title' => __('Actions'),
@@ -64,7 +58,9 @@ class RoleDatatable extends Datatable
 
     protected function buildQuery(): QueryBuilder
     {
-        $query = QueryBuilder::for($this->model);
+        $query = QueryBuilder::for($this->model)
+            ->withCount('users')
+            ->withCount('permissions');
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -72,9 +68,30 @@ class RoleDatatable extends Datatable
             });
         }
 
-        $query->withCount('users');
-
         return $this->sortQuery($query);
+    }
+
+    public function sortQuery(QueryBuilder $query): QueryBuilder|Builder
+    {
+        if (!$this->sort) {
+            return $query;
+        }
+
+        if ($this->sort && $this->sort === 'permissions_count') {
+            return $query->withCount('permissions')->orderBy('permissions_count', $this->direction);
+        } elseif ($this->sort === 'users_count') {
+            return $query->withCount('users')->orderBy('users_count', $this->direction);
+        }
+
+        return parent::sortQuery($query);
+    }
+
+    public function renderNameColumn(Role $role): string
+    {
+        return "
+            <a href=\"" . route('admin.roles.edit', $role) . "\" class='text-primary hover:underline'>" . $role->name . "</a>
+            <p class='text-sm text-gray-500'>" . $role->permissions_count . " " . __('permissions') . "</p>
+        ";
     }
 
     public function renderUsersColumn(Role $role): string
@@ -83,39 +100,37 @@ class RoleDatatable extends Datatable
         return '<a title="' . __('View Users') . '" href="' . $url . '" class="text-primary hover:underline">' . $role->users_count . '</a>';
     }
 
+    public function renderPermissionsColumn(Role $role): View
+    {
+        return view('backend.pages.roles.partials.permissions', compact('role'));
+    }
+
     protected function handleBulkDelete(array $ids): int
     {
-        $ids = array_filter($ids, fn ($id) => $id != Auth::id()); // Prevent self-deletion.
-        $users = User::whereIn('id', $ids)->get();
+        $roles = Role::whereIn('id', $ids)->get();
         $deletedCount = 0;
-        foreach ($users as $user) {
-            if ($user->hasRole(Role::SUPERADMIN) || $user->id === Auth::id()) {
+        foreach ($roles as $role) {
+            if ($role->name === Role::SUPERADMIN) {
                 continue;
             }
 
-            $this->authorize('delete', $user);
+            $this->authorize('delete', $role);
 
-            $user->delete();
+            $role->delete();
             $deletedCount++;
         }
 
         return $deletedCount;
     }
 
-    public function handleRowDelete(Model|User $user): bool
+    public function handleRowDelete(Model|Role $role): bool
     {
-        // Prevent Superadmin deletion.
-        if ($user->hasRole(Role::SUPERADMIN)) {
-            throw new \Exception(__('You cannot delete a :role account.', ['role' => Role::SUPERADMIN]));
+        if ($role->name === Role::SUPERADMIN) {
+            throw new \Exception(__('You cannot delete a :role role.', ['role' => Role::SUPERADMIN]));
         }
 
-        // Prevent own account deletion.
-        if (Auth::id() === $user->id) {
-            throw new \Exception(__('You cannot delete your own account.'));
-        }
+        $this->authorize('delete', $role);
 
-        $this->authorize('delete', $user);
-
-        return $user->delete();
+        return $role->delete();
     }
 }

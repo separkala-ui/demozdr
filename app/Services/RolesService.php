@@ -7,7 +7,7 @@ namespace App\Services;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class RolesService
 {
@@ -130,14 +130,14 @@ class RolesService
      */
     public function getPaginatedRolesWithUserCount(?string $search = null, int $perPage = 10): LengthAwarePaginator
     {
-        // Check if we're sorting by user count
+        // Check if we're sorting by user count.
         $sort = request()->query('sort');
         $isUserCountSort = ($sort === 'user_count' || $sort === '-user_count');
 
-        // For user count sorting, we need to handle it separately
+        // For user count sorting, we need to handle it separately.
         if ($isUserCountSort) {
-            // Get all roles matching the search criteria without any sorting
-            $query = \App\Models\Role::query();
+            // Get all roles matching the search criteria without any sorting.
+            $query = Role::query();
 
             if ($search) {
                 $query->where('name', 'like', '%' . $search . '%');
@@ -145,19 +145,19 @@ class RolesService
 
             $allRoles = $query->get();
 
-            // Add user count to each role
+            // Add user count to each role.
             foreach ($allRoles as $role) {
                 $userCount = $this->countUsersInRole($role);
                 $role->setAttribute('user_count', $userCount);
             }
 
-            // Sort the collection by user_count
+            // Sort the collection by user_count.
             $direction = $sort === 'user_count' ? 'asc' : 'desc';
             $sortedRoles = $direction === 'asc'
                 ? $allRoles->sortBy('user_count')
                 : $allRoles->sortByDesc('user_count');
 
-            // Manually paginate the collection
+            // Manually paginate the collection.
             $page = request()->get('page', 1);
             $offset = ($page - 1) * $perPage;
 
@@ -170,14 +170,14 @@ class RolesService
             );
         }
 
-        // For normal sorting by database columns
+        // For normal sorting by database columns.
         $filters = [
             'search' => $search,
             'sort_field' => 'name',
             'sort_direction' => 'asc',
         ];
 
-        $query = \App\Models\Role::applyFilters($filters);
+        $query = Role::applyFilters($filters);
         $roles = $query->paginateData(['per_page' => $perPage]);
 
         // Add user count to each role
@@ -196,7 +196,7 @@ class RolesService
     {
         $roles = [];
 
-        // 1. Superadmin role - has all permissions
+        // 1. Superadmin role - has all permissions.
         $allPermissionNames = [];
         foreach ($this->permissionService->getAllPermissions() as $group) {
             foreach ($group['permissions'] as $permission) {
@@ -206,7 +206,7 @@ class RolesService
 
         $roles['superadmin'] = $this->createRole('Superadmin', $allPermissionNames);
 
-        // 2. Admin role - has almost all permissions except some critical ones
+        // 2. Admin role - has almost all permissions except some critical ones.
         $adminPermissions = $allPermissionNames;
         $adminExcludedPermissions = [
             'user.delete', // Cannot delete users.
@@ -216,7 +216,7 @@ class RolesService
         $adminPermissions = array_diff($adminPermissions, $adminExcludedPermissions);
         $roles['admin'] = $this->createRole('Admin', $adminPermissions);
 
-        // 3. Editor role - can manage content but not users/settings
+        // 3. Editor role - can manage content but not users/settings.
         $editorPermissions = [
             'dashboard.view',
             // Blog permissions
@@ -233,7 +233,7 @@ class RolesService
 
         $roles['editor'] = $this->createRole('Editor', $editorPermissions);
 
-        // 4. Subscriber role - basic user role
+        // 4. Subscriber role - basic user role.
         $subscriberPermissions = [
             'dashboard.view',
             'profile.view',
@@ -263,8 +263,8 @@ class RolesService
         $roleName = strtolower($roleName);
 
         switch ($roleName) {
-            case 'superadmin':
-                // All permissions
+            case 'Superadmin':
+                // All permissions.
                 $allPermissionNames = [];
                 foreach ($this->permissionService->getAllPermissions() as $group) {
                     foreach ($group['permissions'] as $permission) {
@@ -274,8 +274,8 @@ class RolesService
 
                 return $allPermissionNames;
 
-            case 'admin':
-                // All except some critical permissions
+            case 'Admin':
+                // All except some critical permissions.
                 $adminExcludedPermissions = [
                     'user.delete',
                 ];
@@ -288,7 +288,7 @@ class RolesService
 
                 return array_diff($allPermissionNames, $adminExcludedPermissions);
 
-            case 'editor':
+            case 'Editor':
                 return [
                     'dashboard.view',
                     'blog.create',
@@ -306,8 +306,8 @@ class RolesService
                     'term.create',
                 ];
 
-            case 'subscriber':
-            case 'contact ':
+            case 'Subscriber':
+            case 'Contact':
                 return [
                     'dashboard.view',
                     'profile.view',

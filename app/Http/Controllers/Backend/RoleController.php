@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backend;
 
-use App\Enums\ActionType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\StoreRoleRequest;
 use App\Http\Requests\Role\UpdateRoleRequest;
@@ -13,7 +12,7 @@ use App\Services\RolesService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class RoleController extends Controller
 {
@@ -27,34 +26,22 @@ class RoleController extends Controller
     {
         $this->authorize('viewAny', Role::class);
 
-        $perPage = config('settings.default_pagination') ?? 10;
-        $search = request()->input('search') !== '' ? request()->input('search') : null;
+        $this->setBreadcrumbTitle(__('Roles'));
 
-        return view('backend.pages.roles.index', [
-            'roles' => $this->rolesService->getPaginatedRolesWithUserCount($search, intval($perPage)),
-            'breadcrumbs' => [
-                'title' => __('Roles'),
-            ],
-        ]);
+        return $this->renderViewWithBreadcrumbs('backend.pages.roles.index');
     }
 
     public function create(): Renderable
     {
         $this->authorize('create', Role::class);
 
-        return view('backend.pages.roles.create', [
+        $this->setBreadcrumbTitle(__('New Role'))
+            ->addBreadcrumbItem(__('Roles'), route('admin.roles.index'));
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.roles.create', [
             'roleService' => $this->rolesService,
             'all_permissions' => $this->permissionService->getAllPermissionModels(),
             'permission_groups' => $this->permissionService->getDatabasePermissionGroups(),
-            'breadcrumbs' => [
-                'title' => __('New Role'),
-                'items' => [
-                    [
-                        'label' => __('Roles'),
-                        'url' => route('admin.roles.index'),
-                    ],
-                ],
-            ],
         ]);
     }
 
@@ -65,8 +52,6 @@ class RoleController extends Controller
         $role = $this->rolesService->createRole($request->name, $request->input('permissions', []));
 
         session()->flash('success', __('Role has been created.'));
-
-        $this->storeActionLog(ActionType::CREATED, ['role' => $role]);
 
         return redirect()->route('admin.roles.index');
     }
@@ -82,20 +67,14 @@ class RoleController extends Controller
 
         $this->authorize('update', $role);
 
-        return view('backend.pages.roles.edit', [
+        $this->setBreadcrumbTitle(__('Edit Role'))
+            ->addBreadcrumbItem(__('Roles'), route('admin.roles.index'));
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.roles.edit', [
             'role' => $role,
             'roleService' => $this->rolesService,
             'all_permissions' => $this->permissionService->getAllPermissionModels(),
             'permission_groups' => $this->permissionService->getDatabasePermissionGroups(),
-            'breadcrumbs' => [
-                'title' => __('Edit Role'),
-                'items' => [
-                    [
-                        'label' => __('Roles'),
-                        'url' => route('admin.roles.index'),
-                    ],
-                ],
-            ],
         ]);
     }
 
@@ -119,7 +98,6 @@ class RoleController extends Controller
         $role = $this->rolesService->updateRole($role, $request->name, $request->input('permissions', []));
 
         session()->flash('success', __('Role has been updated.'));
-        $this->storeActionLog(ActionType::UPDATED, ['role' => $role]);
 
         return back();
     }
@@ -135,14 +113,14 @@ class RoleController extends Controller
         }
 
         // Check if this is the Superadmin role in demo mode - return 403 directly
-        if (config('app.demo_mode') && $role->name === 'Superadmin') {
+        if (config('app.demo_mode') && $role->name === Role::SUPERADMIN) {
             abort(403, 'Cannot delete Superadmin role in demo mode.');
         }
 
         $this->authorize('delete', $role);
 
         $this->rolesService->deleteRole($role);
-        $this->storeActionLog(ActionType::DELETED, ['role' => $role]);
+
         session()->flash('success', __('Role has been deleted.'));
 
         return redirect()->route('admin.roles.index');
@@ -172,12 +150,11 @@ class RoleController extends Controller
             }
 
             // Skip Superadmin role.
-            if ($role->name === 'Superadmin') {
+            if ($role->name === Role::SUPERADMIN) {
                 continue;
             }
 
             $this->rolesService->deleteRole($role);
-            $this->storeActionLog(ActionType::DELETED, ['role' => $role]);
 
             $deletedCount++;
         }

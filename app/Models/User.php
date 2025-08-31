@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Notifications\AdminResetPasswordNotification;
 use App\Concerns\AuthorizationChecker;
-use App\Concerns\QueryBuilderTrait;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Notifications\ResetPassword as DefaultResetPassword;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -25,7 +24,6 @@ class User extends Authenticatable
     use HasFactory;
     use HasRoles;
     use Notifiable;
-    use QueryBuilderTrait;
 
     /**
      * The attributes that are mass assignable.

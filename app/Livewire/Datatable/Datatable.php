@@ -212,7 +212,7 @@ abstract class Datatable extends Component
     protected function getPaginatedData($query)
     {
         $paginationUi = $this->getSettingsPaginatorUi();
-        $perPage = $this->perPage == __('All') ? 999999 : (int)$this->perPage;
+        $perPage = $this->perPage == __('All') ? 999999 : (int) $this->perPage;
 
         switch ($paginationUi) {
             case 'cursor':

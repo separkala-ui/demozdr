@@ -230,11 +230,11 @@
                             <div class="flex items-center justify-center relative" x-data="{ open: false }">
                                 <button
                                     @click="open = !open"
-                                    class="btn-secondary flex items-center justify-center gap-2"
+                                    class="btn-default flex items-center justify-center gap-2"
                                     type="button"
                                 >
                                     @if($filter['icon'] ?? false)
-                                        <iconify-icon icon="{{ $filter['icon'] }}"></iconify-icon>
+                                        <iconify-icon icon="{{ $filter['icon'] ?? '' }}"></iconify-icon>
                                     @endif
 
                                     {{ $filter['filterLabel'] }}

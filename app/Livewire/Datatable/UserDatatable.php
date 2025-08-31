@@ -39,7 +39,7 @@ class UserDatatable extends Datatable
                 'id' => 'role',
                 'label' => __('Role'),
                 'filterLabel' => __('Filter by Role'),
-                'icon' => '',
+                'icon' => 'lucide:sliders',
                 'allLabel' => __('All Roles'),
                 'options' => app(RolesService::class)->getRolesDropdown(),
                 'selected' => $this->role,
