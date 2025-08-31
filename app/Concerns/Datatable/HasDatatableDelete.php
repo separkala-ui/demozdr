@@ -4,28 +4,80 @@ declare(strict_types=1);
 
 namespace App\Concerns\Datatable;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 trait HasDatatableDelete
 {
-    public bool $enableLivewireBulkDelete = true;
+    public bool $enableLivewireDelete = true;
 
     public function getBulkDeleteAction(): array
     {
-        if ($this->enableLivewireBulkDelete) {
-            return [
-                'url' => '', // No need to specify a URL for Livewire bulk delete.
-                'method' => 'DELETE',
-            ];
-        }
-
         return [
-            'url' => route('admin.' . Str::lower($this->getModelNamePlural()) . '.bulk-delete'),
+            'url' => $this->enableLivewireDelete ? '' : route('admin.' . Str::lower($this->getModelNamePlural()) . '.bulk-delete'),
             'method' => 'DELETE',
         ];
     }
 
-    public function bulkDelete()
+    /**
+     * Get the delete action config for a single item.
+     */
+    public function getDeleteAction(int $id): array
+    {
+        return [
+            'url' => $this->enableLivewireDelete ? '' : route('admin.' . Str::lower($this->getModelNamePlural()) . '.destroy', $id),
+            'method' => 'DELETE',
+            'livewire' => $this->enableLivewireDelete,
+            'id' => $id,
+        ];
+    }
+
+    /**
+     * Livewire method to delete a single item.
+     */
+    public function deleteItem($id): void
+    {
+        if (empty($id)) {
+            $this->dispatch('notify', [
+                'variant' => 'error',
+                'title' => __('Delete Failed'),
+                'message' => __('No item selected for deletion.'),
+            ]);
+            return;
+        }
+
+        $modelClass = $this->getModelClass();
+        $item = $modelClass::find($id);
+        if (!$item) {
+            $this->dispatch('notify', [
+                'variant' => 'error',
+                'title' => __('Delete Failed'),
+                'message' => __('Item not found.'),
+            ]);
+            return;
+        }
+
+        // Optionally allow child to override deletion logic.
+        try {
+            $this->handleRowDelete($item);
+
+            $this->dispatch('notify', [
+                'variant' => 'success',
+                'title' => __('Delete Successful'),
+                'message' => __('Item deleted successfully.'),
+            ]);
+        } catch (\Exception $exception) {
+            $this->dispatch('notify', [
+                'variant' => 'error',
+                'title' => __('Delete Failed'),
+                'message' => __($exception->getMessage()),
+            ]);
+        }
+
+        $this->resetPage();
+    }
+
+    public function bulkDelete(): void
     {
         $ids = $this->selectedItems;
         if (empty($ids)) {
@@ -69,18 +121,27 @@ trait HasDatatableDelete
         $this->resetPage();
     }
 
-    /**
-     * Default bulk delete handler. Override in child for custom logic.
-     */
     protected function handleBulkDelete(array $ids): int
     {
         $modelClass = $this->getModelClass();
         $items = $modelClass::whereIn('id', $ids)->get();
         $deletedCount = 0;
+
         foreach ($items as $item) {
+            $this->authorize('delete', $item);
+
             $item->delete();
+
             $deletedCount++;
         }
+
         return $deletedCount;
+    }
+
+    protected function handleRowDelete(Model $item): bool
+    {
+        $this->authorize('delete', $item);
+
+        return $item->delete();
     }
 }

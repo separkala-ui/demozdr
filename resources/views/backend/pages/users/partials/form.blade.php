@@ -107,7 +107,7 @@
             </div>
             <div>
                 <label for="last_name" class="form-label">{{ $lastNameLabel }}</label>
-                <input type="text" name="last_name" id="last_name" required
+                <input type="text" name="last_name" id="last_name"
                     value="{{ old('last_name', $user?->last_name) }}"
                     placeholder="{{ __('Enter Last Name') }}"
                     class="form-control">

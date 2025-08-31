@@ -2,6 +2,7 @@
     :label="$this->actionColumnLabel"
     :show-label="$this->showActionColumnLabel"
     :icon="$this->actionColumnIcon"
+    :deleteAction="$this->getDeleteAction($item->id)"
     align="right"
 >
     {!! $this->renderBeforeActionView($item) !!}
@@ -36,16 +37,28 @@
                 class="text-red-600 dark:text-red-400"
             />
 
-            <x-modals.confirm-delete
-                id="delete-modal-{{ $item->id }}"
-                title="{{ __('Delete :model', ['model' => $this->getModelNameSingular()]) }}"
-                content="{{ __('Are you sure you want to delete this :model?', ['model' => $this->getModelNameSingular()]) }}"
-                formId="delete-form-{{ $item->id }}"
-                formAction="{{ route($this->getRoutes()['delete'] ?? '', $item->id) }}"
-                modalTrigger="deleteModalOpen"
-                cancelButtonText="{{ __('No, cancel') }}"
-                confirmButtonText="{{ __('Yes, Confirm') }}"
-            />
+            @if($deleteAction['livewire'] ?? false)
+                <x-modals.confirm-delete
+                    id="delete-modal-{{ $item->id }}"
+                    title="{{ __('Delete :model', ['model' => $this->getModelNameSingular()]) }}"
+                    content="{{ __('Are you sure you want to delete this :model?', ['model' => $this->getModelNameSingular()]) }}"
+                    :wireClick="'deleteItem(' . $item->id . ')'"
+                    modalTrigger="deleteModalOpen"
+                    cancelButtonText="{{ __('No, cancel') }}"
+                    confirmButtonText="{{ __('Yes, Confirm') }}"
+                />
+            @else
+                <x-modals.confirm-delete
+                    id="delete-modal-{{ $item->id }}"
+                    title="{{ __('Delete :model', ['model' => $this->getModelNameSingular()]) }}"
+                    content="{{ __('Are you sure you want to delete this :model?', ['model' => $this->getModelNameSingular()]) }}"
+                    formId="delete-form-{{ $item->id }}"
+                    formAction="{{ $deleteAction['url'] ?? route($this->getRoutes()['delete'] ?? '', $item->id) }}"
+                    modalTrigger="deleteModalOpen"
+                    cancelButtonText="{{ __('No, cancel') }}"
+                    confirmButtonText="{{ __('Yes, Confirm') }}"
+                />
+            @endif
         </div>
     @endif
 

@@ -9,6 +9,11 @@ class Role extends SpatieRole
 {
     use QueryBuilderTrait;
 
+    public const SUPERADMIN = 'Superadmin';
+    public const EDITOR = 'Editor';
+    public const ADMIN = 'Admin';
+    public const SUBSCRIBER = 'Subscriber';
+
     /**
      * Get searchable columns for the model.
      */

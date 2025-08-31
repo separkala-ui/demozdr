@@ -172,7 +172,7 @@ abstract class Datatable extends Component
         ];
 
         // Exclude the disabled routes.
-        if (!empty($this->disabledRoutes)) {
+        if (! empty($this->disabledRoutes)) {
             foreach ($this->disabledRoutes as $disabledRoute) {
                 unset($routes[$disabledRoute]);
             }
@@ -232,7 +232,7 @@ abstract class Datatable extends Component
         }
 
         foreach ($this->filters as $filter) {
-            if (!empty($filter['selected'])) {
+            if (! empty($filter['selected'])) {
                 $query->where($filter['id'], $filter['selected']);
             }
         }
@@ -263,7 +263,7 @@ abstract class Datatable extends Component
 
     public function renderCreatedAtColumn($item): string
     {
-        if (!array_key_exists('created_at', $item->getAttributes()) || !$item->created_at) {
+        if (! array_key_exists('created_at', $item->getAttributes()) || ! $item->created_at) {
             return '';
         }
         $short = $item->created_at->format('d M Y');
@@ -273,7 +273,7 @@ abstract class Datatable extends Component
 
     public function renderUpdatedAtColumn($item): string
     {
-        if (!array_key_exists('updated_at', $item->getAttributes()) || !$item->updated_at) {
+        if (! array_key_exists('updated_at', $item->getAttributes()) || ! $item->updated_at) {
             return '';
         }
         $short = $item->updated_at->format('d M Y');

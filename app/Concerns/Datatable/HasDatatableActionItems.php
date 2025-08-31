@@ -61,6 +61,7 @@ trait HasDatatableActionItems
         return view('backend.livewire.datatable.action-buttons', [
             'item' => $item,
             'permissions' => $this->getActionCellPermissions($item),
+            'deleteAction' => method_exists($this, 'getDeleteAction') ? $this->getDeleteAction($item->id) : null,
         ]);
     }
 

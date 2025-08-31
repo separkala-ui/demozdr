@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Datatable;
 
+use App\Models\Role;
 use App\Services\RolesService;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -14,7 +16,6 @@ class UserDatatable extends Datatable
 {
     public string $role = '';
     public string $model = User::class;
-    public bool $enableLivewireBulkDelete = false; //  cause it needs to modify some more things.
     public array $disabledRoutes = ['view'];
     public function getSearchbarPlaceholder(): string
     {
@@ -133,7 +134,7 @@ class UserDatatable extends Datatable
 
     public function renderAfterActionEdit($user): string|Renderable
     {
-        if (! Auth::user()->can('user.login_as') || $user->id === Auth::id()) {
+        if (!Auth::user()->can('user.login_as') || $user->id === Auth::id()) {
             return '';
         }
 
@@ -142,17 +143,37 @@ class UserDatatable extends Datatable
 
     protected function handleBulkDelete(array $ids): int
     {
-        $ids = array_filter($ids, fn ($id) => $id != Auth::id()); // Prevent self-deletion.
+        $ids = array_filter($ids, fn($id) => $id != Auth::id()); // Prevent self-deletion.
         $users = User::whereIn('id', $ids)->get();
         $deletedCount = 0;
         foreach ($users as $user) {
-            if ($user->hasRole('superadmin')) {
+            if ($user->hasRole(Role::SUPERADMIN) || $user->id === Auth::id()) {
                 continue;
             }
+
+            $this->authorize('delete', $user);
+
             $user->delete();
             $deletedCount++;
         }
 
         return $deletedCount;
+    }
+
+    public function handleRowDelete(Model|User $user): bool
+    {
+        // Prevent Superadmin deletion.
+        if ($user->hasRole(Role::SUPERADMIN)) {
+            throw new \Exception(__('You cannot delete a :role account.', ['role' => Role::SUPERADMIN]));
+        }
+
+        // Prevent own account deletion.
+        if (Auth::id() === $user->id) {
+            throw new \Exception(__('You cannot delete your own account.'));
+        }
+
+        $this->authorize('delete', $user);
+
+        return $user->delete();
     }
 }
