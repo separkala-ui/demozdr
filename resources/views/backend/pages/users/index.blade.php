@@ -1,20 +1,14 @@
-@extends('backend.layouts.app')
-
-@section('title')
-   {{ $breadcrumbs['title'] }} | {{ config('app.name') }}
-@endsection
-
-@section('admin-content')
-<div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6" x-data="{ selectedUsers: [], selectAll: false, bulkDeleteModalOpen: false }">
-    <x-breadcrumbs :breadcrumbs="$breadcrumbs">
-        <x-slot name="title_after">
-            @if (request('role'))
-                <span class="badge">{{ ucfirst(request('role')) }}</span>
-            @endif
-        </x-slot>
-    </x-breadcrumbs>
+<x-layouts.backend-layout :breadcrumbs="$breadcrumbs">
+    <x-slot name="breadcrumbsData">
+        <x-breadcrumbs :breadcrumbs="$breadcrumbs">
+            <x-slot name="title_after">
+                @if (request('role'))
+                    <span class="badge">{{ ucfirst(request('role')) }}</span>
+                @endif
+            </x-slot>
+        </x-breadcrumbs>
+    </x-slot>
 
     {!! ld_apply_filters('users_after_breadcrumbs', '') !!}
     @livewire('datatable.user-datatable', ['lazy' => true])
-</div>
-@endsection
+</x-layouts.backend-layout>

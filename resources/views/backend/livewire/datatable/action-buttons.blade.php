@@ -1,10 +1,16 @@
-<x-buttons.action-buttons :label="__('Actions')" :show-label="false" align="right">
+<x-buttons.action-buttons
+    :label="$this->actionColumnLabel"
+    :show-label="$this->showActionColumnLabel"
+    :icon="$this->actionColumnIcon"
+    align="right"
+>
+    {!! $this->renderBeforeActionView($item) !!}
 
     @if ($this->getRoutes()['view'] ?? false && $this->getPermissions()['view'] ?? false)
         <x-buttons.action-item
             :href="route($this->getRoutes()['view'] ?? '', $item->id)"
-            icon="lucide:eye"
-            :label="__('View')"
+            :icon="$this->viewButtonIcon"
+            :label="$this->viewButtonLabel"
         />
     @endif
 
@@ -13,8 +19,8 @@
     @if (auth()->user()->canBeModified($item) && $this->getRoutes()['edit'] ?? false && $this->getPermissions()['edit'] ?? false)
         <x-buttons.action-item
             :href="route($this->getRoutes()['edit'] ?? '', $item->id)"
-            icon="lucide:pencil"
-            :label="__('Edit')"
+            :icon="$this->editButtonIcon"
+            :label="$this->editButtonLabel"
         />
     @endif
 
@@ -25,8 +31,8 @@
             <x-buttons.action-item
                 type="modal-trigger"
                 modal-target="deleteModalOpen"
-                icon="lucide:trash"
-                :label="__('Delete')"
+                :icon="$this->deleteButtonIcon"
+                :label="$this->deleteButtonLabel"
                 class="text-red-600 dark:text-red-400"
             />
 

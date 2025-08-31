@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Datatable;
 
+use App\Concerns\Datatable\HasDatatableActionItems;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,7 @@ use Illuminate\Support\Str;
 abstract class Datatable extends Component
 {
     use WithPagination;
+    use HasDatatableActionItems;
 
     public string $model = '';
     public string $search = '';
@@ -140,6 +142,7 @@ abstract class Datatable extends Component
     {
         $this->searchbarPlaceholder = $this->getSearchbarPlaceholder();
         $this->filters = $this->getFilters();
+        $this->setActionLabels();
         $this->newResourceLinkPermission = $this->getNewResourceLinkPermission();
         $this->newResourceLinkRouteName = $this->getNewResourceLinkRouteName();
         $this->newResourceLinkLabel = $this->getNewResourceLinkLabel();
@@ -324,55 +327,5 @@ abstract class Datatable extends Component
         $short = $item->updated_at->format('d M Y');
         $full = $item->updated_at->format('Y-m-d H:i:s');
         return '<span class="text-sm" title="' . e($full) . '">' . e($short) . '</span>';
-    }
-
-    public function getActionCellPermissions($item): array
-    {
-        return [
-            'edit' => Auth::user()->canBeModified($item, $this->getPermissions()['edit'] ?? ''),
-            'delete' => Auth::user()->canBeModified($item, $this->getPermissions()['delete'] ?? ''),
-        ];
-    }
-
-    public function showActionItems($item): bool
-    {
-        $permissions = $this->getActionCellPermissions($item);
-        $permissionsCheck = false;
-
-        // Add Or condition permission check.
-        foreach ($permissions as $key => $value) {
-            if ($value) {
-                $permissionsCheck = true;
-                break;
-            }
-        }
-        return $permissionsCheck;
-    }
-
-    public function renderActionsColumn($item): string|Renderable
-    {
-        if ($this->showActionItems($item) === false) {
-            return '';
-        }
-
-        return view('backend.livewire.datatable.action-buttons', [
-            'item' => $item,
-            'permissions' => $this->getActionCellPermissions($item),
-        ]);
-    }
-
-    public function renderAfterActionEdit($item): string|Renderable
-    {
-        return '';
-    }
-
-    public function renderAfterActionDelete($item): string|Renderable
-    {
-        return '';
-    }
-
-    public function renderAfterActionView($item): string|Renderable
-    {
-        return '';
     }
 }

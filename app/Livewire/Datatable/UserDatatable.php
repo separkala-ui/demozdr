@@ -113,12 +113,12 @@ class UserDatatable extends Datatable
         return $this->sortQuery($query);
     }
 
-    public function renderNameColumn($user): Renderable
+    public function renderNameColumn(User $user): Renderable
     {
         return view('backend.pages.users.partials.user-name', compact('user'));
     }
 
-    public function renderRolesColumn($user): Renderable
+    public function renderRolesColumn(User $user): Renderable
     {
         return view('backend.pages.users.partials.user-roles', compact('user'));
     }
