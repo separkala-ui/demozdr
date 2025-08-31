@@ -58,7 +58,7 @@ $tooltipBg = 'bg-gray-900 text-white dark:bg-gray-700 dark:text-gray-100';
         style="min-width: 160px;"
     >
         @if($title)
-            <span class="block font-semibold">{{ $title }}</span>
+            <span class="block text-sm">{{ $title }}</span>
         @endif
 
         @if($description)
