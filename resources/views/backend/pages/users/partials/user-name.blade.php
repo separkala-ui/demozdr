@@ -1,4 +1,4 @@
-<x-tooltip title="{{ __('Edit User') }}" position="top">
+<x-tooltip title="{{ auth()->user()->canBeModified($user) ? __('Edit User') : __('No permission to edit') }}" position="top">
     <a
         data-tooltip-target="tooltip-user-{{ $user->id }}"
         href="{{ auth()->user()->canBeModified($user) ? route('admin.users.edit', $user->id) : '#' }}"
