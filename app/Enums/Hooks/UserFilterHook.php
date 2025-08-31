@@ -6,14 +6,18 @@ namespace App\Enums\Hooks;
 
 enum UserFilterHook: string
 {
-    case STORE_BEFORE = 'filter_user_store_before';
-    case STORE_AFTER = 'filter_user_store_after';
+    case USER_CREATED_BEFORE = 'filter_user_created_before';
+    case USER_CREATED_AFTER = 'filter_user_created_after';
 
-    case EDIT_BEFORE = 'filter_user_edit_before';
-    case EDIT_PROFILE_BEFORE = 'filter_user_edit_profile_before';
-    case EDIT_AFTER = 'filter_user_edit_after';
-    case EDIT_PROFILE_AFTER = 'filter_user_edit_profile_after';
+    case USER_UPDATED_BEFORE = 'filter_user_updated_before';
+    case USER_UPDATED_AFTER = 'filter_user_updated_after';
 
-    case DELETE_BEFORE = 'filter_user_delete_before';
-    case DELETE_AFTER = 'filter_user_delete_after';
+    case USER_PROFILE_UPDATED_BEFORE = 'filter_user_profile_updated_before';
+    case USER_PROFILE_UPDATED_AFTER = 'filter_user_profile_updated_after';
+
+    case USER_DELETED_BEFORE = 'filter_user_deleted_before';
+    case USER_DELETED_AFTER = 'filter_user_deleted_after';
+
+    case USER_BULK_DELETED_BEFORE = 'filter_user_bulk_deleted_before';
+    case USER_BULK_DELETED_AFTER = 'filter_user_bulk_deleted_after';
 }

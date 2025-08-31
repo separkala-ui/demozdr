@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backend;
 
+use App\Enums\Hooks\UserActionHook;
+use App\Enums\Hooks\UserFilterHook;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -54,7 +56,19 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
 
-        $this->userService->createUserWithMetadata($request->validated(), $request);
+        $data = $this->addHooks(
+            $request->validated(),
+            UserActionHook::USER_CREATED_BEFORE,
+            UserFilterHook::USER_CREATED_BEFORE
+        );
+
+        $user = $this->userService->createUserWithMetadata($data, $request);
+
+        $user = $this->addHooks(
+            $user,
+            UserActionHook::USER_CREATED_AFTER,
+            UserFilterHook::USER_CREATED_AFTER
+        );
 
         session()->flash('success', __('User has been created.'));
 
@@ -81,7 +95,19 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $this->authorize('update', $user);
 
-        $user = $this->userService->updateUserWithMetadata($user, $request->validated(), $request);
+        $data = $this->addHooks(
+            $request->validated(),
+            UserActionHook::USER_UPDATED_BEFORE,
+            UserFilterHook::USER_UPDATED_BEFORE
+        );
+
+        $user = $this->userService->updateUserWithMetadata($user, $data, $request);
+
+        $user = $this->addHooks(
+            $user,
+            UserActionHook::USER_UPDATED_AFTER,
+            UserFilterHook::USER_UPDATED_AFTER
+        );
 
         session()->flash('success', __('User has been updated.'));
 
@@ -100,7 +126,19 @@ class UserController extends Controller
 
         $this->authorize('delete', $user);
 
+        $user = $this->addHooks(
+            $user,
+            UserActionHook::USER_DELETED_BEFORE,
+            UserFilterHook::USER_DELETED_BEFORE
+        );
+
         $user->delete();
+
+        $this->addHooks(
+            $user,
+            UserActionHook::USER_DELETED_AFTER,
+            UserFilterHook::USER_DELETED_AFTER
+        );
 
         session()->flash('success', __('User has been deleted.'));
 
@@ -130,7 +168,19 @@ class UserController extends Controller
             }
         }
 
+        $this->addHooks(
+            $ids,
+            UserActionHook::USER_BULK_DELETED_BEFORE,
+            UserFilterHook::USER_BULK_DELETED_BEFORE
+        );
+
         $deletedCount = $this->userService->bulkDeleteUsers($ids, Auth::id());
+
+        $this->addHooks(
+            $deletedCount,
+            UserActionHook::USER_BULK_DELETED_AFTER,
+            UserFilterHook::USER_BULK_DELETED_AFTER
+        );
 
         if ($deletedCount > 0) {
             session()->flash('success', __(':count users deleted successfully', ['count' => $deletedCount]));

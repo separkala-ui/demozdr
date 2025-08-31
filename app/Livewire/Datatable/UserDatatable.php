@@ -134,7 +134,7 @@ class UserDatatable extends Datatable
 
     public function renderAfterActionEdit($user): string|Renderable
     {
-        if (!Auth::user()->can('user.login_as') || $user->id === Auth::id()) {
+        if (! Auth::user()->can('user.login_as') || $user->id === Auth::id()) {
             return '';
         }
 
@@ -143,7 +143,7 @@ class UserDatatable extends Datatable
 
     protected function handleBulkDelete(array $ids): int
     {
-        $ids = array_filter($ids, fn($id) => $id != Auth::id()); // Prevent self-deletion.
+        $ids = array_filter($ids, fn ($id) => $id != Auth::id()); // Prevent self-deletion.
         $users = User::whereIn('id', $ids)->get();
         $deletedCount = 0;
         foreach ($users as $user) {
