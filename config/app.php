@@ -159,7 +159,6 @@ return [
 
     'skip_recaptcha_in_demo' => env('SKIP_RECAPTCHA_IN_DEMO', true),
 
-
     /*
     |--------------------------------------------------------------------------
     | Show demo component preview
@@ -171,7 +170,6 @@ return [
     */
 
     'show_demo_component_preview' => env('SHOW_DEMO_COMPONENT_PREVIEW', false),
-
 
     /*
     |--------------------------------------------------------------------------

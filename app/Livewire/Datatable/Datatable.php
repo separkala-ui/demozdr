@@ -7,7 +7,6 @@ namespace App\Livewire\Datatable;
 use App\Concerns\Datatable\HasDatatableActionItems;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\QueryBuilder\QueryBuilder;
