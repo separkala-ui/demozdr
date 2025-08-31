@@ -73,7 +73,7 @@ class RoleDatatable extends Datatable
 
     public function sortQuery(QueryBuilder $query): QueryBuilder|Builder
     {
-        if (!$this->sort) {
+        if (! $this->sort) {
             return $query;
         }
 
