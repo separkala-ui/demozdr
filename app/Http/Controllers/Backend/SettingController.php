@@ -15,7 +15,7 @@ use App\Services\SettingService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 
-class SettingsController extends Controller
+class SettingController extends Controller
 {
     public function __construct(
         private readonly SettingService $settingService,

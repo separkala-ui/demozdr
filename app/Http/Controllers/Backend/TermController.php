@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
@@ -10,7 +12,7 @@ use App\Services\Content\ContentService;
 use App\Services\TermService;
 use Illuminate\Http\Request;
 
-class TermsController extends Controller
+class TermController extends Controller
 {
     public function __construct(
         private readonly ContentService $contentService,

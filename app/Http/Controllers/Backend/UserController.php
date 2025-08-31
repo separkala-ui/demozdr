@@ -4,23 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backend;
 
-use App\Enums\ActionType;
-// use App\Enums\Hooks\UserHook;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
+use App\Http\Requests\Common\BulkDeleteRequest;
 use App\Models\User;
 use App\Services\LanguageService;
 use App\Services\RolesService;
 use App\Services\TimezoneService;
 use App\Services\UserService;
-use App\Support\Facades\Hook;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class UsersController extends Controller
+class UserController extends Controller
 {
     public function __construct(
         private readonly UserService $userService,
@@ -57,9 +54,7 @@ class UsersController extends Controller
     {
         $this->authorize('create', User::class);
 
-        $user = $this->userService->createUserWithMetadata($request->validated(), $request);
-
-        $this->storeActionLog(ActionType::CREATED, ['user' => $user]);
+        $this->userService->createUserWithMetadata($request->validated(), $request);
 
         session()->flash('success', __('User has been created.'));
 
@@ -88,8 +83,6 @@ class UsersController extends Controller
 
         $user = $this->userService->updateUserWithMetadata($user, $request->validated(), $request);
 
-        $this->storeActionLog(ActionType::UPDATED, ['user' => $user]);
-
         session()->flash('success', __('User has been updated.'));
 
         return back();
@@ -111,16 +104,14 @@ class UsersController extends Controller
 
         session()->flash('success', __('User has been deleted.'));
 
-        $this->storeActionLog(ActionType::DELETED, ['user' => $user]);
-
         return back();
     }
 
-    public function bulkDelete(Request $request): RedirectResponse
+    public function bulkDelete(BulkDeleteRequest $request): RedirectResponse
     {
         $this->authorize('bulkDelete', User::class);
 
-        $ids = $request->input('ids', []);
+        $ids = $request->validated('ids');
 
         if (empty($ids)) {
             return redirect()->route('admin.users.index')
@@ -139,20 +130,7 @@ class UsersController extends Controller
             }
         }
 
-        $users = User::whereIn('id', $ids)->get();
-        $deletedCount = 0;
-
-        foreach ($users as $user) {
-            if ($user->hasRole('superadmin')) {
-                continue;
-            }
-
-            $user->delete();
-
-            $this->storeActionLog(ActionType::DELETED, ['user' => $user]);
-
-            $deletedCount++;
-        }
+        $deletedCount = $this->userService->bulkDeleteUsers($ids, Auth::id());
 
         if ($deletedCount > 0) {
             session()->flash('success', __(':count users deleted successfully', ['count' => $deletedCount]));

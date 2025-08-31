@@ -11,7 +11,7 @@ use App\Services\Modules\ModuleService;
 use Illuminate\Http\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ModulesController extends Controller
+class ModuleController extends Controller
 {
     public function __construct(private readonly ModuleService $moduleService)
     {

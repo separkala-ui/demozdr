@@ -15,7 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
-class RolesController extends Controller
+class RoleController extends Controller
 {
     public function __construct(
         private readonly RolesService $rolesService,

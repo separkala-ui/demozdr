@@ -184,7 +184,7 @@ namespace App\Http\Requests\Post;
    - Variables: Use camelCase for variable names (e.g., `$userData`).
    - Constants: Use UPPER_SNAKE_CASE for constants (e.g., `MAX_USERS`).
    - Exceptions: Use PascalCase with `Exception` suffix (e.g., `ModuleException`).
-   - Traits, Models, Controllers: Plural, PascalCase (e.g., `UsersController`, `Post`, `HasRolesTrait`).
+   - Traits, Models, Controllers: Singular, PascalCase (e.g., `UserController`, `Post`, `HasRolesTrait`).
    - Services: Singular with Service suffix, PascalCase (e.g., `UserService`).
    - Database: Use snake_case for tables and columns.
 

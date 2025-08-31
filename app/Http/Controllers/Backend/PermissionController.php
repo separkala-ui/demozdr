@@ -9,7 +9,7 @@ use App\Services\PermissionService;
 use Illuminate\Contracts\Support\Renderable;
 use Spatie\Permission\Models\Permission;
 
-class PermissionsController extends Controller
+class PermissionController extends Controller
 {
     public function __construct(
         private readonly PermissionService $permissionService

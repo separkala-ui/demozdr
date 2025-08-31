@@ -22,7 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-class PostsController extends Controller
+class PostController extends Controller
 {
     public function __construct(
         private readonly ContentService $contentService,

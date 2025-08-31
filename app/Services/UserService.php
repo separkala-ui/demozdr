@@ -259,4 +259,27 @@ class UserService
             ['meta_value', 'type', 'updated_at'] // Columns to update
         );
     }
+
+    /**
+     * Bulk delete users by IDs, skipping superadmin and current user.
+     * Returns the number of users deleted.
+     */
+    public function bulkDeleteUsers(array $ids, ?int $currentUserId = null): int
+    {
+        $users = User::whereIn('id', $ids)->get();
+        $deletedCount = 0;
+
+        foreach ($users as $user) {
+            if ($user->hasRole('superadmin')) {
+                continue;
+            }
+            if ($currentUserId && $user->id == $currentUserId) {
+                continue;
+            }
+            $user->delete();
+            $deletedCount++;
+        }
+
+        return $deletedCount;
+    }
 }

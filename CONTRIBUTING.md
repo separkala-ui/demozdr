@@ -69,7 +69,7 @@ When contributing code to Lara Dashboard, please follow these guidelines:
    - Prefer Tailwind classes over custom CSS
 
 3. **Naming Conventions**
-   - Controllers: Plural, PascalCase (e.g., `UsersController`)
+   - Controllers: Singular, PascalCase (e.g., `UserController`)
    - Models: Singular, PascalCase (e.g., `User`)
    - Services: Singular with Service suffix, PascalCase (e.g., `UserService`)
    - Database: Use snake_case for tables and columns
