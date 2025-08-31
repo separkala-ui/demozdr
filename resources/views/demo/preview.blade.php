@@ -94,7 +94,8 @@
                         <li><a href="#alerts-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:alert-circle" class="inline-block mr-2"></iconify-icon> {{ __('Alerts') }}</a></li>
                         <li><a href="#buttons-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:mouse-pointer-click" class="inline-block mr-2"></iconify-icon> {{ __('Buttons') }}</a></li>
                         <li><a href="#media-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:image" class="inline-block mr-2"></iconify-icon> {{ __('Media') }}</a></li>
-                        <li><a href="#card-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:image" class="inline-block mr-2"></iconify-icon> {{ __('Card') }}</a></li>
+                        <li><a href="#card-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:square" class="inline-block mr-2"></iconify-icon> {{ __('Card') }}</a></li>
+                        <li><a href="#datatable-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:table" class="inline-block mr-2"></iconify-icon> {{ __('Datatable') }}</a></li>
                     </ul>
                 </nav>
             </aside>
@@ -118,6 +119,9 @@
                 <section id="card-demo" class="scroll-mt-20 mt-10">
                     @include('demo.card')
                 </section>
+                <section id="datatable-demo" class="scroll-mt-20 mt-10">
+                    @include('demo.datatable')
+                </section>
             </div>
         </div>
 
@@ -135,7 +139,7 @@
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const sectionIds = ['forms-demo', 'dropdown-demo', 'alerts-demo', 'buttons-demo', 'media-demo', 'card-demo', 'drawer-demo'];
+            const sectionIds = ['forms-demo', 'dropdown-demo', 'alerts-demo', 'buttons-demo', 'media-demo', 'card-demo', 'datatable-demo', 'drawer-demo'];
             const sidebarLinks = Array.from(document.querySelectorAll('.sidebar-link'));
 
             function setActiveSidebar(hash) {

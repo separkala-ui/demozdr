@@ -11,6 +11,7 @@
     'customFilters' => null,
     'enableBulkActions' => true,
     'customBulkActions' => null,
+    'direction' => 'desc',
 
     'enableNewResourceLink' => true,
     'newResourceLinkPermission' => '',
@@ -310,7 +311,7 @@
 
                         @foreach($table['headers'] ?? [] as $header)
                         <th
-                            @if($header['width']) width="{{ $header['width'] }}" @endif
+                            @isset($header['width']) width="{{ $header['width'] }}" @endisset
                             class="table-thead-th {{ count($table['headers']) - 1 === $loop->index ? 'table-thead-th-last' : '' }}"
                         >
                             <div class="flex items-center">
@@ -328,9 +329,9 @@
                                     @endif
                                     class="ml-1 focus:outline-none"
                                 >
-                                    @if($sort === $header['sortBy'] && $direction === 'asc')
+                                    @if(isset($header['sortBy']) && $sort === $header['sortBy'] && $direction === 'asc')
                                         <iconify-icon icon="lucide:sort-asc" class="text-primary"></iconify-icon>
-                                    @elseif($sort === $header['sortBy'] && $direction === 'desc')
+                                    @elseif(isset($header['sortBy']) && $sort === $header['sortBy'] && $direction === 'desc')
                                         <iconify-icon icon="lucide:sort-desc" class="text-primary"></iconify-icon>
                                     @else
                                         <iconify-icon icon="lucide:arrow-up-down" class="text-gray-400"></iconify-icon>
@@ -370,20 +371,22 @@
                             @foreach($table['headers'] ?? [] as $header)
                                 <td class="table-td">
                                     @php
-                                        $content = null;
-                                        // Convert snake_case to PascalCase for method name discovery
                                         $pascalCaseId = collect(explode('_', $header['id']))->map(fn($part) => ucfirst($part))->implode('');
-                                        $autoDiscoverableMethodName = 'render' . $pascalCaseId . 'Column';
+                                        $content = isset($data[$loop->index][$header['id']]) ? $data[$loop->index][$header['id']] : null;
+                                        if ($enableLivewire){
+                                            // Convert snake_case to PascalCase for method name discovery
+                                            $autoDiscoverableMethodName = 'render' . $pascalCaseId . 'Column';
 
-                                        // Custom Blade include/component.
-                                        if (isset($header['renderContent']) && is_string($header['renderContent'])) {
-                                            $content = $this->{$header['renderContent']}($item, $header);
-                                        } elseif (isset($header['renderRawContent'])) {
-                                            $content = $header['renderRawContent'];
-                                        } elseif (method_exists($this, $autoDiscoverableMethodName)) { // Auto-discovered method - `render[Id]Cell()`
-                                            $content = $this->{$autoDiscoverableMethodName}($item, $header);
-                                        } elseif (isset($item->{$header['id']})) { // model property
-                                            $content = $item->{$header['id']} ?? '';
+                                            // Custom Blade include/component.
+                                            if (isset($header['renderContent']) && is_string($header['renderContent'])) {
+                                                $content = $this->{$header['renderContent']}($item, $header);
+                                            } elseif (isset($header['renderRawContent'])) {
+                                                $content = $header['renderRawContent'];
+                                            } elseif (method_exists($this, $autoDiscoverableMethodName)) { // Auto-discovered method - `render[Id]Cell()`
+                                                $content = $this->{$autoDiscoverableMethodName}($item, $header);
+                                            } elseif (isset($item->{$header['id']})) { // model property
+                                                $content = $item->{$header['id']} ?? '';
+                                            }
                                         }
                                     @endphp
                                     {!! $content !!}
