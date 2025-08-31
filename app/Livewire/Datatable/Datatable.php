@@ -39,6 +39,12 @@ abstract class Datatable extends Component
     public array $permissions = [];
     public array $selectedItems = [];
     public array $disabledRoutes = [];
+    public bool $enableCheckbox = true;
+    public bool $enablePagination = true;
+    public string $noResultsMessage = '';
+    public string $customNoResultsMessage = '';
+    public array $headers = [];
+
     public array $queryString = [
         'search' => ['except' => ''],
         'sort' => ['except' => 'created_at'],
@@ -51,8 +57,6 @@ abstract class Datatable extends Component
     {
         $this->resetPage();
     }
-
-    public array $table = [];
 
     public function updatingSearch()
     {
@@ -92,9 +96,26 @@ abstract class Datatable extends Component
         $this->newResourceLinkRouteName = $this->getNewResourceLinkRouteName();
         $this->newResourceLinkLabel = $this->getNewResourceLinkLabel();
         $this->perPageOptions = $this->getPerPageOptions();
-        $this->table = $this->getTable();
+        $this->headers = $this->getHeaders();
+        $this->noResultsMessage = $this->getNoResultsMessage();
+        $this->customNoResultsMessage = $this->getCustomNoResultsMessage();
         $this->perPage = request()->per_page ?? config('settings.default_pagination', 10);
         $this->paginateOnEachSlide = 0;
+    }
+
+    protected function getHeaders(): array
+    {
+        return $this->headers ?? [];
+    }
+
+    protected function getNoResultsMessage(): string
+    {
+        return $this->noResultsMessage ?? __('No :items found.', ['items' => $this->getModelNamePlural()]);
+    }
+
+    protected function getCustomNoResultsMessage(): string
+    {
+        return $this->customNoResultsMessage ?? '';
     }
 
     protected function getModelClass(): string
@@ -181,11 +202,6 @@ abstract class Datatable extends Component
         return $routes;
     }
 
-    protected function getTable(): array
-    {
-        return [];
-    }
-
     protected function getSettingsPaginatorUi(): string
     {
         return config('settings.default_pagination_ui', 'default');
@@ -223,7 +239,7 @@ abstract class Datatable extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                foreach ($this->table['headers'] as $header) {
+                foreach ($this->headers as $header) {
                     if (isset($header['searchable']) && $header['searchable'] === true) {
                         $q->orWhere($header['sortBy'] ?? $header['id'], 'like', '%' . $this->search . '%');
                     }
@@ -246,10 +262,10 @@ abstract class Datatable extends Component
 
     public function render(): Renderable
     {
-        $this->table = $this->getTable();
+        $this->headers = $this->getHeaders();
 
         return view('backend.livewire.datatable.datatable', [
-            'table' => $this->table,
+            'headers' => $this->headers,
             'data' => $this->getData(),
             'perPage' => $this->perPage,
             'perPageOptions' => $this->perPageOptions,
@@ -266,8 +282,10 @@ abstract class Datatable extends Component
         if (! array_key_exists('created_at', $item->getAttributes()) || ! $item->created_at) {
             return '';
         }
+
         $short = $item->created_at->format('d M Y');
         $full = $item->created_at->format('Y-m-d H:i:s');
+
         return '<span class="text-sm" title="' . e($full) . '">' . e($short) . '</span>';
     }
 
@@ -276,6 +294,7 @@ abstract class Datatable extends Component
         if (! array_key_exists('updated_at', $item->getAttributes()) || ! $item->updated_at) {
             return '';
         }
+
         $short = $item->updated_at->format('d M Y');
         $full = $item->updated_at->format('Y-m-d H:i:s');
         return '<span class="text-sm" title="' . e($full) . '">' . e($short) . '</span>';

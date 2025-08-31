@@ -21,13 +21,11 @@
     'customNewResourceLink' => null,
 
     'data' => [],
-    'table' => [
-        'enableCheckbox' => true,
-        'noResultsMessage' => __('No data found.'),
-        'enablePagination' => true,
-        'customNoResultsMessage' => null,
-        'headers' => []
-    ],
+    'enableCheckbox' => true,
+    'noResultsMessage' => __('No data found.'),
+    'customNoResultsMessage' => null,
+    'enablePagination' => true,
+    'headers' => [],
     'sort' => '',
     'perPage' => 10,
     'perPageOptions' => [10, 20, 50, 100, __('All')],
@@ -252,7 +250,7 @@
                                     <ul class="space-y-2">
                                         <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded"
                                             @if($enableLivewire)
-                                            wire:click="$set('{{ $filter['id'] }}', '')"
+                                                wire:click="$set('{{ $filter['id'] }}', ''); $dispatch('resetPage')"
                                             @endif
                                             @click="open = false"
                                         >
@@ -262,7 +260,7 @@
                                             <li
                                                 class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded {{ $filter['selected'] == $key ? 'bg-gray-200 dark:bg-gray-600 font-bold' : '' }}"
                                                 @if($enableLivewire)
-                                                    wire:click="$set('{{ $filter['id'] }}', '{{ $key }}')"
+                                                    wire:click="$set('{{ $filter['id'] }}', '{{ $key }}'); $dispatch('resetPage')"
                                                 @else
                                                     onclick="window.location.href = '{{ $filter['route'] }}?{{ $filter['id'] }}={{ $key }}';"
                                                 @endif
@@ -296,7 +294,7 @@
             <table id="dataTable" class="table">
                 <thead class="table-thead">
                     <tr class="table-tr">
-                        @if($table['enableCheckbox'] ?? true)
+                        @if($enableCheckbox ?? true)
                             <th width="3%" class="table-thead-th" wire:ignore>
                                 <div class="flex items-center">
                                     <input
@@ -309,10 +307,10 @@
                             </th>
                         @endif
 
-                        @foreach($table['headers'] ?? [] as $header)
+                        @foreach($headers ?? [] as $header)
                         <th
                             @isset($header['width']) width="{{ $header['width'] }}" @endisset
-                            class="table-thead-th {{ count($table['headers']) - 1 === $loop->index ? 'table-thead-th-last' : '' }}"
+                            class="table-thead-th {{ count($headers) - 1 === $loop->index ? 'table-thead-th-last' : '' }}"
                         >
                             <div class="flex items-center">
                                 {{ __($header['title']) }}
@@ -347,7 +345,7 @@
                 <tbody>
                     @forelse ($data as $item)
                         <tr class="{{ $loop->index + 1 != count($data) ?  'table-tr' : '' }}">
-                            @if($table['enableCheckbox'] ?? true)
+                            @if($enableCheckbox ?? true)
                                 <td class="table-td table-td-checkbox" wire:ignore>
                                     <input
                                         type="checkbox"
@@ -368,7 +366,7 @@
                                 </td>
                             @endif
 
-                            @foreach($table['headers'] ?? [] as $header)
+                            @foreach($headers ?? [] as $header)
                                 <td class="table-td">
                                     @php
                                         $pascalCaseId = collect(explode('_', $header['id']))->map(fn($part) => ucfirst($part))->implode('');
@@ -395,12 +393,12 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="{{ count($table['headers'] ?? []) + ($table['enableCheckbox'] ?? true ? 1 : 0) }}" class="text-center py-4">
+                            <td colspan="{{ count($headers ?? []) + ($enableCheckbox ?? true ? 1 : 0) }}" class="text-center py-4">
                                 <p class="text-gray-500 dark:text-gray-300">
-                                    @if($table['customNoResultsMessage'] ?? false)
-                                        {!! $table['customNoResultsMessage'] !!}
+                                    @if($customNoResultsMessage ?? false)
+                                        {!! $customNoResultsMessage !!}
                                     @else
-                                        {!! $table['noResultsMessage'] ?? __('No data found.') !!}
+                                        {!! $noResultsMessage ?? __('No data found.') !!}
                                     @endif
                                 </p>
                             </td>
@@ -409,7 +407,7 @@
                 </tbody>
             </table>
 
-            @if($table['enablePagination'] ?? true)
+            @if($enablePagination ?? true)
                 <div class="my-4 px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div class="flex items-center gap-2">
                         <label for="perPage" class="text-sm text-gray-600 dark:text-gray-300">{{ __('Per page') }}</label>

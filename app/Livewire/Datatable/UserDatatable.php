@@ -17,9 +17,15 @@ class UserDatatable extends Datatable
     public string $role = '';
     public string $model = User::class;
     public array $disabledRoutes = ['view'];
+
     public function getSearchbarPlaceholder(): string
     {
         return __('Search by name or email...');
+    }
+
+    public function updatingRole()
+    {
+        $this->resetPage();
     }
 
     public function mount(): void
@@ -46,47 +52,42 @@ class UserDatatable extends Datatable
         ];
     }
 
-    public function getTable(): array
+    protected function getHeaders(): array
     {
         return [
-            'enableCheckbox' => true,
-            'enablePagination' => true,
-            'noResultsMessage' => __('No users found.'),
-            'headers' => [
-                [
-                    'id' => 'name',
-                    'title' => __('Name'),
-                    'width' => null,
-                    'sortable' => true,
-                    'sortBy' => 'first_name',
-                ],
-                [
-                    'id' => 'email',
-                    'title' => __('Email'),
-                    'width' => null,
-                    'sortable' => true,
-                    'sortBy' => 'email',
-                ],
-                [
-                    'id' => 'roles',
-                    'title' => __('Roles'),
-                    'width' => null,
-                    'sortable' => false,
-                ],
-                [
-                    'id' => 'created_at',
-                    'title' => __('Created At'),
-                    'width' => null,
-                    'sortable' => true,
-                    'sortBy' => 'created_at',
-                ],
-                [
-                    'id' => 'actions',
-                    'title' => __('Actions'),
-                    'width' => null,
-                    'sortable' => false,
-                    'is_action' => true,
-                ],
+            [
+                'id' => 'name',
+                'title' => __('Name'),
+                'width' => null,
+                'sortable' => true,
+                'sortBy' => 'first_name',
+            ],
+            [
+                'id' => 'email',
+                'title' => __('Email'),
+                'width' => null,
+                'sortable' => true,
+                'sortBy' => 'email',
+            ],
+            [
+                'id' => 'roles',
+                'title' => __('Roles'),
+                'width' => null,
+                'sortable' => false,
+            ],
+            [
+                'id' => 'created_at',
+                'title' => __('Created At'),
+                'width' => null,
+                'sortable' => true,
+                'sortBy' => 'created_at',
+            ],
+            [
+                'id' => 'actions',
+                'title' => __('Actions'),
+                'width' => null,
+                'sortable' => false,
+                'is_action' => true,
             ],
         ];
     }
