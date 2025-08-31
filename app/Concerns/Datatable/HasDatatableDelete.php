@@ -48,7 +48,7 @@ trait HasDatatableDelete
 
         $modelClass = $this->getModelClass();
         $item = $modelClass::find($id);
-        if (!$item) {
+        if (! $item) {
             $this->dispatch('notify', [
                 'variant' => 'error',
                 'title' => __('Delete Failed'),
@@ -90,7 +90,7 @@ trait HasDatatableDelete
         }
 
         $bulkDeleteAction = $this->getBulkDeleteAction();
-        if (!empty($bulkDeleteAction['url'])) {
+        if (! empty($bulkDeleteAction['url'])) {
             // If a bulk delete route is defined, redirect or make an HTTP request (could be AJAX in JS, here just emit event)
             $this->dispatch('bulkDeleteRequest', [
                 'url' => $bulkDeleteAction['url'],

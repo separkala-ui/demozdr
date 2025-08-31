@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Contacts;
+namespace App\Contracts;
 
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
