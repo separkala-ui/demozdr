@@ -15,6 +15,10 @@ use Spatie\QueryBuilder\QueryBuilder;
 class UserDatatable extends Datatable
 {
     public string $role = '';
+    public array $queryString = [
+        ...parent::QUERY_STRING_DEFAULTS,
+        'role' => [],
+    ];
     public string $model = User::class;
     public array $disabledRoutes = ['view'];
 
@@ -26,15 +30,6 @@ class UserDatatable extends Datatable
     public function updatingRole()
     {
         $this->resetPage();
-    }
-
-    public function mount(): void
-    {
-        parent::mount();
-
-        $this->queryString = array_merge($this->queryString, [
-            'role' => [],
-        ]);
     }
 
     public function getFilters(): array

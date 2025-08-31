@@ -22,9 +22,9 @@ trait HasDatatableActionItems
     public function getActionCellPermissions($item): array
     {
         return [
-            'view' => Auth::user()->canBeModified($item, $this->getPermissions()['view'] ?? ''),
-            'edit' => Auth::user()->canBeModified($item, $this->getPermissions()['edit'] ?? ''),
-            'delete' => Auth::user()->canBeModified($item, $this->getPermissions()['delete'] ?? ''),
+            'view' => Auth::user()->can($this->getPermissions()['view'] ?? '', $item),
+            'edit' => Auth::user()->can($this->getPermissions()['edit'] ?? '', $item),
+            'delete' => Auth::user()->can($this->getPermissions()['delete'] ?? '', $item),
         ];
     }
 

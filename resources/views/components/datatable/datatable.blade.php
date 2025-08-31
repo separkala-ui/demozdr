@@ -345,7 +345,7 @@
                 <tbody>
                     @forelse ($data as $item)
                         <tr class="{{ $loop->index + 1 != count($data) ?  'table-tr' : '' }}">
-                            @if($enableCheckbox ?? true)
+                            @if($enableCheckbox ?? true && can('delete', $item))
                                 <td class="table-td table-td-checkbox" wire:ignore>
                                     <input
                                         type="checkbox"
@@ -361,7 +361,6 @@
                                             }
                                             updateSelectAll();
                                         "
-                                        {{ !auth()->user()->canBeModified($item, 'user.delete') ? 'disabled' : '' }}
                                     />
                                 </td>
                             @endif

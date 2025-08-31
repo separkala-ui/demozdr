@@ -45,13 +45,15 @@ abstract class Datatable extends Component
     public string $customNoResultsMessage = '';
     public array $headers = [];
 
-    public array $queryString = [
+    public const QUERY_STRING_DEFAULTS = [
         'search' => ['except' => ''],
         'sort' => ['except' => 'created_at'],
         'direction' => ['except' => 'asc'],
         'page' => ['except' => 1],
         'perPage' => ['except' => 10],
     ];
+
+    public array $queryString = self::QUERY_STRING_DEFAULTS;
 
     public function updatingPerPage()
     {

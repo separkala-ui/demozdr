@@ -161,15 +161,13 @@ class RolesService
             $page = request()->get('page', 1);
             $offset = ($page - 1) * $perPage;
 
-            $paginatedRoles = new \Illuminate\Pagination\LengthAwarePaginator(
+            return new \Illuminate\Pagination\LengthAwarePaginator(
                 $sortedRoles->slice($offset, $perPage)->values(),
                 $sortedRoles->count(),
                 $perPage,
                 $page,
                 ['path' => request()->url(), 'query' => request()->query()]
             );
-
-            return $paginatedRoles;
         }
 
         // For normal sorting by database columns
