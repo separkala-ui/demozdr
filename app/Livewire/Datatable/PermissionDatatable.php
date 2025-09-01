@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Livewire\Datatable;
 
 use App\Models\Permission;
-use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class PermissionDatatable extends Datatable
