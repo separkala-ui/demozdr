@@ -310,10 +310,11 @@
                         @foreach($headers ?? [] as $header)
                         <th
                             @isset($header['width']) width="{{ $header['width'] }}" @endisset
-                            class="table-thead-th {{ count($headers) - 1 === $loop->index ? 'table-thead-th-last' : '' }}"
+                            class="table-thead-th {{ count($headers) - 1 === $loop->index ? 'table-thead-th-last' : '' }} {{ isset($header['align']) ? 'text-' . $header['align'] : '' }}"
                         >
-                            <div class="flex items-center">
+                            <div class="flex w-full items-center {{ isset($header['align']) ? 'justify-' . ($header['align'] === 'right' ? 'end' : 'start') : '' }}">
                                 {{ __($header['title']) }}
+
                                 @if($header['sortable'] ?? false)
                                 <button
                                     @if($enableLivewire)
@@ -366,7 +367,7 @@
                             @endif
 
                             @foreach($headers ?? [] as $header)
-                                <td class="table-td">
+                                <td class="table-td {{ isset($header['align']) ? 'text-' . $header['align'] : '' }}">
                                     @php
                                         $pascalCaseId = collect(explode('_', $header['id']))->map(fn($part) => ucfirst($part))->implode('');
                                         $content = isset($data[$loop->index][$header['id']]) ? $data[$loop->index][$header['id']] : null;

@@ -96,6 +96,7 @@
                         <li><a href="#media-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:image" class="inline-block mr-2"></iconify-icon> {{ __('Media') }}</a></li>
                         <li><a href="#card-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:square" class="inline-block mr-2"></iconify-icon> {{ __('Card') }}</a></li>
                         <li><a href="#datatable-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:table" class="inline-block mr-2"></iconify-icon> {{ __('Datatable') }}</a></li>
+                        <li><a href="#modal-demo" class="sidebar-link flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"><iconify-icon icon="lucide:expand" class="inline-block mr-2"></iconify-icon> {{ __('Modal') }}</a></li>
                     </ul>
                 </nav>
             </aside>
@@ -122,6 +123,9 @@
                 <section id="datatable-demo" class="scroll-mt-20 mt-10">
                     @include('demo.datatable')
                 </section>
+                <section id="modal-demo" class="scroll-mt-20 mt-10">
+                    @include('demo.modal')
+                </section>
             </div>
         </div>
 
@@ -139,7 +143,7 @@
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const sectionIds = ['forms-demo', 'dropdown-demo', 'alerts-demo', 'buttons-demo', 'media-demo', 'card-demo', 'datatable-demo', 'drawer-demo'];
+            const sectionIds = ['forms-demo', 'dropdown-demo', 'alerts-demo', 'buttons-demo', 'media-demo', 'card-demo', 'datatable-demo', 'modal-demo', 'drawer-demo'];
             const sidebarLinks = Array.from(document.querySelectorAll('.sidebar-link'));
 
             function setActiveSidebar(hash) {
