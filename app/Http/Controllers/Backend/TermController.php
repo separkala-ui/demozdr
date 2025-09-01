@@ -31,15 +31,6 @@ class TermController extends Controller
             return redirect()->route('admin.posts.index')->with('error', __('Taxonomy not found'));
         }
 
-        // Prepare filters
-        $filters = [
-            'taxonomy' => $taxonomy,
-            'search' => $request->search,
-        ];
-
-        // Get terms with pagination using service
-        $terms = $this->termService->getTerms($filters);
-
         // Get parent terms for hierarchical taxonomies.
         $parentTerms = [];
         if ($taxonomyModel->hierarchical) {
@@ -48,18 +39,15 @@ class TermController extends Controller
                 ->get();
         }
 
-        // Get term being edited if exists
+        // Get term being edited if exists.
         $term = null;
         if ($request->has('edit') && is_numeric($request->edit)) {
             $term = Term::findOrFail($request->edit);
         }
 
-        return view('backend.pages.terms.index', compact('terms', 'taxonomy', 'taxonomyModel', 'parentTerms', 'term'))
-            ->with([
-                'breadcrumbs' => [
-                    'title' => $taxonomyModel->label,
-                ],
-            ]);
+        $this->setBreadcrumbTitle($taxonomyModel->label);
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.terms.index', compact('taxonomy', 'taxonomyModel', 'parentTerms', 'term'));
     }
 
     public function store(StoreTermRequest $request, string $taxonomy)
@@ -145,14 +133,14 @@ class TermController extends Controller
 
     public function edit(string $taxonomy, string $term)
     {
-        // Get taxonomy using service
+        // Get taxonomy using service.
         $taxonomyModel = $this->termService->getTaxonomy($taxonomy);
 
         if (! $taxonomyModel) {
             return redirect()->route('admin.posts.index')->with('error', __('Taxonomy not found'));
         }
 
-        // Get term using service
+        // Get term using service.
         $term = $this->termService->getTermById((int) $term, $taxonomy);
 
         $this->authorize('update', $term);
@@ -165,16 +153,10 @@ class TermController extends Controller
                 ->get();
         }
 
-        return view('backend.pages.terms.edit', compact('taxonomy', 'taxonomyModel', 'term', 'parentTerms'))
-            ->with('breadcrumbs', [
-                'title' => __('Edit :taxLabel', ['taxLabel' => $taxonomyModel->label_singular]),
-                'items' => [
-                    [
-                        'label' => $taxonomyModel->label,
-                        'url' => route('admin.terms.index', $taxonomy),
-                    ],
-                ],
-            ]);
+        $this->setBreadcrumbTitle(__('Edit :taxLabel', ['taxLabel' => $taxonomyModel->label_singular]))
+            ->addBreadcrumbItem($taxonomyModel->label, route('admin.terms.index', $taxonomy));
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.terms.edit', compact('taxonomy', 'taxonomyModel', 'term', 'parentTerms'));
     }
 
     /**

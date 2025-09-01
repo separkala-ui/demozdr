@@ -125,22 +125,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get searchable columns for the model.
-     */
-    protected function getSearchableColumns(): array
-    {
-        return ['first_name', 'last_name', 'email', 'username'];
-    }
-
-    /**
-     * Get columns that should be excluded from sorting.
-     */
-    protected function getExcludedSortColumns(): array
-    {
-        return [];
-    }
-
-    /**
      * Get the user's avatar media.
      */
     public function avatar(): BelongsTo

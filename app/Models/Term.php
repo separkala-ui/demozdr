@@ -31,11 +31,6 @@ class Term extends Model implements SpatieHasMedia
         'count',
     ];
 
-    protected function getSlugSourceField($model): string
-    {
-        return 'name';
-    }
-
     /**
      * Boot method to auto-generate slug.
      */
@@ -102,22 +97,6 @@ class Term extends Model implements SpatieHasMedia
     public function sortByPostsCount(Builder $query, string $direction = 'asc'): void
     {
         $query->withCount('posts')->orderBy('posts_count', $direction);
-    }
-
-    /**
-     * Get searchable columns for the model.
-     */
-    protected function getSearchableColumns(): array
-    {
-        return ['name', 'slug', 'description'];
-    }
-
-    /**
-     * Get columns that should be excluded from sorting.
-     */
-    protected function getExcludedSortColumns(): array
-    {
-        return ['description'];
     }
 
     /**

@@ -12,6 +12,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -195,6 +196,13 @@ abstract class Datatable extends Component
             'edit' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.edit',
             'delete' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.destroy',
         ];
+
+        // Remove routes if any of them doesn't exist.
+        foreach ($routes as $key => $route) {
+            if (! Route::has($route)) {
+                unset($routes[$key]);
+            }
+        }
 
         // Exclude the disabled routes.
         if (! empty($this->disabledRoutes)) {
