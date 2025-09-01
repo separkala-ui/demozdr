@@ -20,35 +20,22 @@ class PermissionController extends Controller
     {
         $this->authorize('viewAny', Permission::class);
 
-        $perPage = config('settings.default_pagination') ?? 10;
-        $search = request()->input('search') !== '' ? request()->input('search') : null;
+        $this->setBreadcrumbTitle(__('Permissions'));
 
-        return view('backend.pages.permissions.index', [
-            'permissions' => $this->permissionService->getPaginatedPermissionsWithRoleCount($search, intval($perPage)),
-            'breadcrumbs' => [
-                'title' => __('Permissions'),
-            ],
-        ]);
+        return $this->renderViewWithBreadcrumbs('backend.pages.permissions.index');
     }
 
     public function show(int $id): Renderable
     {
         $permission = Permission::findById($id);
         $this->authorize('view', $permission);
-        $roles = $this->permissionService->getRolesForPermission($permission);
 
-        return view('backend.pages.permissions.show', [
+        $this->setBreadcrumbTitle(__('Permission Details'))
+            ->addBreadcrumbItem(__('Permissions'), route('admin.permissions.index'));
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.permissions.show', [
             'permission' => $permission,
-            'roles' => $roles,
-            'breadcrumbs' => [
-                'title' => __('Permission Details'),
-                'items' => [
-                    [
-                        'label' => __('Permissions'),
-                        'url' => route('admin.permissions.index'),
-                    ],
-                ],
-            ],
+            'roles' => $this->permissionService->getRolesForPermission($permission),
         ]);
     }
 }

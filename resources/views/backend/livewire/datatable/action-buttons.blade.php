@@ -7,7 +7,7 @@
 >
     {!! $this->renderBeforeActionView($item) !!}
 
-    @if ($this->getRoutes()['view'] ?? false && $this->getPermissions()['view'] ?? false)
+    @if (isset($this->getRoutes()['view']) && $this->getRoutes()['view'] ?? false && $this->getPermissions()['view'] ?? false)
         <x-buttons.action-item
             :href="route($this->getRoutes()['view'] ?? '', $item->id)"
             :icon="$this->viewButtonIcon"
@@ -17,7 +17,7 @@
 
     {!! $this->renderAfterActionView($item) !!}
 
-    @if (auth()->user()->can('update', $item) && $this->getRoutes()['edit'] ?? false && $this->getPermissions()['edit'] ?? false)
+    @if (isset($this->getRoutes()['edit']) && auth()->user()->can('update', $item) && $this->getRoutes()['edit'] ?? false && $this->getPermissions()['edit'] ?? false)
         <x-buttons.action-item
             :href="route($this->getRoutes()['edit'] ?? '', $item->id)"
             :icon="$this->editButtonIcon"
@@ -27,7 +27,7 @@
 
     {!! $this->renderAfterActionEdit($item) !!}
 
-    @if (auth()->user()->can('delete', $item) && $this->getRoutes()['delete'] ?? false)
+    @if (isset($this->getRoutes()['delete']) && auth()->user()->can('delete', $item) && $this->getRoutes()['delete'] ?? false)
         <div x-data="{ deleteModalOpen: false }">
             <x-buttons.action-item
                 type="modal-trigger"

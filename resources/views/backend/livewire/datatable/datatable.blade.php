@@ -4,6 +4,7 @@
     :customFilters="$customFilters"
     :perPageOptions="$perPageOptions"
     :headers="$headers"
+    :enableCheckbox="$enableCheckbox"
     :noResultsMessage="$noResultsMessage"
     :customNoResultsMessage="$customNoResultsMessage"
     :data="$data"

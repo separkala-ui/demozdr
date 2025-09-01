@@ -191,7 +191,7 @@ abstract class Datatable extends Component
     {
         $routes = [
             'create' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.create',
-            'view' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.view',
+            'view' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.show',
             'edit' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.edit',
             'delete' => 'admin.' . Str::lower($this->getModelNamePlural()) . '.destroy',
         ];
