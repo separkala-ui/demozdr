@@ -17,4 +17,10 @@ enum RoleFilterHook: string
 
     case ROLE_BULK_DELETED_BEFORE = 'filter_role_bulk_deleted_before';
     case ROLE_BULK_DELETED_AFTER = 'filter_role_bulk_deleted_after';
+
+    // UI Hooks.
+    case ROLE_CREATE_BEFORE_FORM = 'filter_role_create_before_form';
+    case ROLE_EDIT_BEFORE_FORM = 'filter_role_edit_before_form';
+    case ROLE_CREATE_AFTER_FORM = 'filter_role_create_after_form';
+    case ROLE_EDIT_AFTER_FORM = 'filter_role_edit_after_form';
 }

@@ -1,6 +1,6 @@
 <div
     x-data="{ loading: @js($skeleton ?? false) }"
-    class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
+    class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] {{ $class ?? '' }}"
 >
     <template x-if="loading">
         <x-card.card-skeleton />
@@ -8,17 +8,17 @@
     <template x-if="!loading">
         <div>
             @isset($header)
-                <div class="p-5 space-y-6 sm:p-6 border-b font-semibold {{ $headerClass ?? '' }}">
+                <div class="py-4 md:px-8 space-y-6 sm:p-4 border-b font-semibold flex justify-between items-center {{ $headerClass ?? '' }}">
                     {{ $header }}
                 </div>
             @endisset
 
-            <div class="p-5 space-y-6 sm:p-6 {{ isset($footer) ? 'border-b' : '' }} {{ $bodyClass ?? '' }}">
+            <div class="py-4 md:px-8 space-y-6 sm:p-4 {{ isset($footer) ? 'border-b' : '' }} {{ $bodyClass ?? '' }}">
                 {{ $slot }}
             </div>
 
             @isset($footer)
-            <div class="p-5 space-y-6 sm:p-6 {{ $footerClass ?? '' }}">
+            <div class="py-4 md:px-10 space-y-6 sm:p-4 flex justify-between items-center {{ $footerClass ?? '' }}">
                 {{ $footer }}
             </div>
             @endisset

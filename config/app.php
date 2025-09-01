@@ -285,7 +285,17 @@ return [
          * Package Aliases
          */
         'Eventy' => TorMorten\Eventy\Facades\Events::class,
+
+        /**
+         * Hook Aliases.
+         */
         'Hook' => App\Support\Facades\Hook::class,
         'DatatableHook' => App\Enums\Hooks\DatatableHook::class,
+        'RoleActionHook' => App\Enums\Hooks\RoleActionHook::class,
+        'RoleFilterHook' => App\Enums\Hooks\RoleFilterHook::class,
+        'UserActionHook' => App\Enums\Hooks\UserActionHook::class,
+        'UserFilterHook' => App\Enums\Hooks\UserFilterHook::class,
+        'PostActionHook' => App\Enums\Hooks\PostActionHook::class,
+        'PostFilterHook' => App\Enums\Hooks\PostFilterHook::class,
     ],
 ];
