@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\QueryBuilderTrait;
 use App\Notifications\AdminResetPasswordNotification;
 use App\Concerns\AuthorizationChecker;
 use App\Observers\UserObserver;
@@ -24,6 +25,7 @@ class User extends Authenticatable
     use HasFactory;
     use HasRoles;
     use Notifiable;
+    use QueryBuilderTrait;
 
     /**
      * The attributes that are mass assignable.

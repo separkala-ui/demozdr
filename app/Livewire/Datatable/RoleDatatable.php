@@ -77,9 +77,9 @@ class RoleDatatable extends Datatable
             return $query;
         }
 
-        if ($this->sort && $this->sort === 'permissions_count') {
+        if (! empty($this->sort) && $this->sort === 'permissions_count') {
             return $query->withCount('permissions')->orderBy('permissions_count', $this->direction);
-        } elseif ($this->sort === 'users_count') {
+        } elseif (! empty($this->sort) && $this->sort === 'users_count') {
             return $query->withCount('users')->orderBy('users_count', $this->direction);
         }
 

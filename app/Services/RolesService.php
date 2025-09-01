@@ -65,9 +65,9 @@ class RolesService
     /**
      * Create a new role with permissions
      */
-    public function createRole(string $name, array $permissions = []): \Spatie\Permission\Models\Role
+    public function createRole(string $name, array $permissions = []): Role
     {
-        /** @var \Spatie\Permission\Models\Role $role */
+        /** @var Role $role */
         $role = Role::create(['name' => $name, 'guard_name' => 'web']);
 
         if (! empty($permissions)) {

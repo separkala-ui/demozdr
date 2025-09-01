@@ -172,6 +172,7 @@ class UserDatatable extends Datatable
     public function handleRowDelete(Model|User $user): bool
     {
         // Prevent Superadmin deletion.
+        // @phpstan-ignore-next-line
         if ($user->hasRole(Role::SUPERADMIN)) {
             throw new \Exception(__('You cannot delete a :role account.', ['role' => Role::SUPERADMIN]));
         }

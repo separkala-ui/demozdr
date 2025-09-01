@@ -76,12 +76,14 @@ class TermDatatable extends Datatable
 
     public function renderParentColumn($term): string
     {
-        return $term->parent?->name ?? '-';
+        return $term->parent->name ?? '-';
     }
 
     public function renderAfterActionEdit($term): string
     {
-        if (! Auth::user()->can('term.edit')) return '';
+        if (! Auth::user()->can('term.edit')) {
+            return '';
+        }
         $route = route('admin.terms.edit', [$this->taxonomy, $term->id]);
 
         return "<a
