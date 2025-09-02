@@ -6,6 +6,9 @@ use Illuminate\Support\Str;
 
 class PostType
 {
+    public const POST = 'post';
+    public const PAGE = 'page';
+
     public string $name = '';
 
     public string $label = '';

@@ -66,7 +66,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     // Action Log Routes.
     Route::get('/action-log', [ActionLogController::class, 'index'])->name('actionlog.index');
 
-    // Posts/Pages Routes - Dynamic post types
+    // Posts/Pages Routes - Dynamic post types.
     Route::get('/posts/{postType?}', [PostController::class, 'index'])->name('posts.index');
     Route::get('/posts/{postType}/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts/{postType}', [PostController::class, 'store'])->name('posts.store');
@@ -76,7 +76,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::delete('/posts/{postType}/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::delete('/posts/{postType}/delete/bulk-delete', [PostController::class, 'bulkDelete'])->name('posts.bulk-delete');
 
-    // Terms Routes (Categories, Tags, etc.)
+    // Terms Routes (Categories, Tags, etc.).
     Route::get('/terms/{taxonomy}', [TermController::class, 'index'])->name('terms.index');
     Route::get('/terms/{taxonomy}/{term}/edit', [TermController::class, 'edit'])->name('terms.edit');
     Route::post('/terms/{taxonomy}', [TermController::class, 'store'])->name('terms.store');

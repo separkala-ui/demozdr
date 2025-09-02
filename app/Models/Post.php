@@ -8,6 +8,7 @@ use App\Services\Content\ContentService;
 use App\Services\Content\PostType;
 use App\Concerns\QueryBuilderTrait;
 use App\Concerns\HasMedia;
+use App\Enums\PostStatus;
 use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,6 +59,13 @@ class Post extends Model implements SpatieHasMedia
                 $post->user_id = Auth::id();
             }
         });
+    }
+
+    public static function getPostStatuses(): array
+    {
+        return collect(PostStatus::cases())
+            ->mapWithKeys(fn ($case) => [$case->value => Str::of($case->name)->title()])
+            ->toArray();
     }
 
     /**
