@@ -79,6 +79,11 @@ class TermDatatable extends Datatable
         return $term->parent->name ?? '-';
     }
 
+    public function renderNameColumn($term): string
+    {
+        return "<a class='text-primary hover:underline'  href=\"".route('admin.terms.edit', [$this->taxonomy, $term->id])."\">{$term->name}</a>";
+    }
+
     public function renderAfterActionEdit($term): string
     {
         if (! Auth::user()->can('term.edit')) {
