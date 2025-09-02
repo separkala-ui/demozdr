@@ -32,7 +32,7 @@
 ])
 
 @php
-    $allIds = collect($data)->pluck('id')->toArray();
+    $allIds = $data->getCollection()->pluck('id')->toArray();
 @endphp
 
 <div class="space-y-6"

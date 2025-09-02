@@ -16,7 +16,7 @@ class TermDatatable extends Datatable
 
     public function getSearchbarPlaceholder(): string
     {
-        return __('Search by term name...');
+        return __('Search by :taxonomy name...', ['taxonomy' => $this->taxonomy]);
     }
 
     protected function getNoResultsMessage(): string
