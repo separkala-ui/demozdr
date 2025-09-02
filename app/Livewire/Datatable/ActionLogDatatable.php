@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Datatable;
 
-use App\Enums\ActionType;
 use App\Models\ActionLog;
 use Illuminate\Contracts\View\View;
 use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Support\Str;
 
 class ActionLogDatatable extends Datatable
 {
@@ -46,9 +44,7 @@ class ActionLogDatatable extends Datatable
                 'filterLabel' => __('Filter by Type'),
                 'icon' => 'lucide:sliders',
                 'allLabel' => __('All Types'),
-                'options' => collect(ActionType::cases())
-                    ->mapWithKeys(fn($case) => [$case->value => Str::of($case->name)->title()])
-                    ->toArray(),
+                'options' => ActionLog::getActionTypes(),
                 'selected' => $this->type,
             ],
         ];
@@ -100,7 +96,7 @@ class ActionLogDatatable extends Datatable
             });
         });
 
-        $query->when($this->type, fn($q) => $q->where('type', $this->type));
+        $query->when($this->type, fn ($q) => $q->where('type', $this->type));
 
         return $this->sortQuery($query);
     }
