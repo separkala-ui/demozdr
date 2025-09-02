@@ -18,7 +18,7 @@
             </div>
 
             @isset($footer)
-            <div class="py-4 md:px-10 space-y-6 sm:p-4 flex justify-between items-center {{ $footerClass ?? '' }}">
+            <div class="py-4 md:px-8 space-y-6 sm:p-4 flex justify-between items-center {{ $footerClass ?? '' }}">
                 {{ $footer }}
             </div>
             @endisset
