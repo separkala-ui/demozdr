@@ -86,18 +86,28 @@
     <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div class="px-5 py-4 sm:px-6 sm:py-5 flex flex-col md:flex-row justify-between items-center gap-3">
 
-            {!! Hook::applyFilters(DatatableHook::BEFORE_SEARCHBOX, '', $searchbarPlaceholder) !!}
-            @if($enableSearchbar)
-                @if($customSeachForm)
-                    {!! $customSeachForm !!}
-                @else
-                    <x-datatable.searchbar
-                        :placeholder="$searchbarPlaceholder"
-                        :enableLivewire="$enableLivewire"
-                    />
+            <div class="flex items-center gap-3">
+                {!! Hook::applyFilters(DatatableHook::BEFORE_SEARCHBOX, '', $searchbarPlaceholder) !!}
+                @if($enableLivewire)
+                    {{ method_exists($this, 'renderBeforeSearchbar') ? $this->renderBeforeSearchbar() : '' }}
                 @endif
-            @endif
-            {!! Hook::applyFilters(DatatableHook::AFTER_SEARCHBOX, '', $searchbarPlaceholder) !!}
+
+                @if($enableSearchbar)
+                    @if($customSeachForm)
+                        {!! $customSeachForm !!}
+                    @else
+                        <x-datatable.searchbar
+                            :placeholder="$searchbarPlaceholder"
+                            :enableLivewire="$enableLivewire"
+                        />
+                    @endif
+                @endif
+
+                @if($enableLivewire)
+                    {{ method_exists($this, 'renderAfterSearchbar') ? $this->renderAfterSearchbar() : '' }}
+                @endif
+                {!! Hook::applyFilters(DatatableHook::AFTER_SEARCHBOX, '', $searchbarPlaceholder) !!}
+            </div>
 
             <div
                 class="flex items-center gap-3"

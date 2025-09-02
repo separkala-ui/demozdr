@@ -108,6 +108,16 @@ abstract class Datatable extends Component
         $this->paginateOnEachSlide = 0;
     }
 
+    public function renderBeforeSearchbar(): string|Renderable
+    {
+        return '';
+    }
+
+    public function renderAfterSearchbar(): string|Renderable
+    {
+        return '';
+    }
+
     protected function getHeaders(): array
     {
         return $this->headers ?? [];
