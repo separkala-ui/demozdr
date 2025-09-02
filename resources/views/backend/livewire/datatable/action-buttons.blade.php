@@ -1,47 +1,47 @@
 <x-buttons.action-buttons
-    :label="$this->actionColumnLabel"
-    :show-label="$this->showActionColumnLabel"
-    :icon="$this->actionColumnIcon"
-    :deleteAction="$this->getDeleteAction($item->id)"
+    :label="$actionColumnLabel"
+    :show-label="$showActionColumnLabel"
+    :icon="$actionColumnIcon"
+    :deleteAction="$deleteAction"
     align="right"
 >
-    {!! $this->renderBeforeActionView($item) !!}
+    {!! $beforeActionView !!}
 
-    @if (isset($this->getRoutes()['view']) && $this->getRoutes()['view'] ?? false && $this->getPermissions()['view'] ?? false)
+    @if (isset($routes['view']) && $routes['view'] ?? false && $componentPermissions['view'] ?? false)
         <x-buttons.action-item
-            :href="route($this->getRoutes()['view'] ?? '', $item->id)"
-            :icon="$this->viewButtonIcon"
-            :label="$this->viewButtonLabel"
+            :href="$viewRouteUrl"
+            :icon="$viewButtonIcon"
+            :label="$viewButtonLabel"
         />
     @endif
 
-    {!! $this->renderAfterActionView($item) !!}
+    {!! $afterActionView !!}
 
-    @if (isset($this->getRoutes()['edit']) && auth()->user()->can('update', $item) && $this->getRoutes()['edit'] ?? false && $this->getPermissions()['edit'] ?? false)
+    @if (isset($routes['edit']) && auth()->user()->can('update', $item) && $routes['edit'] ?? false && $componentPermissions['edit'] ?? false)
         <x-buttons.action-item
-            :href="route($this->getRoutes()['edit'] ?? '', $item->id)"
-            :icon="$this->editButtonIcon"
-            :label="$this->editButtonLabel"
+            :href="$editRouteUrl"
+            :icon="$editButtonIcon"
+            :label="$editButtonLabel"
         />
     @endif
 
-    {!! $this->renderAfterActionEdit($item) !!}
+    {!! $afterActionEdit !!}
 
-    @if (isset($this->getRoutes()['delete']) && auth()->user()->can('delete', $item) && $this->getRoutes()['delete'] ?? false)
+    @if (isset($routes['delete']) && auth()->user()->can('delete', $item) && $routes['delete'] ?? false)
         <div x-data="{ deleteModalOpen: false }">
             <x-buttons.action-item
                 type="modal-trigger"
                 modal-target="deleteModalOpen"
-                :icon="$this->deleteButtonIcon"
-                :label="$this->deleteButtonLabel"
+                :icon="$deleteButtonIcon"
+                :label="$deleteButtonLabel"
                 class="text-red-600 dark:text-red-400"
             />
 
             @if($deleteAction['livewire'] ?? false)
                 <x-modals.confirm-delete
                     id="delete-modal-{{ $item->id }}"
-                    title="{{ __('Delete :model', ['model' => $this->getModelNameSingular()]) }}"
-                    content="{{ __('Are you sure you want to delete this :model?', ['model' => $this->getModelNameSingular()]) }}"
+                    title="{{ __('Delete :model', ['model' => $modelNameSingular]) }}"
+                    content="{{ __('Are you sure you want to delete this :model?', ['model' => $modelNameSingular]) }}"
                     :wireClick="'deleteItem(' . $item->id . ')'"
                     modalTrigger="deleteModalOpen"
                     cancelButtonText="{{ __('No, cancel') }}"
@@ -50,10 +50,10 @@
             @else
                 <x-modals.confirm-delete
                     id="delete-modal-{{ $item->id }}"
-                    title="{{ __('Delete :model', ['model' => $this->getModelNameSingular()]) }}"
-                    content="{{ __('Are you sure you want to delete this :model?', ['model' => $this->getModelNameSingular()]) }}"
+                    title="{{ __('Delete :model', ['model' => $modelNameSingular]) }}"
+                    content="{{ __('Are you sure you want to delete this :model?', ['model' => $modelNameSingular]) }}"
                     formId="delete-form-{{ $item->id }}"
-                    formAction="{{ $deleteAction['url'] ?? route($this->getRoutes()['delete'] ?? '', $item->id) }}"
+                    formAction="{{ $deleteAction['url'] ?? $deleteRouteUrl }}"
                     modalTrigger="deleteModalOpen"
                     cancelButtonText="{{ __('No, cancel') }}"
                     confirmButtonText="{{ __('Yes, Confirm') }}"
@@ -62,5 +62,5 @@
         </div>
     @endif
 
-    {!! $this->renderAfterActionDelete($item) !!}
+    {!! $afterActionDelete !!}
 </x-buttons.action-buttons>

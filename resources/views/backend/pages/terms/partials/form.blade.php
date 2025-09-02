@@ -1,16 +1,16 @@
-<x-card>
-    <x-slot name="header">
-        {{ $term ? __("Edit {$taxonomyModel->label_singular}") : __("Add New {$taxonomyModel->label_singular}") }}
-    </x-slot>
-    <form
-        action="{{ $term ? route('admin.terms.update', [$taxonomy, $term->id]) : route('admin.terms.store', $taxonomy) }}"
-        method="POST"
-        enctype="multipart/form-data"
-        data-prevent-unsaved-changes
-    >
-        @method($term ? 'PUT' : 'POST')
-        @csrf
+<form
+    action="{{ $term ? route('admin.terms.update', [$taxonomy, $term->id]) : route('admin.terms.store', $taxonomy) }}"
+    method="POST"
+    enctype="multipart/form-data"
+    data-prevent-unsaved-changes
+>
+    @method($term ? 'PUT' : 'POST')
+    @csrf
 
+    <x-card>
+        <x-slot name="header">
+            {{ $term ? __("Edit {$taxonomyModel->label_singular}") : __("Add New {$taxonomyModel->label_singular}") }}
+        </x-slot>
         <div x-data="slugGenerator('{{ old('name', $term ? $term->name : '') }}', '{{ old('slug', $term ? $term->slug : '') }}')">
             <div class="space-y-1">
                 <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -75,5 +75,6 @@
                 <x-buttons.submit-buttons cancelUrl="{{ $term ? route('admin.terms.index', $taxonomy) : '' }}" />
             </x-slot>
         </div>
-    </form>
-</x-card>
+    </x-card>
+
+</form>

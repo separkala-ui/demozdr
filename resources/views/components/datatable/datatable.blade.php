@@ -17,6 +17,7 @@
     'newResourceLinkPermission' => '',
     'newResourceLinkIcon' => 'feather:plus',
     'newResourceLinkRouteName' => '',
+    'newResourceLinkRouteUrl' => '',
     'newResourceLinkLabel' => __('Create New'),
     'customNewResourceLink' => null,
 
@@ -290,8 +291,8 @@
                 @if($enableNewResourceLink)
                     @if($customNewResourceLink)
                         {!! $customNewResourceLink !!}
-                    @elseif($newResourceLinkPermission && $newResourceLinkRouteName && auth()->user()->can($newResourceLinkPermission))
-                        <a href="{{ route($newResourceLinkRouteName) }}" class="btn-primary flex items-center gap-2">
+                    @elseif($newResourceLinkPermission && ($newResourceLinkRouteUrl || $newResourceLinkRouteName) && auth()->user()->can($newResourceLinkPermission))
+                        <a href="{{ $newResourceLinkRouteUrl ?: route($newResourceLinkRouteName) }}" class="btn-primary flex items-center gap-2">
                             <iconify-icon icon="{{ $newResourceLinkIcon }}" height="16"></iconify-icon>
                             {{ $newResourceLinkLabel }}
                         </a>

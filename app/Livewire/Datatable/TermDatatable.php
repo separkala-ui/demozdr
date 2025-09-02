@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Livewire\Datatable;
 
 use App\Models\Term;
-use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class TermDatatable extends Datatable
 {
     public string $taxonomy;
     public string $model = Term::class;
-    public array $disabledRoutes = ['view', 'edit'];
+    public array $disabledRoutes = ['view'];
 
     public function getSearchbarPlaceholder(): string
     {
@@ -79,25 +78,21 @@ class TermDatatable extends Datatable
         return $term->parent->name ?? '-';
     }
 
-    public function renderNameColumn($term): string
+    protected function getRouteParameters(): array
     {
-        return "<a class='text-primary hover:underline'  href=\"".route('admin.terms.edit', [$this->taxonomy, $term->id])."\">{$term->name}</a>";
+        return ['taxonomy' => $this->taxonomy];
     }
 
-    public function renderAfterActionEdit($term): string
+    protected function getItemRouteParameters($item): array
     {
-        if (! Auth::user()->can('term.edit')) {
-            return '';
-        }
-        $route = route('admin.terms.edit', [$this->taxonomy, $term->id]);
+        return [
+            'taxonomy' => $this->taxonomy,
+            'term' => $item->id,
+        ];
+    }
 
-        return "<a
-                href=\"{$route}\"
-                class='flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700'
-                role='menuitem'
-            >
-                <iconify-icon icon='mdi:pencil' class='text-base'></iconify-icon>
-                ". __('Edit') ."
-            </a>";
+    public function renderNameColumn($term): string
+    {
+        return "<a class='text-primary hover:underline'  href=\"".$this->getEditRouteUrl($term)."\">{$term->name}</a>";
     }
 }

@@ -191,11 +191,80 @@ abstract class Datatable extends Component
         $snakeCaseModel = $this->getSnakeCaseModel();
 
         return [
-            'view' => $snakeCaseModel . '.view',
             'create' => $snakeCaseModel . '.create',
+            'view' => $snakeCaseModel . '.view',
             'edit' => $snakeCaseModel . '.edit',
             'delete' => $snakeCaseModel . '.delete',
         ];
+    }
+
+    protected function getRouteParameters(): array
+    {
+        return [];
+    }
+
+    protected function getItemRouteParameters($item): array
+    {
+        // For standard Laravel resource routes, the parameter name is the singular model name.
+        $modelName = strtolower(class_basename($this->getModelClass()));
+        $baseParams = $this->getRouteParameters();
+
+        // If we have custom route parameters (like postType, taxonomy), use id
+        // Otherwise use the model name for standard resource routes.
+        if (! empty($baseParams)) {
+            return array_merge($baseParams, ['id' => $item->id]);
+        }
+
+        return [$modelName => $item->id];
+    }
+
+    protected function getRouteUrl(string $routeName, array $parameters = []): string
+    {
+        if (empty($parameters)) {
+            return route($routeName);
+        }
+
+        return route($routeName, $parameters);
+    }
+
+    public function getCreateRouteUrl(): string
+    {
+        $routes = $this->getRoutes();
+        if (! isset($routes['create'])) {
+            return '';
+        }
+
+        return $this->getRouteUrl($routes['create'], $this->getRouteParameters());
+    }
+
+    public function getViewRouteUrl($item): string
+    {
+        $routes = $this->getRoutes();
+        if (! isset($routes['view'])) {
+            return '';
+        }
+
+        return $this->getRouteUrl($routes['view'], $this->getItemRouteParameters($item));
+    }
+
+    public function getEditRouteUrl($item): string
+    {
+        $routes = $this->getRoutes();
+        if (! isset($routes['edit'])) {
+            return '';
+        }
+
+        return $this->getRouteUrl($routes['edit'], $this->getItemRouteParameters($item));
+    }
+
+    public function getDeleteRouteUrl($item): string
+    {
+        $routes = $this->getRoutes();
+        if (! isset($routes['delete'])) {
+            return '';
+        }
+
+        return $this->getRouteUrl($routes['delete'], $this->getItemRouteParameters($item));
     }
 
     public function getRoutes(): array

@@ -62,6 +62,31 @@ trait HasDatatableActionItems
             'item' => $item,
             'permissions' => $this->getActionCellPermissions($item),
             'deleteAction' => method_exists($this, 'getDeleteAction') ? $this->getDeleteAction($item->id) : null,
+
+            // Component properties.
+            'actionColumnLabel' => $this->actionColumnLabel,
+            'showActionColumnLabel' => $this->showActionColumnLabel,
+            'actionColumnIcon' => $this->actionColumnIcon,
+            'viewButtonIcon' => $this->viewButtonIcon,
+            'viewButtonLabel' => $this->viewButtonLabel,
+            'editButtonIcon' => $this->editButtonIcon,
+            'editButtonLabel' => $this->editButtonLabel,
+            'deleteButtonIcon' => $this->deleteButtonIcon,
+            'deleteButtonLabel' => $this->deleteButtonLabel,
+
+            // Component methods results.
+            'routes' => $this->getRoutes(),
+            'componentPermissions' => $this->getPermissions(),
+            'viewRouteUrl' => $this->getViewRouteUrl($item),
+            'editRouteUrl' => $this->getEditRouteUrl($item),
+            'deleteRouteUrl' => $this->getDeleteRouteUrl($item),
+            'modelNameSingular' => $this->getModelNameSingular(),
+
+            // Render methods results.
+            'beforeActionView' => $this->renderBeforeActionView($item),
+            'afterActionView' => $this->renderAfterActionView($item),
+            'afterActionEdit' => $this->renderAfterActionEdit($item),
+            'afterActionDelete' => $this->renderAfterActionDelete($item),
         ]);
     }
 

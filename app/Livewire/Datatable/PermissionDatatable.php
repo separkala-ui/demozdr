@@ -76,10 +76,8 @@ class PermissionDatatable extends Datatable
 
     public function renderNameColumn(Permission $permission): string
     {
-        return "
-            <a href=\"" . route('admin.permissions.show', $permission) . "\" class='text-primary hover:underline'>" . $permission->name . "</a>
-            <p class='text-sm text-gray-500'>" . $permission->roles_count . " " . __('roles') . "</p>
-        ";
+        return "<a href=\"" . route('admin.permissions.show', $permission) . "\" class='text-primary hover:underline'>" . $permission->name . "</a>
+            <p class='text-sm text-gray-500'>" . $permission->roles_count . " " . __('roles') . "</p>";
     }
 
     public function renderGroupNameColumn(Permission $permission): string

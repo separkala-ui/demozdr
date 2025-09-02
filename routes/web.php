@@ -40,7 +40,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
 
     // Permissions Routes.
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
-    Route::get('/permissions/{id}', [PermissionController::class, 'show'])->name('permissions.show');
+    Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->name('permissions.show');
 
     // Modules Routes.
     Route::get('/modules', [ModuleController::class, 'index'])->name('modules.index');
@@ -70,18 +70,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('/posts/{postType?}', [PostController::class, 'index'])->name('posts.index');
     Route::get('/posts/{postType}/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts/{postType}', [PostController::class, 'store'])->name('posts.store');
-    Route::get('/posts/{postType}/{id}', [PostController::class, 'show'])->name('posts.show');
-    Route::get('/posts/{postType}/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
-    Route::put('/posts/{postType}/{id}', [PostController::class, 'update'])->name('posts.update');
-    Route::delete('/posts/{postType}/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
+    Route::get('/posts/{postType}/{post}', [PostController::class, 'show'])->name('posts.show');
+    Route::get('/posts/{postType}/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{postType}/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{postType}/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::delete('/posts/{postType}/delete/bulk-delete', [PostController::class, 'bulkDelete'])->name('posts.bulk-delete');
 
     // Terms Routes (Categories, Tags, etc.).
     Route::get('/terms/{taxonomy}', [TermController::class, 'index'])->name('terms.index');
     Route::get('/terms/{taxonomy}/{term}/edit', [TermController::class, 'edit'])->name('terms.edit');
     Route::post('/terms/{taxonomy}', [TermController::class, 'store'])->name('terms.store');
-    Route::put('/terms/{taxonomy}/{id}', [TermController::class, 'update'])->name('terms.update');
-    Route::delete('/terms/{taxonomy}/{id}', [TermController::class, 'destroy'])->name('terms.destroy');
+    Route::put('/terms/{taxonomy}/{term}', [TermController::class, 'update'])->name('terms.update');
+    Route::delete('/terms/{taxonomy}/{term}', [TermController::class, 'destroy'])->name('terms.destroy');
     Route::delete('/terms/{taxonomy}/delete/bulk-delete', [TermController::class, 'bulkDelete'])->name('terms.bulk-delete');
 
     // Media Routes.

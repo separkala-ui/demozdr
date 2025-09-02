@@ -25,9 +25,8 @@ class PermissionController extends Controller
         return $this->renderViewWithBreadcrumbs('backend.pages.permissions.index');
     }
 
-    public function show(int $id): Renderable
+    public function show(Permission $permission): Renderable
     {
-        $permission = Permission::findById($id);
         $this->authorize('view', $permission);
 
         $this->setBreadcrumbTitle(__('Permission Details'))
