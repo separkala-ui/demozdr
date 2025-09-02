@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace App\Livewire\Datatable;
 
+use App\Enums\ActionType;
 use App\Models\ActionLog;
 use Illuminate\Contracts\View\View;
 use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Support\Str;
 
 class ActionLogDatatable extends Datatable
 {
+    public string $type = '';
     public bool $enableCheckbox = false;
     public string $model = ActionLog::class;
     public array $disabledRoutes = ['edit', 'delete'];
+    public array $queryString = [
+        ...parent::QUERY_STRING_DEFAULTS,
+        'type' => [],
+    ];
 
     public function getSearchbarPlaceholder(): string
     {
@@ -23,6 +30,27 @@ class ActionLogDatatable extends Datatable
     {
         return [
             'view' => 'role.view',
+        ];
+    }
+    public function updatingType()
+    {
+        $this->resetPage();
+    }
+
+    public function getFilters(): array
+    {
+        return [
+            [
+                'id' => 'type',
+                'label' => __('Type'),
+                'filterLabel' => __('Filter by Type'),
+                'icon' => 'lucide:sliders',
+                'allLabel' => __('All Types'),
+                'options' => collect(ActionType::cases())
+                    ->mapWithKeys(fn($case) => [$case->value => Str::of($case->name)->title()])
+                    ->toArray(),
+                'selected' => $this->type,
+            ],
         ];
     }
 
@@ -65,12 +93,14 @@ class ActionLogDatatable extends Datatable
         $query = QueryBuilder::for($this->model)
             ->with('user');
 
-        if ($this->search) {
+        $query->when($this->search, function ($query) {
             $query->where(function ($q) {
                 $q->where('title', 'like', "%{$this->search}%")
                     ->orWhere('type', 'like', "%{$this->search}%");
             });
-        }
+        });
+
+        $query->when($this->type, fn($q) => $q->where('type', $this->type));
 
         return $this->sortQuery($query);
     }

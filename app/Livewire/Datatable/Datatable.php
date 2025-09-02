@@ -115,7 +115,7 @@ abstract class Datatable extends Component
 
     protected function getNoResultsMessage(): string
     {
-        return $this->noResultsMessage ?? __('No :items found.', ['items' => $this->getModelNamePlural()]);
+        return __('No :items found.', ['items' => $this->getModelNamePlural()]);
     }
 
     protected function getCustomNoResultsMessage(): string
