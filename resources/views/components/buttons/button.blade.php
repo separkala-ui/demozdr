@@ -21,18 +21,18 @@
 		'secondary' => 'btn-secondary',
 		default => 'btn-default',
 	};
-	
+
 	// Define spinner colors based on button variant
 	$spinnerColor = match($variant) {
 		'primary' => 'text-white',
 		'success' => 'text-white',
-		'danger' => 'text-white', 
+		'danger' => 'text-white',
 		'warning' => 'text-white',
 		'info' => 'text-white',
 		'secondary' => 'text-gray-600 dark:text-gray-300',
 		default => 'text-gray-600 dark:text-gray-300',
 	};
-	
+
 	$classes = trim("btn $typeClass $class");
 	$isDisabled = $disabled || $loading;
 @endphp
@@ -51,16 +51,21 @@
 			</span>
 		@else
 			@if($icon && $iconPosition === 'left')
-				<span class="mr-2">{!! $icon !!}</span>
+				<iconify-icon class="mr-2" icon="{{ $icon }}"></iconify-icon>
 			@endif
 			{{ $slot }}
 			@if($icon && $iconPosition === 'right')
-				<span class="ml-2">{!! $icon !!}</span>
+				<iconify-icon class="ml-2" icon="{{ $icon }}"></iconify-icon>
 			@endif
 		@endif
 	</a>
 @else
-	<button type="{{ $type }}" class="{{ $classes }}" @if($isDisabled) disabled @endif>
+	<button
+		type="{{ $type }}"
+		{{ $attributes->except(['class', 'variant', 'disabled', 'as', 'href', 'icon', 'iconPosition', 'loading', 'loadingText'])->merge(['class' => $classes]) }}
+		@if($isDisabled) disabled @endif
+		x-bind:disabled="{{ $isDisabled ? 'true' : 'false' }}"
+	>
 		@if($loading)
 			<span class="flex items-center">
 				<svg class="size-5 animate-spin {{ $spinnerColor }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -73,11 +78,11 @@
 			</span>
 		@else
 			@if($icon && $iconPosition === 'left')
-				<span class="mr-2">{!! $icon !!}</span>
+				<iconify-icon class="mr-2" icon="{{ $icon }}"></iconify-icon>
 			@endif
 			{{ $slot }}
 			@if($icon && $iconPosition === 'right')
-				<span class="ml-2">{!! $icon !!}</span>
+				<iconify-icon class="ml-2" icon="{{ $icon }}"></iconify-icon>
 			@endif
 		@endif
 	</button>
