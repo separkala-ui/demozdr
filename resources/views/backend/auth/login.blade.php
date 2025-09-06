@@ -60,7 +60,7 @@
 
           <div>
             <button type="submit" class="btn-primary w-full" :disabled="loading">
-              <span x-text="loading ? '' : '{{ __('Sign In') }}'"></span>
+              <span x-text="loading ? '' : '{{ __('Sign In') }}'">{{ __('Sign In') }}</span>
               <iconify-icon :icon="loading ? 'lucide:loader-circle' : 'lucide:log-in'" :class="{ 'animate-spin': loading, 'ml-2': !loading }" />
             </button>
           </div>
@@ -99,7 +99,7 @@
                 :disabled="loading"
                 @click="loading = true"
               >
-                <span x-text="loading ? '' : '{{ __('Login Now') }}'"></span>
+                <span x-text="loading ? '' : '{{ __('Login Now') }}'">{{ __('Login Now') }}</span>
                 <iconify-icon :icon="loading ? 'lucide:loader-circle' : 'lucide:log-in'" :class="{ 'animate-spin': loading, 'ml-2': !loading }" />
               </button>
             </div>
