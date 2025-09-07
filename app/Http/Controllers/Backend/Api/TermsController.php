@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Backend\Api;
 
 use App\Http\Controllers\Controller;
@@ -12,7 +14,7 @@ use Dedoc\Scramble\Attributes\ExcludeRouteFromDocs;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Blade;
 
-class TermsController extends Controller
+class TermController extends Controller
 {
     public function __construct(
         private readonly ContentService $contentService,
