@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backend;
 
-use App\Enums\Hooks\PostHook;
+use App\Enums\Hooks\PostActionHook;
+use App\Enums\Hooks\PostFilterHook;
 use App\Enums\PostStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
+use App\Http\Requests\Common\BulkDeleteRequest;
 use App\Models\Post;
 use App\Models\Term;
 use App\Services\Content\ContentService;
@@ -16,7 +18,6 @@ use App\Services\ImageService;
 use App\Services\MediaLibraryService;
 use App\Services\PostMetaService;
 use App\Services\PostService;
-use App\Support\Facades\Hook;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
@@ -108,44 +109,52 @@ class PostController extends Controller
             return redirect()->route('admin.posts.index')->with('error', 'Post type not found');
         }
 
+        $data = $this->addHooks(
+            $request->validated(),
+            PostActionHook::POST_CREATED_BEFORE,
+            PostFilterHook::POST_CREATED_BEFORE
+        );
+
         // Create post
         $post = new Post();
-        $post->title = $request->title;
-        $post->slug = $request->slug ?: Str::slug($request->title);
-        $post->content = $request->content;
-        $post->excerpt = $request->excerpt ?: Str::limit(strip_tags($request->content), 200);
-        $post->status = $request->status;
+        $post->title = $data['title'];
+        $post->slug = $data['slug'] ?? Str::slug($data['title']);
+        $post->content = $data['content'];
+        $post->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($data['content']), 200);
+        $post->status = $data['status'];
         $post->post_type = $postType;
         $post->user_id = Auth::id();
-        $post->parent_id = $request->parent_id;
+        $post->parent_id = $data['parent_id'] ?? null;
 
         // Handle publish date
-        if ($request->has('schedule_post') && $request->schedule_post && ! empty($request->published_at)) {
+        if (isset($data['schedule_post']) && $data['schedule_post'] && ! empty($data['published_at'])) {
             $post->status = PostStatus::SCHEDULED->value;
-            $post->published_at = Carbon::parse($request->published_at);
-        } elseif ($request->status === PostStatus::SCHEDULED->value && ! empty($request->published_at)) {
-            $post->published_at = Carbon::parse($request->published_at);
-        } elseif ($request->status === PostStatus::PUBLISHED->value) {
+            $post->published_at = Carbon::parse($data['published_at']);
+        } elseif ($data['status'] === PostStatus::SCHEDULED->value && ! empty($data['published_at'])) {
+            $post->published_at = Carbon::parse($data['published_at']);
+        } elseif ($data['status'] === PostStatus::PUBLISHED->value) {
             $post->published_at = now();
         }
-
-        $post = Hook::applyFilters(PostHook::BEFORE_SAVE, $post, $request);
 
         $post->save();
 
         // Handle featured image removal first.
-        if ($request->has('remove_featured_image') && $request->remove_featured_image) {
+        if (isset($data['remove_featured_image']) && $data['remove_featured_image']) {
             $post->clearMediaCollection('featured');
-        } elseif ($request->filled('featured_image')) {
+        } elseif (! empty($data['featured_image'])) {
             if ($request->hasFile('featured_image')) {
                 $post->clearMediaCollection('featured');
                 $post->addMediaFromRequest('featured_image')->toMediaCollection('featured');
             } else {
-                $this->mediaService->associateExistingMedia($post, $request->input('featured_image'), 'featured');
+                $this->mediaService->associateExistingMedia($post, $data['featured_image'], 'featured');
             }
         }
 
-        $post = Hook::applyFilters(PostHook::AFTER_SAVE, $post, $request);
+        $post = $this->addHooks(
+            $post,
+            PostActionHook::POST_CREATED_AFTER,
+            PostFilterHook::POST_CREATED_AFTER
+        );
 
         // Handle post meta.
         $this->handlePostMeta($request, $post);
@@ -153,8 +162,9 @@ class PostController extends Controller
         // Handle taxonomies
         $this->handleTaxonomies($request, $post);
 
-        return redirect()->route('admin.posts.edit', [$postType, $post->id])
-            ->with('success', 'Post created successfully');
+        session()->flash('success', __('Post has been created.'));
+
+        return redirect()->route('admin.posts.edit', [$postType, $post->id]);
     }
 
     public function show(string $postType, string $id): Renderable
@@ -220,48 +230,56 @@ class PostController extends Controller
         return $this->renderViewWithBreadcrumbs('backend.pages.posts.edit', compact('post', 'postType', 'postTypeModel', 'taxonomies', 'parentPosts', 'selectedTerms'));
     }
 
-    public function update(UpdatePostRequest $request, string $postType, string $id)
+    public function update(UpdatePostRequest $request, string $postType, string $id): RedirectResponse
     {
         // Get post.
         $post = Post::where('post_type', $postType)->findOrFail($id);
         $this->authorize('update', $post);
 
+        $data = $this->addHooks(
+            $request->validated(),
+            PostActionHook::POST_UPDATED_BEFORE,
+            PostFilterHook::POST_UPDATED_BEFORE
+        );
+
         // Update post.
-        $post->title = $request->title;
-        $post->slug = $request->slug ?: Str::slug($request->title);
-        $post->content = $request->content;
-        $post->excerpt = $request->excerpt ?: Str::limit(strip_tags($request->content), 200);
-        $post->status = $request->status;
-        $post->parent_id = $request->parent_id;
+        $post->title = $data['title'];
+        $post->slug = $data['slug'] ?? Str::slug($data['title']);
+        $post->content = $data['content'];
+        $post->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($data['content']), 200);
+        $post->status = $data['status'];
+        $post->parent_id = $data['parent_id'] ?? null;
 
         // Handle publish date.
-        if ($request->has('schedule_post') && $request->schedule_post && ! empty($request->published_at)) {
+        if (isset($data['schedule_post']) && $data['schedule_post'] && ! empty($data['published_at'])) {
             $post->status = PostStatus::SCHEDULED->value;
-            $post->published_at = Carbon::parse($request->published_at);
-        } elseif ($request->status === PostStatus::SCHEDULED->value && ! empty($request->published_at)) {
-            $post->published_at = Carbon::parse($request->published_at);
-        } elseif ($request->status === PostStatus::PUBLISHED->value && ! $post->published_at) {
+            $post->published_at = Carbon::parse($data['published_at']);
+        } elseif ($data['status'] === PostStatus::SCHEDULED->value && ! empty($data['published_at'])) {
+            $post->published_at = Carbon::parse($data['published_at']);
+        } elseif ($data['status'] === PostStatus::PUBLISHED->value && ! $post->published_at) {
             $post->published_at = now();
         }
-
-        $post = Hook::applyFilters('before_post_update', $post, $request);
 
         $post->save();
 
         // Handle featured image removal first.
-        if ($request->has('remove_featured_image') && $request->remove_featured_image) {
+        if (isset($data['remove_featured_image']) && $data['remove_featured_image']) {
             $post->clearMediaCollection('featured');
-        } elseif ($request->filled('featured_image')) {
+        } elseif (! empty($data['featured_image'])) {
             $post->clearMediaCollection('featured');
 
             if ($request->hasFile('featured_image')) {
                 $post->addMediaFromRequest('featured_image')->toMediaCollection('featured');
             } else {
-                $this->mediaService->associateExistingMedia($post, $request->input('featured_image'), 'featured');
+                $this->mediaService->associateExistingMedia($post, $data['featured_image'], 'featured');
             }
         }
 
-        $post = Hook::applyFilters('after_post_update', $post, $request);
+        $post = $this->addHooks(
+            $post,
+            PostActionHook::POST_UPDATED_AFTER,
+            PostFilterHook::POST_UPDATED_AFTER
+        );
 
         // Handle post meta.
         $this->handlePostMeta($request, $post);
@@ -269,8 +287,9 @@ class PostController extends Controller
         // Handle taxonomies.
         $this->handleTaxonomies($request, $post);
 
-        return redirect()->route('admin.posts.edit', [$postType, $post->id])
-            ->with('success', 'Post updated successfully');
+        session()->flash('success', __('Post has been updated.'));
+
+        return back();
     }
 
     /**
@@ -281,40 +300,58 @@ class PostController extends Controller
         $post = Post::where('post_type', $postType)->findOrFail($id);
         $this->authorize('delete', $post);
 
-        Hook::doAction('post_before_deleted', $post);
-        $post->delete();
-        Hook::doAction('post_deleted', $post);
+        $post = $this->addHooks(
+            $post,
+            PostActionHook::POST_DELETED_BEFORE,
+            PostFilterHook::POST_DELETED_BEFORE
+        );
 
-        return redirect()->route('admin.posts.index', $postType)
-            ->with('success', __('Post deleted successfully'));
+        $post->delete();
+
+        $this->addHooks(
+            $post,
+            PostActionHook::POST_DELETED_AFTER,
+            PostFilterHook::POST_DELETED_AFTER
+        );
+
+        session()->flash('success', __('Post has been deleted.'));
+
+        return redirect()->route('admin.posts.index', $postType);
     }
 
     /**
      * Delete multiple posts at once
      */
-    public function bulkDelete(Request $request, string $postType): RedirectResponse
+    public function bulkDelete(BulkDeleteRequest $request, string $postType): RedirectResponse
     {
         $this->authorize('bulkDelete', Post::class);
 
-        $ids = $request->input('ids', []);
+        $ids = $request->validated('ids');
 
         if (empty($ids)) {
-            return redirect()->route('admin.posts.index', $postType)
-                ->with('error', __('No posts selected for deletion'));
+            session()->flash('error', __('No posts selected for deletion.'));
+            return redirect()->route('admin.posts.index', $postType);
         }
 
-        $posts = Post::where('post_type', $postType)->whereIn('id', $ids)->get();
+        $ids = $this->addHooks(
+            $ids,
+            PostActionHook::POST_BULK_DELETED_BEFORE
+        );
 
-        foreach ($posts as $post) {
-            Hook::doAction('post_before_deleted', $post);
+        $deletedCount = $this->postService->bulkDeletePosts($ids, $postType);
 
-            $post->delete();
+        $this->addHooks(
+            ['deleted_count' => $deletedCount, 'post_type' => $postType],
+            PostActionHook::POST_BULK_DELETED_AFTER
+        );
 
-            Hook::doAction('post_deleted', $post);
+        if ($deletedCount > 0) {
+            session()->flash('success', __(':count posts deleted successfully', ['count' => $deletedCount]));
+        } else {
+            session()->flash('error', __('No posts were deleted.'));
         }
 
-        return redirect()->route('admin.posts.index', $postType)
-            ->with('success', __(':count posts deleted successfully', ['count' => count($posts)]));
+        return redirect()->route('admin.posts.index', $postType);
     }
 
     /**
@@ -344,7 +381,10 @@ class PostController extends Controller
         // Sync terms.
         $post->terms()->sync($termIds);
 
-        Hook::doAction('post_taxonomies_updated', $post, $termIds);
+        $this->addHooks(
+            ['post' => $post, 'term_ids' => $termIds],
+            PostActionHook::POST_TAXONOMIES_UPDATED
+        );
     }
 
     protected function handlePostMeta(Request $request, Post $post)
@@ -370,6 +410,15 @@ class PostController extends Controller
             }
         }
 
-        Hook::doAction('post_meta_updated', $post, $metaKeys, $metaValues, $metaTypes, $metaDefaultValues);
+        $this->addHooks(
+            [
+                'post' => $post,
+                'meta_keys' => $metaKeys,
+                'meta_values' => $metaValues,
+                'meta_types' => $metaTypes,
+                'meta_default_values' => $metaDefaultValues,
+            ],
+            PostActionHook::POST_META_UPDATED
+        );
     }
 }

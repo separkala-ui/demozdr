@@ -9,6 +9,11 @@ enum DatatableHook: string
     case BEFORE_SEARCHBOX = 'datatable_before_searchbox';
     case AFTER_SEARCHBOX = 'datatable_after_searchbox';
 
+    // Lifecycle hooks
+    case POST_DATATABLE_MOUNTED = 'post_datatable_mounted';
+    case USER_DATATABLE_MOUNTED = 'user_datatable_mounted';
+    case DATATABLE_MOUNTED = 'datatable_mounted';
+
     // Delete
     case BEFORE_DELETE_ACTION = 'datatable_action_before_delete';
     case BEFORE_DELETE_FILTER = 'datatable_filter_before_delete';

@@ -9,7 +9,9 @@ use App\Services\Content\PostType;
 use App\Concerns\QueryBuilderTrait;
 use App\Concerns\HasMedia;
 use App\Enums\PostStatus;
+use App\Observers\PostObserver;
 use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
+#[ObservedBy([PostObserver::class])]
 class Post extends Model implements SpatieHasMedia
 {
     use HasFactory;

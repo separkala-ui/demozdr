@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Datatable;
 
+use App\Enums\Hooks\DatatableHook;
 use App\Enums\PostStatus;
 use App\Models\Post;
 use App\Models\Term;
@@ -37,10 +38,30 @@ class PostDatatable extends Datatable
         $this->resetPage();
     }
 
+    public function updatingTag()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingCategory()
+    {
+        $this->resetPage();
+    }
+
     public function mount(): void
     {
         parent::mount();
-        $this->categories = Term::where('taxonomy', 'category')->get()->toArray();
+
+        $postTypeModel = $this->getPostTypeModelProperty();
+        if ($postTypeModel->supports_taxonomies && $postTypeModel->taxonomies && in_array('category', $postTypeModel->taxonomies)) {
+            $this->categories = Term::where('taxonomy', 'category')->get()->toArray();
+        }
+
+        // Apply hooks to modify datatable initialization.
+        $this->addHooks(
+            $this,
+            DatatableHook::POST_DATATABLE_MOUNTED
+        );
     }
 
     public function getPostTypeModelProperty(): PostType
@@ -51,6 +72,8 @@ class PostDatatable extends Datatable
     public function getFilters(): array
     {
         $postTypeModel = $this->getPostTypeModelProperty();
+        $filters = [];
+
         $filters[] = [
             'id' => 'status',
             'label' => __('Status'),
@@ -84,6 +107,13 @@ class PostDatatable extends Datatable
                 'selected' => $this->category,
             ];
         }
+
+        // Apply hooks to modify filters
+        $filters = $this->addHooks(
+            $filters,
+            null,
+            DatatableHook::DATATABLE_MOUNTED
+        );
 
         return $filters;
     }
@@ -202,14 +232,10 @@ class PostDatatable extends Datatable
                     <iconify-icon icon="lucide:image" class=" text-center text-gray-400"></iconify-icon>
                 </div>
             <?php endif; ?>
-            <?php if (auth()->user()->can('post.edit')): ?>
-                <a href="<?php echo route('admin.posts.edit', [$this->postType, $post->id]) ?>"
-                    class="text-gray-700 dark:text-white font-medium hover:text-primary dark:hover:text-primary">
-                    <?php echo $post->title; ?>
-                </a>
-            <?php else: ?>
+            <a href="<?php echo route('admin.posts.edit', [$this->postType, $post->id]) ?>"
+                class="text-gray-700 dark:text-white font-medium hover:text-primary dark:hover:text-primary">
                 <?php echo $post->title; ?>
-            <?php endif; ?>
+            </a>
         </div>
         <?php
         return ob_get_clean();
