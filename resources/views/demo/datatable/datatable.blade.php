@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Datatable;
 
+use App\Enums\Hooks\UserActionHook;
+use App\Enums\Hooks\UserFilterHook;
 use App\Models\Role;
 use App\Services\RolesService;
 use App\Models\User;
@@ -15,20 +17,21 @@ use Spatie\QueryBuilder\QueryBuilder;
 class UserDatatable extends Datatable
 {
     public string $role = '';
+    public array $queryString = [
+        ...parent::QUERY_STRING_DEFAULTS,
+        'role' => [],
+    ];
     public string $model = User::class;
     public array $disabledRoutes = ['view'];
+
     public function getSearchbarPlaceholder(): string
     {
         return __('Search by name or email...');
     }
 
-    public function mount(): void
+    public function updatingRole()
     {
-        parent::mount();
-
-        $this->queryString = array_merge($this->queryString, [
-            'role' => [],
-        ]);
+        $this->resetPage();
     }
 
     public function getFilters(): array
@@ -38,7 +41,7 @@ class UserDatatable extends Datatable
                 'id' => 'role',
                 'label' => __('Role'),
                 'filterLabel' => __('Filter by Role'),
-                'icon' => '',
+                'icon' => 'lucide:sliders',
                 'allLabel' => __('All Roles'),
                 'options' => app(RolesService::class)->getRolesDropdown(),
                 'selected' => $this->role,
@@ -46,47 +49,42 @@ class UserDatatable extends Datatable
         ];
     }
 
-    public function getTable(): array
+    protected function getHeaders(): array
     {
         return [
-            'enableCheckbox' => true,
-            'enablePagination' => true,
-            'noResultsMessage' => __('No users found.'),
-            'headers' => [
-                [
-                    'id' => 'name',
-                    'title' => __('Name'),
-                    'width' => null,
-                    'sortable' => true,
-                    'sortBy' => 'first_name',
-                ],
-                [
-                    'id' => 'email',
-                    'title' => __('Email'),
-                    'width' => null,
-                    'sortable' => true,
-                    'sortBy' => 'email',
-                ],
-                [
-                    'id' => 'roles',
-                    'title' => __('Roles'),
-                    'width' => null,
-                    'sortable' => false,
-                ],
-                [
-                    'id' => 'created_at',
-                    'title' => __('Created At'),
-                    'width' => null,
-                    'sortable' => true,
-                    'sortBy' => 'created_at',
-                ],
-                [
-                    'id' => 'actions',
-                    'title' => __('Actions'),
-                    'width' => null,
-                    'sortable' => false,
-                    'is_action' => true,
-                ],
+            [
+                'id' => 'name',
+                'title' => __('Name'),
+                'width' => null,
+                'sortable' => true,
+                'sortBy' => 'first_name',
+            ],
+            [
+                'id' => 'email',
+                'title' => __('Email'),
+                'width' => null,
+                'sortable' => true,
+                'sortBy' => 'email',
+            ],
+            [
+                'id' => 'roles',
+                'title' => __('Roles'),
+                'width' => null,
+                'sortable' => false,
+            ],
+            [
+                'id' => 'created_at',
+                'title' => __('Created At'),
+                'width' => null,
+                'sortable' => true,
+                'sortBy' => 'created_at',
+            ],
+            [
+                'id' => 'actions',
+                'title' => __('Actions'),
+                'width' => null,
+                'sortable' => false,
+                'is_action' => true,
             ],
         ];
     }
@@ -151,7 +149,20 @@ class UserDatatable extends Datatable
 
             $this->authorize('delete', $user);
 
+            $user = $this->addHooks(
+                $user,
+                UserActionHook::USER_DELETED_BEFORE,
+                UserFilterHook::USER_DELETED_BEFORE
+            );
+
             $user->delete();
+
+            $this->addHooks(
+                $user,
+                UserActionHook::USER_DELETED_AFTER,
+                UserFilterHook::USER_DELETED_AFTER
+            );
+
             $deletedCount++;
         }
 
@@ -161,6 +172,7 @@ class UserDatatable extends Datatable
     public function handleRowDelete(Model|User $user): bool
     {
         // Prevent Superadmin deletion.
+        // @phpstan-ignore-next-line
         if ($user->hasRole(Role::SUPERADMIN)) {
             throw new \Exception(__('You cannot delete a :role account.', ['role' => Role::SUPERADMIN]));
         }
@@ -170,9 +182,23 @@ class UserDatatable extends Datatable
             throw new \Exception(__('You cannot delete your own account.'));
         }
 
+        $user = $this->addHooks(
+            $user,
+            UserActionHook::USER_DELETED_BEFORE,
+            UserFilterHook::USER_DELETED_BEFORE
+        );
+
         $this->authorize('delete', $user);
 
-        return $user->delete();
+        $deleted = $user->delete();
+
+        $this->addHooks(
+            $user,
+            UserActionHook::USER_DELETED_AFTER,
+            UserFilterHook::USER_DELETED_AFTER
+        );
+
+        return $deleted;
     }
 }
 ?>
