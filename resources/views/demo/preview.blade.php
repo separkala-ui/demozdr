@@ -131,8 +131,6 @@
 
         <x-toast-notifications />
 
-        {!! ld_apply_filters('admin_footer_before', '') !!}
-
         @stack('scripts')
 
         @if (!empty(config('settings.global_custom_js')))
@@ -205,6 +203,5 @@
         </script>
 
         @livewireScriptConfig
-        {!! ld_apply_filters('admin_footer_after', '') !!}
     </body>
 </html>

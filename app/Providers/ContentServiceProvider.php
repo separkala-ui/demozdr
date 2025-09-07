@@ -75,9 +75,7 @@ class ContentServiceProvider extends ServiceProvider
         ]);
 
         // Allow other plugins/modules to register post types.
-        if (function_exists('ld_do_action')) {
-            Hook::doAction(ContentActionHook::REGISTER_POST_TYPES, $contentService);
-        }
+        Hook::doAction(ContentActionHook::REGISTER_POST_TYPES, $contentService);
     }
 
     protected function registerDefaultTaxonomies(): void
@@ -105,9 +103,7 @@ class ContentServiceProvider extends ServiceProvider
         ], 'post');
 
         // Allow other plugins/modules to register taxonomies
-        if (function_exists('ld_do_action')) {
-            Hook::doAction(ContentActionHook::REGISTER_TAXONOMIES, $contentService);
-        }
+        Hook::doAction(ContentActionHook::REGISTER_TAXONOMIES, $contentService);
     }
 
     protected function getPostTypeIcon(string $postType): string

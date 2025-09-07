@@ -1,14 +1,14 @@
 @extends('backend.layouts.app')
 
 @section('title')
-    {{ $breadcrumbs['title'] }} | {{ config('app.name') }}
+    {{ __('Translations') }} | {{ config('app.name') }}
 @endsection
 
 @section('admin-content')
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
         <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
 
-        {!! ld_apply_filters('translation_after_breadcrumbs', '') !!}
+        {!! Hook::applyFilters(CommonFilterHook::TRANSLATION_AFTER_BREADCRUMBS, '') !!}
 
         <div class="bg-white p-6 rounded-md shadow-md mb-6 dark:bg-gray-800">
             <div class="flex flex-col sm:flex-row mb-6 gap-4 justify-between">

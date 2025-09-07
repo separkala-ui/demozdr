@@ -6,16 +6,6 @@ namespace App\Enums\Hooks;
 
 enum CommonFilterHook: string
 {
-    // Dashboard.
-    case DASHBOARD_AFTER_BREADCRUMBS = 'filter.dashboard_after_breadcrumbs';
-    case DASHBOARD_CARDS_BEFORE_USERS = 'filter.dashboard_cards_before_users';
-    case DASHBOARD_CARDS_AFTER_USERS = 'filter.dashboard_cards_after_users';
-    case DASHBOARD_CARDS_AFTER_ROLES = 'filter.dashboard_cards_after_roles';
-    case DASHBOARD_CARDS_AFTER_PERMISSIONS = 'filter.dashboard_cards_after_permissions';
-    case DASHBOARD_CARDS_AFTER_TRANSLATIONS = 'filter.dashboard_cards_after_translations';
-    case DASHBOARD_CARDS_AFTER = 'filter.dashboard_cards_after';
-    case DASHBOARD_AFTER = 'filter.dashboard_after';
-
     // Media
     case MEDIA_AFTER_BREADCRUMBS = 'filter.media_after_breadcrumbs';
 

@@ -15,12 +15,12 @@
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
         <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
 
-        {!! ld_apply_filters('dashboard_after_breadcrumbs', '') !!}
+        {!! Hook::applyFilters(DashboardFilterHook::DASHBOARD_AFTER_BREADCRUMBS, '') !!}
 
         <div class="grid grid-cols-12 gap-4 md:gap-6">
             <div class="col-span-12 space-y-6">
                 <div class="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-4 md:gap-6">
-                    {!! ld_apply_filters('dashboard_cards_before_users', '') !!}
+                    {!! Hook::applyFilters(DashboardFilterHook::DASHBOARD_CARDS_BEFORE_USERS, '') !!}
                     @include('backend.pages.dashboard.partials.card', [
                         "icon" => 'heroicons:user-group',
                         'icon_bg' => '#635BFF',
@@ -30,7 +30,7 @@
                         'url' => route('admin.users.index'),
                         'enable_full_div_click' => true,
                     ])
-                    {!! ld_apply_filters('dashboard_cards_after_users', '') !!}
+                    {!! Hook::applyFilters(DashboardFilterHook::DASHBOARD_CARDS_AFTER_USERS, '') !!}
                     @include('backend.pages.dashboard.partials.card', [
                         'icon' => 'heroicons:key',
                         'icon_bg' => '#00D7FF',
@@ -40,7 +40,7 @@
                         'url' => route('admin.roles.index'),
                         'enable_full_div_click' => true,
                     ])
-                    {!! ld_apply_filters('dashboard_cards_after_roles', '') !!}
+                    {!! Hook::applyFilters(DashboardFilterHook::DASHBOARD_CARDS_AFTER_ROLES, '') !!}
                     @include('backend.pages.dashboard.partials.card', [
                         'icon' => 'bi:shield-check',
                         'icon_bg' => '#FF4D96',
@@ -50,7 +50,7 @@
                         'url' => route('admin.permissions.index'),
                         'enable_full_div_click' => true,
                     ])
-                    {!! ld_apply_filters('dashboard_cards_after_permissions', '') !!}
+                    {!! Hook::applyFilters(DashboardFilterHook::DASHBOARD_CARDS_AFTER_PERMISSIONS, '') !!}
                     @include('backend.pages.dashboard.partials.card', [
                         'icon' => 'heroicons:language',
                         'icon_bg' => '#22C55E',
@@ -60,12 +60,12 @@
                         'url' => route('admin.translations.index'),
                         'enable_full_div_click' => true,
                     ])
-                    {!! ld_apply_filters('dashboard_cards_after_translations', '') !!}
+                    {!! Hook::applyFilters(DashboardFilterHook::DASHBOARD_CARDS_AFTER_TRANSLATIONS, '') !!}
                 </div>
             </div>
         </div>
 
-        {!! ld_apply_filters('dashboard_cards_after', '') !!}
+        {!! Hook::applyFilters(DashboardFilterHook::DASHBOARD_CARDS_AFTER, '') !!}
 
         <div class="mt-6">
             <div class="grid grid-cols-12 gap-4 md:gap-6">
@@ -92,6 +92,6 @@
             </div>
         </div>
 
-        {!! ld_apply_filters('dashboard_after', '') !!}
+        {!! Hook::applyFilters(DashboardFilterHook::DASHBOARD_AFTER, '') !!}
     </div>
 @endsection

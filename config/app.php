@@ -291,6 +291,7 @@ return [
          */
         'Hook' => App\Support\Facades\Hook::class,
         'AdminFilterHook' => App\Enums\Hooks\AdminFilterHook::class,
+        'DashboardFilterHook' => App\Enums\Hooks\DashboardFilterHook::class,
         'DatatableHook' => App\Enums\Hooks\DatatableHook::class,
         'RoleActionHook' => App\Enums\Hooks\RoleActionHook::class,
         'RoleFilterHook' => App\Enums\Hooks\RoleFilterHook::class,

@@ -15,6 +15,6 @@
         </x-breadcrumbs>
     </x-slot>
 
-    {!! ld_apply_filters('posts_after_breadcrumbs', '', $postType) !!}
+    {!! Hook::applyFilters(PostFilterHook::POSTS_AFTER_BREADCRUMBS, '', $postType) !!}
     @livewire('datatable.post-datatable', ['postType' => $postType ,'lazy' => true])
 </x-layouts.backend-layout>

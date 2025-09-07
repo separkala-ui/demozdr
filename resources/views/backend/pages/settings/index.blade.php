@@ -8,7 +8,7 @@
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
         <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
 
-        {!! ld_apply_filters('settings_after_breadcrumbs', '') !!}
+        {!! Hook::applyFilters(SettingFilterHook::SETTINGS_AFTER_BREADCRUMBS, '') !!}
 
         <div class="space-y-6">
             <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
@@ -21,7 +21,7 @@
                     >
                         @csrf
                         @include('backend.pages.settings.tabs', [
-                            'tabs' => ld_apply_filters('settings_tabs', [
+                            'tabs' => Hook::applyFilters(SettingFilterHook::SETTINGS_TABS, [
                                 'general' => [
                                     'title' => __('General Settings'),
                                     'view' => 'backend.pages.settings.general-tab',

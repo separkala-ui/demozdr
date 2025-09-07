@@ -26,7 +26,7 @@
     }" id="mediaManager">
         <x-breadcrumbs :breadcrumbs="$breadcrumbs" />
 
-        {!! ld_apply_filters('media_after_breadcrumbs', '') !!}
+        {!! Hook::applyFilters(CommonFilterHook::MEDIA_AFTER_BREADCRUMBS, '') !!}
 
         @if ($errors->any())
             <div class="mb-6 p-4 border border-red-200 bg-red-50 rounded-md dark:border-red-800 dark:bg-red-900/20">

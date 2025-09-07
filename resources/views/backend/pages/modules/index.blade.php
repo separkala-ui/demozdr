@@ -55,7 +55,7 @@
         </x-slot>
     </x-breadcrumbs>
 
-    {!! ld_apply_filters('modules_after_breadcrumbs', '') !!}
+    {!! Hook::applyFilters(ModuleFilterHook::MODULES_AFTER_BREADCRUMBS, '') !!}
 
     @if (!empty($modules))
     <div x-show="showUploadArea" class="mb-6 p-6 border-2 border-dashed border-gray-300 rounded-md bg-gray-50 dark:bg-gray-800 dark:border-gray-600"

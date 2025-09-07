@@ -1,5 +1,5 @@
 <x-layouts.backend-layout :breadcrumbs="$breadcrumbs">
-    {!! ld_apply_filters('posts_create_after_breadcrumbs', '', $postType) !!}
+    {!! Hook::applyFilters(PostFilterHook::POSTS_CREATE_AFTER_BREADCRUMBS, '', $postType) !!}
 
     <x-card>
         <form
@@ -21,7 +21,7 @@
         </form>
     </x-card>
 
-    {!! ld_apply_filters('after_post_form', '', $postType) !!}
+    {!! Hook::applyFilters(PostFilterHook::AFTER_POST_FORM, '', $postType) !!}
 
     @push('scripts')
         <x-quill-editor :editor-id="'content'" height="200px" maxHeight="-1" />
