@@ -7,7 +7,9 @@ namespace App\Models;
 use App\Concerns\HasUniqueSlug;
 use App\Concerns\QueryBuilderTrait;
 use App\Concerns\HasMedia;
+use App\Observers\TermObserver;
 use Spatie\MediaLibrary\HasMedia as SpatieHasMedia;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
+#[ObservedBy([TermObserver::class])]
 class Term extends Model implements SpatieHasMedia
 {
     use HasFactory;
