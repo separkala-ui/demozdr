@@ -9,6 +9,9 @@
         </x-breadcrumbs>
     </x-slot>
 
-    {!! ld_apply_filters('users_after_breadcrumbs', '') !!}
+    {!! Hook::applyFilters(UserFilterHook::USER_AFTER_BREADCRUMBS, '') !!}
+
     @livewire('datatable.user-datatable', ['lazy' => true])
+
+    {!! Hook::applyFilters(UserFilterHook::USER_AFTER_TABLE, '') !!}
 </x-layouts.backend-layout>

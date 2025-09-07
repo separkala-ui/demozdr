@@ -53,7 +53,27 @@ When contributing code to Lara Dashboard, please follow these guidelines:
 
 7. **Extensibility**
    - If implementing functionality that might be useful for extension, create action/filter hooks
-   - Use the `ld_do_action()` and `ld_apply_filters()` functions for extension points
+   - Use the Hook facade to apply filters and actions.
+   - Example usage:
+```php
+<?php
+use App\Enums\Hooks\CommonFilterHook;
+use App\Enums\Hooks\UserActionHook;
+use App\Enums\Hooks\UserFilterHook;
+use App\Support\Facades\Hook;
+
+// Applying a filter.
+$content = Hook::applyFilters('filter_hook_name', $content);
+
+// Adding an action.
+Hook::doAction('action_hook_name', $param1, $param2);
+
+// We've also listed all filter/action hooks inside of `app/Enums/Hooks` directory.
+$content = Hook::applyFilters(UserFilterHook::USER_AFTER_BREADCRUMBS, $content);
+
+// Adding an action via enum.
+Hook::doAction(UserActionHook::USER_CREATED, $user);
+```
 
 ### Coding Standards
 

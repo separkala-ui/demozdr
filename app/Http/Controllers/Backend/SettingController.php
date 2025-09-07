@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Backend;
 
 use App\Enums\ActionType;
+use App\Enums\Hooks\SettingFilterHook;
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use App\Services\CacheService;
 use App\Services\EnvWriter;
 use App\Services\ImageService;
 use App\Services\RecaptchaService;
-use App\Models\Setting;
 use App\Services\SettingService;
+use App\Support\Facades\Hook;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 
@@ -46,7 +48,7 @@ class SettingController extends Controller
 
         // Restrict specific fields in demo mode.
         if (config('app.demo_mode', false)) {
-            $restrictedFields = ld_apply_filters('settings_restricted_fields', [
+            $restrictedFields = Hook::applyFilters(SettingFilterHook::SETTINGS_RESTRICTED_FIELDS, [
                 'app_name',
                 'google_analytics_script',
                 'recaptcha_site_key',
