@@ -26,6 +26,9 @@ enum PostFilterHook: string
     case POSTS_EDIT_AFTER_BREADCRUMBS = 'filter.post.edit.after_breadcrumbs';
     case POSTS_SHOW_AFTER_BREADCRUMBS = 'filter.post.show.after_breadcrumbs';
 
+    // UI Hooks - Table.
+    case POSTS_AFTER_TABLE = 'filter.post.after_table';
+
     // UI Hooks - Form.
     case INSIDE_POST_FORM_START = 'filter.post.form_start';
     case POST_FORM_AFTER_TITLE = 'filter.post.form_after_title';

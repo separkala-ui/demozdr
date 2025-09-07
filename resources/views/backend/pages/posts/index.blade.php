@@ -16,5 +16,8 @@
     </x-slot>
 
     {!! Hook::applyFilters(PostFilterHook::POSTS_AFTER_BREADCRUMBS, '', $postType) !!}
+
     @livewire('datatable.post-datatable', ['postType' => $postType ,'lazy' => true])
+
+    {!! Hook::applyFilters(PostFilterHook::POSTS_AFTER_TABLE, '', $postType) !!}
 </x-layouts.backend-layout>
