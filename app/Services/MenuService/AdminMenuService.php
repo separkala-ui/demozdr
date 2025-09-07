@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services\MenuService;
 
 use App\Enums\Hooks\AdminFilterHook;
-use App\Enums\Hooks\CommonFilterHook;
 use App\Services\Content\ContentService;
 use App\Support\Facades\Hook;
 use Illuminate\Support\Facades\Route;

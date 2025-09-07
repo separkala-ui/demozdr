@@ -10,7 +10,7 @@ enum AdminFilterHook: string
     case ADMIN_FOOTER_BEFORE = 'filter.admin_footer_before';
     case ADMIN_FOOTER_AFTER = 'filter.admin_footer_after';
 
-     // Dark mode.
+    // Dark mode.
     case DARK_MODE_TOGGLER_BEFORE_BUTTON = 'filter.dark_mode_toggler_before_button';
     case DARK_MODE_TOGGLER_AFTER_BUTTON = 'filter.dark_mode_toggler_after_button';
 
