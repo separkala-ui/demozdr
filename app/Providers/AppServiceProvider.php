@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Enums\Hooks\CommonFilterHook;
+use App\Enums\Hooks\AdminFilterHook;
 use App\Models\Setting;
 use App\Models\User;
 use App\Support\Facades\Hook;
@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
         if (
             ! $this->app->runningInConsole() &&
             request()->is('/') &&
-            Hook::applyFilters(CommonFilterHook::ADMIN_SITE_ONLY, true)
+            Hook::applyFilters(AdminFilterHook::ADMIN_SITE_ONLY, true)
         ) {
             redirect('/admin')->send();
             exit;

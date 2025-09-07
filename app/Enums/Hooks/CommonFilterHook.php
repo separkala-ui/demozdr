@@ -29,7 +29,4 @@ enum CommonFilterHook: string
     case RECAPTCHA_POST_VERIFICATION = 'filter.recaptcha_post_verification';
     case RECAPTCHA_VERIFICATION_EXCEPTION = 'filter.recaptcha_verification_exception';
     case RECAPTCHA_AVAILABLE_PAGES = 'filter.recaptcha_available_pages';
-
-    // Generic filters
-    case ADMIN_SITE_ONLY = 'filter.admin_site_only';
 }
