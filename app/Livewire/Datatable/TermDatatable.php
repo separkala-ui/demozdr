@@ -62,13 +62,12 @@ class TermDatatable extends Datatable
         $query = QueryBuilder::for($this->model)
             ->where('taxonomy', $this->taxonomy)
             ->with('parent')
-            ->withCount('posts');
-
-        if ($this->search) {
-            $query->where(function ($q) {
-                $q->where('name', 'like', "%{$this->search}%");
+            ->withCount('posts')
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('name', 'like', "%{$this->search}%");
+                });
             });
-        }
 
         return $this->sortQuery($query);
     }

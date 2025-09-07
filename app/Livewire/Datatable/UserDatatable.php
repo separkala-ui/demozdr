@@ -91,23 +91,20 @@ class UserDatatable extends Datatable
 
     protected function buildQuery(): QueryBuilder
     {
-        $query = QueryBuilder::for($this->model);
-
-        if ($this->search) {
-            $query->where(function ($q) {
-                $q->where('first_name', 'like', "%{$this->search}%")
-                    ->orWhere('last_name', 'like', "%{$this->search}%")
-                    ->orWhere('email', 'like', "%{$this->search}%");
+        $query = QueryBuilder::for($this->model)
+            ->with('roles')
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('first_name', 'like', "%{$this->search}%")
+                        ->orWhere('last_name', 'like', "%{$this->search}%")
+                        ->orWhere('email', 'like', "%{$this->search}%");
+                });
+            })
+            ->when($this->role, function ($query) {
+                $query->whereHas('roles', function ($q) {
+                    $q->where('name', $this->role);
+                });
             });
-        }
-
-        if ($this->role) {
-            $query->whereHas('roles', function ($q) {
-                $q->where('name', $this->role);
-            });
-        }
-
-        $query->with('roles');
 
         return $this->sortQuery($query);
     }

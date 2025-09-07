@@ -60,13 +60,12 @@ class RoleDatatable extends Datatable
     {
         $query = QueryBuilder::for($this->model)
             ->withCount('users')
-            ->withCount('permissions');
-
-        if ($this->search) {
-            $query->where(function ($q) {
-                $q->where('name', 'like', "%{$this->search}%");
+            ->withCount('permissions')
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('name', 'like', "%{$this->search}%");
+                });
             });
-        }
 
         return $this->sortQuery($query);
     }
