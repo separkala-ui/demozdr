@@ -4,8 +4,15 @@
 
 <div class="flex flex-col gap-5">
     <x-demo.preview-component
-        title="{{ __('Simple Datatable') }}"
-        description="{{ __('A basic datatable with only body content.') }}"
+        title="{{ __('Sample Todo Datatable Source Code') }}"
+        description="{{ __('A basic datatable with fields of the model.') }}"
+        path="views/demo/datatable/todo-datatable.blade.php"
+        include="demo.datatable.todo-datatable"
+        :hideCodeButton="true"
+    />
+    <x-demo.preview-component
+        title="{{ __('User Datatable') }}"
+        description="{{ __('A basic datatable with some customization fields of the user model.') }}"
         path="views/demo/datatable/datatable.blade.php"
         include="demo.datatable.datatable"
     />

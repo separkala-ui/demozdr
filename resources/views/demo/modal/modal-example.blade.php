@@ -2,7 +2,7 @@
     <button type="button" class="btn-default" @click="open = true">
         {{ __('Open Demo Modal') }}
     </button>
-    <x-modal.modal x-show="open">
+    <x-modal x-show="open">
         <x-slot name="header">
             {{ __('Modal Header') }}
         </x-slot>
@@ -12,5 +12,5 @@
         <x-slot name="footer">
             <button type="button" class="btn-default" @click="open = false">{{ __('Close') }}</button>
         </x-slot>
-    </x-modal.modal>
+    </x-modal>
 </div>

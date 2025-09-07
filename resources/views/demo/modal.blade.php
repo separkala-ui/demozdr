@@ -9,6 +9,7 @@
     include="demo.modal.modal-example"
 />
 
+<br/>
 <x-demo.preview-component
     title="{{ __('Modal without header footer') }}"
     path="views/demo/modal/modal-without-header-footer-example.blade.php"

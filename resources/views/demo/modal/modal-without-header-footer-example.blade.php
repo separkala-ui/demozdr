@@ -2,7 +2,7 @@
     <button type="button" class="btn-default" @click="open = true">
         {{ __('Open Demo Modal') }}
     </button>
-    <x-modal.modal x-show="open">
+    <x-modal x-show="open">
         <p>{{ __('This is a demo modal body. You can put any content here, including forms, text, or other components.') }}</p>
-    </x-modal.modal>
+    </x-modal>
 </div>
