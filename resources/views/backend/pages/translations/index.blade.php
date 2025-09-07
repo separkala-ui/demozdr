@@ -35,7 +35,7 @@
 
             <div class="place-items-end mt-4 sm:mt-0">
                 @if(auth()->user()->can('translations.edit'))
-                    <button data-modal-target="add-language-modal" data-modal-toggle="add-language-modal" class="btn-primary" id="add-language-button">
+                    <button @click="$dispatch('open-add-language-modal')" class="btn-primary" id="add-language-button">
                         <iconify-icon icon="feather:plus" class="mr-2"></iconify-icon>{{ __('New Language') }}
                     </button>
                 @endif

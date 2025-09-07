@@ -36,7 +36,7 @@
             </div>
 
             @isset($footer)
-                <div class="px-6 py-4 border-t flex justify-end items-center {{ $footerClass ?? '' }}">
+                <div class="px-6 py-4 border-t flex justify-start gap-4 items-center {{ $footerClass ?? '' }}">
                     {{ $footer }}
                 </div>
             @endisset
