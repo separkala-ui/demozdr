@@ -1,5 +1,5 @@
 <x-layouts.backend-layout :breadcrumbs="$breadcrumbs">
-    {!! Hook::applyFilters('terms_after_breadcrumbs', '', $taxonomyModel) !!}
+    {!! Hook::applyFilters(TermFilterHook::TERM_AFTER_BREADCRUMBS, '', $taxonomyModel) !!}
 
     <div class="max-w-4xl mx-auto">
         @include('backend.pages.terms.partials.form')

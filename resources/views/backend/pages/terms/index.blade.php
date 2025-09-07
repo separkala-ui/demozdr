@@ -1,5 +1,5 @@
 <x-layouts.backend-layout :breadcrumbs="$breadcrumbs">
-    {!! Hook::applyFilters('terms_after_breadcrumbs', '', $taxonomyModel) !!}
+    {!! Hook::applyFilters(TermFilterHook::TERM_AFTER_BREADCRUMBS, '', $taxonomyModel) !!}
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-1 space-y-6">

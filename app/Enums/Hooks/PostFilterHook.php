@@ -43,14 +43,18 @@ enum PostFilterHook: string
     case POST_FORM_AFTER_TAXONOMY = 'filter.post.form_after_taxonomy_';
     case AFTER_POST_FORM = 'filter.post.after_form';
 
-    // UI Hooks - Actions
-    case ADMIN_POST_ACTIONS_AFTER_EDIT = 'filter.post.actions_after_edit';
-    case ADMIN_POST_ACTIONS_AFTER_VIEW = 'filter.post.actions_after_view';
-    case ADMIN_POST_ACTIONS_AFTER_DELETE = 'filter.post.actions_after_delete';
+    // UI Hooks - Filters.
+    case POST_ACTIONS_AFTER_EDIT = 'filter.post.actions_after_edit';
+    case POST_ACTIONS_AFTER_VIEW = 'filter.post.actions_after_view';
+    case POST_ACTIONS_AFTER_DELETE = 'filter.post.actions_after_delete';
 
-    // UI Hooks - Content
+    // Validation rule - Filters.
+    case POST_STORE_VALIDATION_RULES = 'post.store.validation.rules';
+    case POST_UPDATE_VALIDATION_RULES = 'post.update.validation.rules';
+
+    // UI Hooks - Content.
     case POSTS_SHOW_AFTER_CONTENT = 'filter.posts.show_after_content';
 
-    // Options
+    // Options.
     case POST_STATUS_OPTIONS = 'filter.post.status_options';
 }

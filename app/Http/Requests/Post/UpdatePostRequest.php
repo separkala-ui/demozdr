@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Post;
 
+use App\Enums\Hooks\PostFilterHook;
 use App\Enums\PostStatus;
 use App\Http\Requests\FormRequest;
 use App\Support\Facades\Hook;
@@ -50,7 +51,7 @@ class UpdatePostRequest extends FormRequest
         $postId = $this->post;
         $postStatuses = implode(',', array_map(fn ($status) => $status->value, PostStatus::cases()));
 
-        return Hook::applyFilters('post.update.validation.rules', [
+        return Hook::applyFilters(PostFilterHook::POST_UPDATE_VALIDATION_RULES, [
             /** @example "Updated: Laravel Development Best Practices" */
             'title' => 'required|string|max:255',
 

@@ -382,13 +382,13 @@ class AdminMenuService
         $html = '';
         foreach ($groupItems as $menuItem) {
             $filterKey = $menuItem->id ?? Str::slug($menuItem->label) ?: '';
-            $html .= Hook::applyFilters('sidebar_menu_before_' . $filterKey, '');
+            $html .= Hook::applyFilters(AdminFilterHook::SIDEBAR_MENU_BEFORE->value . $filterKey, '');
 
             $html .= view('backend.layouts.partials.menu-item', [
                 'item' => $menuItem,
             ])->render();
 
-            $html .= Hook::applyFilters('sidebar_menu_after_' . $filterKey, '');
+            $html .= Hook::applyFilters(AdminFilterHook::SIDEBAR_MENU_AFTER->value . $filterKey, '');
         }
 
         return $html;

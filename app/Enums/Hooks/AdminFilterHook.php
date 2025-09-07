@@ -30,6 +30,8 @@ enum AdminFilterHook: string
     case SIDEBAR_MENU_GROUP_BEFORE = 'filter.sidebar_menu_group_before_';
     case SIDEBAR_MENU_GROUP_HEADING_BEFORE = 'filter.sidebar_menu_group_heading_before_';
     case SIDEBAR_MENU_GROUP_HEADING_AFTER = 'filter.sidebar_menu_group_heading_after_';
+    case SIDEBAR_MENU_BEFORE = 'filter.sidebar_menu_before_';
+    case SIDEBAR_MENU_AFTER = 'filter.sidebar_menu_after_';
     case SIDEBAR_MENU_BEFORE_ALL = 'filter.sidebar_menu_before_all_';
     case SIDEBAR_MENU_AFTER_ALL = 'filter.sidebar_menu_after_all_';
     case SIDEBAR_MENU_GROUP_AFTER = 'filter.sidebar_menu_group_after_';
