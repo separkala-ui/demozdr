@@ -21,17 +21,17 @@ class ModuleController extends Controller
     {
         $this->authorize('viewAny', Module::class);
 
-        return view('backend.pages.modules.index', [
+        $this->setBreadcrumbTitle(__('Modules'));
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.modules.index', [
             'modules' => $this->moduleService->getPaginatedModules(),
-            'breadcrumbs' => [
-                'title' => __('Modules'),
-            ],
         ]);
     }
 
     public function store(StoreModuleRequest $request): RedirectResponse
     {
         $this->authorize('create', Module::class);
+
         if (config('app.demo_mode', false)) {
             session()->flash('error', __('Module upload is restricted in demo mode. Please try on your local/live environment.'));
 
