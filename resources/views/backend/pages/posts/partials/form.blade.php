@@ -94,12 +94,12 @@
                 @php
                     $statusOptions = ld_apply_filters('post_status_options', [
                         ['value' => 'draft', 'label' => __('Draft')],
-                        ['value' => 'publish', 'label' => __('Published')],
+                        ['value' => 'published', 'label' => __('Published')],
                         ['value' => 'pending', 'label' => __('Pending Review')],
-                        ['value' => 'future', 'label' => __('Scheduled')],
+                        ['value' => 'scheduled', 'label' => __('Scheduled')],
                         ['value' => 'private', 'label' => __('Private')],
                     ]);
-                    $currentStatus = old('status', $post->status ?? 'draft');
+                    $currentStatus = old('status', $post->status ?? App\Enums\PostStatus::DRAFT->value);
                 @endphp
 
                 <x-inputs.combobox
@@ -116,11 +116,11 @@
 
                 <!-- Publish Date (for scheduled posts) -->
                 <div x-data="{
-                    showSchedule: {{ isset($post) && (old('status', $post->status) === 'future' || $post->published_at) ? 'true' : 'false' }},
-                    status: '{{ old('status', $post->status ?? 'draft') }}',
+                    showSchedule: {{ isset($post) && (old('status', $post->status) === 'scheduled' || $post->published_at) ? 'true' : 'false' }},
+                    status: '{{ old('status', $post->status ?? App\Enums\PostStatus::DRAFT->value) }}',
                     init() {
                         this.$watch('status', value => {
-                            if (value === 'future') {
+                            if (value === 'scheduled') {
                                 this.showSchedule = true;
                             }
                         });
@@ -128,7 +128,7 @@
                 }">
                     <div class="mb-2">
                         <input type="checkbox" id="schedule_post" name="schedule_post" x-model="showSchedule"
-                            x-on:change="if(showSchedule && status !== 'future') status = 'future'; $dispatch('input', status)"
+                            x-on:change="if(showSchedule && status !== 'scheduled') status = 'scheduled'; $dispatch('input', status)"
                             class="form-checkbox mr-2">
                         <label for="schedule_post"
                             class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Schedule this post') }}</label>
@@ -140,7 +140,10 @@
                                 isset($post) && $post->published_at
                                     ? $post->published_at->format('Y-m-d H:i')
                                     : now()->addDay()->format('Y-m-d H:i'),
-                            )" :min-date="now()->format('Y-m-d')" :help-text="__('Schedule when this post should be published')" />
+                            )"
+                            :min-date="now()->format('Y-m-d')"
+                            :help-text="__('Schedule when this post should be published')"
+                        />
                     </div>
                 </div>
                 {!! ld_apply_filters('post_form_after_publish_date', '') !!}

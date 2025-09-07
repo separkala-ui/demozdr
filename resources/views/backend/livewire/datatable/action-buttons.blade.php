@@ -17,7 +17,7 @@
 
     {!! $afterActionView !!}
 
-    @if (isset($routes['edit']) && auth()->user()->can('update', $item) && $routes['edit'] ?? false && $componentPermissions['edit'] ?? false)
+    @if (isset($routes['edit']) && $routes['edit'] ?? false && $componentPermissions['edit'] ?? false && (($componentPermissions['edit'] === true) || auth()->user()->can('update', $item)))
         <x-buttons.action-item
             :href="$editRouteUrl"
             :icon="$editButtonIcon"
@@ -27,7 +27,7 @@
 
     {!! $afterActionEdit !!}
 
-    @if (isset($routes['delete']) && auth()->user()->can('delete', $item) && $routes['delete'] ?? false)
+    @if (isset($routes['delete']) && $routes['delete'] ?? false && (($componentPermissions['delete'] === true) || auth()->user()->can('delete', $item)))
         <div x-data="{ deleteModalOpen: false }">
             <x-buttons.action-item
                 type="modal-trigger"

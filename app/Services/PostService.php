@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\PostStatus;
 use App\Models\Post;
 
 class PostService
@@ -104,7 +105,7 @@ class PostService
             'content' => $data['content'] ?? '',
             'excerpt' => $data['excerpt'] ?? '',
             'post_type' => $data['post_type'] ?? 'post',
-            'status' => $data['status'] ?? 'draft',
+            'status' => $data['status'] ?? PostStatus::DRAFT->value,
             'published_at' => $data['published_at'] ?? null,
             'author_id' => $data['author_id'],
         ]);

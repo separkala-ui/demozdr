@@ -6,6 +6,7 @@ namespace App\Livewire\Datatable;
 
 use App\Concerns\Datatable\HasDatatableActionItems;
 use App\Concerns\Datatable\HasDatatableDelete;
+use App\Concerns\Datatable\HasDatatableGenerator;
 use App\Concerns\Hookable;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -23,6 +24,7 @@ abstract class Datatable extends Component
     use WithPagination;
     use HasDatatableActionItems;
     use HasDatatableDelete;
+    use HasDatatableGenerator;
     use Hookable;
 
     public string $model = '';
@@ -94,6 +96,10 @@ abstract class Datatable extends Component
 
     public function mount(): void
     {
+        if (empty($this->getModelClass())) {
+            throw new \Exception('Model class is not defined in the datatable component.');
+        }
+
         $this->searchbarPlaceholder = $this->getSearchbarPlaceholder();
         $this->filters = $this->getFilters();
         $this->setActionLabels();
@@ -118,11 +124,6 @@ abstract class Datatable extends Component
         return '';
     }
 
-    protected function getHeaders(): array
-    {
-        return $this->headers ?? [];
-    }
-
     protected function getNoResultsMessage(): string
     {
         return __('No :items found.', ['items' => $this->getModelNamePlural()]);
@@ -141,11 +142,6 @@ abstract class Datatable extends Component
     protected function getPerPageOptions(): array
     {
         return [10, 20, 50, 100, __('All')];
-    }
-
-    protected function getSearchbarPlaceholder(): string
-    {
-        return __('Search...');
     }
 
     protected function getNewResourceLinkPermission(): string
@@ -322,10 +318,6 @@ abstract class Datatable extends Component
 
     protected function buildQuery(): QueryBuilder
     {
-        if (empty($this->getModelClass())) {
-            throw new \Exception('Model class is not defined in the datatable component.');
-        }
-
         $query = QueryBuilder::for($this->getModelClass());
 
         if ($this->search) {
@@ -344,6 +336,12 @@ abstract class Datatable extends Component
             }
         }
 
+        // Auto-include relationships if specified.
+        if (! empty($this->relationships)) {
+            $query->with($this->relationships);
+        }
+
+        // Apply sorting
         if ($this->sort) {
             $query->orderBy($this->sort, $this->direction);
         }

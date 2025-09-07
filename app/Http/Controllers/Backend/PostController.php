@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Backend;
 
 use App\Enums\Hooks\PostHook;
+use App\Enums\PostStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
@@ -15,6 +16,7 @@ use App\Services\ImageService;
 use App\Services\MediaLibraryService;
 use App\Services\PostMetaService;
 use App\Services\PostService;
+use App\Support\Facades\Hook;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
@@ -53,19 +55,13 @@ class PostController extends Controller
             'tag' => $request->tag,
         ];
 
-        // Get posts with pagination using service.
-        $posts = $this->postService->getPosts($filters);
+        $this->setBreadcrumbTitle($postTypeModel->label);
 
         // Get categories and tags for filters.
         $categories = Term::where('taxonomy', 'category')->select('id', 'name')->get();
         $tags = Term::where('taxonomy', 'tag')->select('id', 'name')->get();
 
-        return view('backend.pages.posts.index', compact('posts', 'postType', 'postTypeModel', 'categories', 'tags'))
-            ->with([
-                'breadcrumbs' => [
-                    'title' => $postTypeModel->label,
-                ],
-            ]);
+        return $this->renderViewWithBreadcrumbs('backend.pages.posts.index', compact('postType', 'postTypeModel', 'categories', 'tags'));
     }
 
     public function create(string $postType = 'post'): RedirectResponse|Renderable
@@ -95,18 +91,10 @@ class PostController extends Controller
                 ->toArray();
         }
 
-        return view('backend.pages.posts.create', compact('postType', 'postTypeModel', 'taxonomies', 'parentPosts'))
-            ->with([
-                'breadcrumbs' => [
-                    'title' => __('New :postType', ['postType' => $postTypeModel->label_singular]),
-                    'items' => [
-                        [
-                            'label' => $postTypeModel->label,
-                            'url' => route('admin.posts.index', $postType),
-                        ],
-                    ],
-                ],
-            ]);
+        $this->setBreadcrumbTitle(__('New :postType', ['postType' => $postTypeModel->label_singular]))
+            ->addBreadcrumbItem($postTypeModel->label, route('admin.posts.index', $postType));
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.posts.create', compact('postType', 'postTypeModel', 'taxonomies', 'parentPosts'));
     }
 
     public function store(StorePostRequest $request, string $postType = 'post'): RedirectResponse
@@ -133,15 +121,15 @@ class PostController extends Controller
 
         // Handle publish date
         if ($request->has('schedule_post') && $request->schedule_post && ! empty($request->published_at)) {
-            $post->status = 'future';
+            $post->status = PostStatus::SCHEDULED->value;
             $post->published_at = Carbon::parse($request->published_at);
-        } elseif ($request->status === 'future' && ! empty($request->published_at)) {
+        } elseif ($request->status === PostStatus::SCHEDULED->value && ! empty($request->published_at)) {
             $post->published_at = Carbon::parse($request->published_at);
-        } elseif ($request->status === 'publish') {
+        } elseif ($request->status === PostStatus::PUBLISHED->value) {
             $post->published_at = now();
         }
 
-        $post = ld_apply_filters(PostHook::BEFORE_SAVE, $post, $request);
+        $post = Hook::applyFilters(PostHook::BEFORE_SAVE, $post, $request);
 
         $post->save();
 
@@ -157,7 +145,7 @@ class PostController extends Controller
             }
         }
 
-        $post = ld_apply_filters(PostHook::AFTER_SAVE, $post, $request);
+        $post = Hook::applyFilters(PostHook::AFTER_SAVE, $post, $request);
 
         // Handle post meta.
         $this->handlePostMeta($request, $post);
@@ -169,27 +157,16 @@ class PostController extends Controller
             ->with('success', 'Post created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $postType, string $id): Renderable
     {
         $post = Post::where('post_type', $postType)->findOrFail($id);
         $this->authorize('view', $post);
         $postTypeModel = $this->contentService->getPostType($postType);
 
-        return view('backend.pages.posts.show', compact('post', 'postType', 'postTypeModel'))
-            ->with([
-                'breadcrumbs' => [
-                    'title' => __('View :postName', ['postName' => $post->title]),
-                    'items' => [
-                        [
-                            'label' => $postTypeModel->label,
-                            'url' => route('admin.posts.index', $postType),
-                        ],
-                    ],
-                ],
-            ]);
+        $this->setBreadcrumbTitle(__('View :postName', ['postName' => $post->title]))
+            ->addBreadcrumbItem($postTypeModel->label, route('admin.posts.index', $postType));
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.posts.show', compact('post', 'postType', 'postTypeModel'));
     }
 
     public function edit(string $postType, string $id): RedirectResponse|Renderable
@@ -237,23 +214,12 @@ class PostController extends Controller
             }
         }
 
-        return view('backend.pages.posts.edit', compact('post', 'postType', 'postTypeModel', 'taxonomies', 'parentPosts', 'selectedTerms'))
-            ->with([
-                'breadcrumbs' => [
-                    'title' => __('Edit :postType', ['postType' => $postTypeModel->label_singular]),
-                    'items' => [
-                        [
-                            'label' => $postTypeModel->label,
-                            'url' => route('admin.posts.index', $postType),
-                        ],
-                    ],
-                ],
-            ]);
+        $this->setBreadcrumbTitle(__('Edit :postType', ['postType' => $postTypeModel->label_singular]))
+            ->addBreadcrumbItem($postTypeModel->label, route('admin.posts.index', $postType));
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.posts.edit', compact('post', 'postType', 'postTypeModel', 'taxonomies', 'parentPosts', 'selectedTerms'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdatePostRequest $request, string $postType, string $id)
     {
         // Get post.
@@ -270,15 +236,15 @@ class PostController extends Controller
 
         // Handle publish date.
         if ($request->has('schedule_post') && $request->schedule_post && ! empty($request->published_at)) {
-            $post->status = 'future';
-            $post->published_at = \Carbon\Carbon::parse($request->published_at);
-        } elseif ($request->status === 'future' && ! empty($request->published_at)) {
-            $post->published_at = \Carbon\Carbon::parse($request->published_at);
-        } elseif ($request->status === 'publish' && ! $post->published_at) {
+            $post->status = PostStatus::SCHEDULED->value;
+            $post->published_at = Carbon::parse($request->published_at);
+        } elseif ($request->status === PostStatus::SCHEDULED->value && ! empty($request->published_at)) {
+            $post->published_at = Carbon::parse($request->published_at);
+        } elseif ($request->status === PostStatus::PUBLISHED->value && ! $post->published_at) {
             $post->published_at = now();
         }
 
-        $post = ld_apply_filters('before_post_update', $post, $request);
+        $post = Hook::applyFilters('before_post_update', $post, $request);
 
         $post->save();
 
@@ -295,7 +261,7 @@ class PostController extends Controller
             }
         }
 
-        $post = ld_apply_filters('after_post_update', $post, $request);
+        $post = Hook::applyFilters('after_post_update', $post, $request);
 
         // Handle post meta.
         $this->handlePostMeta($request, $post);
@@ -315,9 +281,9 @@ class PostController extends Controller
         $post = Post::where('post_type', $postType)->findOrFail($id);
         $this->authorize('delete', $post);
 
-        ld_do_action('post_before_deleted', $post);
+        Hook::doAction('post_before_deleted', $post);
         $post->delete();
-        ld_do_action('post_deleted', $post);
+        Hook::doAction('post_deleted', $post);
 
         return redirect()->route('admin.posts.index', $postType)
             ->with('success', __('Post deleted successfully'));
@@ -340,11 +306,11 @@ class PostController extends Controller
         $posts = Post::where('post_type', $postType)->whereIn('id', $ids)->get();
 
         foreach ($posts as $post) {
-            ld_do_action('post_before_deleted', $post);
+            Hook::doAction('post_before_deleted', $post);
 
             $post->delete();
 
-            ld_do_action('post_deleted', $post);
+            Hook::doAction('post_deleted', $post);
         }
 
         return redirect()->route('admin.posts.index', $postType)
@@ -366,7 +332,7 @@ class PostController extends Controller
         // Initialize empty arrays for each taxonomy.
         $termIds = [];
         foreach ($postTypeModel->taxonomies as $taxonomy) {
-            $termKey = 'taxonomy_'.$taxonomy;
+            $termKey = 'taxonomy_' . $taxonomy;
             if ($request->has($termKey)) {
                 $taxonomyTerms = $request->input($termKey);
                 if (is_array($taxonomyTerms)) {
@@ -378,7 +344,7 @@ class PostController extends Controller
         // Sync terms.
         $post->terms()->sync($termIds);
 
-        ld_do_action('post_taxonomies_updated', $post, $termIds);
+        Hook::doAction('post_taxonomies_updated', $post, $termIds);
     }
 
     protected function handlePostMeta(Request $request, Post $post)
@@ -404,6 +370,6 @@ class PostController extends Controller
             }
         }
 
-        ld_do_action('post_meta_updated', $post, $metaKeys, $metaValues, $metaTypes, $metaDefaultValues);
+        Hook::doAction('post_meta_updated', $post, $metaKeys, $metaValues, $metaTypes, $metaDefaultValues);
     }
 }

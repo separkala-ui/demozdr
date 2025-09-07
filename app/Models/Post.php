@@ -292,7 +292,7 @@ class Post extends Model implements SpatieHasMedia
      */
     public function scopePublished(Builder $query): void
     {
-        $query->where('status', 'publish')
+        $query->where('status', PostStatus::PUBLISHED->value)
             ->where(function ($query) {
                 $query->whereNull('published_at')
                     ->orWhere('published_at', '<=', now());
