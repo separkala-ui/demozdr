@@ -256,7 +256,7 @@
                                     x-show="open"
                                     @click.outside="open = false"
                                     x-transition
-                                    class="absolute top-10 right-0 mt-2 w-56 rounded-md shadow bg-white dark:bg-gray-700 z-10 p-3"
+                                    class="absolute top-10 right-0 mt-2 w-56 rounded-md shadow bg-white dark:bg-gray-700 z-10 p-3 overflow-y-auto max-h-80"
                                 >
                                     <ul class="space-y-2">
                                         <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1.5 rounded"

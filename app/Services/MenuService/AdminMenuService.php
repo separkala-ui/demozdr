@@ -349,7 +349,7 @@ class AdminMenuService
             });
 
             // Apply filters that might add/modify menu items.
-            $filteredItems = Hook::applyFilters('sidebar_menu_' . strtolower((string) $group), $filteredItems);
+            $filteredItems = Hook::applyFilters(AdminFilterHook::SIDEBAR_MENU->value . strtolower((string) $group), $filteredItems);
 
             // Only add the group if it has items after filtering.
             if (! empty($filteredItems)) {
