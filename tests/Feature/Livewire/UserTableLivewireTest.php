@@ -2,21 +2,50 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Tables\User;
+use App\Http\Middleware\VerifyCsrfToken;
+use App\Livewire\Datatable\UserDatatable;
+use App\Models\Permission;
+use App\Models\Role;
 use Livewire\Livewire;
-use App\Models\User as UserModel;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
+pest()->use(RefreshDatabase::class);
+
+beforeEach(function () {
+    // Disable CSRF protection for tests.
+    $this->withoutMiddleware(VerifyCsrfToken::class);
+
+    // Create admin user with permissions
+    $this->admin = User::factory()->create();
+    $adminRole = Role::create(['name' => 'Superadmin', 'guard_name' => 'web']);
+
+    // Create necessary permissions
+    Permission::create(['name' => 'user.view']);
+    Permission::create(['name' => 'user.create']);
+    Permission::create(['name' => 'user.edit']);
+    Permission::create(['name' => 'user.delete']);
+
+    $adminRole->syncPermissions([
+        'user.view',
+        'user.create',
+        'user.edit',
+        'user.delete',
+    ]);
+
+    $this->admin->assignRole($adminRole);
+});
 
 it('renders user table successfully', function () {
-    Livewire::test(User::class)
+    $this->actingAs($this->admin);
+    Livewire::test(UserDatatable::class)
         ->assertStatus(200);
 });
 
 it('searches users by name and email', function () {
-    $user = UserModel::factory()->create(['name' => 'John Doe', 'email' => 'john@example.com']);
-    Livewire::test(User::class)
+    $this->actingAs($this->admin);
+    $user = User::factory()->create(['first_name' => 'John Doe', 'email' => 'john@example.com']);
+    Livewire::test(UserDatatable::class)
         ->set('search', 'John')
         ->assertSee('John Doe')
         ->set('search', 'john@example.com')
@@ -24,18 +53,20 @@ it('searches users by name and email', function () {
 });
 
 it('filters users by role', function () {
-    $user = UserModel::factory()->create(['name' => 'RoleUser']);
+    $this->actingAs($this->admin);
+    $user = User::factory()->create(['first_name' => 'RoleUser']);
     $role = \Spatie\Permission\Models\Role::create(['name' => 'admin']);
     $user->assignRole('admin');
-    Livewire::test(User::class)
+    Livewire::test(UserDatatable::class)
         ->set('role', 'admin')
         ->assertSee('RoleUser');
 });
 
 it('paginates users', function () {
-    UserModel::factory()->count(15)->create();
-    Livewire::test(User::class)
-        ->assertSee('Users')
+    $this->actingAs($this->admin);
+    User::factory()->count(15)->create();
+    Livewire::test(UserDatatable::class)
+        ->assertSee('Search by name or email...')
         ->set('page', 2)
         ->assertStatus(200);
 });
