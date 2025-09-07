@@ -26,7 +26,7 @@ class UpdateRoleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $roleId = $this->route('role');
+        $roleId = $this->role ?? $this->route('role');
 
         return Hook::applyFilters(RoleFilterHook::ROLE_UPDATE_VALIDATION_RULES, [
             /** @example "Senior Content Writer" */

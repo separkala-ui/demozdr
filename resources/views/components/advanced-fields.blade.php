@@ -1,7 +1,6 @@
-<div class="p-4 bg-white border border-gray-200 rounded-md dark:border-gray-800 dark:bg-white/[0.03]">s([
+@props([
     'postMeta' => []
 ])
-
 <div class="rounded-md border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
      x-data="{ open: false }">
     <button type="button"

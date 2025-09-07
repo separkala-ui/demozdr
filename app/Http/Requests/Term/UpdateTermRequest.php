@@ -27,7 +27,7 @@ class UpdateTermRequest extends FormRequest
      */
     public function rules(): array
     {
-        $termId = $this->route('id');
+        $termId = $this->term ?? $this->route('id');
 
         $rules = [
             /** @example "Web Development" */
