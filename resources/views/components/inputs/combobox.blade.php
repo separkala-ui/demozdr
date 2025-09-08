@@ -15,6 +15,11 @@
 ])
 
 @php
+    // if collection, convert to array.
+    if ($options instanceof \Illuminate\Support\Collection) {
+        $options = $options->toArray();
+    }
+
     $selectedValues = is_array($selected) ? $selected : [$selected];
     $selectedValues = array_filter($selectedValues, fn($val) => !empty($val));
 
