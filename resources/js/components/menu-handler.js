@@ -1,10 +1,6 @@
 /**
- * Menu handler for sidebar navigation
- * Handles submenu toggling and automatic navigation to first child
- */
-
-/**
- * Handle menu item clicks with submenu toggle and first child navigation
+ * Handle menu item clicks with submenu toggle and first child navigation.
+ *
  * @param {HTMLElement} buttonElement - The button element that was clicked
  * @param {string} submenuId - The ID of the submenu to toggle
  * @param {string|null} firstChildRoute - The route of the first child item
@@ -17,32 +13,31 @@ window.handleMenuItemClick = function (buttonElement, submenuId, firstChildRoute
     
     if (!submenu || !arrowIcon) return;
     
-    // Toggle submenu visibility with smooth animation
+    // Toggle submenu visibility with smooth animation.
     const isExpanded = submenu.classList.contains('submenu-expanded');
     
     if (!isExpanded) {
-        // Expanding submenu
+        // Expanding submenu.
         submenu.classList.remove('submenu-collapsed');
         submenu.classList.add('submenu-expanded');
         arrowIcon.setAttribute('icon', 'lucide:chevron-up');
         
-        // Add rotation animation to arrow
+        // Add rotation animation to arrow.
         arrowIcon.style.transform = 'rotate(180deg)';
         
-        // If there's a first child route, we're not currently on a child page, and we're not already on that route, navigate to it
+        // If there's a first child route, we're not currently on a child page, and we're not already on that route, navigate to it.
         if (firstChildRoute && !isOnChildPage && window.location.href !== firstChildRoute) {
-            // Small delay to allow the submenu to expand first
             setTimeout(() => {
                 window.location.href = firstChildRoute;
-            }, 350); // Increased delay to match animation duration + stagger
+            }, 50);
         }
     } else {
-        // Collapsing submenu
+        // Collapsing submenu.
         submenu.classList.remove('submenu-expanded');
         submenu.classList.add('submenu-collapsed');
         arrowIcon.setAttribute('icon', 'lucide:chevron-right');
         
-        // Remove rotation from arrow
+        // Remove rotation from arrow.
         arrowIcon.style.transform = 'rotate(0deg)';
     }
 };
