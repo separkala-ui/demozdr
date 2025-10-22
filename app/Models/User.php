@@ -39,6 +39,7 @@ class User extends Authenticatable
         'password',
         'username',
         'avatar_id',
+        'branch_id',
     ];
 
     /**
@@ -132,6 +133,14 @@ class User extends Authenticatable
     public function avatar(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'avatar_id', 'id');
+    }
+
+    /**
+     * Get the user's branch (petty cash ledger).
+     */
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(PettyCashLedger::class, 'branch_id');
     }
 
     /**

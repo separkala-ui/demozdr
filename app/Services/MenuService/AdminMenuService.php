@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\MenuService;
 
 use App\Enums\Hooks\AdminFilterHook;
+use App\Models\PettyCashLedger;
 use App\Services\Content\ContentService;
 use App\Support\Facades\Hook;
 use Illuminate\Support\Facades\Route;
@@ -128,6 +129,57 @@ class AdminMenuService
             'priority' => 25,
             'permissions' => 'module.view',
         ], __('More'));
+
+        $defaultLedgerId = null;
+        $user = auth()->user();
+
+        if ($user?->branch_id) {
+            $defaultLedgerId = $user->branch_id;
+        } elseif ($user && $user->hasRole(['Superadmin', 'Admin'])) {
+            $defaultLedgerId = PettyCashLedger::query()->orderBy('branch_name')->value('id');
+        }
+
+        $chargeRoute = $defaultLedgerId
+            ? route('admin.petty-cash.charge-request', $defaultLedgerId)
+            : route('admin.petty-cash.index');
+
+        $settlementRoute = $defaultLedgerId
+            ? route('admin.petty-cash.settlement', $defaultLedgerId)
+            : route('admin.petty-cash.index');
+
+        $this->addMenuItem([
+            'label' => __('تنخواه'),
+            'icon' => 'lucide:wallet',
+            'id' => 'petty-cash',
+            'priority' => 30,
+            'active' => request()->is('admin/petty-cash*'),
+            'children' => [
+                [
+                    'label' => __('داشبورد تنخواه'),
+                    'route' => route('admin.petty-cash.index', $defaultLedgerId ? ['ledger' => $defaultLedgerId] : []),
+                    'active' => Route::is('admin.petty-cash.index'),
+                    'priority' => 10,
+                ],
+                [
+                    'label' => __('ثبت تراکنش جدید'),
+                    'route' => $defaultLedgerId ? route('admin.petty-cash.transactions', $defaultLedgerId) : route('admin.petty-cash.index'),
+                    'active' => Route::is('admin.petty-cash.transactions'),
+                    'priority' => 15,
+                ],
+                [
+                    'label' => __('درخواست شارژ'),
+                    'route' => $chargeRoute,
+                    'active' => Route::is('admin.petty-cash.charge-request'),
+                    'priority' => 20,
+                ],
+                [
+                    'label' => __('تسویه تنخواه'),
+                    'route' => $settlementRoute,
+                    'active' => Route::is('admin.petty-cash.settlement'),
+                    'priority' => 30,
+                ],
+            ],
+        ], __('Finance'));
 
         $this->addMenuItem([
             'label' => __('Monitoring'),

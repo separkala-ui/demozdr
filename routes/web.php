@@ -8,11 +8,13 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\LocaleController;
 use App\Http\Controllers\Backend\MediaController;
 use App\Http\Controllers\Backend\ModuleController;
+use App\Http\Controllers\Backend\PettyCashController;
 use App\Http\Controllers\Backend\PermissionController;
 use App\Http\Controllers\Backend\PostController;
 use App\Http\Controllers\Backend\ProfileController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Backend\Settings\SmartInvoiceSettingsController;
 use App\Http\Controllers\Backend\TermController;
 use App\Http\Controllers\Backend\TranslationController;
 use App\Http\Controllers\Backend\UserLoginAsController;
@@ -38,6 +40,40 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::resource('roles', RoleController::class);
     Route::delete('roles/delete/bulk-delete', [RoleController::class, 'bulkDelete'])->name('roles.bulk-delete');
 
+    Route::get('/petty-cash/{ledger?}', [PettyCashController::class, 'index'])
+        ->whereNumber('ledger')
+        ->name('petty-cash.index');
+    Route::get('/petty-cash/create', [PettyCashController::class, 'create'])->name('petty-cash.create');
+    Route::post('/petty-cash', [PettyCashController::class, 'store'])->name('petty-cash.store');
+    Route::get('/petty-cash/{ledger}/edit', [PettyCashController::class, 'edit'])
+        ->whereNumber('ledger')
+        ->name('petty-cash.edit');
+    Route::put('/petty-cash/{ledger}', [PettyCashController::class, 'update'])
+        ->whereNumber('ledger')
+        ->name('petty-cash.update');
+    Route::get('/petty-cash/{ledger}/delete', [PettyCashController::class, 'delete'])
+        ->whereNumber('ledger')
+        ->name('petty-cash.delete');
+    Route::delete('/petty-cash/{ledger}', [PettyCashController::class, 'destroy'])
+        ->whereNumber('ledger')
+        ->name('petty-cash.destroy');
+    Route::get('/petty-cash/{ledger}/print', [PettyCashController::class, 'print'])
+        ->whereNumber('ledger')
+        ->name('petty-cash.print');
+    Route::get('/petty-cash/{ledger}/charge-request', [PettyCashController::class, 'chargeRequestPage'])
+        ->whereNumber('ledger')
+        ->name('petty-cash.charge-request');
+    Route::get('/petty-cash/{ledger}/settlement', [PettyCashController::class, 'settlementPage'])
+        ->whereNumber('ledger')
+        ->name('petty-cash.settlement');
+    Route::get('/petty-cash/{ledger}/transactions', [PettyCashController::class, 'transactionsPage'])
+        ->whereNumber('ledger')
+        ->name('petty-cash.transactions');
+    Route::get('/petty-cash/backups', [PettyCashController::class, 'backups'])->name('petty-cash.backups');
+    Route::get('/petty-cash/backups/{filename}/download', [PettyCashController::class, 'downloadBackup'])->name('petty-cash.backup.download');
+    Route::delete('/petty-cash/backups/{filename}', [PettyCashController::class, 'deleteBackup'])->name('petty-cash.backup.delete');
+    Route::post('/petty-cash/module-backup', [PettyCashController::class, 'downloadModulePackage'])->name('petty-cash.module-backup');
+
     // Permissions Routes.
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->name('permissions.show');
@@ -50,7 +86,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
 
     // Settings Routes.
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
+    Route::put('/settings', [SettingController::class, 'store'])->name('settings.store');
+    
+    // Smart Invoice Settings Routes - در قسمت Settings
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('/smart-invoice', [SmartInvoiceSettingsController::class, 'index'])
+            ->name('smart-invoice.index');
+        Route::put('/smart-invoice', [SmartInvoiceSettingsController::class, 'update'])
+            ->name('smart-invoice.update');
+        Route::post('/smart-invoice/test', [SmartInvoiceSettingsController::class, 'testServices'])
+            ->name('smart-invoice.test');
+        Route::post('/smart-invoice/refresh-models', [SmartInvoiceSettingsController::class, 'refreshModels'])
+            ->name('smart-invoice.refresh-models');
+    });
 
     // Translation Routes.
     Route::get('/translations', [TranslationController::class, 'index'])->name('translations.index');

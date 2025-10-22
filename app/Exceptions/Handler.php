@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Spatie\LaravelIgnition\Facades\Flare;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -25,6 +26,23 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
+
+    /**
+     * Report or log an exception.
+     *
+     * @param  \Throwable  $exception
+     * @return void
+     *
+     * @throws \Throwable
+     */
+    public function report(Throwable $exception)
+    {
+        if ($this->shouldReport($exception)) {
+            Flare::report($exception);
+        }
+
+        parent::report($exception);
+    }
 
     /**
      * Render an exception into an HTTP response.

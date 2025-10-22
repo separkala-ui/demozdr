@@ -1,4 +1,26 @@
 {!! Hook::applyFilters(SettingFilterHook::SETTINGS_AI_INTEGRATIONS_TAB_BEFORE_SECTION_START, '') !!}
+
+<!-- Smart Invoice Settings Link -->
+<div class="rounded-md border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03] mb-6">
+    <div class="px-5 py-4 sm:px-6 sm:py-5">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-base font-medium text-gray-700 dark:text-white/90">
+                    {{ __('Smart Invoice Settings') }}
+                </h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+                    {{ __('Configure AI-powered invoice extraction with Gemini and Python OCR services') }}
+                </p>
+            </div>
+            <a href="{{ route('admin.settings.smart-invoice.index') }}" 
+               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <i class="fas fa-cog mr-2"></i>
+                {{ __('Configure') }}
+            </a>
+        </div>
+    </div>
+</div>
+
 <div class="rounded-md border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03]">
     <div class="px-5 py-4 sm:px-6 sm:py-5">
         <h3 class="text-base font-medium text-gray-700 dark:text-white/90">

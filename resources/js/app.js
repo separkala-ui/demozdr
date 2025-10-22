@@ -9,6 +9,9 @@ import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.e
 import focus from '@alpinejs/focus'
 import flatpickr from "flatpickr";
 import Dropzone from "dropzone";
+import * as jalaali from "../../modules/jalaali-js-master/index.js";
+
+const { toJalaali, toGregorian } = jalaali;
 
 import chart01 from "./components/charts/chart-01";
 import chart02 from "./components/charts/chart-02";
@@ -22,6 +25,7 @@ import * as Popper from '@popperjs/core';
 
 // Make Popper available globally with the correct structure
 window.Popper = Popper;
+window.initJalaliDatepicker = initJalaliDatepicker;
 
 // Register a slug generator component with Alpine.
 Alpine.data('slugGenerator', (initialTitle = '', initialSlug = '') => {
@@ -171,6 +175,93 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+
+function pad(value) {
+    return String(value).padStart(2, '0');
+}
+
+function formatJalaliDate(date, includeTime = false) {
+    const { jy, jm, jd } = toJalaali(date);
+    let result = `${jy}/${pad(jm)}/${pad(jd)}`;
+    if (includeTime) {
+        result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+    return result;
+}
+
+function parseJalaliDate(value, includeTime = false) {
+    if (!value) {
+        return null;
+    }
+
+    let [datePart, timePart] = value.trim().split(/[\sT]/);
+    datePart = (datePart || '').replace(/\//g, '-');
+    const parts = datePart.split('-').map(Number);
+
+    if (parts.length !== 3 || parts.some(Number.isNaN)) {
+        const parsed = new Date(value);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    const [jy, jm, jd] = parts;
+    let gregorian;
+    try {
+        gregorian = toGregorian(jy, jm, jd);
+    } catch (error) {
+        return null;
+    }
+
+    let hours = 0;
+    let minutes = 0;
+
+    if (includeTime && timePart) {
+        const timeSegments = timePart.split(':').map(Number);
+        if (timeSegments.length >= 2) {
+            hours = timeSegments[0] || 0;
+            minutes = timeSegments[1] || 0;
+        }
+    }
+
+    return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hours, minutes);
+}
+
+function initJalaliDatepicker(element, { enableTime = false } = {}) {
+    const initialValue = element.value;
+
+    const picker = flatpickr(element, {
+        enableTime,
+        allowInput: true,
+        time_24hr: true,
+        dateFormat: 'Y-m-d',
+        defaultDate: initialValue ? parseJalaliDate(initialValue, enableTime) : undefined,
+        formatDate: (date) => formatJalaliDate(date, enableTime),
+        parseDate: (str) => parseJalaliDate(str, enableTime),
+        locale: {
+            firstDayOfWeek: 6,
+        },
+        onOpen(selectedDates, dateStr, instance) {
+            if (!dateStr && selectedDates.length === 0 && initialValue) {
+                const parsed = parseJalaliDate(initialValue, enableTime);
+                if (parsed) {
+                    instance.setDate(parsed, false);
+                }
+            }
+        },
+        onValueUpdate(selectedDates, dateStr, instance) {
+            if (selectedDates.length > 0) {
+                instance.input.value = formatJalaliDate(selectedDates[0], enableTime);
+            }
+        },
+    });
+
+    element.addEventListener('blur', () => {
+        if (!element.value) {
+            const now = new Date();
+            element.value = formatJalaliDate(now, enableTime);
+            picker.setDate(now, false);
+        }
+    });
+}
 
 // Initialize all drawer triggers on page load
 document.addEventListener('DOMContentLoaded', function () {

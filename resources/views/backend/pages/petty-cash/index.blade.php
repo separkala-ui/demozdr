@@ -1,0 +1,361 @@
+@php
+    $isAdminUser = auth()->user()?->hasRole(['Superadmin', 'Admin']);
+    $selectedLedgerMetrics = $selectedLedgerMetrics ?? [];
+    $visibleLedgers = $visibleLedgers ?? $ledgers;
+    $showAllCards = $showAllCards ?? false;
+    $showAllTransactions = $showAllTransactions ?? collect();
+    $chargeTimeline = isset($chargeTimeline) ? collect($chargeTimeline) : collect();
+    $cardPalettes = [
+        ['border' => 'border-indigo-200', 'badge_bg' => 'bg-indigo-100', 'badge_text' => 'text-indigo-700', 'progress' => 'bg-indigo-500', 'row_bg' => 'bg-indigo-50', 'dot' => 'bg-indigo-400'],
+        ['border' => 'border-emerald-200', 'badge_bg' => 'bg-emerald-100', 'badge_text' => 'text-emerald-700', 'progress' => 'bg-emerald-500', 'row_bg' => 'bg-emerald-50', 'dot' => 'bg-emerald-400'],
+        ['border' => 'border-amber-200', 'badge_bg' => 'bg-amber-100', 'badge_text' => 'text-amber-700', 'progress' => 'bg-amber-500', 'row_bg' => 'bg-amber-50', 'dot' => 'bg-amber-400'],
+        ['border' => 'border-rose-200', 'badge_bg' => 'bg-rose-100', 'badge_text' => 'text-rose-700', 'progress' => 'bg-rose-500', 'row_bg' => 'bg-rose-50', 'dot' => 'bg-rose-400'],
+        ['border' => 'border-sky-200', 'badge_bg' => 'bg-sky-100', 'badge_text' => 'text-sky-700', 'progress' => 'bg-sky-500', 'row_bg' => 'bg-sky-50', 'dot' => 'bg-sky-400'],
+    ];
+    $statusStyles = [
+        'approved' => ['label' => __('تایید شده'), 'badge' => 'bg-emerald-100 text-emerald-700', 'dot' => 'bg-emerald-500'],
+        'submitted' => ['label' => __('در انتظار تایید'), 'badge' => 'bg-amber-100 text-amber-700', 'dot' => 'bg-amber-500'],
+        'draft' => ['label' => __('پیش‌نویس'), 'badge' => 'bg-slate-100 text-slate-600', 'dot' => 'bg-slate-400'],
+        'rejected' => ['label' => __('رد شده'), 'badge' => 'bg-rose-100 text-rose-700', 'dot' => 'bg-rose-500'],
+        'needs_changes' => ['label' => __('نیاز به اصلاح'), 'badge' => 'bg-amber-100 text-amber-700', 'dot' => 'bg-amber-500'],
+        'under_review' => ['label' => __('در حال بررسی مدیریت'), 'badge' => 'bg-purple-100 text-purple-700', 'dot' => 'bg-purple-500'],
+    ];
+    $typeLabels = [
+        'charge' => __('شارژ'),
+        'expense' => __('هزینه'),
+        'adjustment' => __('تعدیل'),
+    ];
+    $branchPaletteMap = $visibleLedgers->values()->mapWithKeys(function ($ledgerItem, $index) use ($cardPalettes) {
+        $palette = $cardPalettes[$index % count($cardPalettes)];
+        return [$ledgerItem->id => $palette];
+    })->toArray();
+    $ledgerRouteParams = function (?int $ledgerId = null, ?bool $forceShowAll = null) use ($showAllCards) {
+        $params = [];
+        if ($ledgerId) {
+            $params['ledger'] = $ledgerId;
+        }
+        $shouldShowAll = $forceShowAll ?? $showAllCards;
+        if ($shouldShowAll) {
+            $params['show_all'] = 1;
+        }
+        return $params;
+    };
+@endphp
+
+<x-layouts.backend-layout :breadcrumbs="$breadcrumbs">
+    <div class="space-y-6">
+        <div
+            class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+            x-data="{ toggleCreate: false }"
+        >
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 class="text-lg font-semibold text-slate-800">{{ __('مدیریت تنخواه شعب') }}</h1>
+                    <p class="text-sm text-slate-500">{{ __('نظارت بر مانده، هزینه‌ها و شارژهای هر شعبه') }}</p>
+                </div>
+
+                @if($isAdminUser)
+                    <div class="flex flex-col items-stretch gap-3 md:flex-row md:items-center md:gap-4">
+                        @if($ledgers->isNotEmpty())
+                            <div>
+                                <label for="ledgerSwitcher" class="block text-xs font-medium text-slate-500">{{ __('انتخاب شعبه') }}</label>
+                                <select
+                                    id="ledgerSwitcher"
+                                    class="mt-1 block w-56 rounded-md border-slate-300 text-sm shadow focus:border-indigo-500 focus:ring-indigo-500"
+                                    onchange="window.location.href=this.value;"
+                                >
+                                    @foreach($ledgers as $ledgerOption)
+                                        <option value="{{ route('admin.petty-cash.index', $ledgerRouteParams($ledgerOption->id)) }}"
+                                            @if($selectedLedger && $selectedLedger->id === $ledgerOption->id) selected @endif>
+                                            {{ $ledgerOption->branch_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
+                        <div class="flex gap-2">
+                            @if($ledgers->isNotEmpty())
+                                @if($showAllCards)
+                                    <a href="{{ route('admin.petty-cash.index', $ledgerRouteParams($selectedLedger?->id, false)) }}"
+                                       class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        <i class="fas fa-layer-group mr-2 text-lg"></i>
+                                        {{ __('نمایش شعبه انتخابی') }}
+                                    </a>
+                                @else
+                                    <a href="{{ route('admin.petty-cash.index', $ledgerRouteParams($selectedLedger?->id, true)) }}"
+                                       class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        <i class="fas fa-layer-group mr-2 text-lg"></i>
+                                        {{ __('نمایش همه شعبه‌ها') }}
+                                    </a>
+                                @endif
+                            @endif
+
+                            <a href="{{ route('admin.petty-cash.create') }}"
+                               class="inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                <i class="fas fa-plus-circle ml-2 text-lg"></i>
+                                {{ __('ایجاد دفتر تنخواه') }}
+                            </a>
+
+                            @can('petty_cash.ledger.delete')
+                                <a href="{{ route('admin.petty-cash.backups') }}"
+                                   class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <i class="fas fa-database mr-2 text-lg"></i>
+                                    {{ __('مدیریت بک‌آپ‌ها') }}
+                                </a>
+                            @endcan
+
+                            @if(auth()->user()?->hasRole('Superadmin'))
+                                <form method="POST" action="{{ route('admin.petty-cash.module-backup') }}">
+                                    @csrf
+                                    <button type="submit"
+                                            class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        <i class="fas fa-box-archive mr-2 text-lg"></i>
+                                        {{ __('دریافت بسته نصب') }}
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            @if(session('success'))
+                <div class="mt-4 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+        </div>
+
+        @if($isAdminUser && ($showAllCards || ! $selectedLedger))
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                @forelse($visibleLedgers as $ledgerItem)
+                    @php
+                        $palette = $cardPalettes[$loop->index % count($cardPalettes)];
+                    @endphp
+                    <div class="rounded-lg border {{ $palette['border'] }} bg-white p-4 shadow-sm">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold {{ $palette['badge_bg'] }} {{ $palette['badge_text'] }}">
+                                        {{ __('شعبه') }}
+                                    </span>
+                                    <h3 class="text-base font-semibold text-slate-700">{{ $ledgerItem->branch_name }}</h3>
+                                </div>
+                                <p class="text-xs text-slate-500">{{ __('سقف تنخواه شعبه :amount ریال', ['amount' => number_format($ledgerItem->limit_amount)]) }}</p>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <a href="{{ route('admin.petty-cash.index', $ledgerRouteParams($ledgerItem->id, false)) }}"
+                                   class="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-600 hover:bg-indigo-100">
+                                    <i class="fas fa-eye text-indigo-500"></i>
+                                    {{ __('مشاهده') }}
+                                </a>
+                                @can('petty_cash.ledger.edit')
+                                    <a href="{{ route('admin.petty-cash.edit', $ledgerItem->id) }}"
+                                       class="inline-flex items-center gap-1 rounded-md bg-yellow-50 px-3 py-1 text-xs font-medium text-yellow-600 hover:bg-yellow-100">
+                                        <i class="fas fa-edit text-yellow-500"></i>
+                                        {{ __('ویرایش') }}
+                                    </a>
+                                @endcan
+                                @can('petty_cash.ledger.delete')
+                                    <a href="{{ route('admin.petty-cash.delete', $ledgerItem->id) }}"
+                                       class="inline-flex items-center gap-1 rounded-md bg-red-50 px-3 py-1 text-xs font-medium text-red-600 hover:bg-red-100">
+                                        <i class="fas fa-trash text-red-500"></i>
+                                        {{ __('حذف') }}
+                                    </a>
+                                @endcan
+                            </div>
+                        </div>
+
+                        <dl class="mt-4 space-y-2 text-sm text-slate-600">
+                            <div class="flex items-center justify-between">
+                                <dt>{{ __('مانده تایید شده') }}</dt>
+                                <dd class="font-semibold text-slate-800">{{ number_format($ledgerItem->current_balance) }} {{ __('ریال') }}</dd>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <dt>{{ __('مانده در انتظار تایید') }}</dt>
+                                <dd class="font-semibold {{ ($ledgerItem->pending_balance_delta ?? 0) < 0 ? 'text-red-600' : 'text-amber-600' }}">
+                                    {{ number_format($ledgerItem->pending_balance ?? $ledgerItem->current_balance) }} {{ __('ریال') }}
+                                </dd>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <dt>{{ __('ورودی دوره') }}</dt>
+                                <dd>{{ number_format($ledgerItem->opening_balance) }} {{ __('ریال') }}</dd>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <dt>{{ __('هزینه‌های در انتظار تایید') }}</dt>
+                                <dd>{{ number_format($ledgerItem->pending_expenses_total ?? 0) }} {{ __('ریال') }}</dd>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <dt>{{ __('شارژهای در انتظار تایید') }}</dt>
+                                <dd>{{ number_format($ledgerItem->pending_charges_total ?? 0) }} {{ __('ریال') }}</dd>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <dt>{{ __('تعداد تراکنش‌های در انتظار تایید') }}</dt>
+                                <dd>{{ $ledgerItem->pending_transactions_count ?? 0 }}</dd>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <dt>{{ __('آخرین تراکنش') }}</dt>
+                                <dd>
+                                    @if(!empty($ledgerItem->last_transaction_at))
+                                        {{ verta($ledgerItem->last_transaction_at)->format('Y/m/d H:i') }}
+                                    @else
+                                        <span class="text-slate-400">{{ __('ثبت نشده') }}</span>
+                                    @endif
+                                </dd>
+                            </div>
+                        </dl>
+
+                        @php
+                            $limit = (float) $ledgerItem->limit_amount;
+                            $balance = (float) $ledgerItem->current_balance;
+                            $consumed = $limit > 0 ? max(0, min(100, round((($limit - $balance) / $limit) * 100, 2))) : null;
+                        @endphp
+
+                        @if(! is_null($consumed))
+                            <div class="mt-4">
+                                <div class="flex justify-between text-xs text-slate-500">
+                                    <span>{{ __('درصد مصرف شده') }}</span>
+                                    <span>{{ $consumed }}%</span>
+                                </div>
+                                <div class="mt-1 h-2 rounded-full bg-slate-100">
+                                    <div class="h-2 rounded-full {{ $palette['progress'] }}" style="width: {{ $consumed }}%"></div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                @empty
+                    <div class="col-span-1 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-6 text-center text-sm text-slate-500 lg:col-span-3">
+                        {{ __('هنوز دفتری برای تنخواه ایجاد نشده است. پس از اجرای مایگریشن و افزودن شعبه‌ها، اطلاعات در اینجا نمایش داده می‌شود.') }}
+                    </div>
+                @endforelse
+            </div>
+        @endif
+
+        @if($showAllCards)
+            <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-base font-semibold text-slate-700">{{ __('فهرست تراکنش‌ها در همه شعب') }}</h2>
+                        <p class="text-xs text-slate-500">{{ __('حداکثر ۵۰ تراکنش اخیر نمایش داده می‌شود. برای بررسی دقیق، شعبه مربوطه را انتخاب کنید.') }}</p>
+                    </div>
+                    <span class="text-xs font-medium text-slate-500">{{ __('تعداد رکوردها: :count', ['count' => $showAllTransactions->count()]) }}</span>
+                </div>
+
+                <div class="mt-4 overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-50 text-xs uppercase text-slate-500">
+                            <tr>
+                                <th class="px-4 py-3 text-right">{{ __('شعبه') }}</th>
+                                <th class="px-4 py-3 text-right">{{ __('نوع تراکنش') }}</th>
+                                <th class="px-4 py-3 text-right">{{ __('مقدار') }}</th>
+                                <th class="px-4 py-3 text-right">{{ __('وضعیت') }}</th>
+                                <th class="px-4 py-3 text-right">{{ __('تاریخ ثبت') }}</th>
+                                <th class="px-4 py-3 text-right">{{ __('شناسه') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @forelse($showAllTransactions as $transaction)
+                                @php
+                                    $status = $statusStyles[$transaction->status] ?? $statusStyles['draft'];
+                                    $typeLabel = $typeLabels[$transaction->type] ?? $transaction->type;
+                                    $branchName = $transaction->ledger->branch_name ?? __('نامشخص');
+                                    $dateLabel = $transaction->transaction_date ? verta($transaction->transaction_date)->format('Y/m/d H:i') : __('ثبت نشده');
+                                    $palette = $branchPaletteMap[$transaction->ledger_id] ?? [
+                                        'border' => 'border-slate-200',
+                                        'badge_bg' => 'bg-slate-100',
+                                        'badge_text' => 'text-slate-600',
+                                        'progress' => 'bg-slate-400',
+                                        'row_bg' => $loop->odd ? 'bg-white' : 'bg-slate-50',
+                                        'dot' => 'bg-slate-400',
+                                    ];
+                                @endphp
+                                <tr class="transition-colors border-r-4 {{ $palette['border'] ?? 'border-slate-200' }} {{ $palette['row_bg'] ?? ($loop->odd ? 'bg-white' : 'bg-slate-50') }} hover:bg-white">
+                                    <td class="whitespace-nowrap px-4 py-3">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <span class="inline-flex items-center gap-2 rounded-full px-3 py-0.5 text-xs font-semibold {{ $palette['badge_bg'] ?? 'bg-slate-100' }} {{ $palette['badge_text'] ?? 'text-slate-600' }}">
+                                                <span class="h-2 w-2 rounded-full {{ $palette['dot'] ?? 'bg-slate-400' }}"></span>
+                                                {{ $branchName }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="whitespace-nowrap px-4 py-3 text-slate-600">{{ $typeLabel }}</td>
+                                    <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-800">{{ number_format($transaction->amount) }} {{ __('ریال') }}</td>
+                                    <td class="whitespace-nowrap px-4 py-3">
+                                        <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold {{ $status['badge'] }}">
+                                            {{ $status['label'] }}
+                                        </span>
+                                    </td>
+                                    <td class="whitespace-nowrap px-4 py-3 text-slate-500">{{ $dateLabel }}</td>
+                                    <td class="whitespace-nowrap px-4 py-3 text-slate-400">#{{ $transaction->id }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-4 py-6 text-center text-sm text-slate-500">
+                                        {{ __('تراکنش ثبت شده‌ای برای نمایش وجود ندارد.') }}
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
+
+        @if($selectedLedger)
+            @php
+                $metrics = $selectedLedgerMetrics ?? [];
+                $pendingCount = $metrics['pending_transactions_count'] ?? 0;
+                $pendingCharges = $metrics['pending_charges_total'] ?? 0;
+                $pendingExpenses = $metrics['pending_expenses_total'] ?? 0;
+            @endphp
+
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                    <p class="text-xs text-slate-500">{{ __('سقف مجاز شعبه') }}</p>
+                    <p class="mt-1 text-lg font-semibold text-slate-800">{{ number_format($selectedLedger->limit_amount) }} {{ __('ریال') }}</p>
+                </div>
+                <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                    <p class="text-xs text-slate-500">{{ __('مانده تایید شده') }}</p>
+                    <p class="mt-1 text-lg font-semibold text-emerald-600">{{ number_format($selectedLedger->current_balance) }} {{ __('ریال') }}</p>
+                </div>
+                <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                    <p class="text-xs text-slate-500">{{ __('تراکنش‌های در انتظار تایید') }}</p>
+                    <p class="mt-1 text-lg font-semibold text-amber-600">{{ $pendingCount }}</p>
+                </div>
+                <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                    <p class="text-xs text-slate-500">{{ __('جمع مبالغ در انتظار') }}</p>
+                    <p class="mt-1 text-lg font-semibold text-slate-800">{{ number_format(($pendingCharges ?? 0) - ($pendingExpenses ?? 0)) }} {{ __('ریال') }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                    <p class="text-xs text-slate-500">{{ __('صاحب حساب') }}</p>
+                    <p class="mt-1 text-sm font-semibold text-slate-800">{{ $selectedLedger->account_holder ?? __('تعریف نشده') }}</p>
+                </div>
+                <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                    <p class="text-xs text-slate-500">{{ __('شماره حساب') }}</p>
+                    <p class="mt-1 text-sm font-mono text-slate-800">{{ $selectedLedger->account_number ?? __('تعریف نشده') }}</p>
+                </div>
+                <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                    <p class="text-xs text-slate-500">{{ __('شماره شبا') }}</p>
+                    <p class="mt-1 text-sm font-mono text-slate-800">{{ $selectedLedger->iban ?? __('تعریف نشده') }}</p>
+                </div>
+                <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                    <p class="text-xs text-slate-500">{{ __('شماره کارت') }}</p>
+                    <p class="mt-1 text-sm font-mono text-slate-800">{{ $selectedLedger->card_number ?? __('تعریف نشده') }}</p>
+                </div>
+            </div>
+        @endif
+
+
+        @if(! $selectedLedger && ! $showAllCards)
+            <div class="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-600">
+                {{ __('هنوز شعبه‌ای به حساب کاربری شما متصل نشده است. برای دریافت دسترسی با مدیر سیستم تماس بگیرید.') }}
+            </div>
+        @endif
+    </div>
+</x-layouts.backend-layout>

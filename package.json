@@ -50,6 +50,7 @@
     "tailwind-merge": "^3.0.1",
     "tailwindcss": "^4.0.0",
     "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-rtl": "^0.9.0",
     "vite": "^6.3"
   },
   "config": {

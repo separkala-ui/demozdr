@@ -149,7 +149,28 @@ class ContentService
         // Convert arrays back to PostType objects
         $postTypes = collect();
         foreach ($postTypesArray as $name => $data) {
-            $postTypes[$name] = new PostType($data);
+            // Ensure $data is an array and has proper structure
+            if (is_array($data)) {
+                $attributes = $data;
+            } else {
+                $attributes = ['name' => $name, 'data' => $data];
+            }
+            
+            // Ensure required fields exist
+            if (!isset($attributes['name'])) {
+                $attributes['name'] = $name;
+            }
+            
+            try {
+                $postTypes[$name] = new PostType($attributes);
+            } catch (\Exception $e) {
+                \Log::warning("Failed to create PostType for {$name}", [
+                    'attributes' => $attributes,
+                    'error' => $e->getMessage()
+                ]);
+                // Skip invalid post types
+                continue;
+            }
         }
 
         return $postTypes;

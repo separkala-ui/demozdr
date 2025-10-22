@@ -252,6 +252,22 @@ class RolesService
 
         $roles['contact'] = $this->createRole('Contact', $contactPermissions);
 
+        // 6. Branch Manager role - can manage petty cash for their branch only
+        $branchManagerPermissions = [
+            'dashboard.view',
+            'profile.view',
+            'profile.edit',
+            'profile.update',
+            'petty_cash.ledger.view',
+            'petty_cash.transaction.create',
+            'petty_cash.transaction.view',
+            'petty_cash.transaction.edit',
+            'petty_cash.report.view',
+            'petty_cash.report.print',
+        ];
+
+        $roles['branch_manager'] = $this->createRole('Branch Manager', $branchManagerPermissions);
+
         return $roles;
     }
 
@@ -316,6 +332,21 @@ class RolesService
                     'post.view',
                     'term.view',
                 ];
+
+            case 'Branch Manager':
+                return [
+                    'dashboard.view',
+                    'profile.view',
+                    'profile.edit',
+                    'profile.update',
+                    'petty_cash.ledger.view',
+                    'petty_cash.transaction.create',
+                    'petty_cash.transaction.view',
+                    'petty_cash.transaction.edit',
+                    'petty_cash.report.view',
+                    'petty_cash.report.print',
+                ];
+
             default:
                 return [
                     'dashboard.view',

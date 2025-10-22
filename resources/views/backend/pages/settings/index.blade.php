@@ -11,6 +11,7 @@
                     data-prevent-unsaved-changes
                 >
                     @csrf
+                    @method('PUT')
                     @include('backend.pages.settings.tabs', [
                         'tabs' => Hook::applyFilters(SettingFilterHook::SETTINGS_TABS, [
                             'general' => [
@@ -29,6 +30,10 @@
                                 'title' => __('Integrations'),
                                 'view' => 'backend.pages.settings.integration-settings',
                             ],
+                            'smart-invoice' => [
+                                'title' => __('Smart Invoice'),
+                                'view' => 'backend.pages.settings.smart-invoice-settings',
+                            ],
                             'performance-security' => [
                                 'title' => __('Performance & Security'),
                                 'view' => 'backend.pages.settings.performance-security-tab',
@@ -36,7 +41,9 @@
                         ]),
                     ])
 
-                    <x-buttons.submit-buttons  />
+                    @if($tab !== 'smart-invoice')
+                        <x-buttons.submit-buttons  />
+                    @endif
                 </form>
             </div>
         </div>

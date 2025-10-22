@@ -26,6 +26,9 @@ class ContentServiceProvider extends ServiceProvider
                 return;
             }
 
+            // Temporarily disable ContentService to fix cache issues
+            return;
+
             // Register default post types.
             $this->registerDefaultPostTypes();
 

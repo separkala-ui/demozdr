@@ -19,6 +19,7 @@
         "cweagans/composer-patches": "^1.7",
         "dedoc/scramble": "^0.12.23",
         "guzzlehttp/guzzle": "^7.2",
+        "hekmatinasser/verta": "^8.5",
         "laravel/framework": "^12.0",
         "laravel/pulse": "^1.4",
         "laravel/sanctum": "^4.1",

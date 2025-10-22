@@ -121,6 +121,26 @@ class PermissionService
                     'ai_content.generate',
                 ],
             ],
+            [
+                'group_name' => 'petty_cash',
+                'permissions' => [
+                    'petty_cash.ledger.create',
+                    'petty_cash.ledger.view',
+                    'petty_cash.ledger.edit',
+                    'petty_cash.ledger.delete',
+                    'petty_cash.transaction.create',
+                    'petty_cash.transaction.view',
+                    'petty_cash.transaction.edit',
+                    'petty_cash.transaction.delete',
+                    'petty_cash.transaction.approve',
+                    'petty_cash.transaction.reject',
+                    'petty_cash.transaction.charge',
+                    'petty_cash.report.view',
+                    'petty_cash.report.print',
+                    'petty_cash.archive.view',
+                    'petty_cash.archive.manage',
+                ],
+            ],
         ];
 
         return $permissions;

@@ -45,6 +45,11 @@ enum SettingFilterHook: string
     case SETTINGS_RECAPTCHA_INTEGRATIONS_TAB_BEFORE_SECTION_START = 'filter.settings.recaptcha_integrations_tab_before_section_start';
     case SETTINGS_RECAPTCHA_INTEGRATIONS_TAB_BEFORE_SECTION_END = 'filter.settings.recaptcha_integrations_tab_before_section_end';
 
+    // UI Hooks - Smart Invoice tab
+    case SETTINGS_SMART_INVOICE_TAB_BEFORE_SECTION_START = 'filter.settings.smart_invoice_tab_before_section_start';
+    case SETTINGS_SMART_INVOICE_TAB_BEFORE_SECTION_END = 'filter.settings.smart_invoice_tab_before_section_end';
+    case SETTINGS_SMART_INVOICE_TAB_AFTER_SECTION_END = 'filter.settings.smart_invoice_tab_after_section_end';
+
     // UI Hooks - Tab menu and content
     case SETTINGS_TAB_MENU_BEFORE = 'filter.settings.tab_menu_before_';
     case SETTINGS_TAB_MENU_AFTER = 'filter.settings.tab_menu_after_';

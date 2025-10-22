@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\SetupStorage::class,
         Commands\CreatePlaceholderImages::class,
+        Commands\PettyCashArchive::class,
     ];
 
     /**
@@ -26,6 +27,11 @@ class Kernel extends ConsoleKernel
     {
         // Schedule the demo database refresh command every 15 minutes in demo mode.
         $schedule->command('demo:refresh-database')->everyFifteenMinutes();
+
+        // Schedule petty cash archiving
+        $schedule->command('petty-cash:archive --period=daily')->dailyAt('23:59');
+        $schedule->command('petty-cash:archive --period=3days')->cron('59 23 */3 * *'); // Every 3 days at 23:59
+        $schedule->command('petty-cash:archive --period=weekly')->weeklyOn(6, '23:59'); // Every Saturday at 23:59
     }
 
     /**
