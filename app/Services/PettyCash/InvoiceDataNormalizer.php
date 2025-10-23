@@ -120,12 +120,34 @@ class InvoiceDataNormalizer
                 'service_charge',
                 'service_fee'
             ])),
+            'other_charges' => $this->parseAmount($this->findValue($financial, [
+                'other_charges_in_rial_numerical',
+                'other_fees',
+                'misc_fees',
+                'additional_charges'
+            ])),
+            'prepayment' => $this->parseAmount($this->findValue($financial, [
+                'prepayment_in_rial_numerical',
+                'prepayment',
+                'advance_payment',
+                'deposit'
+            ])),
             'final_amount' => $this->parseAmount($this->findValue($financial, [
                 'final_amount_in_rial_numerical',
                 'total_amount',
                 'grand_total',
                 'final_total'
             ])),
+            'raw_currency' => $this->findValue($financial, [
+                'raw_currency',
+                'detected_currency',
+                'currency'
+            ]),
+            'currency_source_note' => $this->findValue($financial, [
+                'currency_source_note',
+                'currency_note',
+                'currency_evidence'
+            ]),
         ];
     }
 
@@ -163,12 +185,22 @@ class InvoiceDataNormalizer
                     'discount',
                     'item_discount'
                 ])),
+                'tax' => $this->parseAmount($this->findValue($item, [
+                    'tax_per_item_in_rial_numerical',
+                    'item_tax',
+                    'tax'
+                ])),
                 'total' => $this->parseAmount($this->findValue($item, [
                     'total_after_discount_in_rial_numerical',
                     'total_price_in_rial_numerical',
                     'total',
                     'line_total'
                 ])),
+                'currency_source' => $this->findValue($item, [
+                    'currency_source',
+                    'currency',
+                    'unit_currency'
+                ]),
             ];
         }
 

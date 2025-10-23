@@ -1,9 +1,9 @@
 {
     "mcpServers": {
         "laravel-boost": {
-            "command": "php",
+            "command": "/usr/bin/php8.4",
             "args": [
-                "/Users/maniruzzamanakash/workspace/laradashboard/artisan",
+                "/var/www/zdr/artisan",
                 "boost:mcp"
             ]
         }

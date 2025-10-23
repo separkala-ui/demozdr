@@ -34,50 +34,6 @@ class SettingController extends Controller
 
         $tab = $tab ?? request()->input('tab', 'general');
 
-        // Handle Smart Invoice tab
-        if ($tab === 'smart-invoice') {
-            $hybridService = app(\App\Services\PettyCash\HybridInvoiceService::class);
-            $modelService = app(\App\Services\PettyCash\GeminiModelService::class);
-            $serviceStatus = $hybridService->getServiceStatus();
-            $availableModels = $modelService->getRecommendedModels();
-            
-            // Set default values if not configured
-            $settingService = app(\App\Services\SettingService::class);
-            
-            // Set defaults only if not already set
-            if (!$settingService->getSetting('smart-invoice.gemini.model')) {
-                $settingService->addSetting('smart-invoice.gemini.model', 'gemini-2.5-flash');
-            }
-            
-            if (!$settingService->getSetting('smart-invoice.primary_service')) {
-                $settingService->addSetting('smart-invoice.primary_service', 'gemini');
-            }
-            
-            if (!$settingService->getSetting('smart-invoice.fallback_service')) {
-                $settingService->addSetting('smart-invoice.fallback_service', 'python');
-            }
-
-            if (!$settingService->getSetting('smart-invoice.gemini.enabled')) {
-                $settingService->addSetting('smart-invoice.gemini.enabled', true);
-            }
-
-            if (!$settingService->getSetting('smart-invoice.analytics')) {
-                $settingService->addSetting('smart-invoice.analytics', true);
-            }
-
-            if (!$settingService->getSetting('smart-invoice.confidence_threshold')) {
-                $settingService->addSetting('smart-invoice.confidence_threshold', 0.5);
-            }
-            
-            return view('backend.pages.settings.index', compact('tab', 'serviceStatus', 'availableModels'))
-                ->with([
-                    'breadcrumbs' => [
-                        'title' => __('Smart Invoice Settings'),
-                    ],
-                    'availableModels' => $availableModels,
-                ]);
-        }
-
         return view('backend.pages.settings.index', compact('tab'))
             ->with([
                 'breadcrumbs' => [
@@ -90,11 +46,6 @@ class SettingController extends Controller
     {
         // Temporarily disable authorization for testing
         // $this->authorize('update', Setting::class);
-
-        // Handle Smart Invoice settings
-        if ($request->has('primary_service') || $request->has('gemini_api_key')) {
-            return $this->handleSmartInvoiceSettings($request);
-        }
 
         // Restrict specific fields in demo mode.
         if (config('app.demo_mode', false)) {
@@ -161,16 +112,5 @@ class SettingController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Settings saved successfully.');
-    }
-
-    private function handleSmartInvoiceSettings(Request $request)
-    {
-        // Delegate to SmartInvoiceSettingsController
-        $smartInvoiceController = new \App\Http\Controllers\Backend\Settings\SmartInvoiceSettingsController(
-            app(\App\Services\PettyCash\HybridInvoiceService::class),
-            app(\App\Services\PettyCash\GeminiModelService::class)
-        );
-
-        return $smartInvoiceController->update($request);
     }
 }

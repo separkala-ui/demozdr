@@ -1,73 +1,69 @@
-# Smart Invoice Intelligence Architecture
+# Smart Invoice – Gemini Architecture
 
-This document captures the high–level architecture for the petty-cash "smart invoice" automation stack.  
-Its goal is to make it easy to reason about how images captured inside the Laravel dashboard flow into the Python pipeline, how extracted fields are sent back, and how the data can later power analytics.
+این نسخه ساختار جدید تکمیل خودکار فاکتور را توضیح می‌دهد؛ تمام مراحل هوش‌مصنوعی توسط سرویس Gemini انجام می‌شود و دیگر به مایکروسرویس پایتونی نیازی نیست.
 
-## 1. Functional Overview
+## 1. جریان کلی
 
-- **Trigger point:** Inside the petty–cash transaction form each row has a _Smart Fill_ button. A user uploads an invoice image (and optionally the POS receipt) and then presses the button.
-- **Livewire action:** The Livewire component streams the temporary upload paths to a dedicated `SmartInvoiceService`.
-- **Python service call:** The PHP service posts a multipart request to the locally hosted Python microservice. The request contains the invoice image, receipt image, contextual metadata, and the user/ledger identifiers.
-- **Extraction pipeline:** The Python API performs:
-  1. OpenCV pre-processing (deskew, denoise, normalization).
-  2. OCR (EasyOCR by default). External OCR APIs remain optional and are disabled unless explicitly configured.
-  3. Structured field extraction (NER-based entity tagging + fallback regex heuristics).
-  4. Category inference and behaviour analytics (Pandas + lightweight keyword classifier).
-- **Response:** The Python service returns the extracted totals, dates, reference numbers, vendor/customer names, detected line items, analytics snippets, and a confidence score.
-- **Form auto-fill:** Livewire updates the inline row fields, stores the structured payload in `entries[n][meta]`, and shows the confidence/status to the user. Submitting the form persists the transaction as usual with the enriched metadata.
-
-## 2. Deployment Model
+1. کاربر داخل فرم تنخواه تصویر فاکتور (و در صورت نیاز رسید POS) را بارگذاری و روی دکمه «تکمیل هوشمند» کلیک می‌کند.
+2. کامپوننت Livewire (`TransactionForm`) فایل‌های موقت را به `SmartInvoiceService` ارسال می‌کند.
+3. سرویس PHP با توجه به تنظیمات فعال بودن Gemini و کلید API، پرامپت و داده‌های تصویری را برای مدل مشخص‌شده (`gemini-2.5-flash` به صورت پیش‌فرض) آماده می‌کند.
+4. پاسخ ساخت‌یافته مدل به `SmartInvoiceExtraction` تبدیل می‌شود؛ سپس فروض محاسباتی مانند جمع اقلام، مالیات، تخفیف، هزینه حمل و پیش‌پرداخت با آستانه خطای قابل تنظیم بررسی می‌شوند.
+5. مقادیر نهایی در فرم درج، وضعیت و پیام‌ها در رابط کاربری نمایش و متادیتا داخل ستون `meta->smart_invoice` ذخیره می‌شود.
 
 ```
-[Laravel App] --HTTP--> [FastAPI microservice] --(optional GPU/External OCR)-->
+[Livewire Form] → [SmartInvoiceService] → [Google Gemini] → [SmartInvoiceExtraction] → [Form Auto-Fill]
 ```
 
-- **Runtime:** The Python service runs on your own infrastructure (VM, bare metal or container). Start it locally with `uvicorn` or bundle it inside your existing docker-compose stack.
-- **Config:** All endpoints and secrets are controlled via `.env` (`SMART_INVOICE_SERVICE_URL`, optional API key, timeout, analytics toggle). PHP falls back gracefully if the service is undefined or unreachable.
+## 2. درخواست به Gemini
 
-## 3. Python Service Composition
+- تصاویر فاکتور و رسید به صورت Base64 در قالب `inline_data` ارسال می‌شود و متن پرامپت توسط `GeminiPromptBuilder` تولید می‌گردد.
+- از قابلیت **function calling** استفاده می‌کنیم؛ بدین ترتیب مدل باید دقیقا طبق اسکیمای «set_invoice» پاسخ دهد.
+- پارامترهای مهم:
+  - `has_receipt` برای اطلاع مدل از وجود رسید و استفاده از آن به عنوان منبع کمکی.
+  - `context` برای ارسال شناسه دفتر، نوع تراکنش و مبلغ فعلی فرم تا مدل پاسخ متناسب‌تری بدهد.
+- تنظیمات قابل‌تر است در `config/smart-invoice.php` (مدل، timeout، آستانه اطمینان و سقف اختلاف مجاز).
 
-| Module | Responsibility | Notes |
-| --- | --- | --- |
-| `config.py` | Centralises environment configuration via Pydantic settings | Supports toggling GPU, choosing OCR provider, thresholds |
-| `preprocessing.py` | OpenCV helpers for noise removal, thresholding, rotation correction | Fallback to PIL if OpenCV is unavailable |
-| `ocr.py` | Wraps EasyOCR or an HTTP-based OCR provider, returns text segments with bounding boxes | Lazily instantiates the OCR reader |
-| `ner.py` | Token classification pipeline (Transformers / spaCy) for Persian invoices | Loads model path from env; degrades to rule-based tagging |
-| `extraction.py` | Combines OCR text + NER entities to produce structured invoice fields | Includes regex fallbacks for total, tax, dates, POS IDs |
-| `analytics.py` | Builds Pandas DataFrames, category spending summaries, behavioural insights | Provides data points for future dashboard widgets |
-| `main.py` | FastAPI app exposing `/extract` and `/analyze` endpoints | Handles multipart uploads and schema validation |
+## 3. اعتبارسنجی و تکمیل داده
 
-All modules are pure Python and covered by type hints so they can be unit-tested independently.
+`SmartInvoiceService` پس از دریافت خروجی خام Gemini مراحل زیر را انجام می‌دهد:
 
-## 4. Error Handling Strategy
+- نرمال‌سازی ساختار با استفاده از `InvoiceDataNormalizer`؛ این کلاس نگاشت کلید‌ها، تبدیل مقادیر متنی به عدد، و تشخیص نام فروشنده/خریدار را بر عهده دارد.
+- محاسبه مجدد جمع اقلام، هزینه خدمات، حمل‌ونقل، تخفیف و پیش‌پرداخت. اگر مدل مقدار نهایی را پر نکرده باشد، سیستم آن را محاسبه می‌کند.
+- مقایسه جمع اقلام با جمع سطر فاکتور و کنترل جمع کل (Subtotal + مالیات + … – تخفیف – پیش‌پرداخت). اختلاف بیش از آستانه تنظیم‌شده باعث علامت هشدار و کاهش ضریب اطمینان می‌شود.
+- بازگرداندن آرایه‌ای استاندارد شامل `total_amount`, `tax_amount`, `line_items`, `analytics` و `raw_payload`. سپس `SmartInvoiceExtraction` این داده را به آبجکت strongly-typed تبدیل می‌کند.
 
-- Network errors, OCR failures, and parsing issues surface to PHP as `SmartInvoiceException` with user-friendly Persian messages.
-- The Python API returns structured error payloads (`status="error"`, `detail`) with HTTP 4xx/5xx codes.
-- Livewire displays inline messages on the offending row while leaving manually entered values untouched.
+## 4. ارتباط با رابط کاربری
 
-## 5. Data Persistence & Analytics
+- Livewire مجموعه `smartEntriesState` را برای هر ردیف نگه می‌دارد؛ وضعیت `success / loading / error`, مقدار اطمینان و خلاصه‌ای از فاکتور در این ساختار قرار می‌گیرد.
+- در صورت وجود اختلاف، کاربر پیام هشدار به همراه مجموع محاسبه‌شده، مجموع استخراج‌شده و آستانه مجاز را مشاهده می‌کند.
+- لیست اقلام (ردیف، شرح، تعداد، قیمت، تخفیف، مالیات) و خروجی‌های تحلیلی (currency note، validation، metadata) در زیر فرم نمایش داده می‌شوند.
+- داده‌های ذخیره‌شده در `entries[n][meta][smart_invoice]` شامل نسخه خام پاسخ مدل نیز هست تا امکان ممیزی بعدی فراهم باشد.
 
-- Extracted metadata is stored inside the `meta` JSON column of `petty_cash_transactions` under the `smart_invoice` key.
-- Each payload includes raw OCR text for auditing, normalised totals, detected items, and analytics snapshots (top category, spend bucket).
-- Future dashboards can aggregate the JSON using the existing services or a new scheduled job that exports to a warehouse.
+## 5. تنظیمات
 
-## 6. Security & Privacy
+تمام تنظیمات از مسیر **تنظیمات → فاکتور هوشمند** مدیریت می‌شود:
 
-- Large images never leave your infrastructure because EasyOCR runs locally. External OCR providers remain opt-in only; if enabled, HTTPS is enforced and secrets are loaded from env/settings.
-- API key authentication between Laravel and Python is optional but recommended in production.
-- Uploaded images remain inside Laravel's temporary storage; the Python service reads them via streaming and never persists files unless configured.
+| کلید | توضیح |
+| --- | --- |
+| `SMART_INVOICE_GEMINI_ENABLED` | فعال/غیرفعال کردن کل سامانه |
+| `SMART_INVOICE_GEMINI_API_KEY` | کلید اختصاصی Google AI Studio |
+| `SMART_INVOICE_GEMINI_MODEL` | نام مدل (پیش‌فرض `gemini-2.5-flash`) |
+| `SMART_INVOICE_GEMINI_TIMEOUT` | حداکثر زمان انتظار (ثانیه) |
+| `SMART_INVOICE_CONFIDENCE_THRESHOLD` | آستانه اطمینان برای نمایش هشدار |
+| `SMART_INVOICE_VALIDATION_TOLERANCE` | سقف اختلاف قابل قبول بین جمع‌ها (ریال) |
 
-## 7. Next Steps
+مقادیر فوق در `config/smart-invoice.php` بارگذاری و در صورت ذخیره شدن از طریق پنل، به شکل داینامیک در `config('settings.*')` نگهداری می‌شوند.
 
-1. Implement the FastAPI server and ship it with a Dockerfile.
-2. Add automated tests around extraction heuristics and the PHP service wrapper.
-3. Instrument analytics outputs with logging/monitoring to keep track of confidence degradation over time.
+## 6. خطا و لاگ
 
-## 8. On-Prem Deployment Checklist
+- خطاهای ارتباط با Gemini به صورت `SmartInvoiceException::requestFailed` بالا می‌آیند و پیام فارسی متناسب نمایش داده می‌شود.
+- پاسخ‌های ناقص، JSON ناقص یا payload متنی در مسیر `storage/logs/smart-invoice` ذخیره می‌شود تا بتوان خروجی مدل را بررسی کرد.
+- در صورت عدم وجود فایل ضمیمه یا غیر فعال بودن سرویس، پیام کاربرپسند با استفاده از فایل‌های ترجمه `resources/lang/*` نمایش داده می‌شود.
 
-- Install Python 3.10+ and system packages required by OpenCV (`ffmpeg`, `libsm6`, `libxext6` on Debian/Ubuntu).
-- Create a dedicated virtualenv and install dependencies:  
-  `pip install -r python/pettycash_ai/requirements.txt`
-- Run the service behind your firewall:  
-  `uvicorn python.pettycash_ai.main:app --host 0.0.0.0 --port 8000`
-- Set the **Smart Invoice** settings (URL, timeout, optional token) from the admin panel so Laravel can communicate with the service.
+## 7. مسیر توسعه آینده
+
+- آموزش prompt اختصاصی بر اساس مستندات فاکتورهای سازمان.
+- افزودن فهرست خطاها و قوانین تشخیص تقلب (مثلا تشخیص تاریخ‌های خارج از دوره).
+- یکپارچه‌سازی با ماژول گزارش‌گیری برای بررسی روند دقت (confidence) در بازه‌های زمانی مختلف.
+
+با این تغییرات، کل چرخه «بارگذاری تصویر → استخراج → اعتبارسنجی → ثبت در فرم» تنها به یک سرویس PHP و API رسمی گوگل متکی است و نیازهای استقرار و نگهداری به حداقل ممکن رسیده است.

@@ -337,7 +337,7 @@
                                                     <span class="rounded-md bg-green-100 px-2 py-1 text-[11px] font-semibold text-green-800">
                                                         {{ __('smart_invoice.confidence', ['value' => number_format(($smartState['confidence'] ?? 0) * 100, 1)]) }}
                                                     </span>
-                                                    @if(($smartState['confidence'] ?? 0) < config('smart-invoice.confidence_threshold', 0.5))
+                                                    @if(($smartState['confidence'] ?? 0) < config('smart-invoice.confidence_threshold', 0.6))
                                                         <span class="rounded-md bg-amber-100 px-2 py-1 text-[11px] font-semibold text-amber-800">
                                                             {{ __('smart_invoice.low_confidence_hint') }}
                                                         </span>
@@ -379,12 +379,15 @@
                                                                     <i class="fas fa-exclamation-triangle ml-1"></i>
                                                                     <strong>اخطار: اختلاف در مبالغ</strong>
                                                                 </div>
-                                                                <div class="mt-1 text-yellow-700">
-                                                                    <div>مجموع محاسبه شده: {{ number_format($smartState['amount_verification']['calculated_total']) }} ریال</div>
-                                                                    <div>مجموع استخراج شده: {{ number_format($smartState['amount_verification']['extracted_total']) }} ریال</div>
-                                                                    <div>اختلاف: {{ number_format($smartState['amount_verification']['discrepancy_amount']) }} ریال</div>
-                                                                </div>
+                                                            <div class="mt-1 text-yellow-700">
+                                                                <div>مجموع محاسبه شده: {{ number_format($smartState['amount_verification']['calculated_total']) }} ریال</div>
+                                                                <div>مجموع استخراج شده: {{ number_format($smartState['amount_verification']['extracted_total']) }} ریال</div>
+                                                                <div>اختلاف: {{ number_format($smartState['amount_verification']['discrepancy_amount']) }} ریال</div>
+                                                                @if(isset($smartState['amount_verification']['tolerance']))
+                                                                    <div>آستانه مجاز: {{ number_format($smartState['amount_verification']['tolerance']) }} ریال</div>
+                                                                @endif
                                                             </div>
+                                                        </div>
                                                         @elseif(isset($smartState['amount_verification']))
                                                             <div class="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs">
                                                                 <div class="flex items-center text-green-800">
@@ -396,80 +399,20 @@
                                                                 </div>
                                                             </div>
                                                         @endif
+                                                        @if(!empty($smartState['extracted_data']['analytics']['validation']['issues']))
+                                                            <div class="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
+                                                                <div class="font-semibold mb-1">موارد نیازمند بررسی:</div>
+                                                                @foreach($smartState['extracted_data']['analytics']['validation']['issues'] as $issue)
+                                                                    <div>- {{ $issue }}</div>
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
                                                         @php
-                                                            // Extract the actual JSON data - handle both structures
-                                                            $extractedData = null;
-                                                            
-                                                            // Debug: Log the structure
-                                                            \Log::info('View JSON extraction debug', [
-                                                                'has_raw_payload' => isset($smartState['extracted_data']['raw_payload']['content']),
-                                                                'has_items_details' => isset($smartState['extracted_data']['items_details']),
-                                                                'extracted_data_keys' => array_keys($smartState['extracted_data'] ?? [])
-                                                            ]);
-                                                            
-                                                            // Case 1: JSON is in raw_payload.content (wrapped in markdown)
-                                                            if (isset($smartState['extracted_data']['raw_payload']['content'])) {
-                                                                \Log::info('Using Case 1: raw_payload.content');
-                                                                $content = $smartState['extracted_data']['raw_payload']['content'];
-                                                                $content = preg_replace('/```json\s*/', '', $content);
-                                                                $content = preg_replace('/```\s*$/', '', $content);
-                                                                $content = trim($content);
-                                                                
-                                                                // Advanced JSON repair for truncated content
-                                                                $openBraces = substr_count($content, '{');
-                                                                $closeBraces = substr_count($content, '}');
-                                                                
-                                                                \Log::info('JSON structure analysis', [
-                                                                    'open_braces' => $openBraces,
-                                                                    'close_braces' => $closeBraces,
-                                                                    'content_length' => strlen($content),
-                                                                    'ends_with_quote' => substr($content, -1) === '"'
-                                                                ]);
-                                                                
-                                                                if ($openBraces > $closeBraces) {
-                                                                    $missingBraces = $openBraces - $closeBraces;
-                                                                    
-                                                                    // Try to find the last complete object
-                                                                    $lastCompleteObject = strrpos($content, '}');
-                                                                    if ($lastCompleteObject !== false) {
-                                                                        $content = substr($content, 0, $lastCompleteObject + 1);
-                                                                        $content .= str_repeat('}', $missingBraces);
-                                                                    } else {
-                                                                        // If no complete object found, try to close all open structures
-                                                                        $content .= str_repeat('}', $missingBraces);
-                                                                    }
-                                                                }
-                                                                
-                                                                // Handle truncated strings
-                                                                if (substr($content, -1) === '"' && !str_ends_with($content, '""')) {
-                                                                    $content = rtrim($content, '"') . '"}';
-                                                                }
-                                                                
-                                                                $extractedData = json_decode($content, true);
-                                                                
-                                                                \Log::info('Case 1 result', [
-                                                                    'json_decode_success' => $extractedData !== null,
-                                                                    'json_error' => json_last_error_msg(),
-                                                                    'has_items' => isset($extractedData['items_details']['item_structure']),
-                                                                    'has_financial' => isset($extractedData['financial_summary'])
-                                                                ]);
-                                                            }
-                                                            // Case 2: JSON is directly in extracted_data (no raw_payload wrapper)
-                                                            elseif (isset($smartState['extracted_data']['items_details'])) {
-                                                                \Log::info('Using Case 2: direct extracted_data');
-                                                                $extractedData = $smartState['extracted_data'];
-                                                                \Log::info('Case 2 result', [
-                                                                    'has_items' => isset($extractedData['items_details']['item_structure'])
-                                                                ]);
-                                                            }
-                                                            else {
-                                                                \Log::warning('No valid JSON structure found', [
-                                                                    'extracted_data_structure' => $smartState['extracted_data'] ?? 'null'
-                                                                ]);
-                                                            }
+                                                            $extractedData = $smartState['extracted_data'] ?? [];
+                                                            $structuredItems = $extractedData['items_details']['item_structure'] ?? [];
                                                         @endphp
                                                         
-                                                        @if($extractedData && isset($extractedData['items_details']['item_structure']) && count($extractedData['items_details']['item_structure']) > 0)
+                                                        @if(!empty($structuredItems))
                                                             <div><strong>آیتم‌های خریداری شده:</strong></div>
                                                             <div class="mt-2 overflow-x-auto">
                                                                 <table class="w-full text-xs border border-gray-200 rounded">
@@ -481,11 +424,11 @@
                                                                             <th class="px-2 py-1 border-b text-center">واحد</th>
                                                                             <th class="px-2 py-1 border-b text-left">قیمت واحد</th>
                                                                             <th class="px-2 py-1 border-b text-left">تخفیف</th>
-                                                                            <th class="px-2 py-1 border-b text-left">مجموع</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        @foreach($extractedData['items_details']['item_structure'] as $item)
+                                                                                <th class="px-2 py-1 border-b text-left">مجموع</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        @foreach($structuredItems as $item)
                                                                             <tr class="border-b hover:bg-gray-50">
                                                                                 <td class="px-2 py-1 text-center">{{ $item['row_number'] ?? '-' }}</td>
                                                                                 <td class="px-2 py-1 text-right">{{ $item['product_or_service_description_fa'] ?? 'نامشخص' }}</td>
@@ -578,12 +521,45 @@
                                                             {{ __('اعمال اطلاعات به فرم') }}
                                                         </button>
                                                     </div>
-                                                    
-                                                    {{-- Raw payload display for debugging --}}
-                                                    <div class="mt-3 p-2 bg-red-50 border border-red-200 rounded">
-                                                        <div class="font-semibold text-red-800 mb-2">Debug - Raw Payload:</div>
-                                                        <pre class="text-xs text-red-700 overflow-auto max-h-40 whitespace-pre-wrap">{{ json_encode($smartState['extracted_data'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
-                                                    </div>
+
+                                                    @php
+                                                        $summaryPreview = [
+                                                            'شماره فاکتور' => $smartState['extracted_data']['invoice_number'] ?? ($smartState['summary']['invoice_number'] ?? null),
+                                                            'شماره مرجع' => $smartState['extracted_data']['reference_number'] ?? ($smartState['summary']['reference_number'] ?? null),
+                                                            'فروشنده' => $smartState['extracted_data']['vendor_name'] ?? ($smartState['summary']['vendor_name'] ?? null),
+                                                            'تاریخ' => $smartState['extracted_data']['issued_at'] ?? ($smartState['summary']['issued_at'] ?? null),
+                                                            'مبلغ کل (ریال)' => $smartState['extracted_data']['total_amount'] ?? ($smartState['summary']['total_amount'] ?? null),
+                                                            'مالیات (ریال)' => $smartState['extracted_data']['financial_summary']['vat_and_tolls_amount_in_rial_numerical'] ?? null,
+                                                            'تخفیف (ریال)' => $smartState['extracted_data']['financial_summary']['total_discount_in_rial_numerical'] ?? null,
+                                                        ];
+                                                        $hasPreviewData = collect($summaryPreview)->contains(fn($value) => filled($value));
+                                                    @endphp
+                                                    @if($hasPreviewData)
+                                                        <div class="mt-3">
+                                                            <table class="w-full text-xs border border-dashed border-slate-300 rounded-md bg-slate-50">
+                                                                <tbody>
+                                                                    @foreach($summaryPreview as $label => $value)
+                                                                        <tr class="border-b border-slate-200 last:border-b-0">
+                                                                            <td class="px-3 py-2 text-slate-500">{{ $label }}</td>
+                                                                            <td class="px-3 py-2 font-semibold text-slate-700">{{ $value !== null && $value !== '' ? $value : '—' }}</td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    @endif
+
+                                                    @php
+                                                        $rawPayload = $smartState['debug_payload'] ?? $smartState['raw_payload'] ?? ($smartState['extracted_data']['raw_payload'] ?? []);
+                                                    @endphp
+                                                    @if(!empty($rawPayload))
+                                                        <details class="mt-3 bg-slate-50 border border-slate-200 rounded p-2 text-xs text-slate-700">
+                                                            <summary class="cursor-pointer font-semibold text-slate-800">
+                                                                نمایش JSON برگشتی سرویس
+                                                            </summary>
+                                                            <pre class="mt-2 overflow-auto max-h-60 whitespace-pre-wrap text-left">{{ json_encode($rawPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) }}</pre>
+                                                        </details>
+                                                    @endif
                                                 </div>
                                             @endif
                                         </div>

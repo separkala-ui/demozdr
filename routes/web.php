@@ -9,12 +9,13 @@ use App\Http\Controllers\Backend\LocaleController;
 use App\Http\Controllers\Backend\MediaController;
 use App\Http\Controllers\Backend\ModuleController;
 use App\Http\Controllers\Backend\PettyCashController;
+use App\Http\Controllers\Backend\PettyCash\DebugInvoiceUploadController;
 use App\Http\Controllers\Backend\PermissionController;
 use App\Http\Controllers\Backend\PostController;
 use App\Http\Controllers\Backend\ProfileController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\SettingController;
-use App\Http\Controllers\Backend\Settings\SmartInvoiceSettingsController;
+use App\Http\Controllers\Backend\Settings\GeminiSettingsController;
 use App\Http\Controllers\Backend\TermController;
 use App\Http\Controllers\Backend\TranslationController;
 use App\Http\Controllers\Backend\UserLoginAsController;
@@ -74,6 +75,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::delete('/petty-cash/backups/{filename}', [PettyCashController::class, 'deleteBackup'])->name('petty-cash.backup.delete');
     Route::post('/petty-cash/module-backup', [PettyCashController::class, 'downloadModulePackage'])->name('petty-cash.module-backup');
 
+    Route::get('/petty-cash/debug/upload', [DebugInvoiceUploadController::class, 'create'])
+        ->name('petty-cash.debug.upload');
+    Route::post('/petty-cash/debug/upload', [DebugInvoiceUploadController::class, 'store'])
+        ->name('petty-cash.debug.upload.store');
+    Route::get('/petty-cash/debug/download/{filename}', [DebugInvoiceUploadController::class, 'download'])
+        ->name('petty-cash.debug.download');
+
     // Permissions Routes.
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->name('permissions.show');
@@ -90,14 +98,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     
     // Smart Invoice Settings Routes - در قسمت Settings
     Route::prefix('settings')->name('settings.')->group(function () {
-        Route::get('/smart-invoice', [SmartInvoiceSettingsController::class, 'index'])
+        Route::get('/smart-invoice', [GeminiSettingsController::class, 'index'])
             ->name('smart-invoice.index');
-        Route::put('/smart-invoice', [SmartInvoiceSettingsController::class, 'update'])
+        Route::put('/smart-invoice', [GeminiSettingsController::class, 'update'])
             ->name('smart-invoice.update');
-        Route::post('/smart-invoice/test', [SmartInvoiceSettingsController::class, 'testServices'])
-            ->name('smart-invoice.test');
-        Route::post('/smart-invoice/refresh-models', [SmartInvoiceSettingsController::class, 'refreshModels'])
-            ->name('smart-invoice.refresh-models');
     });
 
     // Translation Routes.

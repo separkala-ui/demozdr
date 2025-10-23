@@ -30,10 +30,6 @@
                                 'title' => __('Integrations'),
                                 'view' => 'backend.pages.settings.integration-settings',
                             ],
-                            'smart-invoice' => [
-                                'title' => __('Smart Invoice'),
-                                'view' => 'backend.pages.settings.smart-invoice-settings',
-                            ],
                             'performance-security' => [
                                 'title' => __('Performance & Security'),
                                 'view' => 'backend.pages.settings.performance-security-tab',
@@ -41,9 +37,7 @@
                         ]),
                     ])
 
-                    @if($tab !== 'smart-invoice')
-                        <x-buttons.submit-buttons  />
-                    @endif
+                    <x-buttons.submit-buttons  />
                 </form>
             </div>
         </div>

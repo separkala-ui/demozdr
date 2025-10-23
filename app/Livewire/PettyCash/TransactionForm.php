@@ -5,8 +5,9 @@ namespace App\Livewire\PettyCash;
 use App\Exceptions\SmartInvoiceException;
 use App\Models\PettyCashLedger;
 use App\Models\PettyCashTransaction;
+use App\Services\PettyCash\Data\SmartInvoiceExtraction;
+use App\Services\PettyCash\SmartInvoiceService;
 use App\Services\PettyCash\PettyCashService;
-use App\Services\PettyCash\HybridInvoiceService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Hekmatinasser\Verta\Verta;
@@ -384,6 +385,21 @@ class TransactionForm extends Component
                 $calculatedTotal += $serviceAmount;
             }
         }
+
+        if (isset($extractedData['financial_summary']['other_charges_in_rial_numerical'])) {
+            $otherCharges = $this->parseAmount($extractedData['financial_summary']['other_charges_in_rial_numerical']);
+            if ($otherCharges > 0) {
+                $calculatedTotal += $otherCharges;
+            }
+        }
+
+        if (isset($extractedData['financial_summary']['prepayment_in_rial_numerical'])) {
+            $prepayment = $this->parseAmount($extractedData['financial_summary']['prepayment_in_rial_numerical']);
+            if ($prepayment > 0) {
+                $calculatedTotal -= $prepayment;
+            }
+        }
+
         }
 
         // Get extracted total
@@ -403,12 +419,15 @@ class TransactionForm extends Component
             $this->smartEntriesState[$index] = [];
         }
 
+        $tolerance = (float) config('smart-invoice.validation.tolerance', 1000);
+
         $this->smartEntriesState[$index]['amount_verification'] = [
             'calculated_total' => $calculatedTotal,
             'extracted_total' => $extractedTotal,
             'final_amount' => $finalAmount,
-            'has_discrepancy' => $calculatedTotal > 0 && $extractedTotal > 0 && abs($calculatedTotal - $extractedTotal) > 1000, // 1000 rial tolerance
+            'has_discrepancy' => $calculatedTotal > 0 && $extractedTotal > 0 && abs($calculatedTotal - $extractedTotal) > $tolerance,
             'discrepancy_amount' => $calculatedTotal > 0 && $extractedTotal > 0 ? abs($calculatedTotal - $extractedTotal) : 0,
+            'tolerance' => $tolerance,
         ];
     }
 
@@ -624,7 +643,6 @@ class TransactionForm extends Component
         try {
             // Handle incomplete dates like "1403//"
             if (strpos($jalaliDate, '//') !== false) {
-                \Log::info('Incomplete jalali date detected', ['date' => $jalaliDate]);
                 return Verta::now()->format('Y-m-d H:i');
             }
             
@@ -675,124 +693,190 @@ class TransactionForm extends Component
         return Verta::now()->format('Y-m-d H:i');
     }
 
-    public function applyExtractedData(int $index, ?array $rawPayload = null): void
+    protected function resolveStructuredExtraction(int $index, ?array $structuredPayload = null): ?array
     {
-        $rawData = $rawPayload ?? ($this->smartEntriesState[$index]['extracted_data'] ?? null);
-
-        if (! $rawData) {
-            return;
+        if ($structuredPayload) {
+            return $structuredPayload;
         }
-        
-        // Extract the actual JSON data - handle both structures
-        $extractedData = null;
-        
-        // Case 1: JSON is in raw_payload.content (wrapped in markdown)
-        if (isset($rawData['raw_payload']['content'])) {
-            $content = $rawData['raw_payload']['content'];
-            
-            \Log::info('Raw content before parsing', [
-                'index' => $index,
-                'content_length' => strlen($content),
-                'content_preview' => substr($content, 0, 200)
-            ]);
-            
-            // Remove markdown code blocks if present
-            $content = preg_replace('/```json\s*/', '', $content);
-            $content = preg_replace('/```\s*$/', '', $content);
-            $content = trim($content);
-            
-            \Log::info('Cleaned content before parsing', [
-                'index' => $index,
-                'content_length' => strlen($content),
-                'content_preview' => substr($content, 0, 200)
-            ]);
-            
-            try {
-                // Check if JSON is complete
-                $openBraces = substr_count($content, '{');
-                $closeBraces = substr_count($content, '}');
-                
-                \Log::info('JSON structure check', [
-                    'index' => $index,
-                    'open_braces' => $openBraces,
-                    'close_braces' => $closeBraces,
-                    'is_balanced' => $openBraces === $closeBraces
-                ]);
-                
-                // If JSON is incomplete, try to fix it
-                if ($openBraces > $closeBraces) {
-                    $missingBraces = $openBraces - $closeBraces;
-                    
-                    \Log::info('JSON structure analysis', [
-                        'open_braces' => $openBraces,
-                        'close_braces' => $closeBraces,
-                        'content_length' => strlen($content),
-                        'ends_with_quote' => substr($content, -1) === '"',
-                        'last_100_chars' => substr($content, -100)
-                    ]);
-                    
-                    // Try to find the last complete object and add missing braces
-                    $lastCompleteObject = strrpos($content, '}');
-                    if ($lastCompleteObject !== false) {
-                        // Find the last complete object and add missing braces
-                        $content = substr($content, 0, $lastCompleteObject + 1);
-                        $content .= str_repeat('}', $missingBraces);
-                    } else {
-                        // If no complete object found, try to complete the current structure
-                        // Look for incomplete strings and close them
-                        if (substr($content, -1) === '"') {
-                            $content .= '}';
-                            $missingBraces--;
-                        }
-                        
-                        // Add missing closing braces
-                        $content .= str_repeat('}', $missingBraces);
-                    }
-                    
-                    \Log::info('Fixed incomplete JSON', [
-                        'index' => $index,
-                        'added_braces' => $missingBraces,
-                        'last_complete_pos' => $lastCompleteObject,
-                        'repaired_content_length' => strlen($content),
-                        'repaired_preview' => substr($content, -100)
-                    ]);
+
+        $state = $this->smartEntriesState[$index] ?? [];
+
+        if (isset($state['structured']) && is_array($state['structured'])) {
+            return $state['structured'];
+        }
+
+        if (isset($state['raw_payload']['structured']) && is_array($state['raw_payload']['structured'])) {
+            return $state['raw_payload']['structured'];
+        }
+
+        if (isset($state['raw_payload']['items_details']) || isset($state['raw_payload']['financial_summary'])) {
+            return $state['raw_payload'];
+        }
+
+        if (isset($state['raw_payload']['raw_payload']) && is_array($state['raw_payload']['raw_payload'])) {
+            $nested = $state['raw_payload']['raw_payload'];
+
+            if (isset($nested['structured']) && is_array($nested['structured'])) {
+                return $nested['structured'];
+            }
+
+            if (isset($nested['items_details']) || isset($nested['financial_summary'])) {
+                return $nested;
+            }
+
+            if (isset($nested['content']) && is_string($nested['content'])) {
+                $decoded = $this->decodeLegacyExtractionContent($nested['content'], $index);
+                if ($decoded) {
+                    return $decoded;
                 }
-                
-                $extractedData = json_decode($content, true);
-                
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    \Log::error('JSON decode error', [
-                        'index' => $index,
-                        'error' => json_last_error_msg(),
-                        'content' => substr($content, 0, 500)
-                    ]);
-                    return;
-                }
-                
-                \Log::info('Successfully parsed JSON', [
-                    'index' => $index,
-                    'has_financial_summary' => isset($extractedData['financial_summary']),
-                    'has_items' => isset($extractedData['items_details'])
-                ]);
-                
-            } catch (\Exception $e) {
-                \Log::error('Failed to parse extracted data JSON', [
-                    'index' => $index,
-                    'content' => substr($content, 0, 500),
-                    'error' => $e->getMessage()
-                ]);
-                return;
             }
         }
-        // Case 2: JSON is directly in extracted_data (no raw_payload wrapper)
-        elseif (isset($rawData['items_details']) || isset($rawData['financial_summary'])) {
-            \Log::info('Using direct extracted_data structure', ['index' => $index]);
-            $extractedData = $rawData;
+
+        if (isset($state['raw_payload']['content']) && is_string($state['raw_payload']['content'])) {
+            return $this->decodeLegacyExtractionContent($state['raw_payload']['content'], $index);
         }
-        
-        if (!$extractedData) {
+
+        if (isset($state['extracted_data'])) {
+            $legacy = $state['extracted_data'];
+
+            if (isset($legacy['structured']) && is_array($legacy['structured'])) {
+                return $legacy['structured'];
+            }
+
+            if (isset($legacy['raw_payload']['content']) && is_string($legacy['raw_payload']['content'])) {
+                return $this->decodeLegacyExtractionContent($legacy['raw_payload']['content'], $index);
+            }
+
+            if (isset($legacy['items_details']) || isset($legacy['financial_summary'])) {
+                return $legacy;
+            }
+        }
+
+        return null;
+    }
+
+    protected function decodeLegacyExtractionContent(string $content, int $index): ?array
+    {
+        $cleanContent = preg_replace('/```json\s*/', '', $content);
+        $cleanContent = preg_replace('/```$/', '', $cleanContent ?? '');
+        $cleanContent = trim($cleanContent ?? '');
+
+        $openBraces = substr_count($cleanContent, '{');
+        $closeBraces = substr_count($cleanContent, '}');
+
+        if ($openBraces > $closeBraces) {
+            $missingBraces = $openBraces - $closeBraces;
+            $lastCompleteObject = strrpos($cleanContent, '}');
+
+            if ($lastCompleteObject !== false) {
+                $cleanContent = substr($cleanContent, 0, $lastCompleteObject + 1);
+            }
+
+            $cleanContent .= str_repeat('}', $missingBraces);
+        }
+
+        $openSquare = substr_count($cleanContent, '[');
+        $closeSquare = substr_count($cleanContent, ']');
+        if ($openSquare > $closeSquare) {
+            $cleanContent .= str_repeat(']', $openSquare - $closeSquare);
+        }
+
+        $cleanContent = preg_replace('/,(\s*[}\]])/u', '$1', $cleanContent) ?? $cleanContent;
+
+        $decoded = json_decode($cleanContent, true);
+
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+
+        \Log::error('JSON decode error', [
+            'index' => $index,
+            'error' => json_last_error_msg(),
+            'content' => substr($cleanContent, 0, 500),
+        ]);
+
+        return null;
+    }
+
+    protected function buildExtractionSummary(SmartInvoiceExtraction $result, array $structured): array
+    {
+        $financial = $structured['financial_summary'] ?? [];
+        $sellerInfo = $structured['seller_info'] ?? [];
+        $documentInfo = $structured['document_info'] ?? [];
+        $paymentDetails = $structured['payment_and_banking_details'] ?? [];
+        $dates = $structured['dates'] ?? [];
+
+        $total = $financial['final_amount_in_rial_numerical'] ?? $financial['subtotal_in_rial_numerical'] ?? $result->totalAmount;
+        $vendor = $sellerInfo['name_fa'] ?? ($structured['origin_of_document_fa'] ?? $result->vendorName);
+        $invoiceNumber = $structured['invoice_serial_number'] ?? ($documentInfo['number'] ?? null);
+        $reference = $paymentDetails['reference_number_or_sheba'] ?? ($structured['reference_number'] ?? null);
+
+        $issuedAt = $structured['date_jalali'] ?? ($dates['jalali'] ?? null);
+        if (! $issuedAt && $result->issuedAt) {
+            $issuedAt = Verta::instance($result->issuedAt)->format('Y-m-d H:i');
+        }
+
+        $currency = $financial['raw_currency'] ?? $result->currency ?? 'IRR';
+
+        return [
+            'total_amount' => $total,
+            'vendor_name' => $vendor,
+            'invoice_number' => $invoiceNumber,
+            'reference_number' => $reference,
+            'issued_at' => $issuedAt,
+            'currency' => $currency,
+        ];
+    }
+
+    protected function extractStructuredFromRaw(mixed $rawPayload): array
+    {
+        if (is_string($rawPayload)) {
+            $decoded = $this->decodeLegacyExtractionContent($rawPayload, -1);
+            if (is_array($decoded)) {
+                $rawPayload = $decoded;
+            }
+        }
+
+        if (! is_array($rawPayload)) {
+            return [];
+        }
+
+        if (isset($rawPayload['structured']) && is_array($rawPayload['structured'])) {
+            return $rawPayload['structured'];
+        }
+
+        if (isset($rawPayload['items_details']) || isset($rawPayload['financial_summary'])) {
+            return $rawPayload;
+        }
+
+        return [];
+    }
+
+    public function applyExtractedData(int $index, ?array $structuredPayload = null): void
+    {
+        $extractedData = $this->resolveStructuredExtraction($index, $structuredPayload);
+
+        if (! $extractedData) {
             \Log::warning('No valid extracted data found', ['index' => $index]);
             return;
+        }
+
+        $this->smartEntriesState[$index]['structured'] = $extractedData;
+        if (empty($this->smartEntriesState[$index]['summary'])) {
+            $financial = $extractedData['financial_summary'] ?? [];
+            $seller = $extractedData['seller_info'] ?? [];
+            $documentInfo = $extractedData['document_info'] ?? [];
+            $paymentDetails = $extractedData['payment_and_banking_details'] ?? [];
+            $dates = $extractedData['dates'] ?? [];
+
+            $this->smartEntriesState[$index]['summary'] = [
+                'total_amount' => $financial['final_amount_in_rial_numerical'] ?? $financial['subtotal_in_rial_numerical'] ?? null,
+                'vendor_name' => $seller['name_fa'] ?? ($extractedData['origin_of_document_fa'] ?? null),
+                'invoice_number' => $extractedData['invoice_serial_number'] ?? ($documentInfo['number'] ?? null),
+                'reference_number' => $paymentDetails['reference_number_or_sheba'] ?? ($extractedData['reference_number'] ?? null),
+                'issued_at' => $extractedData['date_jalali'] ?? ($dates['jalali'] ?? null),
+                'currency' => $financial['raw_currency'] ?? 'IRR',
+            ];
         }
 
         // Apply extracted data to form fields
@@ -800,12 +884,6 @@ class TransactionForm extends Component
         if (isset($extractedData['financial_summary']['final_amount_in_rial_numerical']) && $extractedData['financial_summary']['final_amount_in_rial_numerical']) {
             $amount = $this->parseAmount($extractedData['financial_summary']['final_amount_in_rial_numerical']);
             $this->entries[$index]['amount'] = $amount;
-            
-            \Log::info('Applied extracted amount', [
-                'index' => $index,
-                'amount' => $amount,
-                'raw_amount' => $extractedData['financial_summary']['final_amount_in_rial_numerical']
-            ]);
         }
 
         // Set transaction date from jalali date
@@ -924,7 +1002,7 @@ class TransactionForm extends Component
         $this->dispatch('$refresh');
     }
 
-    public function runSmartExtraction(int $index, HybridInvoiceService $smartInvoiceService): void
+    public function runSmartExtraction(int $index, SmartInvoiceService $smartInvoiceService): void
     {
         if (! isset($this->entries[$index])) {
             return;
@@ -952,30 +1030,10 @@ class TransactionForm extends Component
         ];
 
         try {
-            // Debug: Log extraction attempt
-            \Log::info('Starting smart extraction', [
-                'index' => $index,
-                'has_invoice' => !is_null($invoice),
-                'has_receipt' => !is_null($receipt),
-                'invoice_filename' => $invoice ? $invoice->getClientOriginalName() : null,
-                'receipt_filename' => $receipt ? $receipt->getClientOriginalName() : null,
-            ]);
-
             $result = $smartInvoiceService->extractFromUploads($invoice, $receipt, [
                 'ledger_id' => $this->ledger->id,
                 'transaction_type' => $entry['type'] ?? PettyCashTransaction::TYPE_EXPENSE,
                 'existing_amount' => $entry['amount'] ?? null,
-            ]);
-
-            // Debug: Log extraction result
-            \Log::info('Smart extraction result', [
-                'index' => $index,
-                'success' => !is_null($result),
-                'confidence' => $result->confidence ?? null,
-                'total_amount' => $result->totalAmount ?? null,
-                'vendor_name' => $result->vendorName ?? null,
-                'invoice_number' => $result->invoiceNumber ?? null,
-                'has_raw_payload' => !is_null($result->rawPayload ?? null),
             ]);
 
             // Force populate form fields with extracted data
@@ -1013,17 +1071,33 @@ class TransactionForm extends Component
             }
 
             $rawPayload = $result->rawPayload ?? [];
+            $structuredSource = $rawPayload['structured']
+                ?? ($rawPayload['raw_payload']['structured'] ?? ($rawPayload['raw_payload'] ?? $rawPayload));
+
+            $structuredPayload = $this->extractStructuredFromRaw($structuredSource);
+            $summary = $this->buildExtractionSummary($result, $structuredPayload);
+            $extractedDataForView = array_merge($summary, [
+                'items_details' => $structuredPayload['items_details'] ?? [],
+                'financial_summary' => $structuredPayload['financial_summary'] ?? [],
+                'line_items' => $structuredPayload['line_items'] ?? [],
+                'analytics' => $result->analytics ?? [],
+                'raw_payload' => $rawPayload,
+            ]);
 
             $existingState = $this->smartEntriesState[$index] ?? [];
             $this->smartEntriesState[$index] = array_merge($existingState, [
                 'status' => 'success',
                 'message' => __('smart_invoice.extraction_success'),
                 'confidence' => $result->confidence,
+                'summary' => $summary,
+                'structured' => $structuredPayload,
+                'raw_payload' => $structuredSource,
+                'debug_payload' => $rawPayload,
+                'extracted_data' => $extractedDataForView,
             ]);
-            $this->smartEntriesState[$index]['extracted_data'] = $rawPayload;
 
             // Auto-apply extracted data to form
-            $this->applyExtractedData($index, $rawPayload);
+            $this->applyExtractedData($index, $structuredPayload);
 
             // Also dispatch a specific event to update the form
             $this->dispatch('smart-invoice-extracted', [
@@ -1197,6 +1271,10 @@ class TransactionForm extends Component
             'status' => 'idle',
             'message' => null,
             'confidence' => null,
+            'summary' => null,
+            'structured' => null,
+            'raw_payload' => null,
+            'extracted_data' => null,
         ];
     }
 
