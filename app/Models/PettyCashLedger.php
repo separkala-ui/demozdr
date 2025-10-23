@@ -16,6 +16,8 @@ class PettyCashLedger extends Model
         'branch_id',
         'branch_name',
         'limit_amount',
+        'max_charge_request_amount',
+        'max_transaction_amount',
         'opening_balance',
         'current_balance',
         'last_reconciled_at',
@@ -31,6 +33,8 @@ class PettyCashLedger extends Model
 
     protected $casts = [
         'limit_amount' => 'decimal:2',
+        'max_charge_request_amount' => 'decimal:2',
+        'max_transaction_amount' => 'decimal:2',
         'opening_balance' => 'decimal:2',
         'current_balance' => 'decimal:2',
         'last_reconciled_at' => 'datetime',

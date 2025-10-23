@@ -101,6 +101,52 @@
                                 @enderror
                             </div>
 
+                            <div class="grid gap-6 sm:grid-cols-2">
+                                <div>
+                                    <label for="max_charge_request_amount" class="block text-sm font-medium text-slate-700">
+                                        {{ __('سقف مجاز درخواست شارژ (ریال)') }}
+                                    </label>
+                                    <div class="relative mt-1">
+                                        <input type="number"
+                                               id="max_charge_request_amount"
+                                               name="max_charge_request_amount"
+                                               value="{{ old('max_charge_request_amount', 0) }}"
+                                               min="0"
+                                               step="0.01"
+                                               class="block w-full rounded-md border-slate-300 px-3 py-2 pl-8 text-sm shadow-sm placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 @error('max_charge_request_amount') border-red-300 @enderror">
+                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                            <span class="text-slate-500 sm:text-sm">ریال</span>
+                                        </div>
+                                    </div>
+                                    @error('max_charge_request_amount')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-slate-500">{{ __('در صورت ورود 0، محدودیتی وجود نخواهد داشت.') }}</p>
+                                </div>
+
+                                <div>
+                                    <label for="max_transaction_amount" class="block text-sm font-medium text-slate-700">
+                                        {{ __('سقف مجاز هر تراکنش (ریال)') }}
+                                    </label>
+                                    <div class="relative mt-1">
+                                        <input type="number"
+                                               id="max_transaction_amount"
+                                               name="max_transaction_amount"
+                                               value="{{ old('max_transaction_amount', 0) }}"
+                                               min="0"
+                                               step="0.01"
+                                               class="block w-full rounded-md border-slate-300 px-3 py-2 pl-8 text-sm shadow-sm placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 @error('max_transaction_amount') border-red-300 @enderror">
+                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                            <span class="text-slate-500 sm:text-sm">ریال</span>
+                                        </div>
+                                    </div>
+                                    @error('max_transaction_amount')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-slate-500">{{ __('در صورت ورود 0، محدودیتی وجود نخواهد داشت.') }}</p>
+                                </div>
+                            </div>
+
                             <!-- Opening Balance -->
                             <div>
                                 <label for="opening_balance" class="block text-sm font-medium text-slate-700">

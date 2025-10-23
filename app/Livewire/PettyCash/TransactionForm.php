@@ -88,7 +88,7 @@ class TransactionForm extends Component
 
             if ($this->entryLooksComplete($entry)) {
                 $rules[$ruleKey] = 'required|file|max:4096';
-                $rules[$receiptRuleKey] = 'required|file|max:4096';
+                $rules[$receiptRuleKey] = 'nullable|file|max:4096';
             } else {
                 $rules[$ruleKey] = 'nullable|file|max:4096';
                 $rules[$receiptRuleKey] = 'nullable|file|max:4096';
@@ -96,6 +96,9 @@ class TransactionForm extends Component
         }
 
         $this->validate($rules);
+
+        $maxChargeLimit = (float) ($this->ledger->max_charge_request_amount ?? 0);
+        $maxTransactionLimit = (float) ($this->ledger->max_transaction_amount ?? 0);
 
         $user = Auth::user();
 
@@ -112,8 +115,30 @@ class TransactionForm extends Component
 
         $processed = 0;
 
-        foreach ($resolvedEntries as $index => $entry) {
-            if ($this->editingTransactionId && $index === 0) {
+        foreach ($resolvedEntries as $loopIndex => $entry) {
+            $originalIndex = $entry['__original_index'] ?? $loopIndex;
+            unset($entry['__original_index']);
+
+            $amountValue = (float) ($entry['amount'] ?? 0);
+
+            if ($maxTransactionLimit > 0 && $amountValue > $maxTransactionLimit) {
+                $this->addError('entries.' . $originalIndex . '.amount', __('مبلغ این تراکنش نمی‌تواند از سقف مجاز (:limit ریال) بیشتر باشد.', ['limit' => number_format($maxTransactionLimit)]));
+                return;
+            }
+
+            if ($entry['type'] === PettyCashTransaction::TYPE_CHARGE) {
+                if ($maxChargeLimit > 0 && $amountValue > $maxChargeLimit) {
+                    $this->addError('entries.' . $originalIndex . '.amount', __('مبلغ درخواست شارژ شما بیشتر از سقف مجاز (:limit ریال) است.', ['limit' => number_format($maxChargeLimit)]));
+                    return;
+                }
+
+                if (! $user->hasRole(['Superadmin', 'Admin'])) {
+                    $this->addError('entries.' . $originalIndex . '.type', __('فقط مدیر ارشد و مدیر می‌توانند تنخواه را شارژ کنند.'));
+                    return;
+                }
+            }
+
+            if ($this->editingTransactionId && $loopIndex === 0) {
                 $transaction = $this->ledger->transactions()->find($this->editingTransactionId);
 
                 if (! $transaction) {
@@ -121,7 +146,7 @@ class TransactionForm extends Component
                 }
 
                 if (! $this->userCanEditTransaction($transaction)) {
-                    $this->addError('entries.' . $index . '.type', __('شما مجاز به ویرایش این تراکنش نیستید.'));
+                    $this->addError('entries.' . $originalIndex . '.type', __('شما مجاز به ویرایش این تراکنش نیستید.'));
                     return;
                 }
 
@@ -135,7 +160,7 @@ class TransactionForm extends Component
 
                 if (($payload['status'] ?? null) === PettyCashTransaction::STATUS_APPROVED) {
                     if (! $user->hasRole(['Superadmin', 'Admin'])) {
-                        $this->addError('entries.' . $index . '.status', __('فقط مدیر ارشد و مدیر می‌توانند تراکنش‌ها را تایید کنند.'));
+                        $this->addError('entries.' . $originalIndex . '.status', __('فقط مدیر ارشد و مدیر می‌توانند تراکنش‌ها را تایید کنند.'));
                         return;
                     }
 
@@ -144,27 +169,23 @@ class TransactionForm extends Component
                     $transaction->save();
                 }
 
-                $this->syncEntryAttachments($transaction, $entry, $user->id);
+                $this->syncEntryAttachments($transaction, $this->entries[$originalIndex] ?? $entry, $user->id, $originalIndex);
                 $processed++;
 
                 continue;
             }
 
-            if ($entry['type'] === PettyCashTransaction::TYPE_CHARGE) {
-                if (! $user->hasRole(['Superadmin', 'Admin'])) {
-                    $this->addError('entries.' . $index . '.type', __('فقط مدیر ارشد و مدیر می‌توانند تنخواه را شارژ کنند.'));
-                    return;
-                }
+            $payload = $this->buildPayload($entry);
 
-                $transaction = $service->recordCharge($this->ledger, $this->buildPayload($entry), $user);
+            if ($entry['type'] === PettyCashTransaction::TYPE_CHARGE) {
+                $transaction = $service->recordCharge($this->ledger, $payload, $user);
             } else {
-                $payload = $this->buildPayload($entry);
                 $payload['type'] = $entry['type'];
                 $transaction = $service->recordExpense($this->ledger, $payload, $user);
             }
 
             if ($transaction) {
-                $this->syncEntryAttachments($transaction, $entry, $user->id);
+                $this->syncEntryAttachments($transaction, $this->entries[$originalIndex] ?? $entry, $user->id, $originalIndex);
                 $processed++;
             }
         }
@@ -300,38 +321,17 @@ class TransactionForm extends Component
 
     private function generateAutoSerialNumber(int $index, array $extractedData): void
     {
-        if (! empty($this->entries[$index]['reference_number'])) {
-            return;
-        }
+        $branchCode = str_pad((string) ($this->ledger->id ?? 0), 3, '0', STR_PAD_LEFT);
 
-        $branchName = $extractedData['origin_of_document_fa'] ?? 
-                     $extractedData['seller_info']['name_fa'] ?? 
-                     'شعبه مرکزی';
-        
-        // Clean branch name for serial number
-        $cleanBranchName = $this->cleanBranchNameForSerial($branchName);
-        
-        // Generate sequential number without date
         $sequentialNumber = $this->getNextSequentialNumber();
-        
-        // Get invoice serial from extracted data
-        $invoiceSerial = $extractedData['invoice_serial_number'] ?? 
-                        $extractedData['transaction_id_or_request_number'] ?? 
-                        null;
-        
-        // Generate auto serial number
-        if ($invoiceSerial) {
-            $this->entries[$index]['reference_number'] = "{$cleanBranchName}-{$sequentialNumber}-{$invoiceSerial}";
-        } else {
-            $this->entries[$index]['reference_number'] = "{$cleanBranchName}-{$sequentialNumber}";
-        }
+        $reference = "{$branchCode}-{$sequentialNumber}";
+
+        $this->entries[$index]['reference_number'] = $reference;
     }
 
     private function ensureSerialNumberAssigned(int $index): string
     {
-        if (empty($this->entries[$index]['reference_number'])) {
-            $this->generateAutoSerialNumber($index, []);
-        }
+        $this->generateAutoSerialNumber($index, $this->entries[$index] ?? []);
 
         return (string) ($this->entries[$index]['reference_number'] ?? '');
     }
@@ -404,7 +404,7 @@ class TransactionForm extends Component
         }
 
         $color = imagecolorallocate($image, 220, 30, 30);
-        $text = 'Serial: ' . $serial;
+        $text = $serial;
 
         $fontWidth = imagefontwidth(5);
         $fontHeight = imagefontheight(5);
@@ -430,23 +430,6 @@ class TransactionForm extends Component
         }
 
         imagedestroy($image);
-    }
-
-    private function cleanBranchNameForSerial(string $branchName): string
-    {
-        // Remove common words and clean the name
-        $removeWords = ['شرکت', 'موسسه', 'فروشگاه', 'رستوران', 'کافه', 'سازمان', 'موسسه'];
-        $cleanName = $branchName;
-        
-        foreach ($removeWords as $word) {
-            $cleanName = str_replace($word, '', $cleanName);
-        }
-        
-        // Remove spaces and special characters
-        $cleanName = preg_replace('/[^آ-ی0-9]/', '', trim($cleanName));
-        
-        // Limit to 10 characters
-        return mb_substr($cleanName, 0, 10);
     }
 
     private function getNextSequentialNumber(): string
@@ -1135,10 +1118,9 @@ class TransactionForm extends Component
         $invoice = $entry['invoice_attachment'] ?? null;
         $receipt = $entry['receipt_attachment'] ?? null;
 
-        if (! $invoice || ! $receipt) {
-            $message = __('برای استفاده از تکمیل هوشمند، بارگذاری فاکتور و رسید الزامی است.');
+        if (! $invoice) {
+            $message = __('برای استفاده از تکمیل هوشمند، بارگذاری فاکتور الزامی است.');
             $this->addError('entries.' . $index . '.invoice_attachment', $message);
-            $this->addError('entries.' . $index . '.receipt_attachment', $message);
             $this->smartEntriesState[$index] = [
                 'status' => 'error',
                 'message' => $message,
@@ -1337,22 +1319,27 @@ class TransactionForm extends Component
         }
     }
 
-    protected function syncEntryAttachments(PettyCashTransaction $transaction, array $entry, int $userId): void
+    protected function syncEntryAttachments(PettyCashTransaction $transaction, array $entry, int $userId, int $entryIndex): void
     {
-        if (isset($entry['invoice_attachment']) && $entry['invoice_attachment']) {
+        $serial = $this->ensureSerialNumberAssigned($entryIndex);
+        $this->applySerialToAttachments($entryIndex, $serial);
+
+        $sourceEntry = $this->entries[$entryIndex] ?? $entry;
+
+        if (isset($sourceEntry['invoice_attachment']) && $sourceEntry['invoice_attachment']) {
             $transaction->clearMediaCollection('invoice');
-            $transaction->addMedia($entry['invoice_attachment']->getRealPath())
-                ->usingFileName($entry['invoice_attachment']->getClientOriginalName())
+            $transaction->addMedia($sourceEntry['invoice_attachment']->getRealPath())
+                ->usingFileName($sourceEntry['invoice_attachment']->getClientOriginalName())
                 ->withCustomProperties([
                     'uploaded_by' => $userId,
                 ])
                 ->toMediaCollection('invoice');
         }
 
-        if (isset($entry['receipt_attachment']) && $entry['receipt_attachment']) {
+        if (isset($sourceEntry['receipt_attachment']) && $sourceEntry['receipt_attachment']) {
             $transaction->clearMediaCollection('bank_receipt');
-            $transaction->addMedia($entry['receipt_attachment']->getRealPath())
-                ->usingFileName($entry['receipt_attachment']->getClientOriginalName())
+            $transaction->addMedia($sourceEntry['receipt_attachment']->getRealPath())
+                ->usingFileName($sourceEntry['receipt_attachment']->getClientOriginalName())
                 ->withCustomProperties([
                     'uploaded_by' => $userId,
                 ])
@@ -1452,7 +1439,7 @@ class TransactionForm extends Component
     {
         return collect($this->entries)
             ->filter(fn ($entry) => $this->entryLooksComplete($entry))
-            ->map(function ($entry) {
+            ->map(function ($entry, $originalIndex) {
                 return [
                     'type' => $entry['type'] ?? PettyCashTransaction::TYPE_EXPENSE,
                     'status' => $entry['status'] ?? PettyCashTransaction::STATUS_SUBMITTED,
@@ -1464,6 +1451,7 @@ class TransactionForm extends Component
                     'invoice_attachment' => $entry['invoice_attachment'] ?? null,
                     'receipt_attachment' => $entry['receipt_attachment'] ?? null,
                     'meta' => $entry['meta'] ?? [],
+                    '__original_index' => $originalIndex,
                 ];
             })
             ->values();

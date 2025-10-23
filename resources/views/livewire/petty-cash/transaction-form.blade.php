@@ -33,6 +33,16 @@
                 <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
                     {{ __('سقف مجاز: :amount ریال', ['amount' => number_format($ledger->limit_amount)]) }}
                 </span>
+                <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                    {{ $ledger->max_charge_request_amount > 0
+                        ? __('سقف شارژ: :amount ریال', ['amount' => number_format($ledger->max_charge_request_amount)])
+                        : __('سقف شارژ: نامحدود') }}
+                </span>
+                <span class="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
+                    {{ $ledger->max_transaction_amount > 0
+                        ? __('سقف هر تراکنش: :amount ریال', ['amount' => number_format($ledger->max_transaction_amount)])
+                        : __('سقف هر تراکنش: نامحدود') }}
+                </span>
                 <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
                     {{ __('آخرین بروزرسانی: :date', ['date' => $ledger->updated_at ? verta($ledger->updated_at)->format('Y/m/d H:i') : __('نامشخص')]) }}
                 </span>

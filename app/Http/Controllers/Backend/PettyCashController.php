@@ -133,6 +133,8 @@ class PettyCashController extends Controller
         $validated = $request->validate([
             'branch_name' => ['required', 'string', 'max:255'],
             'limit_amount' => ['required', 'numeric', 'min:0'],
+            'max_charge_request_amount' => ['nullable', 'numeric', 'min:0'],
+            'max_transaction_amount' => ['nullable', 'numeric', 'min:0'],
             'opening_balance' => ['nullable', 'numeric', 'min:0'],
             'assigned_user_id' => ['required', 'exists:users,id'],
             'account_number' => ['required', 'string', 'max:50'],
@@ -144,6 +146,8 @@ class PettyCashController extends Controller
         $ledger = new PettyCashLedger([
             'branch_name' => $validated['branch_name'],
             'limit_amount' => $validated['limit_amount'],
+            'max_charge_request_amount' => (float) ($validated['max_charge_request_amount'] ?? 0),
+            'max_transaction_amount' => (float) ($validated['max_transaction_amount'] ?? 0),
             'opening_balance' => $validated['opening_balance'] ?? $validated['limit_amount'],
             'assigned_user_id' => $validated['assigned_user_id'] ?? null,
             'account_number' => $validated['account_number'],
@@ -349,6 +353,8 @@ class PettyCashController extends Controller
         $validated = $request->validate([
             'branch_name' => ['required', 'string', 'max:255'],
             'limit_amount' => ['required', 'numeric', 'min:0'],
+            'max_charge_request_amount' => ['nullable', 'numeric', 'min:0'],
+            'max_transaction_amount' => ['nullable', 'numeric', 'min:0'],
             'opening_balance' => ['nullable', 'numeric', 'min:0'],
             'is_active' => ['boolean'],
             'assigned_user_id' => ['required', 'exists:users,id'],
@@ -363,6 +369,8 @@ class PettyCashController extends Controller
         $ledger->update([
             'branch_name' => $validated['branch_name'],
             'limit_amount' => $validated['limit_amount'],
+            'max_charge_request_amount' => (float) ($validated['max_charge_request_amount'] ?? 0),
+            'max_transaction_amount' => (float) ($validated['max_transaction_amount'] ?? 0),
             'opening_balance' => $validated['opening_balance'] ?? $validated['limit_amount'],
             'is_active' => $validated['is_active'] ?? true,
             'assigned_user_id' => $validated['assigned_user_id'] ?? null,

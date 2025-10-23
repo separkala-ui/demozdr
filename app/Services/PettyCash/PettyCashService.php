@@ -21,6 +21,9 @@ class PettyCashService
      */
     public function recordCharge(PettyCashLedger $ledger, array $payload, User $user): PettyCashTransaction
     {
+        $amount = (float) ($payload['amount'] ?? 0);
+        $this->assertAmountWithinLimits($ledger, $amount, PettyCashTransaction::TYPE_CHARGE);
+
         return $this->persistTransaction($ledger, [
             'type' => PettyCashTransaction::TYPE_CHARGE,
             'status' => PettyCashTransaction::STATUS_APPROVED,
@@ -35,6 +38,9 @@ class PettyCashService
      */
     public function recordExpense(PettyCashLedger $ledger, array $payload, User $user): PettyCashTransaction
     {
+        $amount = (float) ($payload['amount'] ?? 0);
+        $this->assertAmountWithinLimits($ledger, $amount, $payload['type'] ?? PettyCashTransaction::TYPE_EXPENSE);
+
         return $this->persistTransaction($ledger, [
             'type' => PettyCashTransaction::TYPE_EXPENSE,
             'status' => $payload['status'] ?? PettyCashTransaction::STATUS_SUBMITTED,
@@ -345,5 +351,26 @@ class PettyCashService
             'approved_adjustments_total' => $approvedAdjustments,
             'last_transaction_at' => $lastTransactionAt ? Carbon::parse($lastTransactionAt) : null,
         ];
+    }
+
+    protected function assertAmountWithinLimits(PettyCashLedger $ledger, float $amount, string $type): void
+    {
+        if ($amount <= 0) {
+            throw ValidationException::withMessages([
+                'amount' => __('مبلغ باید بیشتر از صفر باشد.'),
+            ]);
+        }
+
+        if ($ledger->max_transaction_amount > 0 && $amount > (float) $ledger->max_transaction_amount) {
+            throw ValidationException::withMessages([
+                'amount' => __('مبلغ این تراکنش نمی‌تواند از سقف تعیین‌شده (:limit ریال) بیشتر باشد.', ['limit' => number_format($ledger->max_transaction_amount)]),
+            ]);
+        }
+
+        if ($type === PettyCashTransaction::TYPE_CHARGE && $ledger->max_charge_request_amount > 0 && $amount > (float) $ledger->max_charge_request_amount) {
+            throw ValidationException::withMessages([
+                'amount' => __('مبلغ درخواست شارژ شما بیشتر از سقف مجاز (:limit ریال) است.', ['limit' => number_format($ledger->max_charge_request_amount)]),
+            ]);
+        }
     }
 }
