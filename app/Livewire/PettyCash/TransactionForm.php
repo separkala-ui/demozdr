@@ -285,7 +285,10 @@ class TransactionForm extends Component
 
     private function generateAutoSerialNumber(int $index, array $extractedData): void
     {
-        // Get branch name from extracted data or use default
+        if (! empty($this->entries[$index]['reference_number'])) {
+            return;
+        }
+
         $branchName = $extractedData['origin_of_document_fa'] ?? 
                      $extractedData['seller_info']['name_fa'] ?? 
                      'شعبه مرکزی';
@@ -307,6 +310,111 @@ class TransactionForm extends Component
         } else {
             $this->entries[$index]['reference_number'] = "{$cleanBranchName}-{$sequentialNumber}";
         }
+    }
+
+    private function ensureSerialNumberAssigned(int $index): string
+    {
+        if (empty($this->entries[$index]['reference_number'])) {
+            $this->generateAutoSerialNumber($index, []);
+        }
+
+        return (string) ($this->entries[$index]['reference_number'] ?? '');
+    }
+
+    private function applySerialToAttachments(int $index, string $serial): void
+    {
+        $entry = $this->entries[$index] ?? [];
+        if (empty($serial) || empty($entry)) {
+            return;
+        }
+
+        if (($this->smartEntriesState[$index]['serial_applied'] ?? false) === true) {
+            return;
+        }
+
+        foreach (['invoice_attachment', 'receipt_attachment'] as $field) {
+            if (! isset($entry[$field]) || ! $entry[$field]) {
+                continue;
+            }
+
+            $file = $entry[$field];
+            if (! method_exists($file, 'getRealPath')) {
+                continue;
+            }
+
+            $path = $file->getRealPath();
+            if (! $path || ! is_readable($path) || ! is_writable($path)) {
+                continue;
+            }
+
+            $this->annotateImageWithSerial($path, $serial);
+        }
+
+        $this->smartEntriesState[$index]['serial_applied'] = true;
+    }
+
+    private function annotateImageWithSerial(string $path, string $serial): void
+    {
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        $createMap = [
+            'jpg' => 'imagecreatefromjpeg',
+            'jpeg' => 'imagecreatefromjpeg',
+            'png' => 'imagecreatefrompng',
+            'webp' => 'imagecreatefromwebp',
+        ];
+
+        $saveMap = [
+            'jpg' => 'imagejpeg',
+            'jpeg' => 'imagejpeg',
+            'png' => 'imagepng',
+            'webp' => 'imagewebp',
+        ];
+
+        $create = $createMap[$extension] ?? null;
+        $save = $saveMap[$extension] ?? null;
+
+        if (! $create || ! function_exists($create) || ! $save || ! function_exists($save)) {
+            return;
+        }
+
+        $image = @$create($path);
+        if (! $image) {
+            return;
+        }
+
+        if (in_array($extension, ['png', 'webp'], true)) {
+            imagealphablending($image, true);
+            imagesavealpha($image, true);
+        }
+
+        $color = imagecolorallocate($image, 220, 30, 30);
+        $text = 'Serial: ' . $serial;
+
+        $fontWidth = imagefontwidth(5);
+        $fontHeight = imagefontheight(5);
+
+        $margin = 20;
+        $x = imagesx($image) - ($fontWidth * strlen($text)) - $margin;
+        $y = imagesy($image) - $fontHeight - $margin;
+
+        if ($x < 10) {
+            $x = 10;
+        }
+
+        if ($y < 10) {
+            $y = 10;
+        }
+
+        imagestring($image, 5, (int) $x, (int) $y, $text, $color);
+
+        if ($save === 'imagejpeg') {
+            $save($image, $path, 95);
+        } else {
+            $save($image, $path);
+        }
+
+        imagedestroy($image);
     }
 
     private function cleanBranchNameForSerial(string $branchName): string
@@ -1012,9 +1120,10 @@ class TransactionForm extends Component
         $invoice = $entry['invoice_attachment'] ?? null;
         $receipt = $entry['receipt_attachment'] ?? null;
 
-        if (! $invoice && ! $receipt) {
-            $message = __('smart_invoice.attachments_required');
+        if (! $invoice || ! $receipt) {
+            $message = __('برای استفاده از تکمیل هوشمند، بارگذاری فاکتور و رسید الزامی است.');
             $this->addError('entries.' . $index . '.invoice_attachment', $message);
+            $this->addError('entries.' . $index . '.receipt_attachment', $message);
             $this->smartEntriesState[$index] = [
                 'status' => 'error',
                 'message' => $message,
@@ -1022,6 +1131,9 @@ class TransactionForm extends Component
             ];
             return;
         }
+
+        $serialNumber = $this->ensureSerialNumberAssigned($index);
+        $this->applySerialToAttachments($index, $serialNumber);
 
         $this->smartEntriesState[$index] = [
             'status' => 'loading',
@@ -1366,8 +1478,8 @@ class TransactionForm extends Component
             'entries.*.currency' => 'nullable|string|in:IRR',
             'entries.*.reference_number' => 'nullable|string|max:100',
             'entries.*.description' => 'nullable|string|max:2000',
-            'entries.*.invoice_attachment' => 'nullable|file|max:4096',
-            'entries.*.receipt_attachment' => 'nullable|file|max:4096',
+            'entries.*.invoice_attachment' => 'required|file|max:4096',
+            'entries.*.receipt_attachment' => 'required|file|max:4096',
             'entries.*.meta' => 'nullable|array',
         ];
     }

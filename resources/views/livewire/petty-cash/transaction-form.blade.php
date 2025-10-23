@@ -208,8 +208,9 @@
                                 <input
                                     type="text"
                                     wire:model.lazy="entries.{{ $index }}.reference_number"
-                                    class="w-full rounded-lg border-slate-300 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3"
-                                    placeholder="{{ __('اختیاری') }}"
+                                    class="w-full rounded-lg border-slate-300 bg-slate-100 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3"
+                                    readonly
+                                    title="{{ __('این مقدار به صورت خودکار بر اساس سریال فاکتور تنظیم می‌شود.') }}"
                                 />
                                 @error('entries.' . $index . '.reference_number')
                                     <p class="text-xs text-red-600">{{ $message }}</p>
