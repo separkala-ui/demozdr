@@ -80,7 +80,22 @@ class TransactionForm extends Component
 
     public function submit(PettyCashService $service): void
     {
-        $this->validate();
+        $rules = $this->rules();
+
+        foreach ($this->entries as $index => $entry) {
+            $ruleKey = 'entries.' . $index . '.invoice_attachment';
+            $receiptRuleKey = 'entries.' . $index . '.receipt_attachment';
+
+            if ($this->entryLooksComplete($entry)) {
+                $rules[$ruleKey] = 'required|file|max:4096';
+                $rules[$receiptRuleKey] = 'required|file|max:4096';
+            } else {
+                $rules[$ruleKey] = 'nullable|file|max:4096';
+                $rules[$receiptRuleKey] = 'nullable|file|max:4096';
+            }
+        }
+
+        $this->validate($rules);
 
         $user = Auth::user();
 
@@ -1478,8 +1493,8 @@ class TransactionForm extends Component
             'entries.*.currency' => 'nullable|string|in:IRR',
             'entries.*.reference_number' => 'nullable|string|max:100',
             'entries.*.description' => 'nullable|string|max:2000',
-            'entries.*.invoice_attachment' => 'required|file|max:4096',
-            'entries.*.receipt_attachment' => 'required|file|max:4096',
+            'entries.*.invoice_attachment' => 'nullable|file|max:4096',
+            'entries.*.receipt_attachment' => 'nullable|file|max:4096',
             'entries.*.meta' => 'nullable|array',
         ];
     }
