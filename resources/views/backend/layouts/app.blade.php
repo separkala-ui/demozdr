@@ -79,6 +79,9 @@ x-init="
     <!-- Toast Notification System -->
     @livewire('toast-notification')
 
+    <!-- Command Palette (Ctrl+K) -->
+    @livewire('command-palette')
+
     {!! Hook::applyFilters(AdminFilterHook::ADMIN_FOOTER_BEFORE, '') !!}
 
     @stack('scripts')
