@@ -388,7 +388,7 @@
                         </div>
                     </div>
                     {{-- Decorative element --}}
-                    <div class="absolute -bottom-1 -right-1 h-16 w-16 rounded-full {{ $statusConfig['bg'] }} opacity-50 blur-2xl transition-all group-hover:scale-150"></div>
+                    <div class="absolute -bottom-1 -right-1 h-16 w-16 rounded-full {{ $statusConfig['bg'] }} opacity-50 blur-2xl transition-all group-hover:scale-150"></div>بر
                 </div>
             @endforeach
         </div>

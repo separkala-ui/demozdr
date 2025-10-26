@@ -26,52 +26,70 @@
 
 <x-layouts.backend-layout :breadcrumbs="$breadcrumbs">
     <div class="space-y-6">
-        <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div class="flex-1">
-                    <h1 class="text-xl font-semibold text-slate-800">
-                        <i class="fas fa-plus-circle ml-2 text-indigo-600"></i>
-                        {{ __('ثبت تراکنش‌های تنخواه') }}
-                    </h1>
-                    <p class="text-sm text-slate-500">
-                        {{ __('هزینه‌ها، شارژها یا تعدیلات را با فرم زیر ثبت و مدیریت کنید. پس از ذخیره، تراکنش در داشبورد تنخواه قابل مشاهده خواهد بود.') }}
-                    </p>
+        {{-- Modern Header with Branch Info --}}
+        <div class="overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-l from-slate-50 to-white shadow-sm">
+            <div class="border-b border-slate-200 bg-white p-5">
+                <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    {{-- Title & Branch Name --}}
+                    <div class="flex items-center gap-4">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+                            <iconify-icon icon="lucide:receipt" class="text-2xl text-white"></iconify-icon>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-slate-800">{{ __('ثبت تراکنش‌های تنخواه') }}</h1>
+                            <div class="mt-1 flex items-center gap-2">
+                                <iconify-icon icon="lucide:building-2" class="text-sm text-indigo-500"></iconify-icon>
+                                <span class="text-sm font-semibold text-indigo-600">{{ $ledger->branch_name }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Branch Selector (Admin) --}}
+                    @if($isAdminUser && $availableLedgers->count() > 1)
+                        <div class="flex items-center gap-3">
+                            <iconify-icon icon="lucide:git-branch" class="text-xl text-slate-400"></iconify-icon>
+                            <select id="branch-select" 
+                                    onchange="changeBranch(this.value)"
+                                    class="rounded-lg border-slate-300 px-4 py-2.5 text-sm font-medium shadow-sm transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                                @foreach($availableLedgers as $availableLedger)
+                                    <option value="{{ $availableLedger->id }}" 
+                                            {{ $availableLedger->id == $ledger->id ? 'selected' : '' }}
+                                            data-branch-name="{{ $availableLedger->branch_name }}">
+                                        {{ $availableLedger->branch_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+
+                    {{-- Back Button --}}
+                    <a href="{{ route('admin.petty-cash.index', ['ledger' => $ledger->id]) }}"
+                       class="group inline-flex items-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-700 shadow-sm transition-all hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700">
+                        <iconify-icon icon="lucide:arrow-right" class="text-lg transition-transform group-hover:scale-110"></iconify-icon>
+                        <span>{{ __('بازگشت به داشبورد') }}</span>
+                    </a>
+                </div>
+            </div>
+
+            {{-- Info Bar --}}
+            <div class="bg-slate-50/50 px-5 py-3">
+                <div class="flex flex-wrap items-center gap-4 text-xs">
+                    <div class="flex items-center gap-2 text-slate-600">
+                        <iconify-icon icon="lucide:info" class="text-sm text-indigo-500"></iconify-icon>
+                        <span>{{ __('هزینه‌ها، شارژها یا تعدیلات را با فرم زیر ثبت و مدیریت کنید') }}</span>
+                    </div>
                     @php
                         $custodianName = $formatUserName($ledger->assignedUser ?? null);
-                        $custodianTextClass = $ledger->assignedUser ? 'text-slate-500' : 'text-amber-600';
-                        $custodianIconClass = $ledger->assignedUser ? 'text-slate-400' : 'text-amber-500';
                     @endphp
-                    <div class="mt-2 flex items-center gap-2 text-xs {{ $custodianTextClass }}">
-                        <i class="fas fa-user-circle {{ $custodianIconClass }}"></i>
-                        <span>
+                    <div class="flex items-center gap-2 {{ $ledger->assignedUser ? 'text-emerald-700' : 'text-amber-700' }}">
+                        <iconify-icon icon="lucide:user-check" class="text-sm"></iconify-icon>
+                        <span class="font-medium">
                             {{ $ledger->assignedUser
-                                ? __('مسئول تنخواه: :name', ['name' => $custodianName])
-                                : __('مسئول تنخواه تعیین نشده است. لطفاً با مدیریت برای ثبت مسئول هماهنگ کنید.') }}
+                                ? __('مسئول: :name', ['name' => $custodianName])
+                                : __('مسئول تعیین نشده') }}
                         </span>
                     </div>
                 </div>
-                
-                @if($isAdminUser && $availableLedgers->count() > 1)
-                    <div class="flex items-center gap-3">
-                        <label for="branch-select" class="text-sm font-medium text-slate-700">{{ __('انتخاب شعبه:') }}</label>
-                        <select id="branch-select" 
-                                onchange="changeBranch(this.value)"
-                                class="rounded-md border-slate-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            @foreach($availableLedgers as $availableLedger)
-                                <option value="{{ $availableLedger->id }}" 
-                                        {{ $availableLedger->id == $ledger->id ? 'selected' : '' }}>
-                                    {{ $availableLedger->branch_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                @endif
-                
-                <a href="{{ route('admin.petty-cash.index', ['ledger' => $ledger->id]) }}"
-                   class="inline-flex items-center gap-2 rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
-                    <i class="fas fa-arrow-right"></i>
-                    {{ __('بازگشت به داشبورد تنخواه') }}
-                </a>
             </div>
         </div>
 
@@ -93,22 +111,34 @@
 
 <script>
 function changeBranch(ledgerId) {
-    // Store the selected branch in session storage to maintain it after operations
+    // Get selected option to extract branch name
+    const select = document.getElementById('branch-select');
+    const selectedOption = select.options[select.selectedIndex];
+    const branchName = selectedOption.getAttribute('data-branch-name') || selectedOption.text;
+    
+    // Store in session storage
     sessionStorage.setItem('selectedBranch', ledgerId);
+    sessionStorage.setItem('selectedBranchName', branchName);
     
     // Redirect to the same page with the new ledger
     window.location.href = '{{ route("admin.petty-cash.transactions", ":ledger") }}'.replace(':ledger', ledgerId);
 }
 
-// Restore selected branch from session storage on page load
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Restore selected branch from session storage
     const selectedBranch = sessionStorage.getItem('selectedBranch');
-    if (selectedBranch) {
-        const branchSelect = document.getElementById('branch-select');
-        if (branchSelect && branchSelect.value !== selectedBranch) {
+    const branchSelect = document.getElementById('branch-select');
+    
+    if (selectedBranch && branchSelect) {
+        // Set select value if different
+        if (branchSelect.value !== selectedBranch) {
             branchSelect.value = selectedBranch;
         }
     }
+    
+    // Ensure branch name is displayed (already set by server, but good to have)
+    console.log('Branch loaded: {{ $ledger->branch_name }}');
 });
 
 // Listen for Livewire events to store branch selection
