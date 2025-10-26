@@ -96,7 +96,15 @@ class TransactionForm extends Component
             $categoryRuleKey = 'entries.' . $index . '.category';
 
             if ($this->entryLooksComplete($entry)) {
-                $rules[$ruleKey] = 'required|file|max:4096';
+                $requiresInvoice = true;
+
+                if ($this->editingTransactionId && $index === 0 && $this->transaction) {
+                    if ($this->transaction->hasMedia('invoice') && empty($entry['invoice_attachment'])) {
+                        $requiresInvoice = false;
+                    }
+                }
+
+                $rules[$ruleKey] = $requiresInvoice ? 'required|file|max:4096' : 'nullable|file|max:4096';
                 $rules[$receiptRuleKey] = 'nullable|file|max:4096';
                 $rules[$categoryRuleKey] = 'required|string|max:100';
             } else {
@@ -115,6 +123,13 @@ class TransactionForm extends Component
 
         if (! $user) {
             abort(403);
+        }
+
+        // Ensure serial numbers are assigned BEFORE resolving entries
+        foreach ($this->entries as $index => $entry) {
+            if ($this->entryLooksComplete($entry)) {
+                $this->ensureSerialNumberAssigned($index);
+            }
         }
 
         $resolvedEntries = $this->resolveEntries();
@@ -168,6 +183,25 @@ class TransactionForm extends Component
 
                 if (! $this->userCanManageTransactions()) {
                     $payload['status'] = PettyCashTransaction::STATUS_SUBMITTED;
+                    $payload['approved_by'] = null;
+                    $payload['approved_at'] = null;
+                    $payload['rejected_by'] = null;
+                    $payload['rejected_at'] = null;
+
+                    $meta = $payload['meta'] ?? [];
+                    if (! is_array($meta)) {
+                        $meta = [];
+                    }
+
+                    unset(
+                        $meta['revision_requested_by'],
+                        $meta['revision_requested_at'],
+                        $meta['revision_note'],
+                        $meta['rejection_reason']
+                    );
+
+                    $meta = array_filter($meta, static fn ($value) => $value !== null && $value !== '');
+                    $payload['meta'] = ! empty($meta) ? $meta : null;
                 }
 
                 $transaction->fill($payload);
@@ -465,19 +499,37 @@ class TransactionForm extends Component
         if ($this->serialCursor === null) {
             $lastNumber = 0;
 
-        $lastTransaction = PettyCashTransaction::where('ledger_id', $this->ledger->id)
-                ->orderByDesc('id')
-                ->value('reference_number');
-        
-            if ($lastTransaction && preg_match('/-(\d+)(?:-|$)/', $lastTransaction, $matches)) {
-                $lastNumber = (int) $matches[1];
-            }
-
-            foreach ($this->entries as $entry) {
-                if (! empty($entry['reference_number']) && preg_match('/-(\d+)(?:-|$)/', (string) $entry['reference_number'], $matches)) {
+            // Get ALL transactions from database and find maximum sequential number
+            $allTransactions = PettyCashTransaction::where('ledger_id', $this->ledger->id)
+                ->whereNotNull('reference_number')
+                ->pluck('reference_number');
+            
+            foreach ($allTransactions as $refNumber) {
+                if ($refNumber && preg_match('/-(\d+)(?:-|$)/', (string) $refNumber, $matches)) {
                     $candidate = (int) $matches[1];
                     if ($candidate > $lastNumber) {
                         $lastNumber = $candidate;
+                    }
+                }
+            }
+
+            // Also check current entries for manually entered reference numbers
+            foreach ($this->entries as $entry) {
+                if (! empty($entry['reference_number'])) {
+                    $refNumber = (string) $entry['reference_number'];
+                    
+                    // Extract number from formats like: 001-0005, 001-0005-ABC, or just 0005
+                    if (preg_match('/-(\d+)(?:-|$)/', $refNumber, $matches)) {
+                        $candidate = (int) $matches[1];
+                        if ($candidate > $lastNumber) {
+                            $lastNumber = $candidate;
+                        }
+                    } elseif (preg_match('/^(\d+)$/', $refNumber, $matches)) {
+                        // Handle pure numeric reference numbers
+                        $candidate = (int) $matches[1];
+                        if ($candidate > $lastNumber) {
+                            $lastNumber = $candidate;
+                        }
                     }
                 }
             }

@@ -258,17 +258,34 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-xs font-semibold text-slate-500">{{ __('شماره مرجع') }}</label>
-                                <input
-                                    type="text"
-                                    wire:model.lazy="entries.{{ $index }}.reference_number"
-                                    class="w-full rounded-lg border-slate-300 bg-slate-100 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3"
-                                    readonly
-                                    title="{{ __('این مقدار به صورت خودکار بر اساس سریال فاکتور تنظیم می‌شود.') }}"
-                                />
+                                <label class="text-xs font-semibold text-slate-500">
+                                    {{ __('شماره مرجع') }}
+                                    <span class="text-[10px] font-normal text-slate-400">(دستی/خودکار)</span>
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        type="text"
+                                        wire:model.lazy="entries.{{ $index }}.reference_number"
+                                        class="w-full rounded-lg border-slate-300 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3 pr-10"
+                                        placeholder="{{ __('خودکار یا دستی...') }}"
+                                        title="{{ __('می‌توانید شماره مرجع را به صورت دستی وارد کنید یا خالی بگذارید تا خودکار تولید شود.') }}"
+                                    />
+                                    @if(!empty($entries[$index]['reference_number']))
+                                        <div class="absolute left-3 top-1/2 -translate-y-1/2">
+                                            <iconify-icon icon="lucide:check-circle" class="text-lg text-green-500"></iconify-icon>
+                                        </div>
+                                    @else
+                                        <div class="absolute left-3 top-1/2 -translate-y-1/2">
+                                            <iconify-icon icon="lucide:hash" class="text-lg text-slate-400"></iconify-icon>
+                                        </div>
+                                    @endif
+                                </div>
                                 @error('entries.' . $index . '.reference_number')
                                     <p class="text-xs text-red-600">{{ $message }}</p>
                                 @enderror
+                                <p class="text-[10px] text-slate-400">
+                                    {{ __('در صورت خالی بودن، شماره به صورت خودکار و مسلسل تولید می‌شود') }}
+                                </p>
                             </div>
 
                             <div class="space-y-2">
