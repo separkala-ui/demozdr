@@ -182,36 +182,55 @@
                                         inputmode="numeric"
                                         class="w-full rounded-lg border-slate-300 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3"
                                         placeholder="0"
-                                        x-data="{ 
-                                            rawValue: '',
-                                            formatNumber(value) {
-                                                if (!value) return '';
+                                        x-data="{
+                                            init() {
+                                                // فرمت اولیه
+                                                if (this.$el.value) {
+                                                    let raw = this.$el.value.replace(/[^\d]/g, '');
+                                                    this.$el.value = this.formatWithCommas(raw);
+                                                }
+                                            },
+                                            formatWithCommas(value) {
+                                                if (!value || value === '0') return '';
                                                 // حذف همه چیز به جز اعداد
-                                                let cleaned = String(value).replace(/[^\d]/g, '');
-                                                if (!cleaned || cleaned === '0') return '';
-                                                // جداسازی با ممیز هر 3 رقم
-                                                return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                                                let nums = String(value).replace(/[^\d]/g, '');
+                                                // جداسازی با ممیز از راست به چپ (هر 3 رقم)
+                                                return nums.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                                             }
                                         }"
-                                        x-init="
-                                            // فرمت اولیه
-                                            if ($el.value) {
-                                                $el.value = formatNumber($el.value);
-                                            }
-                                        "
-                                        @input="
-                                            // گرفتن مقدار خام
-                                            rawValue = $event.target.value.replace(/[^\d]/g, '');
+                                        @input.stop="
+                                            let input = $event.target;
+                                            let cursorPos = input.selectionStart;
+                                            let oldValue = input.value;
+                                            let oldLength = oldValue.length;
+                                            
+                                            // حذف ممیزها و گرفتن فقط اعداد
+                                            let rawValue = oldValue.replace(/[^\d]/g, '');
                                             
                                             // محدودیت 20 رقم
                                             if (rawValue.length > 20) {
                                                 rawValue = rawValue.substring(0, 20);
                                             }
                                             
-                                            // فرمت کردن برای نمایش
-                                            $event.target.value = formatNumber(rawValue);
+                                            // فرمت کردن با ممیز
+                                            let formatted = rawValue ? rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
                                             
-                                            // ارسال مقدار خام به Livewire
+                                            // محاسبه تعداد ممیزها قبل از cursor
+                                            let commasBefore = (oldValue.substring(0, cursorPos).match(/,/g) || []).length;
+                                            let commasAfter = (formatted.substring(0, cursorPos).match(/,/g) || []).length;
+                                            
+                                            // تنظیم مقدار جدید
+                                            input.value = formatted;
+                                            
+                                            // تنظیم cursor position
+                                            let newCursorPos = cursorPos + (commasAfter - commasBefore);
+                                            if (formatted.length < oldLength) {
+                                                newCursorPos = cursorPos - (oldLength - formatted.length);
+                                            }
+                                            
+                                            input.setSelectionRange(newCursorPos, newCursorPos);
+                                            
+                                            // ارسال به Livewire
                                             $wire.set('entries.{{ $index }}.amount', rawValue);
                                         "
                                     />
