@@ -274,33 +274,32 @@ class AdminMenuService
             ],
         ], __('More'));
 
-        // System Management - Alerts & Announcements
-        $this->addMenuItem([
-            'label' => __('مدیریت سیستم'),
-            'icon' => 'lucide:bell',
-            'id' => 'system-management-submenu',
-            'active' => Route::is('admin.alert-settings.*') || Route::is('admin.announcements.*'),
-            'priority' => 35,
-            'permissions' => ['Superadmin'],
-            'children' => [
-                [
-                    'label' => __('تنظیمات هشدارها'),
-                    'route' => route('admin.alert-settings.index'),
-                    'icon' => 'lucide:sliders',
-                    'active' => Route::is('admin.alert-settings.*'),
-                    'priority' => 10,
-                    'permissions' => ['Superadmin'],
+        // System Management - Alerts & Announcements (Superadmin only)
+        if ($user && $user->hasRole('Superadmin')) {
+            $this->addMenuItem([
+                'label' => __('مدیریت سیستم'),
+                'icon' => 'lucide:bell',
+                'id' => 'system-management-submenu',
+                'active' => Route::is('admin.alert-settings.*') || Route::is('admin.announcements.*'),
+                'priority' => 35,
+                'children' => [
+                    [
+                        'label' => __('تنظیمات هشدارها'),
+                        'route' => route('admin.alert-settings.index'),
+                        'icon' => 'lucide:sliders',
+                        'active' => Route::is('admin.alert-settings.*'),
+                        'priority' => 10,
+                    ],
+                    [
+                        'label' => __('مدیریت اطلاعیه‌ها'),
+                        'route' => route('admin.announcements.index'),
+                        'icon' => 'lucide:megaphone',
+                        'active' => Route::is('admin.announcements.*'),
+                        'priority' => 20,
+                    ],
                 ],
-                [
-                    'label' => __('مدیریت اطلاعیه‌ها'),
-                    'route' => route('admin.announcements.index'),
-                    'icon' => 'lucide:megaphone',
-                    'active' => Route::is('admin.announcements.*'),
-                    'priority' => 20,
-                    'permissions' => ['Superadmin'],
-                ],
-            ],
-        ], __('More'));
+            ], __('More'));
+        }
 
         $this->addMenuItem([
             'label' => __('Logout'),
