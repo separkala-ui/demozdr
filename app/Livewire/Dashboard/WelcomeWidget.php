@@ -47,13 +47,25 @@ class WelcomeWidget extends Component
         // Today's stats
         $todayStart = now()->startOfDay();
 
+        // Calculate online users from sessions table (active in last 15 minutes)
+        $onlineUsers = 0;
+        try {
+            $fifteenMinutesAgo = now()->subMinutes(15)->timestamp;
+            $onlineUsers = DB::table('sessions')
+                ->where('user_id', '!=', null)
+                ->where('last_activity', '>=', $fifteenMinutesAgo)
+                ->distinct('user_id')
+                ->count('user_id');
+        } catch (\Exception $e) {
+            // If sessions table doesn't exist or error, default to 0
+            $onlineUsers = 0;
+        }
+
         $this->stats = [
             'today_users' => User::where('created_at', '>=', $todayStart)->count(),
             'total_users' => User::count(),
-            'online_users' => User::where('last_login_at', '>=', now()->subMinutes(15))->count(),
-            'your_last_login' => $this->user->last_login_at 
-                ? verta($this->user->last_login_at)->formatDifference() 
-                : __('اولین ورود'),
+            'online_users' => $onlineUsers,
+            'your_last_login' => __('امروز'), // Simplified since we don't have last_login_at column
         ];
 
         // Check if user has petty cash access
