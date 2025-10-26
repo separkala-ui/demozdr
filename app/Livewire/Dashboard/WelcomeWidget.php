@@ -17,14 +17,11 @@ class WelcomeWidget extends Component
 
     public string $greeting = '';
 
-    public string $motivationalQuote = '';
-
     public function mount(): void
     {
         $this->user = auth()->user();
         $this->setGreeting();
         $this->loadStats();
-        $this->setMotivationalQuote();
     }
 
     protected function setGreeting(): void
@@ -82,23 +79,6 @@ class WelcomeWidget extends Component
         }
     }
 
-    protected function setMotivationalQuote(): void
-    {
-        $quotes = [
-            __('امروز روز خوبی برای موفقیت است! 🚀'),
-            __('تلاش شما تفاوت ایجاد می‌کند! 💪'),
-            __('با انگیزه و امید به آینده نگاه کنید! ✨'),
-            __('هر روز فرصتی جدید برای پیشرفت است! 🌟'),
-            __('موفقیت حاصل تلاش‌های مستمر است! 🎯'),
-            __('باور داشته باشید، می‌توانید! 💫'),
-            __('امروز بهترین روز برای شروع است! 🌅'),
-            __('کوچکترین قدم‌ها به بزرگترین موفقیت‌ها منجر می‌شوند! 👣'),
-        ];
-
-        // Select quote based on day of week (consistent for each day)
-        $dayOfWeek = (int) now()->dayOfWeek;
-        $this->motivationalQuote = $quotes[$dayOfWeek % count($quotes)];
-    }
 
     public function render()
     {
