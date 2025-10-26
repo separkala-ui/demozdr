@@ -54,6 +54,12 @@ class TransactionsTable extends Component
 
     public string $rejectNote = '';
 
+    public bool $showRevisionModal = false;
+
+    public ?int $revisionTransactionId = null;
+
+    public string $revisionNote = '';
+
     protected $queryString = [
         'status' => ['except' => null],
         'type' => ['except' => null],
@@ -152,26 +158,51 @@ class TransactionsTable extends Component
         $this->dispatch('store-selected-branch', ['branchId' => $this->ledger->id]);
     }
 
-    public function requestRevision(int $transactionId): void
+    public function openRevisionModal(int $transactionId): void
     {
         if (! $this->userCanManageTransactions()) {
             return;
         }
 
-        $transaction = $this->ledger->transactions()->find($transactionId);
+        $this->revisionTransactionId = $transactionId;
+        $this->revisionNote = '';
+        $this->showRevisionModal = true;
+    }
+
+    public function requestRevision(): void
+    {
+        if (! $this->userCanManageTransactions()) {
+            return;
+        }
+
+        $this->validate([
+            'revisionNote' => 'required|string|min:5|max:500',
+        ], [
+            'revisionNote.required' => 'لطفاً دلیل ارسال برای بازبینی را وارد کنید.',
+            'revisionNote.min' => 'دلیل باید حداقل ۵ کاراکتر باشد.',
+            'revisionNote.max' => 'دلیل نباید بیشتر از ۵۰۰ کاراکتر باشد.',
+        ]);
+
+        $transaction = $this->ledger->transactions()->find($this->revisionTransactionId);
 
         if (! $transaction) {
+            session()->flash('error', __('تراکنش یافت نشد.'));
+            $this->showRevisionModal = false;
             return;
         }
 
         try {
             if ($transaction->status === PettyCashTransaction::STATUS_NEEDS_CHANGES) {
                 session()->flash('success', __('این تراکنش هم‌اکنون در وضعیت بازبینی است.'));
+                $this->showRevisionModal = false;
                 return;
             }
 
-            app(PettyCashService::class)->sendBackForRevision($transaction, Auth::user());
+            app(PettyCashService::class)->sendBackForRevision($transaction, Auth::user(), $this->revisionNote);
             session()->flash('success', __('برای بازبینی به کاربر شعبه ارسال شد.'));
+            $this->showRevisionModal = false;
+            $this->revisionNote = '';
+            $this->revisionTransactionId = null;
             $this->dispatch('petty-cash-transaction-saved');
         } catch (ValidationException $exception) {
             session()->flash('error', $exception->getMessage());

@@ -63,41 +63,31 @@ class PettyCashService
 
     public function approveTransaction(PettyCashTransaction $transaction, User $approver, ?string $note = null): PettyCashTransaction
     {
-        if ($transaction->status === PettyCashTransaction::STATUS_APPROVED) {
-            return $transaction;
-        }
-
-        if ($transaction->status === PettyCashTransaction::STATUS_REJECTED) {
-            throw ValidationException::withMessages([
-                'status' => __('The transaction has already been rejected.'),
-            ]);
-        }
-
         $transaction->status = PettyCashTransaction::STATUS_APPROVED;
         $transaction->approved_by = $approver->id;
         $transaction->approved_at = Carbon::now();
-        $transaction->meta = array_filter(array_merge($transaction->meta ?? [], [
+        $transaction->rejected_by = null;
+        $transaction->rejected_at = null;
+
+        $meta = array_merge($transaction->meta ?? [], [
             'revision_requested_by' => null,
             'revision_requested_at' => null,
             'revision_note' => null,
             'suspicious' => false,
             'suspicious_marked_by' => null,
             'suspicious_marked_at' => null,
+            'suspicious_note' => null,
             'rejection_reason' => null,
             'approval_note' => $note,
-        ]), fn ($value) => $value !== null);
+        ]);
+
+        $transaction->meta = array_filter($meta, fn ($value) => $value !== null);
 
         return $this->persistAndUpdateLedger($transaction);
     }
 
     public function rejectTransaction(PettyCashTransaction $transaction, User $rejector, ?string $reason = null): PettyCashTransaction
     {
-        if ($transaction->status === PettyCashTransaction::STATUS_APPROVED) {
-            throw ValidationException::withMessages([
-                'status' => __('The transaction is already approved and cannot be rejected.'),
-            ]);
-        }
-
         $note = trim((string) $reason);
 
         if ($note === '') {
@@ -107,53 +97,66 @@ class PettyCashService
         }
 
         $transaction->status = PettyCashTransaction::STATUS_REJECTED;
+        $transaction->approved_by = null;
+        $transaction->approved_at = null;
         $transaction->rejected_by = $rejector->id;
         $transaction->rejected_at = Carbon::now();
+
         $meta = array_merge($transaction->meta ?? [], [
             'approval_note' => $note,
             'rejection_reason' => $note,
             'revision_requested_by' => null,
             'revision_requested_at' => null,
             'revision_note' => null,
+            'suspicious' => false,
+            'suspicious_marked_by' => null,
+            'suspicious_marked_at' => null,
+            'suspicious_note' => null,
         ]);
         $transaction->meta = array_filter($meta, fn ($value) => ! is_null($value) && $value !== '');
 
-        $transaction->save();
-
-        return $transaction;
+        return $this->persistAndUpdateLedger($transaction);
     }
 
     public function sendBackForRevision(PettyCashTransaction $transaction, User $manager, ?string $note = null): PettyCashTransaction
     {
-        if ($transaction->status === PettyCashTransaction::STATUS_APPROVED) {
+        $note = trim((string) $note);
+
+        if ($note === '') {
             throw ValidationException::withMessages([
-                'status' => __('The transaction is already approved and cannot be sent for revision.'),
+                'revisionNote' => __('لطفاً دلیل ارسال برای بازبینی را وارد کنید.'),
             ]);
         }
 
         $transaction->status = PettyCashTransaction::STATUS_NEEDS_CHANGES;
         $transaction->approved_by = null;
         $transaction->approved_at = null;
+        $transaction->rejected_by = null;
+        $transaction->rejected_at = null;
         $transaction->meta = array_merge($transaction->meta ?? [], [
             'revision_requested_by' => $manager->id,
             'revision_requested_at' => Carbon::now()->toISOString(),
             'revision_note' => $note,
+            'approval_note' => null,
+            'rejection_reason' => null,
+            'suspicious' => false,
+            'suspicious_marked_by' => null,
+            'suspicious_marked_at' => null,
+            'suspicious_note' => null,
         ]);
 
-        $transaction->save();
+        $transaction->meta = array_filter($transaction->meta, fn ($value) => ! is_null($value));
 
-        return $transaction;
+        return $this->persistAndUpdateLedger($transaction);
     }
 
     public function markSuspicious(PettyCashTransaction $transaction, User $manager, ?string $note = null): PettyCashTransaction
     {
-        if ($transaction->status === PettyCashTransaction::STATUS_APPROVED) {
-            throw ValidationException::withMessages([
-                'status' => __('Approved transactions cannot be flagged as suspicious.'),
-            ]);
-        }
-
         $transaction->status = PettyCashTransaction::STATUS_UNDER_REVIEW;
+        $transaction->approved_by = null;
+        $transaction->approved_at = null;
+        $transaction->rejected_by = null;
+        $transaction->rejected_at = null;
         $transaction->meta = array_merge($transaction->meta ?? [], [
             'suspicious' => true,
             'suspicious_marked_by' => $manager->id,
@@ -161,9 +164,9 @@ class PettyCashService
             'suspicious_note' => $note,
         ]);
 
-        $transaction->save();
+        $transaction->meta = array_filter($transaction->meta, fn ($value) => ! is_null($value));
 
-        return $transaction;
+        return $this->persistAndUpdateLedger($transaction);
     }
 
     public function recalcLedger(PettyCashLedger $ledger): void
@@ -222,7 +225,15 @@ class PettyCashService
             $this->recalcLedger($ledger);
 
             if ($transaction->type === PettyCashTransaction::TYPE_CHARGE) {
-                $ledger->last_charge_at = Carbon::now();
+                $latestCharge = $ledger->transactions()
+                    ->where('type', PettyCashTransaction::TYPE_CHARGE)
+                    ->where('status', PettyCashTransaction::STATUS_APPROVED)
+                    ->whereNull('archive_cycle_id')
+                    ->orderByDesc('transaction_date')
+                    ->orderByDesc('id')
+                    ->first();
+
+                $ledger->last_charge_at = $latestCharge?->transaction_date ?: null;
                 $ledger->save();
             }
 
