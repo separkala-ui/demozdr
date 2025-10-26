@@ -161,13 +161,17 @@ class PettyCashTransaction extends Model implements SpatieHasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('invoice')->acceptsMimeTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/webp']);
-        $this->addMediaCollection('bank_receipt')->acceptsMimeTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/webp']);
-        $this->addMediaCollection('charge_request')->acceptsMimeTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/webp']);
+        $this->addMediaCollection('invoice')->acceptsFile(fn () => true);
+        $this->addMediaCollection('bank_receipt')->acceptsFile(fn () => true);
+        $this->addMediaCollection('charge_request')->acceptsFile(fn () => true);
     }
 
     public function registerMediaConversions(?Media $media = null): void
     {
+        if ($media && ! str_starts_with((string) $media->mime_type, 'image/')) {
+            return;
+        }
+
         $this->addMediaConversion('thumb')
             ->width(200)
             ->height(200)

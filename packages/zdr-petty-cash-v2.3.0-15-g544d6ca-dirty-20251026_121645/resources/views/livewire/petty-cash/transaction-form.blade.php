@@ -318,7 +318,7 @@
                                 >
                                     <input
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/*,application/pdf"
                                         capture="environment"
                                         class="hidden"
                                         wire:model="entries.{{ $index }}.invoice_attachment"
@@ -348,7 +348,7 @@
                                 >
                                     <input
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/*,application/pdf"
                                         capture="environment"
                                         class="hidden"
                                         wire:model="entries.{{ $index }}.receipt_attachment"

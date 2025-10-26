@@ -157,6 +157,39 @@
     <!-- Mobile cards -->
     <div class="space-y-3 rounded-lg border border-slate-200 bg-white p-3 shadow-sm md:hidden">
         @forelse($transactions as $transaction)
+            @php
+                $status = $transaction->status;
+                $noteText = null;
+                $noteLabel = null;
+
+                if ($status === \App\Models\PettyCashTransaction::STATUS_REJECTED) {
+                    $noteText = data_get($transaction->meta, 'rejection_reason') ?? data_get($transaction->meta, 'approval_note');
+                    $noteLabel = __('دلیل رد');
+                } elseif ($status === \App\Models\PettyCashTransaction::STATUS_APPROVED) {
+                    $noteText = data_get($transaction->meta, 'approval_note');
+                    $noteLabel = __('توضیح تایید');
+                } elseif ($status === \App\Models\PettyCashTransaction::STATUS_NEEDS_CHANGES) {
+                    $noteText = data_get($transaction->meta, 'revision_note');
+                    $noteLabel = __('توضیحات اصلاح');
+                } elseif ($status === \App\Models\PettyCashTransaction::STATUS_UNDER_REVIEW) {
+                    $noteText = data_get($transaction->meta, 'suspicious_note');
+                    $noteLabel = __('توضیح بررسی');
+                } else {
+                    $noteText = data_get($transaction->meta, 'approval_note') ?? data_get($transaction->meta, 'rejection_reason');
+                    $noteLabel = $noteText ? __('یادداشت مدیر') : null;
+                }
+
+                $managerNote = null;
+                if (is_string($noteText)) {
+                    $noteText = trim($noteText);
+                    if ($noteText !== '') {
+                        $managerNote = [
+                            'text' => $noteText,
+                            'label' => $noteLabel ?? __('یادداشت مدیر'),
+                        ];
+                    }
+                }
+            @endphp
             <div class="rounded-xl border border-slate-100 p-4">
                 <div class="flex items-start justify-between gap-3">
                     <div>
@@ -202,6 +235,13 @@
                         <span>{{ $transaction->reference_number ?: '---' }}</span>
                     </div>
                 </div>
+
+                @if($managerNote)
+                    <div class="mt-3 text-xs text-slate-500">
+                        <span class="font-semibold text-slate-600">{{ $managerNote['label'] }}:</span>
+                        <div class="mt-1 text-slate-700">{{ $managerNote['text'] }}</div>
+                    </div>
+                @endif
 
                 <div class="mt-3 flex flex-wrap items-center gap-2 text-xs">
                     @if($transaction->getFirstMediaUrl('invoice'))
@@ -293,12 +333,46 @@
                     <th class="px-4 py-3 text-right">{{ __('وضعیت') }}</th>
                     <th class="px-4 py-3 text-right">{{ __('مبلغ') }}</th>
                     <th class="px-4 py-3 text-right">{{ __('شرح') }}</th>
+                    <th class="px-4 py-3 text-right">{{ __('یادداشت مدیر') }}</th>
                     <th class="px-4 py-3 text-right">{{ __('مرجع') }}</th>
                     <th class="px-4 py-3 text-right">{{ __('عملیات') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 bg-white text-slate-700">
                 @forelse($transactions as $transaction)
+                    @php
+                        $status = $transaction->status;
+                        $noteText = null;
+                        $noteLabel = null;
+
+                        if ($status === \App\Models\PettyCashTransaction::STATUS_REJECTED) {
+                            $noteText = data_get($transaction->meta, 'rejection_reason') ?? data_get($transaction->meta, 'approval_note');
+                            $noteLabel = __('دلیل رد');
+                        } elseif ($status === \App\Models\PettyCashTransaction::STATUS_APPROVED) {
+                            $noteText = data_get($transaction->meta, 'approval_note');
+                            $noteLabel = __('توضیح تایید');
+                        } elseif ($status === \App\Models\PettyCashTransaction::STATUS_NEEDS_CHANGES) {
+                            $noteText = data_get($transaction->meta, 'revision_note');
+                            $noteLabel = __('توضیحات اصلاح');
+                        } elseif ($status === \App\Models\PettyCashTransaction::STATUS_UNDER_REVIEW) {
+                            $noteText = data_get($transaction->meta, 'suspicious_note');
+                            $noteLabel = __('توضیح بررسی');
+                        } else {
+                            $noteText = data_get($transaction->meta, 'approval_note') ?? data_get($transaction->meta, 'rejection_reason');
+                            $noteLabel = $noteText ? __('یادداشت مدیر') : null;
+                        }
+
+                        $managerNote = null;
+                        if (is_string($noteText)) {
+                            $noteText = trim($noteText);
+                            if ($noteText !== '') {
+                                $managerNote = [
+                                    'text' => $noteText,
+                                    'label' => $noteLabel ?? __('یادداشت مدیر'),
+                                ];
+                            }
+                        }
+                    @endphp
                     <tr>
                         <td class="px-4 py-3">
                             <div class="text-sm font-medium">{{ verta($transaction->transaction_date)->format('Y/m/d') }}</div>
@@ -327,6 +401,14 @@
                         </td>
                         <td class="px-4 py-3 text-left text-sm">
                             <div class="line-clamp-2">{{ $transaction->description }}</div>
+                        </td>
+                        <td class="px-4 py-3 text-left text-sm">
+                            @if($managerNote)
+                                <div class="text-[11px] text-slate-400">{{ $managerNote['label'] }}</div>
+                                <div class="mt-1 line-clamp-2 text-slate-600">{{ $managerNote['text'] }}</div>
+                            @else
+                                <span class="text-xs text-slate-400">{{ __('—') }}</span>
+                            @endif
                         </td>
                         <td class="px-4 py-3 text-left text-xs text-slate-500">
                             {{ $transaction->reference_number }}
@@ -403,7 +485,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-4 py-6 text-center text-sm text-slate-500">
+                        <td colspan="8" class="px-4 py-6 text-center text-sm text-slate-500">
                             {{ __('تراکنشی یافت نشد.') }}
                         </td>
                     </tr>

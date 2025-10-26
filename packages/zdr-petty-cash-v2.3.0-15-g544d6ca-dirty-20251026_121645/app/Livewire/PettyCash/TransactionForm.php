@@ -96,7 +96,15 @@ class TransactionForm extends Component
             $categoryRuleKey = 'entries.' . $index . '.category';
 
             if ($this->entryLooksComplete($entry)) {
-                $rules[$ruleKey] = 'required|file|max:4096';
+                $requiresInvoice = true;
+
+                if ($this->editingTransactionId && $index === 0 && $this->transaction) {
+                    if ($this->transaction->hasMedia('invoice') && empty($entry['invoice_attachment'])) {
+                        $requiresInvoice = false;
+                    }
+                }
+
+                $rules[$ruleKey] = $requiresInvoice ? 'required|file|max:4096' : 'nullable|file|max:4096';
                 $rules[$receiptRuleKey] = 'nullable|file|max:4096';
                 $rules[$categoryRuleKey] = 'required|string|max:100';
             } else {
@@ -168,6 +176,25 @@ class TransactionForm extends Component
 
                 if (! $this->userCanManageTransactions()) {
                     $payload['status'] = PettyCashTransaction::STATUS_SUBMITTED;
+                    $payload['approved_by'] = null;
+                    $payload['approved_at'] = null;
+                    $payload['rejected_by'] = null;
+                    $payload['rejected_at'] = null;
+
+                    $meta = $payload['meta'] ?? [];
+                    if (! is_array($meta)) {
+                        $meta = [];
+                    }
+
+                    unset(
+                        $meta['revision_requested_by'],
+                        $meta['revision_requested_at'],
+                        $meta['revision_note'],
+                        $meta['rejection_reason']
+                    );
+
+                    $meta = array_filter($meta, static fn ($value) => $value !== null && $value !== '');
+                    $payload['meta'] = ! empty($meta) ? $meta : null;
                 }
 
                 $transaction->fill($payload);
