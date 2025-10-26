@@ -305,11 +305,90 @@
     <div class="rounded-lg border border-slate-200 bg-white p-5">
         <h3 class="text-sm font-semibold text-slate-800">{{ __('وضعیت تراکنش‌ها') }}</h3>
         <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
-            @foreach($statusBreakdown as $status)
-                <div class="rounded-lg border border-slate-200 bg-slate-50 p-3 text-center">
-                    <p class="text-xs text-slate-500">{{ __($status['status']) }}</p>
-                    <p class="mt-1 text-xl font-bold text-slate-900">{{ $status['count'] }}</p>
-                    <p class="mt-1 text-[10px] text-slate-600">{{ number_format($status['amount']) }}</p>
+            @foreach($statusBreakdown as $statusItem)
+                @php
+                    $statusConfig = match($statusItem['status']) {
+                        'submitted' => [
+                            'label' => 'در انتظار تایید',
+                            'icon' => 'lucide:clock',
+                            'bg' => 'bg-amber-50',
+                            'border' => 'border-amber-200',
+                            'text' => 'text-amber-700',
+                            'icon_color' => 'text-amber-500',
+                            'count_color' => 'text-amber-900'
+                        ],
+                        'approved' => [
+                            'label' => 'تایید شده',
+                            'icon' => 'lucide:check-circle',
+                            'bg' => 'bg-emerald-50',
+                            'border' => 'border-emerald-200',
+                            'text' => 'text-emerald-700',
+                            'icon_color' => 'text-emerald-500',
+                            'count_color' => 'text-emerald-900'
+                        ],
+                        'rejected' => [
+                            'label' => 'رد شده',
+                            'icon' => 'lucide:x-circle',
+                            'bg' => 'bg-rose-50',
+                            'border' => 'border-rose-200',
+                            'text' => 'text-rose-700',
+                            'icon_color' => 'text-rose-500',
+                            'count_color' => 'text-rose-900'
+                        ],
+                        'needs_changes' => [
+                            'label' => 'نیاز به اصلاح',
+                            'icon' => 'lucide:alert-circle',
+                            'bg' => 'bg-orange-50',
+                            'border' => 'border-orange-200',
+                            'text' => 'text-orange-700',
+                            'icon_color' => 'text-orange-500',
+                            'count_color' => 'text-orange-900'
+                        ],
+                        'draft' => [
+                            'label' => 'پیش‌نویس',
+                            'icon' => 'lucide:file-text',
+                            'bg' => 'bg-slate-50',
+                            'border' => 'border-slate-200',
+                            'text' => 'text-slate-700',
+                            'icon_color' => 'text-slate-500',
+                            'count_color' => 'text-slate-900'
+                        ],
+                        'under_review' => [
+                            'label' => 'در حال بررسی',
+                            'icon' => 'lucide:search',
+                            'bg' => 'bg-purple-50',
+                            'border' => 'border-purple-200',
+                            'text' => 'text-purple-700',
+                            'icon_color' => 'text-purple-500',
+                            'count_color' => 'text-purple-900'
+                        ],
+                        default => [
+                            'label' => $statusItem['status'],
+                            'icon' => 'lucide:help-circle',
+                            'bg' => 'bg-gray-50',
+                            'border' => 'border-gray-200',
+                            'text' => 'text-gray-700',
+                            'icon_color' => 'text-gray-500',
+                            'count_color' => 'text-gray-900'
+                        ]
+                    };
+                @endphp
+                <div class="group relative overflow-hidden rounded-lg border {{ $statusConfig['border'] }} {{ $statusConfig['bg'] }} p-4 transition-all hover:shadow-md">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2">
+                                <iconify-icon icon="{{ $statusConfig['icon'] }}" class="text-lg {{ $statusConfig['icon_color'] }}"></iconify-icon>
+                                <p class="text-xs font-semibold {{ $statusConfig['text'] }}">{{ $statusConfig['label'] }}</p>
+                            </div>
+                            <p class="mt-2 text-2xl font-bold {{ $statusConfig['count_color'] }}">{{ $statusItem['count'] }}</p>
+                            <div class="mt-1 flex items-center gap-1">
+                                <iconify-icon icon="lucide:coins" class="text-xs {{ $statusConfig['icon_color'] }}"></iconify-icon>
+                                <p class="text-[10px] font-medium {{ $statusConfig['text'] }}">{{ number_format($statusItem['amount']) }} ریال</p>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Decorative element --}}
+                    <div class="absolute -bottom-1 -right-1 h-16 w-16 rounded-full {{ $statusConfig['bg'] }} opacity-50 blur-2xl transition-all group-hover:scale-150"></div>
                 </div>
             @endforeach
         </div>
