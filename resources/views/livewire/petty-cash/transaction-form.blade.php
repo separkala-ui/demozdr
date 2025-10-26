@@ -184,12 +184,22 @@
                                         placeholder="0"
                                         x-data
                                         x-init="
+                                            function formatNumber(num) {
+                                                // تبدیل به string و حذف همه چیز به جز اعداد
+                                                let str = String(num).replace(/[^\d]/g, '');
+                                                if (!str || str === '0') return '';
+                                                
+                                                // اضافه کردن ممیز هر 3 رقم از راست
+                                                return str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                                            }
+                                            
                                             $el.addEventListener('input', function(e) {
                                                 // حذف همه چیز به جز اعداد
                                                 let rawValue = e.target.value.replace(/[^\d]/g, '');
                                                 
-                                                if (!rawValue) {
+                                                if (!rawValue || rawValue === '0') {
                                                     e.target.value = '';
+                                                    $wire.set('entries.{{ $index }}.amount', '');
                                                     return;
                                                 }
                                                 
@@ -198,8 +208,8 @@
                                                     rawValue = rawValue.substring(0, 20);
                                                 }
                                                 
-                                                // فرمت با جداکننده هزارگان (1,000,000)
-                                                let formatted = parseInt(rawValue).toLocaleString('en-US');
+                                                // فرمت با جداکننده هزارگان
+                                                let formatted = formatNumber(rawValue);
                                                 
                                                 // تنظیم مقدار با فرمت
                                                 e.target.value = formatted;
@@ -211,25 +221,52 @@
                                             // فرمت اولیه اگر مقدار دارد
                                             if ($el.value) {
                                                 let rawValue = $el.value.replace(/[^\d]/g, '');
-                                                if (rawValue) {
-                                                    $el.value = parseInt(rawValue).toLocaleString('en-US');
+                                                if (rawValue && rawValue !== '0') {
+                                                    $el.value = formatNumber(rawValue);
                                                 }
                                             }
                                         "
                                     />
                                     @if(!empty($entry['amount']) && is_numeric($entry['amount']) && (float) $entry['amount'] > 0)
                                         @php
-                                            $amountData = \App\Helpers\NumberToWords::formatWithSeparatorsAndWordsWithToman((int) $entry['amount']);
+                                            $amount = (int) $entry['amount'];
+                                            $amountData = \App\Helpers\NumberToWords::formatWithSeparatorsAndWordsWithToman($amount);
+                                            $formattedRial = number_format($amount);
+                                            $formattedToman = number_format(floor($amount / 10));
                                         @endphp
-                                        <div class="mt-1 text-xs text-slate-600 bg-slate-50 rounded-md px-2 py-1 space-y-1">
-                                            <div>
-                                                <strong>مبلغ حروفی (ریال):</strong> {{ $amountData['words'] }} ریال
+                                        <div class="mt-2 space-y-1.5 rounded-lg border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-3 shadow-sm">
+                                            {{-- معادل ریال با فرمت --}}
+                                            <div class="flex items-center gap-2">
+                                                <iconify-icon icon="lucide:coins" class="text-base text-emerald-500"></iconify-icon>
+                                                <span class="text-xs font-semibold text-slate-500">معادل ریال:</span>
+                                                <span class="font-mono text-sm font-bold text-emerald-700">{{ $formattedRial }}</span>
+                                                <span class="text-xs text-slate-400">ریال</span>
                                             </div>
-                                            <div>
-                                                <strong>معادل تومان:</strong> {{ $amountData['toman_amount'] }} تومان
+                                            
+                                            {{-- معادل تومان با فرمت --}}
+                                            <div class="flex items-center gap-2">
+                                                <iconify-icon icon="lucide:banknote" class="text-base text-indigo-500"></iconify-icon>
+                                                <span class="text-xs font-semibold text-slate-500">معادل تومان:</span>
+                                                <span class="font-mono text-sm font-bold text-indigo-700">{{ $formattedToman }}</span>
+                                                <span class="text-xs text-slate-400">تومان</span>
                                             </div>
-                                            <div>
-                                                <strong>مبلغ حروفی (تومان):</strong> {{ $amountData['toman_words'] }} تومان
+                                            
+                                            {{-- معادل حروفی ریال --}}
+                                            <div class="flex items-start gap-2 border-t border-slate-200 pt-2">
+                                                <iconify-icon icon="lucide:text" class="text-base text-amber-500 mt-0.5"></iconify-icon>
+                                                <div class="flex-1">
+                                                    <span class="text-xs font-semibold text-slate-500">به حروف (ریال):</span>
+                                                    <p class="mt-0.5 text-xs leading-relaxed text-slate-700">{{ $amountData['words'] }} ریال</p>
+                                                </div>
+                                            </div>
+                                            
+                                            {{-- معادل حروفی تومان --}}
+                                            <div class="flex items-start gap-2">
+                                                <iconify-icon icon="lucide:text" class="text-base text-purple-500 mt-0.5"></iconify-icon>
+                                                <div class="flex-1">
+                                                    <span class="text-xs font-semibold text-slate-500">به حروف (تومان):</span>
+                                                    <p class="mt-0.5 text-xs leading-relaxed text-slate-700">{{ $amountData['toman_words'] }} تومان</p>
+                                                </div>
                                             </div>
                                         </div>
                                     @endif
@@ -245,12 +282,12 @@
                                     {{ __('تاریخ و ساعت') }}
                                 </label>
                                 <div class="relative">
-                                    <input
-                                        type="text"
-                                        wire:model.lazy="entries.{{ $index }}.transaction_date"
+                                <input
+                                    type="text"
+                                    wire:model.lazy="entries.{{ $index }}.transaction_date"
                                         class="w-full rounded-lg border-slate-300 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3 pr-10"
                                         placeholder="{{ __('1404/08/04 14:30') }}"
-                                        x-data
+                                    x-data
                                         x-init="window.initPersianDatepicker($el, { enableTime: true })"
                                         dir="rtl"
                                     />
@@ -288,9 +325,9 @@
                                     <span class="text-[10px] font-normal text-slate-400">(دستی/خودکار)</span>
                                 </label>
                                 <div class="relative">
-                                    <input
-                                        type="text"
-                                        wire:model.lazy="entries.{{ $index }}.reference_number"
+                                <input
+                                    type="text"
+                                    wire:model.lazy="entries.{{ $index }}.reference_number"
                                         class="w-full rounded-lg border-slate-300 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3 pr-10"
                                         placeholder="{{ __('خودکار یا دستی...') }}"
                                         title="{{ __('می‌توانید شماره مرجع را به صورت دستی وارد کنید یا خالی بگذارید تا خودکار تولید شود.') }}"
