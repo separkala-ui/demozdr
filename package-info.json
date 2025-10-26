@@ -1,0 +1,84 @@
+{
+    "name": "zdr-petty-cash",
+    "version": "2.0.0",
+    "description": "سیستم مدیریت تنخواه پیشرفته با قابلیت فاکتور هوشمند",
+    "keywords": [
+        "laravel",
+        "petty-cash",
+        "ai",
+        "invoice",
+        "gemini",
+        "openai",
+        "persian",
+        "jalali"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/your-org/zdr",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-org/zdr.git"
+    },
+    "bugs": {
+        "url": "https://github.com/your-org/zdr/issues"
+    },
+    "author": {
+        "name": "ZDR Team",
+        "email": "support@zdr.com"
+    },
+    "scripts": {
+        "install": "./scripts/install.sh --seed",
+        "install:no-build": "./scripts/install.sh --seed --no-build",
+        "dev": "npm run dev",
+        "build": "npm run build",
+        "test": "php artisan test",
+        "lint": "./vendor/bin/pint",
+        "analyze": "./vendor/bin/phpstan analyse"
+    },
+    "engines": {
+        "php": "^8.3|^8.4",
+        "node": ">=18.0.0",
+        "npm": ">=9.0.0"
+    },
+    "requirements": {
+        "php_extensions": [
+            "bcmath",
+            "curl",
+            "dom",
+            "fileinfo",
+            "gd",
+            "intl",
+            "mbstring",
+            "openssl",
+            "pdo_mysql",
+            "tokenizer",
+            "xml"
+        ],
+        "system": [
+            "MySQL 5.7+ یا MariaDB 10.3+",
+            "Composer 2+",
+            "Node.js 18+",
+            "npm 9+"
+        ]
+    },
+    "features": [
+        "مدیریت چند شعبه",
+        "سیستم تایید چندمرحله‌ای",
+        "فاکتور هوشمند با AI",
+        "آرشیو دوره‌ای",
+        "گزارش‌گیری کامل",
+        "پشتیبانی از تاریخ جلالی",
+        "رابط کاربری مدرن",
+        "سیستم امنیتی پیشرفته"
+    ],
+    "ai_providers": [
+        "Google Gemini 2.5 Flash",
+        "OpenAI GPT-4o-mini"
+    ],
+    "supported_languages": [
+        "فارسی (پیش‌فرض)",
+        "انگلیسی"
+    ],
+    "installation_time": "5-10 دقیقه",
+    "documentation": "https://github.com/your-org/zdr/wiki",
+    "demo": "https://demo.zdr.com"
+}

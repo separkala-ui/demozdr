@@ -1,0 +1,41 @@
+بسته نصب افزونه زودری (ZDR)
+================================
+
+نام بسته: zdr-petty-cash-v2.3.0-15-g544d6ca-dirty-20251026_121645
+نسخه: v2.3.0-15-g544d6ca-dirty
+تاریخ ایجاد: Sun Oct 26 12:16:46 UTC 2025
+تاریخچه گیت: 544d6ca feat: تکمیل و بهبود سیستم تنخواه زودری;d3cdd57 feat: enforce branch limits and numeric serial annotations;7e78e82 fix: allow blank rows without attachments during submission;4d3cf8e feat: enforce dual attachments and imprint serial numbers;b5e2cd8 feat: improve smart invoice extraction pipeline;
+
+ویژگی‌های اصلی:
+- سیستم مدیریت تنخواه پیشرفته
+- فاکتور هوشمند با AI (Gemini/OpenAI)
+- مدیریت چند شعبه
+- سیستم تایید چندمرحله‌ای
+- آرشیو دوره‌ای
+- گزارش‌گیری کامل
+- پشتیبانی از تاریخ جلالی
+- رابط کاربری مدرن
+
+پیش‌نیازها:
+- PHP 8.3+
+- Composer 2+
+- Node.js 18+
+- MySQL/MariaDB
+
+نصب:
+1. فایل‌ها را در دایرکتوری پروژه کپی کنید
+2. دستورات زیر را اجرا کنید:
+   chmod +x scripts/install.sh
+   ./scripts/install.sh --seed
+
+مستندات:
+- راهنمای نصب: INSTALL.md
+- README: README.md
+- تنظیمات: config/
+
+پشتیبانی:
+- ایمیل: support@zdr.com
+- تلگرام: @zdr_support
+- وب‌سایت: https://zdr.com
+
+مجوز: MIT
