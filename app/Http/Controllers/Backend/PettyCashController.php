@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\PettyCashLedger;
-use App\Models\User;
+use App\Models\PettyCashCycle;
 use App\Models\PettyCashTransaction;
+use App\Models\User;
 use App\Services\PettyCash\PettyCashService;
+use App\Services\PettyCash\PettyCashArchiveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Hekmatinasser\Verta\Verta;
@@ -47,12 +50,14 @@ class PettyCashController extends Controller
 
         // If user is Superadmin or Admin, show all ledgers
         if ($user && $user->hasRole(['Superadmin', 'Admin'])) {
-            $ledgers = PettyCashLedger::orderBy('branch_name')->get();
+            $ledgers = PettyCashLedger::with(['assignedUser:id,first_name,last_name,email'])
+                ->orderBy('branch_name')
+                ->get();
         } else {
             // For other users, show only their assigned branch
             $ledgers = collect();
             if ($user && $user->branch_id) {
-                $userLedger = PettyCashLedger::find($user->branch_id);
+                $userLedger = PettyCashLedger::with(['assignedUser:id,first_name,last_name,email'])->find($user->branch_id);
                 if ($userLedger) {
                     $ledgers->push($userLedger);
                 }
@@ -64,6 +69,10 @@ class PettyCashController extends Controller
         }
 
         $selectedLedger = $ledger ?? $ledgers->first();
+
+        if ($selectedLedger instanceof PettyCashLedger) {
+            $selectedLedger->loadMissing('assignedUser:id,first_name,last_name,email');
+        }
 
         if ($selectedLedger && ! $ledgers->contains(fn ($item) => $item->id === $selectedLedger->id)) {
             abort(403, __('شما به این شعبه دسترسی ندارید.'));
@@ -87,9 +96,55 @@ class PettyCashController extends Controller
 
         $visibleLedgers = $showAllCards ? $ledgers : ($selectedLedger ? collect([$selectedLedger]) : collect());
 
+        $analyticsFilters = [
+            'period' => $request->get('analytics_period', 'last_30'),
+            'from' => $request->get('analytics_from'),
+            'to' => $request->get('analytics_to'),
+        ];
+
+        if (($analyticsFilters['period'] ?? '') !== 'custom') {
+            $analyticsFilters['from'] = null;
+            $analyticsFilters['to'] = null;
+        }
+
+        $analytics = $selectedLedger
+            ? $this->pettyCashService->getLedgerAnalytics($selectedLedger, $analyticsFilters)
+            : null;
+
+        $analyticsPeriodOptions = [
+            'today' => __('امروز'),
+            'last_7' => __('۷ روز گذشته'),
+            'last_30' => __('۳۰ روز گذشته'),
+            'current_month' => __('ماه جاری'),
+            'last_90' => __('۹۰ روز گذشته'),
+            'last_180' => __('۶ ماه گذشته'),
+            'current_year' => __('سال جاری'),
+            'custom' => __('بازه سفارشی'),
+        ];
         $chargeTimeline = collect();
         if ($selectedLedger && $user && $user->hasRole(['Superadmin', 'Admin'])) {
             $chargeTimeline = collect($this->pettyCashService->getChargeUsageTimeline($selectedLedger, 10));
+        }
+
+        $adminArchives = collect();
+        $branchArchives = collect();
+
+        if ($selectedLedger) {
+            if ($user && $user->hasRole(['Superadmin', 'Admin'])) {
+                $adminArchives = $selectedLedger->archivedCycles()
+                    ->with(['closer:id,first_name,last_name'])
+                    ->withCount('archivedTransactions')
+                    ->orderByDesc('closed_at')
+                    ->paginate(5, ['*'], 'archives_page')
+                    ->appends($request->query());
+            } elseif ($user && (int) $user->branch_id === (int) $selectedLedger->id) {
+                $branchArchives = $selectedLedger->archivedCycles()
+                    ->with(['closer:id,first_name,last_name'])
+                    ->withCount('archivedTransactions')
+                    ->orderByDesc('closed_at')
+                    ->simplePaginate(5, ['*'], 'branch_archives_page')
+                    ->appends($request->query());
+            }
         }
 
         return $this->renderViewWithBreadcrumbs('backend.pages.petty-cash.index', [
@@ -103,12 +158,19 @@ class PettyCashController extends Controller
             'showAllTransactions' => $showAllCards
                 ? PettyCashTransaction::with('ledger:id,branch_name')
                     ->whereIn('ledger_id', $visibleLedgers->pluck('id'))
+                    ->whereNull('archive_cycle_id')
                     ->orderByDesc('transaction_date')
                     ->orderByDesc('id')
                     ->take(50)
                     ->get()
                 : collect(),
             'chargeTimeline' => $chargeTimeline,
+            'adminArchives' => $adminArchives,
+            'branchArchives' => $branchArchives,
+            'analytics' => $analytics,
+            'analyticsFilters' => $analyticsFilters,
+            'analyticsPeriodOptions' => $analyticsPeriodOptions,
+            'isAdminUser' => $user?->hasRole(['Superadmin', 'Admin']) ?? false,
         ]);
     }
 
@@ -179,13 +241,79 @@ class PettyCashController extends Controller
             ->addBreadcrumbItem(__('مدیریت مالی'), null)
             ->addBreadcrumbItem(__('چاپ گزارش'), null);
 
-        // Get date filters
+        $ledger->loadMissing('assignedUser:id,first_name,last_name,email');
+
+        $cycleId = $request->get('cycle');
+        $isArchiveView = false;
+        $cycle = null;
+
+        if ($cycleId) {
+            $cycle = $ledger->archivedCycles()->with('closer:id,first_name,last_name')->findOrFail($cycleId);
+            $transactions = $ledger->transactions()
+                ->where('archive_cycle_id', $cycle->id)
+                ->orderBy('transaction_date')
+                ->get();
+
+            $approvedInPeriod = $transactions;
+            $pendingInPeriod = collect();
+
+            $totals = [
+                'incoming' => (float) $approvedInPeriod
+                    ->where('type', PettyCashTransaction::TYPE_CHARGE)
+                    ->sum('amount'),
+                'outgoing' => (float) $approvedInPeriod
+                    ->where('type', PettyCashTransaction::TYPE_EXPENSE)
+                    ->sum('amount'),
+                'adjustment_positive' => (float) $approvedInPeriod
+                    ->where('type', PettyCashTransaction::TYPE_ADJUSTMENT)
+                    ->filter(fn ($transaction) => $transaction->amount >= 0)
+                    ->sum('amount'),
+                'adjustment_negative' => (float) $approvedInPeriod
+                    ->where('type', PettyCashTransaction::TYPE_ADJUSTMENT)
+                    ->filter(fn ($transaction) => $transaction->amount < 0)
+                    ->sum('amount'),
+                'pending_incoming' => 0.0,
+                'pending_outgoing' => 0.0,
+            ];
+
+            $overallTotals = [
+                'opening_balance' => (float) $cycle->opening_balance,
+                'limit_amount' => (float) $ledger->limit_amount,
+                'current_balance' => (float) $cycle->closing_balance,
+                'approved_charges_total' => (float) ($cycle->total_charges ?? $totals['incoming']),
+                'approved_expenses_total' => (float) ($cycle->total_expenses ?? $totals['outgoing']),
+                'approved_adjustments_total' => (float) ($cycle->total_adjustments ?? ($totals['adjustment_positive'] + $totals['adjustment_negative'])),
+                'pending_charges_total' => 0.0,
+                'pending_expenses_total' => 0.0,
+            ];
+
+            $overallTotals['approved_adjustments_positive'] = $overallTotals['approved_adjustments_total'] > 0 ? $overallTotals['approved_adjustments_total'] : 0.0;
+            $overallTotals['approved_adjustments_negative'] = $overallTotals['approved_adjustments_total'] < 0 ? $overallTotals['approved_adjustments_total'] : 0.0;
+            $overallTotals['total_incoming'] = $overallTotals['opening_balance'] + $overallTotals['approved_charges_total'] + $overallTotals['approved_adjustments_positive'];
+            $overallTotals['total_outgoing'] = $overallTotals['approved_expenses_total'] + abs($overallTotals['approved_adjustments_negative']);
+
+            $isArchiveView = true;
+
+            return $this->renderViewWithBreadcrumbs('backend.pages.petty-cash.print', [
+                'ledger' => $ledger,
+                'transactions' => $transactions,
+                'period' => 'archive',
+                'dateFrom' => null,
+                'dateTo' => null,
+                'totals' => $totals,
+                'overallTotals' => $overallTotals,
+                'approvedInPeriod' => $approvedInPeriod,
+                'pendingInPeriod' => $pendingInPeriod,
+                'isArchiveView' => $isArchiveView,
+                'cycle' => $cycle,
+            ]);
+        }
+
         $dateFrom = $request->get('date_from');
         $dateTo = $request->get('date_to');
         $period = $request->get('period', 'all');
 
-        // Apply date filters based on period
-        $query = $ledger->transactions();
+        $query = $ledger->transactions()->whereNull('archive_cycle_id');
 
         switch ($period) {
             case 'today':
@@ -202,7 +330,7 @@ class PettyCashController extends Controller
                 break;
             case 'month':
                 $query->whereMonth('transaction_date', now()->month)
-                      ->whereYear('transaction_date', now()->year);
+                    ->whereYear('transaction_date', now()->year);
                 break;
             default:
                 if ($dateFrom) {
@@ -271,6 +399,42 @@ class PettyCashController extends Controller
             'dateTo' => $dateTo,
             'totals' => $totals,
             'overallTotals' => $overallTotals,
+            'approvedInPeriod' => $approvedInPeriod,
+            'pendingInPeriod' => $pendingInPeriod,
+            'isArchiveView' => $isArchiveView,
+            'cycle' => $cycle,
+        ]);
+    }
+
+    public function downloadArchiveReport(Request $request, PettyCashLedger $ledger, PettyCashCycle $cycle)
+    {
+        $this->authorize('petty_cash.report.view');
+
+        $user = $request->user();
+
+        if ($cycle->ledger_id !== $ledger->id) {
+            abort(404);
+        }
+
+        $isAdmin = $user && $user->hasRole(['Superadmin', 'Admin']);
+        $isBranchUser = $user && (int) $user->branch_id === (int) $ledger->id;
+
+        if (! $isAdmin && ! $isBranchUser) {
+            abort(403, __('شما اجازه مشاهده این آرشیو را ندارید.'));
+        }
+
+        if (! $cycle->report_path) {
+            return back()->with('error', __('فایل گزارش برای این آرشیو در دسترس نیست.'));
+        }
+
+        if (! Storage::disk('local')->exists($cycle->report_path)) {
+            return back()->with('error', __('فایل گزارش آرشیو یافت نشد.'));
+        }
+
+        $filename = sprintf('petty-cash-cycle-%d-ledger-%d.xls', $cycle->id, $ledger->id);
+
+        return Storage::disk('local')->download($cycle->report_path, $filename, [
+            'Content-Type' => 'application/vnd.ms-excel',
         ]);
     }
 
@@ -288,8 +452,23 @@ class PettyCashController extends Controller
             ->addBreadcrumbItem(__('تنخواه شعب'), route('admin.petty-cash.index', ['ledger' => $ledger->id]))
             ->addBreadcrumbItem(__('درخواست شارژ'), null);
 
+        $pendingChargeRequests = $ledger->transactions()
+            ->with(['requester:id,first_name,last_name'])
+            ->whereNull('archive_cycle_id')
+            ->where('type', PettyCashTransaction::TYPE_CHARGE)
+            ->whereIn('status', [
+                PettyCashTransaction::STATUS_SUBMITTED,
+                PettyCashTransaction::STATUS_UNDER_REVIEW,
+                PettyCashTransaction::STATUS_NEEDS_CHANGES,
+            ])
+            ->orderByDesc('transaction_date')
+            ->take(25)
+            ->get();
+
         return $this->renderViewWithBreadcrumbs('backend.pages.petty-cash.charge-request', [
             'ledger' => $ledger,
+            'pendingChargeRequests' => $pendingChargeRequests,
+            'isAdminUser' => $user?->hasRole(['Superadmin', 'Admin']) ?? false,
         ]);
     }
 
@@ -321,14 +500,227 @@ class PettyCashController extends Controller
             abort(403, __('شما به این شعبه دسترسی ندارید.'));
         }
 
+        $ledger->loadMissing('assignedUser:id,first_name,last_name,email');
+
         $this->setBreadcrumbTitle(__('ثبت تراکنش‌های تنخواه'))
             ->addBreadcrumbItem(__('مدیریت مالی'), null)
             ->addBreadcrumbItem(__('تنخواه شعب'), route('admin.petty-cash.index', ['ledger' => $ledger->id]))
             ->addBreadcrumbItem(__('ثبت تراکنش'), null);
 
+        $pendingChargeRequests = $ledger->transactions()
+            ->with(['requester:id,first_name,last_name'])
+            ->whereNull('archive_cycle_id')
+            ->where('type', PettyCashTransaction::TYPE_CHARGE)
+            ->whereIn('status', [
+                PettyCashTransaction::STATUS_SUBMITTED,
+                PettyCashTransaction::STATUS_UNDER_REVIEW,
+                PettyCashTransaction::STATUS_NEEDS_CHANGES,
+            ])
+            ->orderByDesc('transaction_date')
+            ->orderByDesc('id')
+            ->take(25)
+            ->get();
+
+        // Get all available ledgers for dropdown
+        $availableLedgers = collect();
+        if ($user && $user->hasRole(['Superadmin', 'Admin'])) {
+            $availableLedgers = PettyCashLedger::with(['assignedUser:id,first_name,last_name,email'])
+                ->orderBy('branch_name')
+                ->get();
+        } else {
+            // For other users, show only their assigned branch
+            if ($user && $user->branch_id) {
+                $userLedger = PettyCashLedger::with(['assignedUser:id,first_name,last_name,email'])->find($user->branch_id);
+                if ($userLedger) {
+                    $availableLedgers->push($userLedger);
+                }
+            }
+        }
+
         return $this->renderViewWithBreadcrumbs('backend.pages.petty-cash.transactions', [
             'ledger' => $ledger,
+            'availableLedgers' => $availableLedgers,
+            'pendingChargeRequests' => $pendingChargeRequests,
+            'isAdminUser' => $user?->hasRole(['Superadmin', 'Admin']) ?? false,
         ]);
+    }
+
+    public function archivesIndex(Request $request)
+    {
+        $user = $request->user();
+
+        if (! $user || ! $user->hasRole(['Superadmin', 'Admin'])) {
+            abort(403, __('شما اجازه مشاهده بایگانی تنخواه را ندارید.'));
+        }
+
+        $this->setBreadcrumbTitle(__('بایگانی تنخواه'))
+            ->addBreadcrumbItem(__('مدیریت مالی'), null)
+            ->addBreadcrumbItem(__('بایگانی تنخواه'), null);
+
+        $ledgerId = $request->get('ledger_id');
+        $dateFrom = $request->get('date_from');
+        $dateTo = $request->get('date_to');
+
+        // تبدیل تاریخ شمسی به میلادی
+        $dateFromGregorian = null;
+        $dateToGregorian = null;
+
+        if ($dateFrom) {
+            try {
+                $dateFromGregorian = Verta::parseFormat('Y/m/d', $dateFrom)->datetime()->format('Y-m-d');
+            } catch (\Exception $e) {
+                // اگر تبدیل موفق نبود، تاریخ را نادیده بگیر
+                $dateFromGregorian = null;
+            }
+        }
+
+        if ($dateTo) {
+            try {
+                $dateToGregorian = Verta::parseFormat('Y/m/d', $dateTo)->datetime()->format('Y-m-d');
+            } catch (\Exception $e) {
+                // اگر تبدیل موفق نبود، تاریخ را نادیده بگیر
+                $dateToGregorian = null;
+            }
+        }
+
+        $query = PettyCashCycle::query()
+            ->with(['ledger:id,branch_name', 'closer:id,first_name,last_name'])
+            ->where('status', 'closed');
+
+        if ($ledgerId) {
+            $query->where('ledger_id', $ledgerId);
+        }
+
+        if ($dateFromGregorian) {
+            $query->whereDate('closed_at', '>=', $dateFromGregorian);
+        }
+
+        if ($dateToGregorian) {
+            $query->whereDate('closed_at', '<=', $dateToGregorian);
+        }
+
+        $archives = $query->orderByDesc('closed_at')->paginate(20)->withQueryString();
+        $ledgers = PettyCashLedger::orderBy('branch_name')->get(['id', 'branch_name']);
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.petty-cash.archives', [
+            'archives' => $archives,
+            'ledgers' => $ledgers,
+            'filters' => [
+                'ledger_id' => $ledgerId,
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
+            ],
+            'canManageArchives' => $user->hasRole('Superadmin'),
+        ]);
+    }
+
+    public function showArchive(PettyCashCycle $cycle)
+    {
+        $user = Auth::user();
+
+        if (! $user || ! $user->hasRole(['Superadmin', 'Admin'])) {
+            abort(403, __('شما اجازه مشاهده این سند را ندارید.'));
+        }
+
+        $cycle->load(['ledger', 'closer']);
+
+        $archivedTransactions = $cycle->archivedTransactions()
+            ->with([
+                'requester:id,first_name,last_name',
+                'approver:id,first_name,last_name',
+                'media',
+            ])
+            ->orderBy('transaction_date')
+            ->orderBy('id')
+            ->get();
+
+        $activeTransactions = PettyCashTransaction::where('ledger_id', $cycle->ledger_id)
+            ->whereNull('archive_cycle_id')
+            ->with([
+                'requester:id,first_name,last_name',
+                'approver:id,first_name,last_name',
+                'media',
+            ])
+            ->orderByDesc('transaction_date')
+            ->orderByDesc('id')
+            ->get();
+
+        $statusLabels = [
+            PettyCashTransaction::STATUS_DRAFT => __('پیش‌نویس'),
+            PettyCashTransaction::STATUS_SUBMITTED => __('ارسال‌شده'),
+            PettyCashTransaction::STATUS_APPROVED => __('تایید‌شده'),
+            PettyCashTransaction::STATUS_REJECTED => __('رد‌شده'),
+            PettyCashTransaction::STATUS_NEEDS_CHANGES => __('نیاز به اصلاح'),
+            PettyCashTransaction::STATUS_UNDER_REVIEW => __('در حال بررسی'),
+        ];
+
+        $this->setBreadcrumbTitle(__('جزئیات سند بایگانی'))
+            ->addBreadcrumbItem(__('مدیریت مالی'), null)
+            ->addBreadcrumbItem(__('بایگانی تنخواه'), route('admin.petty-cash.archives.index'))
+            ->addBreadcrumbItem(__('مشاهده سند'), null);
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.petty-cash.archive-show', [
+            'archive' => $cycle,
+            'archivedTransactions' => $archivedTransactions,
+            'activeTransactions' => $activeTransactions,
+            'statusLabels' => $statusLabels,
+            'canManageArchives' => $user->hasRole('Superadmin'),
+        ]);
+    }
+
+    public function editArchive(PettyCashCycle $cycle)
+    {
+        $user = Auth::user();
+
+        if (! $user || ! $user->hasRole('Superadmin')) {
+            abort(403, __('تنها سوپر ادمین می‌تواند سند را ویرایش کند.'));
+        }
+
+        $cycle->load(['ledger', 'closer', 'archivedTransactions']);
+
+        $this->setBreadcrumbTitle(__('ویرایش سند بایگانی'))
+            ->addBreadcrumbItem(__('مدیریت مالی'), null)
+            ->addBreadcrumbItem(__('بایگانی تنخواه'), route('admin.petty-cash.archives.index'))
+            ->addBreadcrumbItem(__('ویرایش سند'), null);
+
+        return $this->renderViewWithBreadcrumbs('backend.pages.petty-cash.archives-edit', [
+            'archive' => $cycle,
+        ]);
+    }
+
+    public function updateArchive(Request $request, PettyCashCycle $cycle, PettyCashArchiveService $archiveService)
+    {
+        $user = $request->user();
+
+        if (! $user || ! $user->hasRole('Superadmin')) {
+            abort(403, __('تنها سوپر ادمین می‌تواند سند را ویرایش کند.'));
+        }
+
+        $validated = $request->validate([
+            'closing_note' => ['nullable', 'string', 'max:1000'],
+            'regenerate_report' => ['sometimes', 'boolean'],
+        ]);
+
+        $archiveService->updateCycle($cycle, $validated, $user);
+
+        return redirect()
+            ->route('admin.petty-cash.archives.index')
+            ->with('success', __('سند بایگانی با موفقیت به‌روزرسانی شد.'));
+    }
+
+    public function destroyArchive(Request $request, PettyCashCycle $cycle, PettyCashArchiveService $archiveService)
+    {
+        $user = $request->user();
+
+        if (! $user || ! $user->hasRole('Superadmin')) {
+            abort(403, __('تنها سوپر ادمین می‌تواند سند را حذف کند.'));
+        }
+
+        $archiveService->deleteCycle($cycle);
+
+        return redirect()
+            ->route('admin.petty-cash.archives.index')
+            ->with('success', __('سند بایگانی با موفقیت حذف شد.'));
     }
 
     public function edit(PettyCashLedger $ledger)
@@ -443,8 +835,7 @@ class PettyCashController extends Controller
             $backupDir = dirname($backupPath);
             if (!file_exists($backupDir)) {
                 mkdir($backupDir, 0755, true);
-                chown($backupDir, 'www-data');
-                chgrp($backupDir, 'www-data');
+                $this->adjustBackupOwnership($backupDir);
             }
 
             // Save backup to file with error handling
@@ -456,8 +847,7 @@ class PettyCashController extends Controller
                 }
 
                 // Ensure the file has correct permissions
-                chown($backupPath, 'www-data');
-                chgrp($backupPath, 'www-data');
+                $this->adjustBackupOwnership($backupPath);
 
             } catch (\Exception $e) {
                 \Log::error('Failed to create backup file', [
@@ -618,6 +1008,7 @@ class PettyCashController extends Controller
 
         if (! File::exists($backupDir)) {
             File::makeDirectory($backupDir, 0755, true);
+            $this->adjustBackupOwnership($backupDir);
         }
 
         $zip = new ZipArchive();
@@ -642,6 +1033,7 @@ class PettyCashController extends Controller
         }
 
         $zip->close();
+        $this->adjustBackupOwnership($zipPath);
 
         return response()->download($zipPath, $fileName, [
             'Content-Type' => 'application/zip',
@@ -650,7 +1042,7 @@ class PettyCashController extends Controller
 
     private function getPettyCashModulePaths(): array
     {
-        return [
+        $defaultPaths = [
             'app/Console/Commands/PettyCashArchive.php',
             'app/Http/Controllers/Backend/PettyCashController.php',
             'app/Livewire/PettyCash',
@@ -660,9 +1052,23 @@ class PettyCashController extends Controller
             'database/migrations/2025_10_18_182158_create_petty_cash_ledgers_table.php',
             'database/migrations/2025_10_19_000001_add_assigned_user_id_to_petty_cash_ledgers_table.php',
             'database/migrations/2025_10_18_182204_create_petty_cash_transactions_table.php',
+            'config/petty-cash.php',
+            'config/smart-invoice.php',
+            'resources/lang/fa/smart_invoice.php',
             'resources/views/backend/pages/petty-cash',
             'resources/views/livewire/petty-cash',
+            'routes/web.php',
         ];
+
+        $additionalPaths = config('petty-cash.backups.additional_paths', []);
+
+        if (is_string($additionalPaths)) {
+            $additionalPaths = array_filter(array_map('trim', explode(',', $additionalPaths)));
+        }
+
+        $paths = array_merge($defaultPaths, is_array($additionalPaths) ? $additionalPaths : []);
+
+        return array_values(array_unique($paths));
     }
 
     private function addDirectoryToZip(ZipArchive $zip, string $directory, string $relativePath): void
@@ -765,6 +1171,33 @@ class PettyCashController extends Controller
         }
 
         return round($bytes, 2) . ' ' . $units[$i];
+    }
+
+    private function adjustBackupOwnership(string $path): void
+    {
+        if (! config('petty-cash.backups.adjust_permissions', false)) {
+            return;
+        }
+
+        $canChangeOwnership = function_exists('chown') || function_exists('chgrp');
+        if (! $canChangeOwnership) {
+            return;
+        }
+
+        if (function_exists('posix_geteuid') && posix_geteuid() !== 0) {
+            return;
+        }
+
+        $owner = config('petty-cash.backups.owner');
+        $group = config('petty-cash.backups.group');
+
+        if ($owner && function_exists('chown')) {
+            @chown($path, $owner);
+        }
+
+        if ($group && function_exists('chgrp')) {
+            @chgrp($path, $group);
+        }
     }
 
     public function archive(Request $request, PettyCashLedger $ledger)

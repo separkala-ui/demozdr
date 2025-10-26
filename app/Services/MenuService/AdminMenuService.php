@@ -178,6 +178,13 @@ class AdminMenuService
                     'active' => Route::is('admin.petty-cash.settlement'),
                     'priority' => 30,
                 ],
+                [
+                    'label' => __('اسناد بایگانی شده'),
+                    'route' => route('admin.petty-cash.archives.index'),
+                    'active' => Route::is('admin.petty-cash.archives.*'),
+                    'priority' => 40,
+                    'permissions' => ['petty_cash.archive.view'],
+                ],
             ],
         ], __('Finance'));
 

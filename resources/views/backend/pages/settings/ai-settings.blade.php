@@ -90,6 +90,23 @@
                 </p>
             </div>
 
+            <div class="relative">
+                <label for="ai_openai_model" class="form-label">
+                    {{ __('OpenAI Default Model') }}
+                </label>
+                <select name="ai_openai_model" id="ai_openai_model" class="form-control">
+                    @php
+                        $openAiModel = config('settings.ai_openai_model', 'gpt-4o-mini');
+                    @endphp
+                    <option value="gpt-4o-mini" {{ $openAiModel === 'gpt-4o-mini' ? 'selected' : '' }}>{{ __('GPT-4o mini (recommended)') }}</option>
+                    <option value="gpt-4o" {{ $openAiModel === 'gpt-4o' ? 'selected' : '' }}>{{ __('GPT-4o') }}</option>
+                    <option value="gpt-3.5-turbo" {{ $openAiModel === 'gpt-3.5-turbo' ? 'selected' : '' }}>{{ __('GPT-3.5 Turbo') }}</option>
+                </select>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
+                    {{ __('Choose which OpenAI model to use for content generation. GPT-4o mini offers faster responses with good quality, while GPT-4o provides higher accuracy for complex tasks.') }}
+                </p>
+            </div>
+
             <!-- Claude API Key -->
             <div class="relative">
                 <label for="ai_claude_api_key" class="form-label">

@@ -47,6 +47,7 @@
         </div>
 
         <div class="flex gap-2 lg:justify-end items-center">
+            @livewire('petty-cash.notification-center')
             @include('backend.layouts.partials.header.right-menu')
         </div>
     </div>

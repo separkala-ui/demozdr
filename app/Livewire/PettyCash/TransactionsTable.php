@@ -36,6 +36,24 @@ class TransactionsTable extends Component
 
     public ?string $period = null;
 
+    public int $page = 1;
+
+    public bool $showPreviewModal = false;
+
+    public array $previewTransaction = [];
+
+    public bool $showApproveModal = false;
+
+    public ?int $approvalTransactionId = null;
+
+    public string $approvalNote = '';
+
+    public bool $showRejectModal = false;
+
+    public ?int $rejectTransactionId = null;
+
+    public string $rejectNote = '';
+
     protected $queryString = [
         'status' => ['except' => null],
         'type' => ['except' => null],
@@ -84,10 +102,18 @@ class TransactionsTable extends Component
     public function requestApprove(int $transactionId): void
     {
         if (! $this->userCanManageTransactions()) {
+            session()->flash('error', __('شما مجاز به تایید تراکنش‌ها نیستید.'));
             return;
         }
 
-        $this->dispatchToForm('petty-cash-transaction-approve', $transactionId);
+        $this->approvalTransactionId = $transactionId;
+        $this->approvalNote = '';
+        $this->resetErrorBag(['approvalNote']);
+        $this->showApproveModal = true;
+
+        // Dispatch browser event to open modal via Alpine
+        $this->dispatch('open-approve-modal');
+        $this->dispatch('store-selected-branch', ['branchId' => $this->ledger->id]);
     }
 
     public function requestDelete(int $transactionId): void
@@ -97,30 +123,33 @@ class TransactionsTable extends Component
         }
 
         $this->dispatchToForm('petty-cash-transaction-delete', $transactionId);
+        
+        // Dispatch event to store current branch in session storage
+        $this->dispatch('store-selected-branch', ['branchId' => $this->ledger->id]);
     }
 
     public function requestReject(int $transactionId): void
     {
         if (! $this->userCanManageTransactions()) {
+            session()->flash('error', __('شما مجاز به رد تراکنش‌ها نیستید.'));
             return;
         }
 
         $transaction = $this->ledger->transactions()->find($transactionId);
 
         if (! $transaction) {
+            session()->flash('error', __('تراکنش یافت نشد.'));
             return;
         }
 
-        try {
-            app(PettyCashService::class)->rejectTransaction($transaction, Auth::user());
-            session()->flash('success', __('تراکنش با موفقیت رد شد.'));
-            $this->dispatch('petty-cash-transaction-saved');
-        } catch (ValidationException $exception) {
-            session()->flash('error', $exception->getMessage());
-        } catch (\Throwable $throwable) {
-            session()->flash('error', __('در رد کردن تراکنش خطایی رخ داد.'));
-            report($throwable);
-        }
+        $this->rejectTransactionId = $transactionId;
+        $this->rejectNote = '';
+        $this->resetErrorBag(['rejectNote']);
+        $this->showRejectModal = true;
+
+        // Dispatch browser event to open modal via Alpine
+        $this->dispatch('open-reject-modal');
+        $this->dispatch('store-selected-branch', ['branchId' => $this->ledger->id]);
     }
 
     public function requestRevision(int $transactionId): void
@@ -187,6 +216,169 @@ class TransactionsTable extends Component
             'id' => $transactionId,
             'ledger_id' => $this->ledger->id,
         ])->to(\App\Livewire\PettyCash\TransactionForm::class);
+    }
+
+    public function showPreview(int $transactionId): void
+    {
+        $transaction = $this->ledger->transactions()
+            ->with([
+                'requester:id,first_name,last_name,email',
+                'approver:id,first_name,last_name,email',
+                'ledger.assignedUser:id,first_name,last_name,email',
+            ])
+            ->find($transactionId);
+
+        if (! $transaction) {
+            return;
+        }
+
+        $custodian = $transaction->ledger?->assignedUser;
+        $custodianName = $custodian?->full_name
+            ?? ($custodian?->first_name || $custodian?->last_name
+                ? trim(($custodian?->first_name ?? '') . ' ' . ($custodian?->last_name ?? ''))
+                : null);
+        if (! $custodianName) {
+            $custodianName = $custodian?->name ?? $custodian?->email;
+        }
+
+        $this->previewTransaction = [
+            'id' => $transaction->id,
+            'reference_number' => $transaction->reference_number,
+            'type' => $transaction->type,
+            'status' => $transaction->status,
+            'amount' => (float) $transaction->amount,
+            'category' => $transaction->category,
+            'description' => $transaction->description,
+            'transaction_date' => $transaction->transaction_date ? Verta::instance($transaction->transaction_date)->format('Y/m/d H:i') : null,
+            'created_at' => Verta::instance($transaction->created_at)->format('Y/m/d H:i'),
+            'updated_at' => Verta::instance($transaction->updated_at)->format('Y/m/d H:i'),
+            'requester' => $transaction->requester?->full_name ?? $transaction->requester?->name ?? $transaction->requester?->email,
+            'approver' => $transaction->approver?->full_name ?? $transaction->approver?->name ?? $transaction->approver?->email,
+            'custodian' => $custodianName,
+            'meta' => $transaction->meta ?? [],
+            'attachments' => [
+                'invoice' => $transaction->getMedia('invoice')->map(fn ($media) => [
+                    'name' => $media->file_name,
+                    'url' => $media->getUrl(),
+                    'preview_url' => $media->hasGeneratedConversion('thumb') ? $media->getUrl('thumb') : $media->getUrl(),
+                    'mime_type' => $media->mime_type,
+                ])->toArray(),
+                'bank_receipt' => $transaction->getMedia('bank_receipt')->map(fn ($media) => [
+                    'name' => $media->file_name,
+                    'url' => $media->getUrl(),
+                    'preview_url' => $media->hasGeneratedConversion('thumb') ? $media->getUrl('thumb') : $media->getUrl(),
+                    'mime_type' => $media->mime_type,
+                ])->toArray(),
+                'charge_request' => $transaction->getMedia('charge_request')->map(fn ($media) => [
+                    'name' => $media->file_name,
+                    'url' => $media->getUrl(),
+                    'preview_url' => $media->hasGeneratedConversion('thumb') ? $media->getUrl('thumb') : $media->getUrl(),
+                    'mime_type' => $media->mime_type,
+                ])->toArray(),
+            ],
+        ];
+
+        $this->showPreviewModal = true;
+    }
+
+    public function closePreview(): void
+    {
+        $this->showPreviewModal = false;
+        $this->previewTransaction = [];
+    }
+
+    public function closeApproveModal(): void
+    {
+        $this->showApproveModal = false;
+        $this->approvalTransactionId = null;
+        $this->approvalNote = '';
+        $this->resetErrorBag(['approvalNote']);
+    }
+
+    public function closeRejectModal(): void
+    {
+        $this->showRejectModal = false;
+        $this->rejectTransactionId = null;
+        $this->rejectNote = '';
+        $this->resetErrorBag(['rejectNote']);
+    }
+
+    public function approveSelectedTransaction(): void
+    {
+        if (! $this->userCanManageTransactions()) {
+            session()->flash('error', __('شما مجاز به تایید تراکنش‌ها نیستید.'));
+            return;
+        }
+
+        if (! $this->approvalTransactionId) {
+            return;
+        }
+
+        $transaction = $this->ledger->transactions()->find($this->approvalTransactionId);
+        $user = Auth::user();
+
+        if (! $transaction || ! $user) {
+            return;
+        }
+
+        try {
+            $note = trim($this->approvalNote) !== '' ? trim($this->approvalNote) : null;
+            app(PettyCashService::class)->approveTransaction($transaction, $user, $note);
+
+            session()->flash('success', __('تراکنش با موفقیت تایید شد.'));
+            $this->dispatch('petty-cash-transaction-saved');
+        } catch (ValidationException $exception) {
+            session()->flash('error', $exception->getMessage());
+        } catch (\Throwable $throwable) {
+            report($throwable);
+            session()->flash('error', __('در تایید تراکنش خطایی رخ داد.'));
+        }
+
+        $this->closeApproveModal();
+    }
+
+    public function rejectSelectedTransaction(): void
+    {
+        if (! $this->userCanManageTransactions()) {
+            session()->flash('error', __('شما مجاز به رد تراکنش‌ها نیستید.'));
+            return;
+        }
+
+        if (! $this->rejectTransactionId) {
+            $this->addError('rejectNote', __('تراکنش انتخاب نشده است.'));
+            return;
+        }
+
+        $note = trim((string) $this->rejectNote);
+
+        if ($note === '') {
+            $this->addError('rejectNote', __('لطفاً دلیل رد تراکنش را وارد کنید.'));
+            return;
+        }
+
+        $transaction = $this->ledger->transactions()->find($this->rejectTransactionId);
+        $user = Auth::user();
+
+        if (! $transaction || ! $user) {
+            $this->addError('rejectNote', __('تراکنش برای رد یافت نشد.'));
+            return;
+        }
+
+        try {
+            app(PettyCashService::class)->rejectTransaction($transaction, $user, $note);
+
+            session()->flash('success', __('تراکنش با موفقیت رد شد.'));
+            $this->dispatch('petty-cash-transaction-saved');
+            $this->dispatch('store-selected-branch', ['branchId' => $this->ledger->id]);
+            $this->closeRejectModal();
+        } catch (ValidationException $exception) {
+            $errors = collect($exception->errors())->flatten()->filter()->all();
+            $message = $errors[0] ?? $exception->getMessage();
+            $this->addError('rejectNote', $message);
+        } catch (\Throwable $throwable) {
+            report($throwable);
+            session()->flash('error', __('در رد کردن تراکنش خطایی رخ داد.'));
+        }
     }
 
     protected function userCanManageTransactions(): bool
@@ -288,6 +480,7 @@ class TransactionsTable extends Component
                         ->orWhere('reference_number', 'like', $term);
                 });
             })
+            ->whereNull('archive_cycle_id')
             ->when($this->parseJalaliDate($this->dateFrom), fn ($query, $from) => $query->whereDate('transaction_date', '>=', $from))
             ->when($this->parseJalaliDate($this->dateTo), fn ($query, $to) => $query->whereDate('transaction_date', '<=', $to))
             ->orderByDesc('transaction_date');
@@ -295,10 +488,24 @@ class TransactionsTable extends Component
         return $query->paginate(15);
     }
 
+    protected function getPendingChargeRequests()
+    {
+        return $this->ledger->transactions()
+            ->where('type', PettyCashTransaction::TYPE_CHARGE)
+            ->whereIn('status', [
+                PettyCashTransaction::STATUS_SUBMITTED,
+                PettyCashTransaction::STATUS_UNDER_REVIEW,
+            ])
+            ->with(['requester.branch', 'ledger'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
     public function render()
     {
         return view('livewire.petty-cash.transactions-table', [
             'transactions' => $this->transactions,
+            'pendingChargeRequests' => $this->getPendingChargeRequests(),
             'statusOptions' => [
                 PettyCashTransaction::STATUS_DRAFT => __('پیش‌نویس'),
                 PettyCashTransaction::STATUS_SUBMITTED => __('ارسال‌شده'),

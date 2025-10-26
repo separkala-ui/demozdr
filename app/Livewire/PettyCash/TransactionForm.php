@@ -10,6 +10,7 @@ use App\Services\PettyCash\SmartInvoiceService;
 use App\Services\PettyCash\PettyCashService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Hekmatinasser\Verta\Verta;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -28,6 +29,10 @@ class TransactionForm extends Component
 
     public ?PettyCashTransaction $transaction = null;
 
+    protected ?int $serialCursor = null;
+
+    public ?int $id = null;
+
     /**
      * @var array<int, array<string, mixed>>
      */
@@ -42,26 +47,25 @@ class TransactionForm extends Component
 
     public function getItemCategories(): array
     {
-        return [
-            'vegetables' => 'تره بار',
-            'protein' => 'پروتئینی',
+        return config('petty-cash.categories', [
+            'vegetables' => 'تره بار و محصولات تازه',
+            'protein' => 'محصولات پروتئینی',
             'transport' => 'حمل و نقل',
-            'repairs' => 'ملزومات تعمیرات',
-            'cleaning' => 'مواد شوینده',
-            'utilities' => 'قبوض آب و برق',
-            'fuel' => 'سوخت',
-            'maintenance' => 'نگهداری و تعمیرات',
-            'supplies' => 'لوازم مصرفی',
+            'repairs' => 'تعمیرات و نگهداری',
+            'cleaning' => 'مواد و خدمات نظافتی',
+            'utilities' => 'قبوض آب، برق، گاز و خدمات شهری',
+            'fuel' => 'سوخت و انرژی',
+            'supplies' => 'لوازم مصرفی و اداری',
             'marketing' => 'تبلیغات و بازاریابی',
-            'insurance' => 'بیمه',
-            'rent' => 'اجاره',
-            'equipment' => 'تجهیزات',
-            'furniture' => 'مبلمان',
-            'electronics' => 'الکترونیک',
-            'security' => 'امنیت',
-            'waste' => 'دفع زباله',
-            'other' => 'سایر',
-        ];
+            'insurance' => 'بیمه و خدمات مالی',
+            'rent' => 'اجاره و اجرت',
+            'equipment' => 'تجهیزات و ابزار',
+            'furniture' => 'مبلمان و دکوراسیون',
+            'electronics' => 'کالاهای الکترونیکی',
+            'security' => 'حفاظت و امنیت',
+            'waste' => 'دفع ضایعات',
+            'other' => 'سایر هزینه‌ها',
+        ]);
     }
 
     public function mount(PettyCashLedger $ledger, ?PettyCashTransaction $transaction = null): void
@@ -80,18 +84,25 @@ class TransactionForm extends Component
 
     public function submit(PettyCashService $service): void
     {
+        if ($this->ledger->exists) {
+            $this->ledger = $this->ledger->fresh();
+        }
+
         $rules = $this->rules();
 
         foreach ($this->entries as $index => $entry) {
             $ruleKey = 'entries.' . $index . '.invoice_attachment';
             $receiptRuleKey = 'entries.' . $index . '.receipt_attachment';
+            $categoryRuleKey = 'entries.' . $index . '.category';
 
             if ($this->entryLooksComplete($entry)) {
                 $rules[$ruleKey] = 'required|file|max:4096';
                 $rules[$receiptRuleKey] = 'nullable|file|max:4096';
+                $rules[$categoryRuleKey] = 'required|string|max:100';
             } else {
                 $rules[$ruleKey] = 'nullable|file|max:4096';
                 $rules[$receiptRuleKey] = 'nullable|file|max:4096';
+                $rules[$categoryRuleKey] = 'nullable|string|max:100';
             }
         }
 
@@ -119,7 +130,7 @@ class TransactionForm extends Component
             $originalIndex = $entry['__original_index'] ?? $loopIndex;
             unset($entry['__original_index']);
 
-            $amountValue = (float) ($entry['amount'] ?? 0);
+            $amountValue = $this->parseAmount((string) ($entry['amount'] ?? 0));
 
             if ($maxTransactionLimit > 0 && $amountValue > $maxTransactionLimit) {
                 $this->addError('entries.' . $originalIndex . '.amount', __('مبلغ این تراکنش نمی‌تواند از سقف مجاز (:limit ریال) بیشتر باشد.', ['limit' => number_format($maxTransactionLimit)]));
@@ -132,10 +143,8 @@ class TransactionForm extends Component
                     return;
                 }
 
-                if (! $user->hasRole(['Superadmin', 'Admin'])) {
-                    $this->addError('entries.' . $originalIndex . '.type', __('فقط مدیر ارشد و مدیر می‌توانند تنخواه را شارژ کنند.'));
-                    return;
-                }
+                // Allow all users to create charge requests (they will need approval)
+                // Removed the restriction that only managers can create charges
             }
 
             if ($this->editingTransactionId && $loopIndex === 0) {
@@ -151,6 +160,11 @@ class TransactionForm extends Component
                 }
 
                 $payload = $this->buildPayload($entry);
+
+                if (($entry['type'] ?? $transaction->type) === PettyCashTransaction::TYPE_CHARGE) {
+                    $origin = $entry['meta']['charge_origin'] ?? $transaction->charge_origin ?? 'quick_entry';
+                    $payload = $this->applyChargeOrigin($payload, $origin);
+                }
 
                 if (! $this->userCanManageTransactions()) {
                     $payload['status'] = PettyCashTransaction::STATUS_SUBMITTED;
@@ -178,6 +192,8 @@ class TransactionForm extends Component
             $payload = $this->buildPayload($entry);
 
             if ($entry['type'] === PettyCashTransaction::TYPE_CHARGE) {
+                $origin = $entry['meta']['charge_origin'] ?? 'quick_entry';
+                $payload = $this->applyChargeOrigin($payload, $origin);
                 $transaction = $service->recordCharge($this->ledger, $payload, $user);
             } else {
                 $payload['type'] = $entry['type'];
@@ -232,6 +248,7 @@ class TransactionForm extends Component
 
         $this->transaction = $transaction;
         $this->editingTransactionId = $transaction->id;
+        $this->serialCursor = null;
 
         $entryStatus = $transaction->status;
 
@@ -250,8 +267,10 @@ class TransactionForm extends Component
                 'currency' => $transaction->currency,
                 'reference_number' => $transaction->reference_number,
                 'description' => $transaction->description,
+                'category' => $transaction->category,
                 'invoice_attachment' => null,
                 'receipt_attachment' => null,
+                'manager_note' => data_get($transaction->meta, 'approval_note'),
                 'meta' => $transaction->meta ?? [],
             ],
         ];
@@ -291,6 +310,10 @@ class TransactionForm extends Component
     {
         $this->ensureTrailingEmptyRow();
         $this->syncSmartEntriesState();
+
+        foreach (array_keys($this->entries) as $index) {
+            $this->refreshCategoryStatus($index);
+        }
     }
 
     private function convertPersianToEnglish(string $number): string
@@ -321,6 +344,11 @@ class TransactionForm extends Component
 
     private function generateAutoSerialNumber(int $index, array $extractedData): void
     {
+        // Only generate if reference_number is empty
+        if (!empty($this->entries[$index]['reference_number'])) {
+            return;
+        }
+
         $branchCode = str_pad((string) ($this->ledger->id ?? 0), 3, '0', STR_PAD_LEFT);
 
         $sequentialNumber = $this->getNextSequentialNumber();
@@ -434,21 +462,32 @@ class TransactionForm extends Component
 
     private function getNextSequentialNumber(): string
     {
-        // Get the last transaction for this ledger to determine next number
+        if ($this->serialCursor === null) {
+            $lastNumber = 0;
+
         $lastTransaction = PettyCashTransaction::where('ledger_id', $this->ledger->id)
-            ->orderBy('id', 'desc')
-            ->first();
+                ->orderByDesc('id')
+                ->value('reference_number');
         
-        if ($lastTransaction && $lastTransaction->reference_number) {
-            // Extract number from reference number pattern
-            if (preg_match('/-(\d+)(?:-|$)/', $lastTransaction->reference_number, $matches)) {
+            if ($lastTransaction && preg_match('/-(\d+)(?:-|$)/', $lastTransaction, $matches)) {
                 $lastNumber = (int) $matches[1];
-                return str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
             }
+
+            foreach ($this->entries as $entry) {
+                if (! empty($entry['reference_number']) && preg_match('/-(\d+)(?:-|$)/', (string) $entry['reference_number'], $matches)) {
+                    $candidate = (int) $matches[1];
+                    if ($candidate > $lastNumber) {
+                        $lastNumber = $candidate;
+                    }
+                }
+            }
+
+            $this->serialCursor = $lastNumber;
         }
-        
-        // Start from 1 if no previous transactions
-        return '0001';
+
+        $this->serialCursor++;
+
+        return str_pad((string) $this->serialCursor, 4, '0', STR_PAD_LEFT);
     }
 
     private function verifyAmountConsistency(int $index, array $extractedData): void
@@ -537,6 +576,107 @@ class TransactionForm extends Component
         ];
     }
 
+    private function refreshCategoryStatus(int $index, bool $forceManualNotice = false): void
+    {
+        if (! isset($this->smartEntriesState[$index])) {
+            $this->smartEntriesState[$index] = $this->makeSmartEntryState();
+        }
+
+        $categoryKey = $this->entries[$index]['category'] ?? null;
+        $categories = $this->getItemCategories();
+        $categoryLabel = $categoryKey ? ($categories[$categoryKey] ?? $categoryKey) : null;
+
+        if ($categoryKey && $categoryLabel) {
+            $this->smartEntriesState[$index]['category_status'] = 'ready';
+            $this->smartEntriesState[$index]['category_message'] = __('دسته‌بندی انتخاب‌شده: :category', ['category' => $categoryLabel]);
+
+            return;
+        }
+
+        $shouldFlag = $forceManualNotice || $this->entryLooksComplete($this->entries[$index] ?? []);
+
+        if ($shouldFlag) {
+            $this->smartEntriesState[$index]['category_status'] = 'manual_required';
+            $this->smartEntriesState[$index]['category_message'] = __('دسته‌بندی به صورت خودکار تشخیص داده نشد. لطفاً دسته‌بندی مناسب را انتخاب کنید.');
+        } else {
+            $this->smartEntriesState[$index]['category_status'] = 'unknown';
+            $this->smartEntriesState[$index]['category_message'] = null;
+        }
+    }
+
+    private function translateValidationIssues($issues): array
+    {
+        if (! is_array($issues)) {
+            return [];
+        }
+
+        $translated = [];
+
+        foreach ($issues as $issue) {
+            if (! is_string($issue) || trim($issue) === '') {
+                continue;
+            }
+
+            $translated[] = $this->translateValidationIssue($issue);
+        }
+
+        return array_values(array_unique($translated));
+    }
+
+    private function translateValidationIssue(string $issue): string
+    {
+        $clean = trim($issue);
+
+        if ($clean === '') {
+            return $clean;
+        }
+
+        $patterns = [
+            '/The calculated total for item\s+(\d+)\s+\((.+?)\)\s+does not match the observed total\s+\((.+?)\)\.?/i' =>
+                static function (array $matches): string {
+                    return "مبلغ محاسبه‌شده برای ردیف {$matches[1]} ({$matches[2]}) با مبلغ درج‌شده ({$matches[3]}) مطابقت ندارد.";
+                },
+            '/The sum of individual item total prices\s+\((.+?)\)\s+does not match the invoice subtotal\s+\((.+?)\)\.?/i' =>
+                static function (array $matches): string {
+                    return "جمع مبالغ اقلام ({$matches[1]}) با جمع سطر فاکتور ({$matches[2]}) برابر نیست.";
+                },
+            '/The sum of individual item discounts\s+\((.+?)\)\s+does not match the total discount in the summary\s+\((.+?)\)\.?/i' =>
+                static function (array $matches): string {
+                    return "جمع تخفیف‌های اقلام ({$matches[1]}) با تخفیف درج‌شده در خلاصه ({$matches[2]}) هم‌خوانی ندارد.";
+                },
+            '/The final amount payable\s+\(([\d,., ]+)\)\s+does not reconcile with subtotal\s+\(([\d,., ]+)\)\s+- discount\s+\(([\d,., ]+)\)\s+- prepayment\s+\(([\d,., ]+)\)\s+=\s+([\d,., ]+)/i' =>
+                static function (array $matches): string {
+                    $payable = trim(rtrim($matches[1], " ."));
+                    $subtotal = trim(rtrim($matches[2], " ."));
+                    $discount = trim(rtrim($matches[3], " ."));
+                    $prepayment = trim(rtrim($matches[4], " ."));
+                    $computed = trim(rtrim($matches[5], " ."));
+
+                    return "مبلغ نهایی قابل پرداخت ({$payable}) با محاسبه {$subtotal} - {$discount} - {$prepayment} = {$computed} سازگار نیست.";
+                },
+            '/Prices for items \'(.+?)\' through \'(.+?)\' are not specified on the invoice and have been recorded as 0\./i' =>
+                static function (array $matches): string {
+                    return "قیمت اقلام از «{$matches[1]}» تا «{$matches[2]}» در فاکتور درج نشده و با مقدار صفر ثبت شده است.";
+                },
+        ];
+
+        foreach ($patterns as $pattern => $formatter) {
+            if (preg_match($pattern, $clean, $matches)) {
+                return $formatter($matches);
+            }
+        }
+
+        if (str_contains($clean, 'The provided receipt is for')) {
+            return 'رسید پیوست‌شده با تاریخ یا مبالغ فاکتور هم‌خوانی ندارد و تایید پرداخت ممکن نیست.';
+        }
+
+        if (str_contains($clean, 'does not match')) {
+            return "این مقدار با داده‌های درج‌شده در فاکتور مطابقت ندارد ({$clean}).";
+        }
+
+        return "نیاز به بررسی: {$clean}";
+    }
+
     private function autoCategorizeTransaction(int $index, array $extractedData): void
     {
         $category = null;
@@ -583,174 +723,124 @@ class TransactionForm extends Component
                    str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'سوخت') ||
                    str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'گازوئیل')) {
             $category = 'fuel';
+        } elseif (str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'منابع انسانی') ||
+                   str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'استخدام') ||
+                   str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'حقوق') ||
+                   str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'دستمزد') ||
+                   str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'آموزش کارکنان')) {
+            $category = 'human_resources';
+        } elseif (str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'غذا') ||
+                   str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'پذیرایی') ||
+                   str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'ناهار') ||
+                   str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'کترینگ') ||
+                   str_contains($vendorName . ' ' . $originName . ' ' . $allText, 'رستوران')) {
+            $category = 'staff_meals';
+        } elseif (str_contains($allText, 'لبنی') ||
+                   str_contains($allText, 'شیر') ||
+                   str_contains($allText, 'ماست') ||
+                   str_contains($allText, 'دوغ') ||
+                   str_contains($allText, 'پنیر')) {
+            $category = 'dairy';
+        } elseif (str_contains($allText, 'سوپر') ||
+                   str_contains($allText, 'سوپرمارکت') ||
+                   str_contains($allText, 'کالاهای اساسی') ||
+                   str_contains($allText, 'خواروبار') ||
+                   str_contains($vendorName . ' ' . $originName, 'سوپر')) {
+            $category = 'grocery';
         }
         
         if ($category) {
             $this->entries[$index]['category'] = $category;
         }
+
+        $this->refreshCategoryStatus($index, true);
     }
 
     private function generateDescriptionFromExtractedData(array $extractedData): string
     {
-        // Get document type
-        $documentType = $extractedData['document_type_fa'] ?? '';
-        
-        // Get items for description
-        $items = $extractedData['items_details']['item_structure'] ?? [];
-        $itemCount = count($items);
-        
-        // Get total amount
-        $totalAmount = $extractedData['financial_summary']['final_amount_in_rial_numerical'] ?? 0;
-        $formattedAmount = number_format($totalAmount);
-        
-        // Generate table description
-        $tableDescription = $this->generateTableDescription($extractedData);
-        
-        // Generate description based on available data
-        if ($itemCount > 0) {
-            $firstItem = $items[0]['product_or_service_description_fa'] ?? '';
-            if ($itemCount == 1) {
-                return "خرید {$firstItem} - {$formattedAmount} ریال\n\n{$tableDescription}";
-            } else {
-                return "خرید {$itemCount} قلم کالا شامل {$firstItem} - {$formattedAmount} ریال\n\n{$tableDescription}";
-            }
-        } elseif ($documentType) {
-            return "{$documentType} - {$formattedAmount} ریال\n\n{$tableDescription}";
-        } else {
-            return "تراکنش استخراج شده - {$formattedAmount} ریال\n\n{$tableDescription}";
-        }
+        return $this->generateTableDescription($extractedData);
     }
 
     private function generateTableDescription(array $extractedData): string
     {
-        $items = $extractedData['items_details']['item_structure'] ?? [];
+        $documentType = trim($extractedData['document_type_fa'] ?? $extractedData['origin_of_document_fa'] ?? '');
+        $documentType = $documentType !== '' ? $documentType : 'صورتحساب کالا و خدمات';
+
         $financialSummary = $extractedData['financial_summary'] ?? [];
-        $sellerInfo = $extractedData['seller_info'] ?? [];
-        $buyerInfo = $extractedData['buyer_info'] ?? [];
-        $paymentDetails = $extractedData['payment_and_banking_details'] ?? [];
-        
-        $table = "┌─────────────────────────────────────────────────────────────────────────────────────────────────┐\n";
-        $table .= "│                           جدول آیتم‌های خریداری شده                           │\n";
-        $table .= "├─────┬─────────────────────┬────────┬──────────┬──────────┬─────────────────────────────┤\n";
-        $table .= "│ ردیف│ شرح کالا/خدمات     │ تعداد │ قیمت واحد│ تخفیف   │ مجموع                        │\n";
-        $table .= "├─────┼─────────────────────┼────────┼──────────┼──────────┼─────────────────────────────┤\n";
-        
-        $subtotal = 0;
-        foreach ($items as $item) {
-            $rowNumber = $item['row_number'] ?? '';
-            $description = $item['product_or_service_description_fa'] ?? '';
-            $quantity = $item['quantity_numerical'] ?? '';
-            $unitPrice = isset($item['unit_price_in_rial_numerical']) ? number_format($item['unit_price_in_rial_numerical']) : '';
-            $discount = isset($item['discount_per_item_in_rial_numerical']) && $item['discount_per_item_in_rial_numerical'] > 0 ? number_format($item['discount_per_item_in_rial_numerical']) : '-';
-            $totalPrice = isset($item['total_after_discount_in_rial_numerical']) && $item['total_after_discount_in_rial_numerical'] ? number_format($item['total_after_discount_in_rial_numerical']) : (isset($item['total_price_in_rial_numerical']) ? number_format($item['total_price_in_rial_numerical']) : '');
-            
-            // Truncate description if too long
-            $description = mb_strlen($description) > 20 ? mb_substr($description, 0, 17) . '...' : $description;
-            
-            $table .= sprintf("│ %-3s │ %-19s │ %-6s │ %-8s │ %-8s │ %-27s │\n", 
-                $rowNumber, $description, $quantity, $unitPrice, $discount, $totalPrice);
-            
-            if (isset($item['total_price_in_rial_numerical'])) {
-                $subtotal += (float) $item['total_price_in_rial_numerical'];
+        $totalCandidate = $financialSummary['final_amount_in_rial_numerical']
+            ?? $financialSummary['subtotal_in_rial_numerical']
+            ?? ($extractedData['total_amount'] ?? null);
+        $totalAmount = $totalCandidate !== null ? $this->parseAmount((string) $totalCandidate) : null;
+
+        $items = $extractedData['items_details']['item_structure'] ?? [];
+        if (empty($items) && ! empty($extractedData['line_items'])) {
+            $items = array_map(static function (array $item): array {
+                return [
+                    'product_or_service_description_fa' => $item['description'] ?? $item['item_description_fa'] ?? null,
+                    'quantity_numerical' => $item['quantity'] ?? null,
+                ];
+            }, $extractedData['line_items']);
+        }
+
+        $itemCount = count($items);
+        $itemPreviewParts = [];
+
+        foreach (array_slice($items, 0, 3) as $item) {
+            $description = trim($item['product_or_service_description_fa'] ?? '');
+            if ($description === '') {
+                continue;
             }
-        }
-        
-        // Add taxes row
-        if (isset($financialSummary['vat_and_tolls_amount_in_rial_numerical']) && $financialSummary['vat_and_tolls_amount_in_rial_numerical']) {
-            $taxAmount = number_format($financialSummary['vat_and_tolls_amount_in_rial_numerical']);
-            $table .= "├─────┼─────────────────────┼────────┼──────────┼──────────┼─────────────────────────────┤\n";
-            $table .= sprintf("│ %-3s │ %-19s │ %-6s │ %-8s │ %-8s │ %-27s │\n", 
-                "مالیات", "مالیات و عوارض", "-", "-", "-", $taxAmount);
-        }
-        
-        // Add final amount row
-        if (isset($financialSummary['final_amount_in_rial_numerical']) && $financialSummary['final_amount_in_rial_numerical']) {
-            $finalAmount = number_format($financialSummary['final_amount_in_rial_numerical']);
-            $table .= "├─────┼─────────────────────┼────────┼──────────┼──────────┼─────────────────────────────┤\n";
-            $table .= sprintf("│ %-3s │ %-19s │ %-6s │ %-8s │ %-8s │ %-27s │\n", 
-                "مجموع", "مبلغ نهایی", "-", "-", "-", $finalAmount);
-        }
-        
-        $table .= "└─────┴─────────────────────┴────────┴──────────┴──────────┴─────────────────────────────┘\n";
-        
-        // Add seller and buyer information
-        $table .= $this->generateSellerBuyerInfo($sellerInfo, $buyerInfo, $paymentDetails);
-        
-        return $table;
-    }
 
-    private function generateSellerBuyerInfo(array $sellerInfo, array $buyerInfo, array $paymentDetails): string
-    {
-        $info = "\n┌─────────────────────────────────────────────────────────────────────────────────┐\n";
-        $info .= "│                              اطلاعات طرفین معامله                            │\n";
-        $info .= "├─────────────────────────────────┬─────────────────────────────────────────────┤\n";
-        
-        // Seller information
-        $info .= "│ اطلاعات فروشنده:                │                                             │\n";
-        $info .= "├─────────────────────────────────┼─────────────────────────────────────────────┤\n";
-        
-        $sellerName = $sellerInfo['name_fa'] ?? 'نامشخص';
-        $sellerPhone = $sellerInfo['phone_number'] ?? 'نامشخص';
-        $sellerAddress = $sellerInfo['address_fa'] ?? 'نامشخص';
-        $sellerEconomicCode = $sellerInfo['economic_code_or_national_id'] ?? 'نامشخص';
-        
-        $info .= sprintf("│ نام فروشنده: %-20s │ %-43s │\n", 
-            mb_substr($sellerName, 0, 20), mb_substr($sellerName, 20, 43));
-        $info .= sprintf("│ تلفن: %-24s │ %-43s │\n", 
-            mb_substr($sellerPhone, 0, 24), mb_substr($sellerPhone, 24, 43));
-        $info .= sprintf("│ کد اقتصادی: %-19s │ %-43s │\n", 
-            mb_substr($sellerEconomicCode, 0, 19), mb_substr($sellerEconomicCode, 19, 43));
-        $info .= sprintf("│ آدرس: %-23s │ %-43s │\n", 
-            mb_substr($sellerAddress, 0, 23), mb_substr($sellerAddress, 23, 43));
-        
-        $info .= "├─────────────────────────────────┼─────────────────────────────────────────────┤\n";
-        
-        // Buyer information (Branch)
-        $info .= "│ اطلاعات خریدار (شعبه):          │                                             │\n";
-        $info .= "├─────────────────────────────────┼─────────────────────────────────────────────┤\n";
-        
-        $buyerName = $buyerInfo['name_fa'] ?? $this->ledger->name ?? 'نامشخص';
-        $buyerPhone = $buyerInfo['phone_number'] ?? 'نامشخص';
-        $buyerAddress = $buyerInfo['address_fa'] ?? 'نامشخص';
-        $buyerNationalCode = $buyerInfo['national_code'] ?? 'نامشخص';
-        
-        $info .= sprintf("│ نام شعبه: %-21s │ %-43s │\n", 
-            mb_substr($buyerName, 0, 21), mb_substr($buyerName, 21, 43));
-        $info .= sprintf("│ تلفن شعبه: %-19s │ %-43s │\n", 
-            mb_substr($buyerPhone, 0, 19), mb_substr($buyerPhone, 19, 43));
-        $info .= sprintf("│ کد ملی: %-22s │ %-43s │\n", 
-            mb_substr($buyerNationalCode, 0, 22), mb_substr($buyerNationalCode, 22, 43));
-        $info .= sprintf("│ آدرس شعبه: %-19s │ %-43s │\n", 
-            mb_substr($buyerAddress, 0, 19), mb_substr($buyerAddress, 19, 43));
-        
-        // Payment information
-        $info .= "├─────────────────────────────────┼─────────────────────────────────────────────┤\n";
-        $info .= "│ اطلاعات پرداخت:                 │                                             │\n";
-        $info .= "├─────────────────────────────────┼─────────────────────────────────────────────┤\n";
-        
-        $paymentMethod = $paymentDetails['payment_method_fa'] ?? 'نامشخص';
-        $bankName = $paymentDetails['bank_name_fa'] ?? 'نامشخص';
-        $referenceNumber = $paymentDetails['reference_number_or_sheba'] ?? 'نامشخص';
-        
-        $info .= sprintf("│ روش پرداخت: %-19s │ %-43s │\n", 
-            mb_substr($paymentMethod, 0, 19), mb_substr($paymentMethod, 19, 43));
-        $info .= sprintf("│ نام بانک: %-21s │ %-43s │\n", 
-            mb_substr($bankName, 0, 21), mb_substr($bankName, 21, 43));
-        $info .= sprintf("│ شماره مرجع: %-19s │ %-43s │\n", 
-            mb_substr($referenceNumber, 0, 19), mb_substr($referenceNumber, 19, 43));
-        
-        $info .= "└─────────────────────────────────┴─────────────────────────────────────────────┘\n";
-        
-        return $info;
-    }
+            $quantityRaw = $item['quantity_numerical'] ?? null;
+            $quantity = $quantityRaw !== null ? $this->parseAmount((string) $quantityRaw) : null;
 
+            if ($quantity !== null && $quantity > 0) {
+                $formattedQty = fmod($quantity, 1.0) === 0.0
+                    ? (string) (int) $quantity
+                    : rtrim(rtrim(number_format($quantity, 2), '0'), '.');
+                $description .= ' × ' . $formattedQty;
+            }
+
+            $itemPreviewParts[] = Str::limit($description, 40);
+        }
+
+        if ($itemCount > count($itemPreviewParts)) {
+            $itemPreviewParts[] = 'و ' . ($itemCount - count($itemPreviewParts)) . ' قلم دیگر';
+        }
+
+        $vendorName = $extractedData['seller_info']['name_fa']
+            ?? $extractedData['vendor_name']
+            ?? ($extractedData['origin_of_document_fa'] ?? null);
+
+        $invoiceNumber = $extractedData['invoice_serial_number']
+            ?? $extractedData['invoice_number']
+            ?? $extractedData['document_info']['number'] ?? null;
+
+        $date = $extractedData['date_jalali']
+            ?? $extractedData['dates']['jalali']
+            ?? null;
+
+        $segments = array_filter([
+            $documentType,
+            ! empty($itemPreviewParts) ? 'اقلام: ' . implode('، ', $itemPreviewParts) : null,
+            $totalAmount !== null ? 'مبلغ نهایی: ' . number_format($totalAmount) . ' ریال' : null,
+            $vendorName ? 'فروشنده: ' . $vendorName : null,
+            $invoiceNumber ? 'شماره فاکتور: ' . $invoiceNumber : null,
+            $date ? 'تاریخ: ' . $date : null,
+        ]);
+
+        return Str::limit(implode(' | ', $segments), 220);
+    }
     private function convertJalaliToGregorian(string $jalaliDate): string
     {
         try {
             // Handle incomplete dates like "1403//"
-            if (strpos($jalaliDate, '//') !== false) {
+            if (strpos($jalaliDate, '//') !== false || empty($jalaliDate)) {
                 return Verta::now()->format('Y-m-d H:i');
             }
+            
+            // Clean the date string
+            $jalaliDate = trim($jalaliDate);
             
             // Parse jalali date (format: YYYY/MM/DD or YYYY/MM/DD HH:MM:SS)
             $parts = explode(' ', $jalaliDate);
@@ -768,7 +858,8 @@ class TransactionForm extends Component
                     \Log::warning('Invalid jalali date components', [
                         'year' => $year,
                         'month' => $month,
-                        'day' => $day
+                        'day' => $day,
+                        'original_date' => $jalaliDate
                     ]);
                     return Verta::now()->format('Y-m-d H:i');
                 }
@@ -986,24 +1077,40 @@ class TransactionForm extends Component
         }
 
         // Apply extracted data to form fields
-        // Use final amount from financial summary
-        if (isset($extractedData['financial_summary']['final_amount_in_rial_numerical']) && $extractedData['financial_summary']['final_amount_in_rial_numerical']) {
+        // Use total_amount first (includes tax), then final_amount from financial summary
+        if (isset($extractedData['total_amount']) && $extractedData['total_amount']) {
+            $amount = $this->parseAmount($extractedData['total_amount']);
+            $this->entries[$index]['amount'] = $amount;
+            \Log::info('Using total_amount from root', ['amount' => $amount]);
+        } elseif (isset($extractedData['financial_summary']['final_amount_in_rial_numerical']) && $extractedData['financial_summary']['final_amount_in_rial_numerical']) {
             $amount = $this->parseAmount($extractedData['financial_summary']['final_amount_in_rial_numerical']);
             $this->entries[$index]['amount'] = $amount;
+            \Log::info('Using final_amount from financial_summary', ['amount' => $amount]);
         }
 
         // Set transaction date from jalali date
         if (isset($extractedData['date_jalali']) && $extractedData['date_jalali']) {
             try {
                 $jalaliDate = $extractedData['date_jalali'];
+                \Log::info('Processing Jalali date', ['jalali_date' => $jalaliDate]);
+                
                 // If date is incomplete, use current jalali date
-                if (strlen($jalaliDate) < 8) {
+                if (strlen($jalaliDate) < 8 || strpos($jalaliDate, '//') !== false || empty($jalaliDate)) {
                     $this->entries[$index]['transaction_date'] = Verta::now()->format('Y-m-d H:i');
                 } else {
                     // Parse jalali date and convert to gregorian for form
-                    $this->entries[$index]['transaction_date'] = $this->convertJalaliToGregorian($jalaliDate);
+                    $convertedDate = $this->convertJalaliToGregorian($jalaliDate);
+                    $this->entries[$index]['transaction_date'] = $convertedDate;
+                    \Log::info('Date converted successfully', [
+                        'jalali_date' => $jalaliDate,
+                        'converted_date' => $convertedDate
+                    ]);
                 }
             } catch (\Exception $e) {
+                \Log::warning('Date conversion failed', [
+                    'jalali_date' => $extractedData['date_jalali'] ?? null,
+                    'error' => $e->getMessage()
+                ]);
                 $this->entries[$index]['transaction_date'] = Verta::now()->format('Y-m-d H:i');
             }
         } else {
@@ -1019,19 +1126,20 @@ class TransactionForm extends Component
                      $extractedData['origin_of_document_fa'] ?? 
                      null;
                      
-        if ($vendorName) {
-            $this->entries[$index]['description'] = __('smart_invoice.default_description', ['vendor' => $vendorName]);
-        } else {
-            // Create a meaningful description from extracted data
-            $description = $this->generateDescriptionFromExtractedData($extractedData);
-            $this->entries[$index]['description'] = $description;
-        }
+        // Always generate a concise summary for the transaction list
+        $summaryDescription = $this->generateTableDescription($extractedData);
+        $this->entries[$index]['description'] = $summaryDescription;
+
+        \Log::info('Generated smart invoice summary', [
+            'description_length' => strlen($summaryDescription),
+            'has_vendor' => ! empty($vendorName)
+        ]);
 
         // Auto-categorize based on extracted data
         $this->autoCategorizeTransaction($index, $extractedData);
 
-        // Calculate total from line items (new structure)
-        if (isset($extractedData['items_details']['item_structure']) && is_array($extractedData['items_details']['item_structure'])) {
+        // Calculate total from line items (new structure) - only if amount not already set
+        if (!isset($this->entries[$index]['amount']) && isset($extractedData['items_details']['item_structure']) && is_array($extractedData['items_details']['item_structure'])) {
             $calculatedTotal = 0;
             foreach ($extractedData['items_details']['item_structure'] as $item) {
                 if (isset($item['total_price_in_rial_numerical'])) {
@@ -1068,6 +1176,7 @@ class TransactionForm extends Component
 
             if ($calculatedTotal > 0) {
                 $this->entries[$index]['amount'] = $calculatedTotal;
+                \Log::info('Using calculated total from line items', ['amount' => $calculatedTotal]);
             }
         }
         // Fallback to old structure
@@ -1087,17 +1196,19 @@ class TransactionForm extends Component
             }
         }
 
-        // Use financial summary if available (subtotal first, then final)
+        // Use financial summary if available (final amount with tax first, then subtotal)
         if (!isset($this->entries[$index]['amount'])) {
-            if (isset($extractedData['financial_summary']['subtotal_in_rial_numerical'])) {
-                $subtotalAmount = $this->parseAmount($extractedData['financial_summary']['subtotal_in_rial_numerical']);
-                if ($subtotalAmount > 0) {
-                    $this->entries[$index]['amount'] = $subtotalAmount;
-                }
-            } elseif (isset($extractedData['financial_summary']['final_amount_in_rial_numerical'])) {
+            if (isset($extractedData['financial_summary']['final_amount_in_rial_numerical'])) {
                 $finalAmount = $this->parseAmount($extractedData['financial_summary']['final_amount_in_rial_numerical']);
                 if ($finalAmount > 0) {
                     $this->entries[$index]['amount'] = $finalAmount;
+                    \Log::info('Using final amount with tax', ['amount' => $finalAmount]);
+                }
+            } elseif (isset($extractedData['financial_summary']['subtotal_in_rial_numerical'])) {
+                $subtotalAmount = $this->parseAmount($extractedData['financial_summary']['subtotal_in_rial_numerical']);
+                if ($subtotalAmount > 0) {
+                    $this->entries[$index]['amount'] = $subtotalAmount;
+                    \Log::info('Using subtotal amount', ['amount' => $subtotalAmount]);
                 }
             }
         }
@@ -1185,13 +1296,34 @@ class TransactionForm extends Component
 
             $structuredPayload = $this->extractStructuredFromRaw($structuredSource);
             $summary = $this->buildExtractionSummary($result, $structuredPayload);
+
+        $analyticsIssues = [];
+        if (isset($result->analytics['validation']['issues']) && is_array($result->analytics['validation']['issues'])) {
+            $analyticsIssues = $result->analytics['validation']['issues'];
+        }
+
+        $structuredIssues = [];
+        if (isset($structuredPayload['analytics']['validation']['issues']) && is_array($structuredPayload['analytics']['validation']['issues'])) {
+            $structuredIssues = $structuredPayload['analytics']['validation']['issues'];
+        }
+
+        $translatedValidation = $this->translateValidationIssues(! empty($analyticsIssues) ? $analyticsIssues : $structuredIssues);
+
             $extractedDataForView = array_merge($summary, [
                 'items_details' => $structuredPayload['items_details'] ?? [],
                 'financial_summary' => $structuredPayload['financial_summary'] ?? [],
                 'line_items' => $structuredPayload['line_items'] ?? [],
-                'analytics' => $result->analytics ?? [],
+            'analytics' => array_replace_recursive($result->analytics ?? [], [
+                'validation' => [
+                    'issues' => $translatedValidation,
+                ],
+            ]),
                 'raw_payload' => $rawPayload,
             ]);
+
+        if (isset($extractedDataForView['analytics']['validation'])) {
+            $extractedDataForView['analytics']['validation']['issues'] = $translatedValidation;
+        }
 
             $existingState = $this->smartEntriesState[$index] ?? [];
             $this->smartEntriesState[$index] = array_merge($existingState, [
@@ -1220,8 +1352,18 @@ class TransactionForm extends Component
             ]);
 
             $meta = $this->entries[$index]['meta'] ?? [];
+            $metaAnalytics = is_array($result->analytics ?? null) ? $result->analytics : [];
+            if (isset($metaAnalytics['validation'])) {
+                $metaAnalytics['validation']['issues'] = $translatedValidation;
+            }
+
             $meta['smart_invoice'] = array_merge($meta['smart_invoice'] ?? [], $result->asMeta($smartInvoiceService->analyticsEnabled()), [
                 'raw_payload' => $result->rawPayload,
+                'analytics' => array_replace_recursive($metaAnalytics, [
+                    'validation' => [
+                        'issues' => $translatedValidation,
+                    ],
+                ]),
             ]);
             $this->entries[$index]['meta'] = $meta;
         } catch (SmartInvoiceException $exception) {
@@ -1351,6 +1493,7 @@ class TransactionForm extends Component
     {
         $this->transaction = null;
         $this->editingTransactionId = null;
+        $this->serialCursor = null;
         $this->entries = [
             $this->makeEmptyEntry(),
         ];
@@ -1375,6 +1518,7 @@ class TransactionForm extends Component
             'category' => null,
             'invoice_attachment' => null,
             'receipt_attachment' => null,
+            'manager_note' => null,
             'meta' => [],
         ];
     }
@@ -1389,6 +1533,8 @@ class TransactionForm extends Component
             'structured' => null,
             'raw_payload' => null,
             'extracted_data' => null,
+            'category_status' => 'unknown',
+            'category_message' => null,
         ];
     }
 
@@ -1401,6 +1547,10 @@ class TransactionForm extends Component
         }
 
         $this->smartEntriesState = $synced;
+
+        foreach (array_keys($this->entries) as $index) {
+            $this->refreshCategoryStatus($index);
+        }
     }
 
     protected function ensureTrailingEmptyRow(): void
@@ -1440,17 +1590,30 @@ class TransactionForm extends Component
         return collect($this->entries)
             ->filter(fn ($entry) => $this->entryLooksComplete($entry))
             ->map(function ($entry, $originalIndex) {
+                $meta = $entry['meta'] ?? [];
+                if (! is_array($meta)) {
+                    $meta = [];
+                }
+
+                $note = trim((string) ($entry['manager_note'] ?? ''));
+                if ($note !== '') {
+                    $meta['approval_note'] = $note;
+                } else {
+                    unset($meta['approval_note']);
+                }
+
                 return [
                     'type' => $entry['type'] ?? PettyCashTransaction::TYPE_EXPENSE,
                     'status' => $entry['status'] ?? PettyCashTransaction::STATUS_SUBMITTED,
                     'transaction_date' => $entry['transaction_date'],
-                    'amount' => (float) $entry['amount'],
+                    'amount' => $this->parseAmount((string) ($entry['amount'] ?? 0)),
                     'currency' => $entry['currency'] ?? 'IRR',
                     'reference_number' => $entry['reference_number'] ?? null,
                     'description' => $entry['description'] ?? null,
+                    'category' => $entry['category'] ?? null,
                     'invoice_attachment' => $entry['invoice_attachment'] ?? null,
                     'receipt_attachment' => $entry['receipt_attachment'] ?? null,
-                    'meta' => $entry['meta'] ?? [],
+                    'meta' => $meta,
                     '__original_index' => $originalIndex,
                 ];
             })
@@ -1459,15 +1622,50 @@ class TransactionForm extends Component
 
     protected function buildPayload(array $entry): array
     {
+        $meta = $entry['meta'] ?? [];
+        if (! is_array($meta)) {
+            $meta = [];
+        }
+
+        $note = trim((string) ($entry['manager_note'] ?? ''));
+        if ($note !== '') {
+            $meta['approval_note'] = $note;
+        } else {
+            unset($meta['approval_note']);
+        }
+
         return [
-            'amount' => $entry['amount'],
+            'amount' => $this->parseAmount((string) ($entry['amount'] ?? 0)),
             'currency' => $entry['currency'] ?? 'IRR',
             'transaction_date' => $this->parseDateInput($entry['transaction_date']),
             'reference_number' => $entry['reference_number'] ?? null,
             'description' => $entry['description'] ?? null,
             'status' => $entry['status'] ?? PettyCashTransaction::STATUS_SUBMITTED,
-            'meta' => $entry['meta'] ?? null,
+            'category' => $entry['category'] ?? null,
+            'meta' => ! empty($meta) ? $meta : null,
         ];
+    }
+
+    protected function applyChargeOrigin(array $payload, string $origin): array
+    {
+        $payload['charge_origin'] = $origin;
+
+        $meta = $payload['meta'] ?? [];
+        if (! is_array($meta)) {
+            $meta = [];
+        }
+
+        $chargeMeta = $meta['charge_request'] ?? [];
+        if (! is_array($chargeMeta)) {
+            $chargeMeta = [];
+        }
+
+        $chargeMeta['source'] = $origin;
+        $meta['charge_request'] = $chargeMeta;
+
+        $payload['meta'] = $meta;
+
+        return $payload;
     }
 
     protected function rules(): array
@@ -1481,8 +1679,10 @@ class TransactionForm extends Component
             'entries.*.currency' => 'nullable|string|in:IRR',
             'entries.*.reference_number' => 'nullable|string|max:100',
             'entries.*.description' => 'nullable|string|max:2000',
+            'entries.*.category' => 'nullable|string|max:100',
             'entries.*.invoice_attachment' => 'nullable|file|max:4096',
             'entries.*.receipt_attachment' => 'nullable|file|max:4096',
+            'entries.*.manager_note' => 'nullable|string|max:1000',
             'entries.*.meta' => 'nullable|array',
         ];
     }
@@ -1609,4 +1809,5 @@ class TransactionForm extends Component
 
         return str_replace('/', '-', trim($normalized));
     }
+
 }

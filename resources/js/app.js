@@ -9,9 +9,211 @@ import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.e
 import focus from '@alpinejs/focus'
 import flatpickr from "flatpickr";
 import Dropzone from "dropzone";
-import * as jalaali from "../../modules/jalaali-js-master/index.js";
+import * as jalaaliModule from "../../modules/jalaali-js-master/index.js";
 
-const { toJalaali, toGregorian } = jalaali;
+const {
+    toJalaali,
+    toGregorian,
+    isValidJalaaliDate,
+    isLeapJalaaliYear,
+    jalaaliMonthLength,
+} = jalaaliModule.default ?? jalaaliModule ?? {};
+
+const persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+const persianWeekdays = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
+const persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+const arabicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+const englishDigits = ['0','1','2','3','4','5','6','7','8','9'];
+const persianDigitMap = persianDigits.reduce((acc, char, index) => ({ ...acc, [char]: englishDigits[index] }), {});
+const arabicDigitMap = arabicDigits.reduce((acc, char, index) => ({ ...acc, [char]: englishDigits[index] }), {});
+
+function toPersianDigits(value) {
+    return String(value).replace(/[0-9]/g, (d) => persianDigits[d] ?? d);
+}
+
+function toEnglishDigits(value) {
+    return String(value)
+        .replace(/[۰-۹]/g, (char) => persianDigitMap[char] ?? char)
+        .replace(/[٠-٩]/g, (char) => arabicDigitMap[char] ?? char);
+}
+
+function pad(number) {
+    return number.toString().padStart(2, '0');
+}
+
+function formatJalaliDate(date, includeTime = false) {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+        return '';
+    }
+
+    if (typeof toJalaali !== 'function') {
+        let fallback = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        if (includeTime) {
+            fallback += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        }
+        return fallback;
+    }
+
+    const { jy, jm, jd } = toJalaali(date.getFullYear(), date.getMonth() + 1, date.getDate());
+    let result = `${jy}-${pad(jm)}-${pad(jd)}`;
+
+    if (includeTime) {
+        result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
+    return toPersianDigits(result);
+}
+
+function parseJalaliDate(value, includeTime = false) {
+    if (!value) {
+        return null;
+    }
+
+    const normalized = toEnglishDigits(value)
+        .replace(/\//g, '-')
+        .replace(/Z$/i, '')
+        .trim();
+
+    const isoMatch = normalized.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2}))?/);
+    if (isoMatch && Number(isoMatch[1]) > 1700) {
+        const [, gy, gm, gd, h = '0', m = '0'] = isoMatch;
+        return new Date(
+            Number(gy),
+            Number(gm) - 1,
+            Number(gd),
+            includeTime ? Number(h) : 0,
+            includeTime ? Number(m) : 0,
+        );
+    }
+
+    if (typeof toGregorian !== 'function') {
+        return null;
+    }
+
+    const [datePartRaw, timePartRaw] = normalized.split(/[T\s]/);
+    const datePart = datePartRaw || '';
+    const timePartClean = (timePartRaw || '').split(/[.]/)[0];
+
+    const [jy, jm, jd] = datePart.split('-').map(Number);
+
+    if (!jy || !jm || !jd || Number.isNaN(jy) || Number.isNaN(jm) || Number.isNaN(jd)) {
+        return null;
+    }
+
+    const { gy, gm, gd } = toGregorian(jy, jm, jd);
+
+    let hours = 0;
+    let minutes = 0;
+
+    if (includeTime && timePartClean) {
+        const [h, m] = timePartClean.split(':').map(Number);
+        if (!Number.isNaN(h)) hours = h;
+        if (!Number.isNaN(m)) minutes = m;
+    }
+
+    const parsedDate = new Date(gy, gm - 1, gd, hours, minutes);
+    if (Number.isNaN(parsedDate.getTime())) {
+        const fallback = new Date(normalized);
+        return Number.isNaN(fallback.getTime()) ? null : fallback;
+    }
+
+    return parsedDate;
+}
+
+function decorateCalendar(instance) {
+    if (!instance || !toJalaali) {
+        return;
+    }
+
+    try {
+        const { jy, jm } = toJalaali(instance.currentYear, instance.currentMonth + 1, 1);
+
+        if (Array.isArray(instance.monthElements)) {
+            instance.monthElements.forEach((el) => {
+                el.textContent = persianMonths[jm - 1] ?? persianMonths[0];
+            });
+        }
+
+        if (Array.isArray(instance.yearElements)) {
+            instance.yearElements.forEach((el) => {
+                el.value = toPersianDigits(jy);
+                el.setAttribute('readonly', 'readonly');
+            });
+        }
+
+        const weekdayNodes = instance.weekdayContainer?.querySelectorAll('.flatpickr-weekday');
+        if (weekdayNodes) {
+            weekdayNodes.forEach((el, index) => {
+                el.textContent = persianWeekdays[index % persianWeekdays.length];
+            });
+        }
+
+        instance.days?.childNodes?.forEach((dayElem) => {
+            if (!dayElem.classList || !dayElem.classList.contains('flatpickr-day')) {
+                return;
+            }
+
+            const dateObj = dayElem.dateObj;
+            if (!dateObj) {
+                return;
+            }
+
+            const { jy: dayJy, jm: dayJm, jd: dayJd } = toJalaali(dateObj.getFullYear(), dateObj.getMonth() + 1, dateObj.getDate());
+            dayElem.textContent = toPersianDigits(dayJd);
+            dayElem.setAttribute('data-jalali', `${dayJy}-${pad(dayJm)}-${pad(dayJd)}`);
+            dayElem.setAttribute('aria-label', `${dayJy}-${pad(dayJm)}-${pad(dayJd)}`);
+        });
+    } catch (error) {
+        console.error('Failed to decorate Jalali calendar:', error);
+    }
+}
+
+(function initializeJalali() {
+    try {
+        window.initJalaliDatepicker = (element, { enableTime = false } = {}) => {
+            if (!element) {
+                return;
+            }
+
+            const initialDate = parseJalaliDate(element.value, enableTime) || new Date();
+
+            const config = {
+                enableTime,
+                allowInput: true,
+                time_24hr: true,
+                locale: {
+                    firstDayOfWeek: 6,
+                },
+                defaultDate: initialDate,
+                parseDate: (value) => parseJalaliDate(value, enableTime) || new Date(value),
+                formatDate: (date) => formatJalaliDate(date, enableTime) || date.toISOString(),
+            };
+
+            const hook = (_, __, instance) => decorateCalendar(instance);
+            ['onReady', 'onOpen', 'onMonthChange', 'onYearChange', 'onValueUpdate'].forEach((event) => {
+                config[event] = [hook];
+            });
+
+            let picker;
+            try {
+                picker = flatpickr(element, config);
+                decorateCalendar(picker);
+            } catch (error) {
+                console.error('Flatpickr Jalali failed, falling back to default mode.', error);
+                picker = flatpickr(element, {
+                    enableTime,
+                    allowInput: true,
+                    time_24hr: true,
+                    defaultDate: initialDate,
+                });
+            }
+
+            return picker;
+        };
+    } catch (error) {
+        console.error('Failed to initialize Jalali datepicker:', error);
+    }
+})();
 
 import chart01 from "./components/charts/chart-01";
 import chart02 from "./components/charts/chart-02";
@@ -25,7 +227,6 @@ import * as Popper from '@popperjs/core';
 
 // Make Popper available globally with the correct structure
 window.Popper = Popper;
-window.initJalaliDatepicker = initJalaliDatepicker;
 
 // Register a slug generator component with Alpine.
 Alpine.data('slugGenerator', (initialTitle = '', initialSlug = '') => {
@@ -175,93 +376,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
-
-function pad(value) {
-    return String(value).padStart(2, '0');
-}
-
-function formatJalaliDate(date, includeTime = false) {
-    const { jy, jm, jd } = toJalaali(date);
-    let result = `${jy}/${pad(jm)}/${pad(jd)}`;
-    if (includeTime) {
-        result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-    }
-    return result;
-}
-
-function parseJalaliDate(value, includeTime = false) {
-    if (!value) {
-        return null;
-    }
-
-    let [datePart, timePart] = value.trim().split(/[\sT]/);
-    datePart = (datePart || '').replace(/\//g, '-');
-    const parts = datePart.split('-').map(Number);
-
-    if (parts.length !== 3 || parts.some(Number.isNaN)) {
-        const parsed = new Date(value);
-        return Number.isNaN(parsed.getTime()) ? null : parsed;
-    }
-
-    const [jy, jm, jd] = parts;
-    let gregorian;
-    try {
-        gregorian = toGregorian(jy, jm, jd);
-    } catch (error) {
-        return null;
-    }
-
-    let hours = 0;
-    let minutes = 0;
-
-    if (includeTime && timePart) {
-        const timeSegments = timePart.split(':').map(Number);
-        if (timeSegments.length >= 2) {
-            hours = timeSegments[0] || 0;
-            minutes = timeSegments[1] || 0;
-        }
-    }
-
-    return new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd, hours, minutes);
-}
-
-function initJalaliDatepicker(element, { enableTime = false } = {}) {
-    const initialValue = element.value;
-
-    const picker = flatpickr(element, {
-        enableTime,
-        allowInput: true,
-        time_24hr: true,
-        dateFormat: 'Y-m-d',
-        defaultDate: initialValue ? parseJalaliDate(initialValue, enableTime) : undefined,
-        formatDate: (date) => formatJalaliDate(date, enableTime),
-        parseDate: (str) => parseJalaliDate(str, enableTime),
-        locale: {
-            firstDayOfWeek: 6,
-        },
-        onOpen(selectedDates, dateStr, instance) {
-            if (!dateStr && selectedDates.length === 0 && initialValue) {
-                const parsed = parseJalaliDate(initialValue, enableTime);
-                if (parsed) {
-                    instance.setDate(parsed, false);
-                }
-            }
-        },
-        onValueUpdate(selectedDates, dateStr, instance) {
-            if (selectedDates.length > 0) {
-                instance.input.value = formatJalaliDate(selectedDates[0], enableTime);
-            }
-        },
-    });
-
-    element.addEventListener('blur', () => {
-        if (!element.value) {
-            const now = new Date();
-            element.value = formatJalaliDate(now, enableTime);
-            picker.setDate(now, false);
-        }
-    });
-}
 
 // Initialize all drawer triggers on page load
 document.addEventListener('DOMContentLoaded', function () {

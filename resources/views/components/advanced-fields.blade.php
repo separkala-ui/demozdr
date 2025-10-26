@@ -115,10 +115,12 @@
 
                                     <!-- Date Type -->
                                     <template x-if="field.type === 'date'">
-                                        <input type="date"
+                                        <input type="text"
                                                x-model="field.value"
                                                :name="`meta_values[${index}]`"
-                                               class="form-control">
+                                               class="form-control jalali-date-input"
+                                               placeholder="مثال: 1404-07-27"
+                                               x-init="window.initJalaliDatepicker($el, { enableTime: false })">
                                     </template>
 
                                     <!-- Checkbox Type -->

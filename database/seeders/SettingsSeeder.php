@@ -57,8 +57,20 @@ class SettingsSeeder extends Seeder
 
             // AI Integration settings.
             ['option_name' => 'ai_default_provider', 'option_value' => 'openai'],
+            ['option_name' => 'ai_openai_model', 'option_value' => 'gpt-4o-mini'],
             ['option_name' => 'ai_openai_api_key', 'option_value' => ''],
             ['option_name' => 'ai_claude_api_key', 'option_value' => ''],
+
+            // Smart invoice defaults
+            ['option_name' => 'smart-invoice.provider', 'option_value' => 'gemini'],
+            ['option_name' => 'smart-invoice.gemini.enabled', 'option_value' => '1'],
+            ['option_name' => 'smart-invoice.gemini.model', 'option_value' => 'gemini-2.5-flash'],
+            ['option_name' => 'smart-invoice.gemini.timeout', 'option_value' => '45'],
+            ['option_name' => 'smart-invoice.gemini.max_output_tokens', 'option_value' => '6144'],
+            ['option_name' => 'smart-invoice.openai.enabled', 'option_value' => '0'],
+            ['option_name' => 'smart-invoice.openai.model', 'option_value' => 'gpt-4o-mini'],
+            ['option_name' => 'smart-invoice.openai.timeout', 'option_value' => '60'],
+            ['option_name' => 'smart-invoice.openai.max_output_tokens', 'option_value' => '4096'],
         ];
 
         // Add created_at and updated_at.

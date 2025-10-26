@@ -100,6 +100,8 @@ Example format:
 
     private function sendOpenAiRequest(string $systemPrompt, string $userPrompt): Response
     {
+        $model = config('settings.ai_openai_model', 'gpt-4o-mini');
+
         return Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->apiKey,
             'Content-Type' => 'application/json',
@@ -107,7 +109,7 @@ Example format:
             ->post(
                 'https://api.openai.com/v1/chat/completions',
                 [
-                    'model' => 'gpt-3.5-turbo',
+                    'model' => $model,
                     'messages' => [
                         ['role' => 'system', 'content' => $systemPrompt],
                         ['role' => 'user', 'content' => $userPrompt],

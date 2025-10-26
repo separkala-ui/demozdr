@@ -18,14 +18,12 @@
         name="{{ $name }}"
         id="{{ $name }}"
         value="{{ old($name, $value) }}"
-        placeholder="{{ $placeholder }}"
+        placeholder="{{ $placeholder ?: __('مثال: 1404-07-27') }}"
         @if($required) required @endif
         @if($disabled) disabled @endif
-        @if($min) min="{{ $min }}" @endif
-        @if($max) max="{{ $max }}" @endif
-        {{ $attributes->class(['form-control', 'datepicker']) }}
+        {{ $attributes->class(['form-control', 'jalali-date-input']) }}
         x-data
-        x-init="flatpickr($el, { enableTime: false, dateFormat: 'Y-m-d' })"
+        x-init="window.initJalaliDatepicker($el, { enableTime: false })"
         autocomplete="off"
     >
     @if($hint)
