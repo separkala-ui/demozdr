@@ -13,6 +13,11 @@
         @livewire('dashboard.welcome-widget')
     </div>
 
+    {{-- System Announcements --}}
+    <div class="mb-6">
+        @livewire('announcements-widget')
+    </div>
+
     {{-- Quick Actions Panel --}}
     <div class="mb-6">
         @livewire('dashboard.quick-actions')
