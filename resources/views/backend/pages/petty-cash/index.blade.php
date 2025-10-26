@@ -532,6 +532,12 @@
                 </div>
             @endif
 
+            {{-- Enhanced Financial Dashboard V2.0 --}}
+            @if($selectedLedger)
+                @livewire('petty-cash.enhanced-dashboard', ['ledger' => $selectedLedger], key('enhanced-dashboard-'.$selectedLedger->id))
+            @endif
+
+            {{-- Old Simple Cards (Keep for comparison/fallback) --}}
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
                     <p class="text-xs text-slate-500">{{ __('سقف مجاز شعبه') }}</p>
