@@ -8,6 +8,16 @@
 
     {!! Hook::applyFilters(DashboardFilterHook::DASHBOARD_AFTER_BREADCRUMBS, '') !!}
 
+    {{-- Welcome Widget --}}
+    <div class="mb-6">
+        @livewire('dashboard.welcome-widget')
+    </div>
+
+    {{-- Quick Actions Panel --}}
+    <div class="mb-6">
+        @livewire('dashboard.quick-actions')
+    </div>
+
     <div class="grid grid-cols-12 gap-4 md:gap-6">
         <div class="col-span-12 space-y-6">
             <div class="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-4 md:gap-6">
@@ -69,6 +79,18 @@
                         @include('backend.pages.dashboard.partials.user-history')
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Recent Activities Timeline & System Health --}}
+    <div class="mt-6">
+        <div class="grid grid-cols-12 gap-4 md:gap-6">
+            <div class="col-span-12 lg:col-span-8">
+                @livewire('dashboard.recent-activities')
+            </div>
+            <div class="col-span-12 lg:col-span-4">
+                @livewire('dashboard.system-health')
             </div>
         </div>
     </div>

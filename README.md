@@ -181,10 +181,10 @@ php artisan serve
 
 ### 🐳 Docker
 
-```bash
-git clone https://github.com/separkala-ui/zdr.git
-cd zdr
-cp .env.example .env
+   ```bash
+   git clone https://github.com/separkala-ui/zdr.git
+   cd zdr
+   cp .env.example .env
 
 docker-compose up -d
 docker-compose exec app composer install
@@ -196,7 +196,7 @@ docker-compose exec app php artisan migrate --seed
 
 ### 🏠 هاست اشتراکی (cPanel)
 
-```bash
+   ```bash
 # در Terminal cPanel
 cd public_html
 git clone https://github.com/separkala-ui/zdr.git
@@ -212,7 +212,7 @@ cd zdr
 
 ### 🖥 سرور اختصاصی (Ubuntu/Debian)
 
-```bash
+   ```bash
 # نصب پیش‌نیازها
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y php8.4 php8.4-fpm composer nodejs npm mysql-server nginx
