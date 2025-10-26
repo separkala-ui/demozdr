@@ -178,53 +178,41 @@
                                 <div class="relative">
                                     <input
                                         type="text"
-                                        wire:model="entries.{{ $index }}.amount"
+                                        wire:model.live.debounce.500ms="entries.{{ $index }}.amount"
                                         inputmode="numeric"
                                         class="w-full rounded-lg border-slate-300 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3"
                                         placeholder="0"
-                                        x-data
-                                        x-init="
-                                            function formatNumber(num) {
-                                                // تبدیل به string و حذف همه چیز به جز اعداد
-                                                let str = String(num).replace(/[^\d]/g, '');
-                                                if (!str || str === '0') return '';
-                                                
-                                                // اضافه کردن ممیز هر 3 رقم از راست
-                                                return str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                                            }
-                                            
-                                            $el.addEventListener('input', function(e) {
+                                        x-data="{ 
+                                            rawValue: '',
+                                            formatNumber(value) {
+                                                if (!value) return '';
                                                 // حذف همه چیز به جز اعداد
-                                                let rawValue = e.target.value.replace(/[^\d]/g, '');
-                                                
-                                                if (!rawValue || rawValue === '0') {
-                                                    e.target.value = '';
-                                                    $wire.set('entries.{{ $index }}.amount', '');
-                                                    return;
-                                                }
-                                                
-                                                // محدود کردن به 20 رقم
-                                                if (rawValue.length > 20) {
-                                                    rawValue = rawValue.substring(0, 20);
-                                                }
-                                                
-                                                // فرمت با جداکننده هزارگان
-                                                let formatted = formatNumber(rawValue);
-                                                
-                                                // تنظیم مقدار با فرمت
-                                                e.target.value = formatted;
-                                                
-                                                // ذخیره مقدار خام در Livewire
-                                                $wire.set('entries.{{ $index }}.amount', rawValue);
-                                            });
-                                            
-                                            // فرمت اولیه اگر مقدار دارد
-                                            if ($el.value) {
-                                                let rawValue = $el.value.replace(/[^\d]/g, '');
-                                                if (rawValue && rawValue !== '0') {
-                                                    $el.value = formatNumber(rawValue);
-                                                }
+                                                let cleaned = String(value).replace(/[^\d]/g, '');
+                                                if (!cleaned || cleaned === '0') return '';
+                                                // جداسازی با ممیز هر 3 رقم
+                                                return cleaned.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                                             }
+                                        }"
+                                        x-init="
+                                            // فرمت اولیه
+                                            if ($el.value) {
+                                                $el.value = formatNumber($el.value);
+                                            }
+                                        "
+                                        @input="
+                                            // گرفتن مقدار خام
+                                            rawValue = $event.target.value.replace(/[^\d]/g, '');
+                                            
+                                            // محدودیت 20 رقم
+                                            if (rawValue.length > 20) {
+                                                rawValue = rawValue.substring(0, 20);
+                                            }
+                                            
+                                            // فرمت کردن برای نمایش
+                                            $event.target.value = formatNumber(rawValue);
+                                            
+                                            // ارسال مقدار خام به Livewire
+                                            $wire.set('entries.{{ $index }}.amount', rawValue);
                                         "
                                     />
                                     @if(!empty($entry['amount']) && is_numeric($entry['amount']) && (float) $entry['amount'] > 0)
@@ -366,7 +354,10 @@
                                     @endforeach
                                 </select>
                                 @error('entries.' . $index . '.category')
-                                    <p class="text-xs text-red-600">{{ $message }}</p>
+                                    <p class="text-xs text-red-600 flex items-center gap-1 mt-1">
+                                        <iconify-icon icon="lucide:alert-circle" class="text-sm"></iconify-icon>
+                                        <span>{{ __('انتخاب دسته‌بندی الزامی است') }}</span>
+                                    </p>
                                 @enderror
                                 @if(($smartState['category_status'] ?? null) === 'manual_required')
                                     <div class="mt-1 text-xs text-rose-600">{{ __('دسته‌بندی به صورت خودکار تشخیص داده نشد. لطفاً از لیست بالا انتخاب کنید.') }}</div>
