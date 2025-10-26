@@ -6,6 +6,7 @@ namespace App\Livewire\PettyCash;
 
 use App\Models\PettyCashLedger;
 use App\Models\PettyCashTransaction;
+use App\Models\AlertSetting;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -58,7 +59,11 @@ class AlertsPanel extends Component
         $limitAmount = (float) $this->ledger->limit_amount;
         $balancePercentage = ($currentBalance / max($limitAmount, 1)) * 100;
 
-        if ($balancePercentage < 20) {
+        // دریافت تنظیمات از دیتابیس
+        $veryLowThreshold = (float) AlertSetting::getValue('very_low_balance_threshold_percentage', 10);
+        $lowThreshold = (float) AlertSetting::getValue('low_balance_threshold_percentage', 20);
+
+        if ($balancePercentage < $veryLowThreshold) {
             $this->alerts[] = [
                 'type' => 'danger',
                 'icon' => 'lucide:alert-triangle',
@@ -70,7 +75,7 @@ class AlertsPanel extends Component
                 ],
                 'priority' => 1,
             ];
-        } elseif ($balancePercentage < 30) {
+        } elseif ($balancePercentage < $lowThreshold) {
             $this->alerts[] = [
                 'type' => 'warning',
                 'icon' => 'lucide:alert-circle',
@@ -91,29 +96,20 @@ class AlertsPanel extends Component
             ->where('status', PettyCashTransaction::STATUS_SUBMITTED)
             ->count();
 
-        if ($pendingCount > 10) {
+        // دریافت تنظیمات از دیتابیس
+        $alertThreshold = (int) AlertSetting::getValue('pending_transactions_alert_count', 5);
+
+        if ($pendingCount > $alertThreshold) {
             $this->alerts[] = [
-                'type' => 'warning',
+                'type' => $pendingCount > ($alertThreshold * 2) ? 'warning' : 'info',
                 'icon' => 'lucide:clock',
-                'title' => __('تراکنش‌های معلق زیاد'),
-                'message' => __(':count تراکنش در انتظار بررسی و تایید شما هستند.', ['count' => $pendingCount]),
+                'title' => $pendingCount > ($alertThreshold * 2) ? __('تراکنش‌های معلق زیاد') : __('تراکنش‌های در انتظار'),
+                'message' => __(':count تراکنش منتظر بررسی و تایید شما هستند.', ['count' => $pendingCount]),
                 'action' => [
                     'label' => __('بررسی تراکنش‌ها'),
                     'route' => route('admin.petty-cash.transactions', ['ledger' => $this->ledger, 'status' => 'submitted']),
                 ],
-                'priority' => 3,
-            ];
-        } elseif ($pendingCount > 5) {
-            $this->alerts[] = [
-                'type' => 'info',
-                'icon' => 'lucide:info',
-                'title' => __('تراکنش‌های در انتظار'),
-                'message' => __(':count تراکنش منتظر بررسی شما هستند.', ['count' => $pendingCount]),
-                'action' => [
-                    'label' => __('مشاهده'),
-                    'route' => route('admin.petty-cash.transactions', ['ledger' => $this->ledger, 'status' => 'submitted']),
-                ],
-                'priority' => 4,
+                'priority' => $pendingCount > ($alertThreshold * 2) ? 3 : 4,
             ];
         }
     }
