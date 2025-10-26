@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AlertSettingsController;
+use App\Http\Controllers\Admin\SystemAnnouncementsController;
 use App\Http\Controllers\Backend\ActionLogController;
 use App\Http\Controllers\Backend\Auth\ScreenshotGeneratorLoginController;
 use App\Http\Controllers\Backend\DashboardController;
@@ -98,6 +100,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         ->name('petty-cash.debug.upload.store');
     Route::get('/petty-cash/debug/download/{filename}', [DebugInvoiceUploadController::class, 'download'])
         ->name('petty-cash.debug.download');
+
+    // Alert Settings & Announcements Routes (Superadmin only)
+    Route::middleware('role:Superadmin')->group(function () {
+        Route::get('/alert-settings', function () {
+            return view('admin.alert-settings.index');
+        })->name('alert-settings.index');
+
+        Route::get('/announcements', function () {
+            return view('admin.announcements.index');
+        })->name('announcements.index');
+    });
 
     // Permissions Routes.
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
