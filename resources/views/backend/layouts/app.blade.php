@@ -75,6 +75,9 @@ x-init="
     </div>
 
     <x-toast-notifications />
+    
+    <!-- Toast Notification System -->
+    @livewire('toast-notification')
 
     {!! Hook::applyFilters(AdminFilterHook::ADMIN_FOOTER_BEFORE, '') !!}
 

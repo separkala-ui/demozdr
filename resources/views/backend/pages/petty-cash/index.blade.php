@@ -512,6 +512,26 @@
                 $pendingExpenses = $metrics['pending_expenses_total'] ?? 0;
             @endphp
 
+            {{-- Alerts Panel --}}
+            @if($isAdminUser || auth()->user()->hasRole(['Admin', 'Superadmin']))
+                <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-base font-semibold text-slate-800">{{ __('هشدارها و اعلان‌ها') }}</h3>
+                            <p class="text-xs text-slate-500">{{ __('موارد نیازمند توجه شما') }}</p>
+                        </div>
+                        <button 
+                            wire:click="$refresh" 
+                            class="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                            title="{{ __('بروزرسانی') }}"
+                        >
+                            <iconify-icon icon="lucide:refresh-cw" class="text-lg"></iconify-icon>
+                        </button>
+                    </div>
+                    @livewire('petty-cash.alerts-panel', ['ledger' => $selectedLedger], key('alerts-'.$selectedLedger->id))
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
                     <p class="text-xs text-slate-500">{{ __('سقف مجاز شعبه') }}</p>
