@@ -68,96 +68,103 @@
 
 <x-layouts.backend-layout :breadcrumbs="$breadcrumbs">
     <div class="space-y-6">
-        <div
-            class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
-            x-data="{ toggleCreate: false }"
-        >
-            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                    <h1 class="text-lg font-semibold text-slate-800">{{ __('مدیریت تنخواه شعب') }}</h1>
-                    <p class="text-sm text-slate-500">{{ __('نظارت بر مانده، هزینه‌ها و شارژهای هر شعبه') }}</p>
-                </div>
-
-                @if($isAdminUser)
-                    <div class="flex flex-col items-stretch gap-3 md:flex-row md:items-center md:gap-4">
-                        @if($ledgers->isNotEmpty())
-                            <div>
-                                <label for="ledgerSwitcher" class="block text-xs font-medium text-slate-500">{{ __('انتخاب شعبه') }}</label>
-                                <select
-                                    id="ledgerSwitcher"
-                                    class="mt-1 block w-56 rounded-md border-slate-300 text-sm shadow focus:border-indigo-500 focus:ring-indigo-500"
-                                    onchange="window.location.href=this.value;"
-                                >
-                                    @foreach($ledgers as $ledgerOption)
-                                        <option value="{{ route('admin.petty-cash.index', $ledgerRouteParams($ledgerOption->id)) }}"
-                                            @if($selectedLedger && $selectedLedger->id === $ledgerOption->id) selected @endif>
-                                            {{ $ledgerOption->branch_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endif
-
-                        <div class="flex gap-2">
-                            @if($ledgers->isNotEmpty())
-                                @if($showAllCards)
-                                    <a href="{{ route('admin.petty-cash.index', $ledgerRouteParams($selectedLedger?->id, false)) }}"
-                                       class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        <i class="fas fa-layer-group mr-2 text-lg"></i>
-                                        {{ __('نمایش شعبه انتخابی') }}
-                                    </a>
-                                @else
-                                    <a href="{{ route('admin.petty-cash.index', $ledgerRouteParams($selectedLedger?->id, true)) }}"
-                                       class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        <i class="fas fa-layer-group mr-2 text-lg"></i>
-                                        {{ __('نمایش همه شعبه‌ها') }}
-                                    </a>
-                                @endif
-                            @endif
-
-                            <a href="{{ route('admin.petty-cash.create') }}"
-                               class="inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                <i class="fas fa-plus-circle ml-2 text-lg"></i>
-                                {{ __('ایجاد دفتر تنخواه') }}
-                            </a>
-
-                            @can('petty_cash.ledger.delete')
-                                <a href="{{ route('admin.petty-cash.backups') }}"
-                                   class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                    <i class="fas fa-database mr-2 text-lg"></i>
-                                    {{ __('مدیریت بک‌آپ‌ها') }}
-                                </a>
-                            @endcan
-
-                            @if($isAdminUser)
-                                <a href="{{ route('admin.petty-cash.archives.index') }}"
-                                   class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                    <i class="fas fa-archive mr-2 text-lg"></i>
-                                    {{ __('داشبورد اسناد بایگانی') }}
-                                </a>
-                            @endif
-
-                            @if(auth()->user()?->hasRole('Superadmin'))
-                                <form method="POST" action="{{ route('admin.petty-cash.module-backup') }}">
-                                    @csrf
-                                    <button type="submit"
-                                            class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        <i class="fas fa-box-archive mr-2 text-lg"></i>
-                                        {{ __('دریافت بسته نصب') }}
-                                    </button>
-                                </form>
-                            @endif
+        {{-- Modern Header with Enhanced Navigation --}}
+        <div class="overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-l from-slate-50 to-white shadow-sm">
+            {{-- Top Section: Title + Branch Selector --}}
+            <div class="border-b border-slate-200 bg-white p-5">
+                <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+                            <iconify-icon icon="lucide:wallet" class="text-2xl text-white"></iconify-icon>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-slate-800">{{ __('مدیریت تنخواه شعب') }}</h1>
+                            <p class="text-sm text-slate-500">{{ __('نظارت بر مانده، هزینه‌ها و شارژهای هر شعبه') }}</p>
                         </div>
                     </div>
-                @endif
+
+                    @if($isAdminUser && $ledgers->isNotEmpty())
+                        <div class="flex items-center gap-3">
+                            <iconify-icon icon="lucide:building-2" class="text-xl text-slate-400"></iconify-icon>
+                            <select
+                                id="ledgerSwitcher"
+                                class="block rounded-lg border-slate-300 px-4 py-2.5 text-sm font-medium shadow-sm transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
+                                onchange="window.location.href=this.value;"
+                            >
+                                @foreach($ledgers as $ledgerOption)
+                                    <option value="{{ route('admin.petty-cash.index', $ledgerRouteParams($ledgerOption->id)) }}"
+                                        @if($selectedLedger && $selectedLedger->id === $ledgerOption->id) selected @endif>
+                                        {{ $ledgerOption->branch_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+                </div>
             </div>
 
-            @if(session('success'))
-                <div class="mt-4 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-                    {{ session('success') }}
+            {{-- Action Navigation Bar --}}
+            @if($isAdminUser)
+                <div class="bg-slate-50/50 p-4">
+                    <div class="flex flex-wrap items-center gap-3">
+                        {{-- Primary Action --}}
+                        <a href="{{ route('admin.petty-cash.create') }}"
+                           class="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-3 font-semibold text-white shadow-md transition-all hover:scale-105 hover:shadow-lg">
+                            <iconify-icon icon="lucide:plus-circle" class="text-xl transition-transform group-hover:rotate-90"></iconify-icon>
+                            <span>{{ __('ایجاد دفتر تنخواه') }}</span>
+                            <div class="absolute inset-0 -z-10 bg-gradient-to-r from-indigo-700 to-purple-700 opacity-0 transition-opacity group-hover:opacity-100"></div>
+                        </a>
+
+                        {{-- Secondary Actions --}}
+                        @if($ledgers->isNotEmpty())
+                            <a href="{{ $showAllCards ? route('admin.petty-cash.index', $ledgerRouteParams($selectedLedger?->id, false)) : route('admin.petty-cash.index', $ledgerRouteParams($selectedLedger?->id, true)) }}"
+                               class="group inline-flex items-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-700 shadow-sm transition-all hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700">
+                                <iconify-icon icon="{{ $showAllCards ? 'lucide:folder' : 'lucide:folders' }}" class="text-lg transition-transform group-hover:scale-110"></iconify-icon>
+                                <span>{{ $showAllCards ? __('نمایش شعبه انتخابی') : __('نمایش همه شعبه‌ها') }}</span>
+                            </a>
+                        @endif
+
+                        @if($isAdminUser)
+                            <a href="{{ route('admin.petty-cash.archives.index') }}"
+                               class="group inline-flex items-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-700">
+                                <iconify-icon icon="lucide:archive" class="text-lg transition-transform group-hover:scale-110"></iconify-icon>
+                                <span>{{ __('داشبورد اسناد بایگانی') }}</span>
+                            </a>
+                        @endif
+
+                        @can('petty_cash.ledger.delete')
+                            <a href="{{ route('admin.petty-cash.backups') }}"
+                               class="group inline-flex items-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-700 shadow-sm transition-all hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700">
+                                <iconify-icon icon="lucide:database" class="text-lg transition-transform group-hover:scale-110"></iconify-icon>
+                                <span>{{ __('مدیریت بک‌آپ‌ها') }}</span>
+                            </a>
+                        @endcan
+
+                        @if(auth()->user()?->hasRole('Superadmin'))
+                            <form method="POST" action="{{ route('admin.petty-cash.module-backup') }}" class="inline-block">
+                                @csrf
+                                <button type="submit"
+                                        class="group inline-flex items-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-700 shadow-sm transition-all hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700">
+                                    <iconify-icon icon="lucide:package" class="text-lg transition-transform group-hover:scale-110"></iconify-icon>
+                                    <span>{{ __('دریافت بسته نصب') }}</span>
+                                </button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
             @endif
 
+            {{-- Success Message --}}
+            @if(session('success'))
+                <div class="border-t border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 p-4">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-green-500">
+                            <iconify-icon icon="lucide:check" class="text-lg text-white"></iconify-icon>
+                        </div>
+                        <p class="font-medium text-green-800">{{ session('success') }}</p>
+                    </div>
+                </div>
+            @endif
         </div>
 
         @if($isAdminUser && ($showAllCards || ! $selectedLedger))
