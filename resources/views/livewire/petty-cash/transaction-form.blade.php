@@ -171,7 +171,10 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-xs font-semibold text-slate-500">{{ __('مبلغ (ریال)') }}</label>
+                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+                                    <iconify-icon icon="lucide:coins" class="text-base text-emerald-500"></iconify-icon>
+                                    {{ __('مبلغ (ریال)') }}
+                                </label>
                                 <div class="relative">
                                     <input
                                         type="text"
@@ -181,28 +184,37 @@
                                         placeholder="0"
                                         x-data
                                         x-init="
-                                            let isFormatting = false;
                                             $el.addEventListener('input', function(e) {
-                                                if (isFormatting) return;
-                                                isFormatting = true;
+                                                // حذف همه چیز به جز اعداد
+                                                let rawValue = e.target.value.replace(/[^\d]/g, '');
                                                 
-                                                let value = e.target.value.replace(/[^\d]/g, '');
-                                                if (value && value.length <= 20) {
-                                                    // Format with thousand separators manually
-                                                    let formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                                                    e.target.value = formatted;
-                                                } else if (value.length > 20) {
-                                                    // Limit to 20 digits
-                                                    let limitedValue = value.substring(0, 20);
-                                                    let formatted = limitedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                                                    e.target.value = formatted;
+                                                if (!rawValue) {
+                                                    e.target.value = '';
+                                                    return;
                                                 }
                                                 
-                                                // Trigger Livewire update
-                                                $wire.set('entries.{{ $index }}.amount', e.target.value.replace(/[^\d]/g, ''));
+                                                // محدود کردن به 20 رقم
+                                                if (rawValue.length > 20) {
+                                                    rawValue = rawValue.substring(0, 20);
+                                                }
                                                 
-                                                setTimeout(() => isFormatting = false, 10);
+                                                // فرمت با جداکننده هزارگان (1,000,000)
+                                                let formatted = parseInt(rawValue).toLocaleString('en-US');
+                                                
+                                                // تنظیم مقدار با فرمت
+                                                e.target.value = formatted;
+                                                
+                                                // ذخیره مقدار خام در Livewire
+                                                $wire.set('entries.{{ $index }}.amount', rawValue);
                                             });
+                                            
+                                            // فرمت اولیه اگر مقدار دارد
+                                            if ($el.value) {
+                                                let rawValue = $el.value.replace(/[^\d]/g, '');
+                                                if (rawValue) {
+                                                    $el.value = parseInt(rawValue).toLocaleString('en-US');
+                                                }
+                                            }
                                         "
                                     />
                                     @if(!empty($entry['amount']) && is_numeric($entry['amount']) && (float) $entry['amount'] > 0)
@@ -228,15 +240,28 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-xs font-semibold text-slate-500">{{ __('تاریخ و ساعت') }}</label>
-                                <input
-                                    type="text"
-                                    wire:model.lazy="entries.{{ $index }}.transaction_date"
-                                    class="w-full rounded-lg border-slate-300 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3"
-                                    placeholder="{{ __('مثال: 1404/07/27 14:30') }}"
-                                    x-data
-                                    x-init="window.initJalaliDatepicker($el, { enableTime: true })"
-                                />
+                                <label class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+                                    <iconify-icon icon="lucide:calendar-clock" class="text-base text-indigo-500"></iconify-icon>
+                                    {{ __('تاریخ و ساعت') }}
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        type="text"
+                                        wire:model.lazy="entries.{{ $index }}.transaction_date"
+                                        class="w-full rounded-lg border-slate-300 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3 pr-10"
+                                        placeholder="{{ __('1404/08/04 14:30') }}"
+                                        x-data
+                                        x-init="window.initJalaliDatepicker($el, { enableTime: true })"
+                                        dir="rtl"
+                                    />
+                                    <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                                        <iconify-icon icon="lucide:calendar" class="text-lg"></iconify-icon>
+                                    </div>
+                                </div>
+                                <p class="text-[10px] text-slate-500 flex items-center gap-1">
+                                    <iconify-icon icon="lucide:info" class="text-xs"></iconify-icon>
+                                    {{ __('فرمت: سال/ماه/روز ساعت:دقیقه (تاریخ شمسی)') }}
+                                </p>
                                 @error('entries.' . $index . '.transaction_date')
                                     <p class="text-xs text-red-600">{{ $message }}</p>
                                 @enderror
