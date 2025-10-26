@@ -251,7 +251,7 @@
                                         class="w-full rounded-lg border-slate-300 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-12 px-3 pr-10"
                                         placeholder="{{ __('1404/08/04 14:30') }}"
                                         x-data
-                                        x-init="window.initJalaliDatepicker($el, { enableTime: true })"
+                                        x-init="window.initPersianDatepicker($el, { enableTime: true })"
                                         dir="rtl"
                                     />
                                     <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">

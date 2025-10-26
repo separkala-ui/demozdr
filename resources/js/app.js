@@ -10,6 +10,7 @@ import focus from '@alpinejs/focus'
 import flatpickr from "flatpickr";
 import Dropzone from "dropzone";
 import * as jalaaliModule from "../../modules/jalaali-js-master/index.js";
+import PersianDate from "persian-date";
 
 const {
     toJalaali,
@@ -170,6 +171,110 @@ function decorateCalendar(instance) {
 
 (function initializeJalali() {
     try {
+        // تابع فرمت کردن تاریخ شمسی با PersianDate
+        function formatPersianDate(date, includeTime = false) {
+            if (!date || !(date instanceof Date)) {
+                return '';
+            }
+            
+            const pd = new PersianDate(date);
+            return includeTime 
+                ? pd.format('YYYY/MM/DD HH:mm')
+                : pd.format('YYYY/MM/DD');
+        }
+
+        // تابع پارس کردن تاریخ شمسی به میلادی
+        function parsePersianDateToGregorian(value, includeTime = false) {
+            if (!value) return null;
+
+            const normalized = toEnglishDigits(value).trim().replace(/\//g, '-');
+            
+            // اگر فرمت شمسی باشد: 1404-08-04 14:30
+            const match = normalized.match(/^(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{2}):(\d{2}))?/);
+            if (match) {
+                const [, jy, jm, jd, h = '0', m = '0'] = match;
+                
+                try {
+                    // تبدیل به میلادی
+                    if (typeof toGregorian === 'function') {
+                        const { gy, gm, gd } = toGregorian(Number(jy), Number(jm), Number(jd));
+                        return new Date(gy, gm - 1, gd, Number(h), Number(m));
+                    }
+                    
+                    // fallback: استفاده از PersianDate
+                    const pd = new PersianDate([Number(jy), Number(jm), Number(jd), Number(h), Number(m)]);
+                    return new Date(pd.valueOf());
+                } catch (error) {
+                    console.error('Failed to parse Persian date:', error);
+                    return null;
+                }
+            }
+
+            return null;
+        }
+
+        // Persian Datepicker کامل - تقویم واقعا شمسی
+        window.initPersianDatepicker = (element, { enableTime = false } = {}) => {
+            if (!element) {
+                return;
+            }
+
+            // دریافت تاریخ اولیه
+            const initialDate = parsePersianDateToGregorian(element.value, enableTime) || new Date();
+
+            const config = {
+                enableTime,
+                allowInput: true,
+                time_24hr: true,
+                dateFormat: enableTime ? 'Y-m-d H:i' : 'Y-m-d',
+                locale: {
+                    firstDayOfWeek: 6, // شنبه
+                    weekdays: {
+                        shorthand: persianWeekdays,
+                        longhand: persianWeekdays
+                    }
+                },
+                defaultDate: initialDate,
+                
+                // پارس کردن input
+                parseDate: (value) => {
+                    return parsePersianDateToGregorian(value, enableTime) || new Date(value);
+                },
+                
+                // فرمت کردن output
+                formatDate: (date) => {
+                    return formatPersianDate(date, enableTime);
+                },
+                
+                // وقتی تاریخ تغییر می‌کند
+                onChange: (selectedDates, dateStr, instance) => {
+                    if (selectedDates[0]) {
+                        const formatted = formatPersianDate(selectedDates[0], enableTime);
+                        element.value = formatted;
+                    }
+                }
+            };
+
+            // Hooks برای تزئین تقویم
+            const hook = (selectedDates, dateStr, instance) => {
+                decorateCalendar(instance);
+            };
+            
+            ['onReady', 'onOpen', 'onMonthChange', 'onYearChange'].forEach((event) => {
+                config[event] = [hook];
+            });
+
+            try {
+                const picker = flatpickr(element, config);
+                decorateCalendar(picker);
+                return picker;
+            } catch (error) {
+                console.error('Persian Datepicker failed:', error);
+                return null;
+            }
+        };
+
+        // Fallback: Flatpickr با تزئین شمسی (قدیمی)
         window.initJalaliDatepicker = (element, { enableTime = false } = {}) => {
             if (!element) {
                 return;
