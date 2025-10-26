@@ -39,7 +39,7 @@
                             <h1 class="text-xl font-bold text-slate-800">{{ __('ثبت تراکنش‌های تنخواه') }}</h1>
                             <div class="mt-1 flex items-center gap-2">
                                 <iconify-icon icon="lucide:building-2" class="text-sm text-indigo-500"></iconify-icon>
-                                <span class="text-sm font-semibold text-indigo-600">{{ $ledger->branch_name }}</span>
+                                <span id="current-branch-name" class="text-sm font-semibold text-indigo-600">{{ $ledger->branch_name }}</span>
                             </div>
                         </div>
                     </div>
@@ -116,6 +116,12 @@ function changeBranch(ledgerId) {
     const selectedOption = select.options[select.selectedIndex];
     const branchName = selectedOption.getAttribute('data-branch-name') || selectedOption.text;
     
+    // Update branch name in header immediately
+    const branchNameDisplay = document.getElementById('current-branch-name');
+    if (branchNameDisplay) {
+        branchNameDisplay.textContent = branchName;
+    }
+    
     // Store in session storage
     sessionStorage.setItem('selectedBranch', ledgerId);
     sessionStorage.setItem('selectedBranchName', branchName);
@@ -126,22 +132,32 @@ function changeBranch(ledgerId) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Restore selected branch from session storage
-    const selectedBranch = sessionStorage.getItem('selectedBranch');
     const branchSelect = document.getElementById('branch-select');
+    const branchNameDisplay = document.getElementById('current-branch-name');
     
-    if (selectedBranch && branchSelect) {
-        // Set select value if different
-        if (branchSelect.value !== selectedBranch) {
-            branchSelect.value = selectedBranch;
-        }
+    // Update branch name from select on page load
+    if (branchSelect && branchNameDisplay) {
+        const selectedOption = branchSelect.options[branchSelect.selectedIndex];
+        const branchName = selectedOption.getAttribute('data-branch-name') || selectedOption.text;
+        branchNameDisplay.textContent = branchName;
     }
     
-    // Ensure branch name is displayed (already set by server, but good to have)
-    console.log('Branch loaded: {{ $ledger->branch_name }}');
+    // Restore selected branch from session storage
+    const selectedBranch = sessionStorage.getItem('selectedBranch');
+    if (selectedBranch && branchSelect) {
+        if (branchSelect.value !== selectedBranch) {
+            branchSelect.value = selectedBranch;
+            // Update branch name after restoring
+            const selectedOption = branchSelect.options[branchSelect.selectedIndex];
+            const branchName = selectedOption.getAttribute('data-branch-name') || selectedOption.text;
+            if (branchNameDisplay) {
+                branchNameDisplay.textContent = branchName;
+            }
+        }
+    }
 });
 
-// Listen for Livewire events to store branch selection
+// Listen for Livewire events
 document.addEventListener('livewire:init', () => {
     Livewire.on('store-selected-branch', (event) => {
         sessionStorage.setItem('selectedBranch', event.branchId);
