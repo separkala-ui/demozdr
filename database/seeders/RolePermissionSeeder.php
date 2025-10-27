@@ -40,7 +40,7 @@ class RolePermissionSeeder extends Seeder
         $roles = $this->rolesService->createPredefinedRoles();
 
         // Assign superadmin role to the user with superadmin.
-        $superadmin = User::where('username', 'superadmin')->first();
+        $superadmin = User::where('email', 'dr.mostafazade@gmail.com')->first();
         if ($superadmin) {
             $this->command->info('Assigning Superadmin role to superadmin user...');
             $superadmin->assignRole($roles['superadmin']);

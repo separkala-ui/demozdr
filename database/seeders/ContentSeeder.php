@@ -291,8 +291,6 @@ class ContentSeeder extends Seeder
                 $post->terms()->syncWithoutDetaching($tagIds);
             }
         }
-
-        Post::factory()->count(50)->create();
     }
 
     protected function createSamplePages(): void

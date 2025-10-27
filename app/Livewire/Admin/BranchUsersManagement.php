@@ -22,6 +22,7 @@ class BranchUsersManagement extends Component
         'inspection' => 'بازرس',
         'quality_control' => 'کنترل کیفیت',
         'production_engineering' => 'مهندسی تولید',
+        'production_manager' => 'مدیر تولید',
     ];
 
     public function mount(PettyCashLedger $ledger)

@@ -18,6 +18,7 @@
         "php": "^8.3|^8.4",
         "cweagans/composer-patches": "^1.7",
         "dedoc/scramble": "^0.12.23",
+        "filament/filament": "^3",
         "guzzlehttp/guzzle": "^7.2",
         "hekmatinasser/verta": "^8.5",
         "laravel/framework": "^12.0",
@@ -26,32 +27,17 @@
         "laravel/telescope": "^5.10",
         "laravel/tinker": "^2.10",
         "laravel/ui": "^4.5",
-        "livewire/livewire": "^3.6",
+        "livewire/livewire": "^3",
+        "livewire/volt": "^1",
         "mhmiton/laravel-modules-livewire": "^5.1",
         "nwidart/laravel-modules": "^12.0",
         "opis/closure": "^3.7",
         "spatie/browsershot": "^5.0",
+        "spatie/laravel-ignition": "^2.9",
         "spatie/laravel-medialibrary": "^11.13",
         "spatie/laravel-permission": "^6.4",
         "spatie/laravel-query-builder": "^6.3",
         "tormjens/eventy": "^0.8.0"
-    },
-    "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.16",
-        "beyondcode/laravel-dump-server": "^2.1",
-        "brianium/paratest": "*",
-        "fakerphp/faker": "^1.24",
-        "larastan/larastan": "^3.0",
-        "laravel/boost": "^1.0",
-        "laravel/pint": "^1.22",
-        "laravel/sail": "^1.41",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.6",
-        "pestphp/pest": "^4.0",
-        "pestphp/pest-plugin-browser": "^4.0",
-        "pestphp/pest-plugin-drift": "^4.0",
-        "rector/rector": "^2.0",
-        "spatie/laravel-ignition": "^2.9"
     },
     "config": {
         "optimize-autoloader": true,
@@ -66,11 +52,6 @@
     "extra": {
         "laravel": {
             "dont-discover": []
-        },
-        "merge-plugin": {
-            "include": [
-                "modules/*/composer.json"
-            ]
         }
     },
     "autoload": {

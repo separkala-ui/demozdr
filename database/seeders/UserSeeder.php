@@ -15,13 +15,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'first_name' => 'Super',
-            'last_name' => 'Admin',
-            'email' => 'superadmin@example.com',
-            'username' => 'superadmin',
-            'password' => Hash::make('12345678'),
-            'email_verified_at' => now(),
+        // create superadmin
+        $superadmin = \App\Models\User::create([
+            'first_name' => 'Mostafa',
+            'last_name' => 'Zadeh',
+            'email' => 'dr.mostafazade@gmail.com',
+            'username' => 'dr.mostafazade',
+            'password' => bcrypt('5011700')
         ]);
 
         User::create([
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
         ]);
 
         // Run factory to create additional users with unique details.
-        User::factory()->count(500)->create();
-        $this->command->info('Users table seeded with 502 users!');
+        // User::factory()->count(500)->create();
+        $this->command->info('Users table seeded with 3 users!');
     }
 }
