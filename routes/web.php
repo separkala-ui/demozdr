@@ -153,7 +153,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::post('users/switch-back', [UserLoginAsController::class, 'switchBack'])->name('users.switch-back');
 
     // Action Log Routes.
-    Route::get('/action-log', [ActionLogController::class, 'index'])->name('actionlog.index');
+    Route::get('/action-logs', [ActionLogController::class, 'index'])->name('action-logs.index');
 
     // Posts/Pages Routes - Dynamic post types.
     Route::get('/posts/{postType?}', [PostController::class, 'index'])->name('posts.index');
