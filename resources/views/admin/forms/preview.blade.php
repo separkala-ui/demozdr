@@ -30,10 +30,10 @@
             </div>
 
             <div class="flex justify-between pt-6 border-t">
-                <a href="{{ route('forms.fill', $template) }}" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
+                <a href="{{ route('admin.form-templates.index') }}" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
                     بازگشت
                 </a>
-                <a href="{{ route('forms.fill', $template) }}" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                <a href="{{ route('admin.forms.fill', $template) }}" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                     پر کردن فرم
                 </a>
             </div>

@@ -247,7 +247,7 @@
                 </a>
 
                 <a 
-                    href="{{ route('admin.settings') }}"
+                    href="{{ route('admin.settings.index') }}"
                     class="flex items-center gap-4 rounded-lg border-2 border-dashed border-stroke p-6 transition-all hover:border-primary hover:bg-primary/5 dark:border-dark-3 dark:hover:border-primary">
                     <div class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/20">
                         <svg class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
