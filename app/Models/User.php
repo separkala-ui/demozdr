@@ -113,6 +113,11 @@ class User extends Authenticatable
      */
     public function hasAnyPermission($permissions): bool
     {
+        // Superadmin has all permissions
+        if ($this->hasRole('Superadmin')) {
+            return true;
+        }
+
         if (empty($permissions)) {
             return true;
         }
@@ -126,6 +131,27 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    /**
+     * Override hasPermissionTo to give Superadmin all permissions
+     */
+    public function hasPermissionTo($permission, $guardName = null): bool
+    {
+        // Superadmin has all permissions
+        if ($this->hasRole('Superadmin')) {
+            return true;
+        }
+
+        return parent::hasPermissionTo($permission, $guardName);
+    }
+
+    /**
+     * Check if user is Superadmin
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('Superadmin');
     }
 
     /**
