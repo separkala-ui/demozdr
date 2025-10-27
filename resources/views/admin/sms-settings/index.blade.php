@@ -18,7 +18,7 @@
         </div>
 
         {{-- Livewire Component --}}
-        <livewire:admin.sms-settings-management />
+        @livewire(\App\Livewire\Admin\SMSSettingsManagement::class)
     </div>
 @endsection
 
