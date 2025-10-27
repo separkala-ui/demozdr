@@ -334,8 +334,24 @@ class AdminMenuService
             'icon' => 'lucide:clipboard-check',
             'id' => 'operations-control',
             'priority' => 28,
-            'active' => request()->is('admin/inspection*') || request()->is('admin/quality*') || request()->is('admin/forms*'),
+            'active' => request()->is('admin/inspection*') || request()->is('admin/quality*') || request()->is('admin/forms*') || request()->is('filament*'),
             'children' => [
+                [
+                    'label' => __('الگوهای فرم'),
+                    'icon' => 'lucide:file-text',
+                    'route' => '/filament/form-templates',
+                    'active' => Route::is('filament.*') && request()->is('filament/form-templates*'),
+                    'priority' => 5,
+                    'permissions' => 'form.view',
+                ],
+                [
+                    'label' => __('نتایج فرم‌ها'),
+                    'icon' => 'lucide:check-circle',
+                    'route' => '/filament/form-reports',
+                    'active' => Route::is('filament.*') && request()->is('filament/form-reports*'),
+                    'priority' => 7,
+                    'permissions' => 'form.view',
+                ],
                 [
                     'label' => __('فرم‌های عملیاتی'),
                     'icon' => 'lucide:form-input',
