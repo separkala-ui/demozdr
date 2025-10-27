@@ -101,7 +101,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('/petty-cash/debug/download/{filename}', [DebugInvoiceUploadController::class, 'download'])
         ->name('petty-cash.debug.download');
 
-    // Alert Settings & Announcements Routes (Superadmin only)
+    // Alert Settings & Announcements & SMS Settings Routes (Superadmin only)
     Route::middleware('role:Superadmin')->group(function () {
         Route::get('/alert-settings', function () {
             return view('admin.alert-settings.index');
@@ -110,6 +110,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::get('/announcements', function () {
             return view('admin.announcements.index');
         })->name('announcements.index');
+
+        Route::get('/sms-settings', [\App\Http\Controllers\Admin\SMSSettingsController::class, 'index'])
+            ->name('sms-settings.index');
+        Route::post('/sms-settings/test', [\App\Http\Controllers\Admin\SMSSettingsController::class, 'testSMS'])
+            ->name('sms-settings.test');
+        Route::get('/sms-settings/credit', [\App\Http\Controllers\Admin\SMSSettingsController::class, 'getCredit'])
+            ->name('sms-settings.credit');
     });
 
     // Permissions Routes.

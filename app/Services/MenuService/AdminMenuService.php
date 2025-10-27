@@ -274,13 +274,13 @@ class AdminMenuService
             ],
         ], __('More'));
 
-        // System Management - Alerts & Announcements (Superadmin only)
+        // System Management - Alerts, Announcements & SMS (Superadmin only)
         if ($user && $user->hasRole('Superadmin')) {
             $this->addMenuItem([
                 'label' => __('مدیریت سیستم'),
                 'icon' => 'lucide:bell',
                 'id' => 'system-management-submenu',
-                'active' => Route::is('admin.alert-settings.*') || Route::is('admin.announcements.*'),
+                'active' => Route::is('admin.alert-settings.*') || Route::is('admin.announcements.*') || Route::is('admin.sms-settings.*'),
                 'priority' => 35,
                 'children' => [
                     [
@@ -296,6 +296,13 @@ class AdminMenuService
                         'icon' => 'lucide:megaphone',
                         'active' => Route::is('admin.announcements.*'),
                         'priority' => 20,
+                    ],
+                    [
+                        'label' => __('تنظیمات پیامک'),
+                        'route' => route('admin.sms-settings.index'),
+                        'icon' => 'lucide:message-square',
+                        'active' => Route::is('admin.sms-settings.*'),
+                        'priority' => 30,
                     ],
                 ],
             ], __('More'));
