@@ -2,7 +2,7 @@
 
 @section('title', __('تنظیمات پیامک'))
 
-@section('content')
+@section('admin-content')
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 px-4 py-8">
         <div class="max-w-6xl mx-auto">
             {{-- Header --}}
