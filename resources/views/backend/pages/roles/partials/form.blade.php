@@ -43,7 +43,7 @@
                         <input type="checkbox" id="checkPermission{{ $permission->id }}" name="permissions[]" value="{{ $permission->name }}" class="form-checkbox mr-2"
                                 @isset($role) {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }} @endisset>
                         <label for="checkPermission{{ $permission->id }}" class="capitalize text-sm text-gray-700 dark:text-gray-300" title="{{ $permission->name }}">
-                            {{ __("permissions.{$permission->name}") ?: $permission->name }}
+                            {{ \App\Helpers\PermissionHelper::getTranslatedPermission($permission->name) }}
                         </label>
                     </div>
                     @php $i++; @endphp

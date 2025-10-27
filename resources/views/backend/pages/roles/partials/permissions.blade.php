@@ -2,7 +2,7 @@
     <div>
         @foreach ($role->permissions->take(7) as $permission)
             <span class="badge badge-sm" title="{{ $permission->name }}">
-                {{ __("permissions.{$permission->name}") ?: __("permissions.{$permission->name}") ?: $permission->name }}
+                {{ \App\Helpers\PermissionHelper::getTranslatedPermission($permission->name) }}
             </span>
         @endforeach
 
@@ -10,7 +10,7 @@
             <div class="space-y-1">
                 @foreach ($role->permissions->skip(7) as $permission)
                     <span class="badge badge-sm" title="{{ $permission->name }}">
-                        {{ __("permissions.{$permission->name}") ?: __("permissions.{$permission->name}") ?: $permission->name }}
+                        {{ \App\Helpers\PermissionHelper::getTranslatedPermission($permission->name) }}
                     </span>
                 @endforeach
             </div>
