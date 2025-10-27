@@ -339,7 +339,7 @@ class AdminMenuService
                 [
                     'label' => __('فرم‌های عملیاتی'),
                     'icon' => 'lucide:form-input',
-                    'route' => route('admin.dashboard'),
+                    'route' => route('admin.operational-forms.index'),
                     'active' => Route::is('admin.operational-forms.*'),
                     'priority' => 10,
                     'permissions' => 'form.view',
@@ -347,7 +347,7 @@ class AdminMenuService
                 [
                     'label' => __('بازرسی شعبه'),
                     'icon' => 'lucide:search',
-                    'route' => route('admin.dashboard'),
+                    'route' => route('admin.inspection.index'),
                     'active' => Route::is('admin.inspection.*'),
                     'priority' => 20,
                     'permissions' => 'inspection.view',
@@ -355,7 +355,7 @@ class AdminMenuService
                 [
                     'label' => __('کنترل کیفیت'),
                     'icon' => 'lucide:badge-check',
-                    'route' => route('admin.dashboard'),
+                    'route' => route('admin.quality-control.index'),
                     'active' => Route::is('admin.quality-control.*'),
                     'priority' => 30,
                     'permissions' => 'quality_control.view',
@@ -363,7 +363,7 @@ class AdminMenuService
                 [
                     'label' => __('مهندسی تولید'),
                     'icon' => 'lucide:cog',
-                    'route' => route('admin.dashboard'),
+                    'route' => route('admin.production.index'),
                     'active' => Route::is('admin.production.*'),
                     'priority' => 40,
                     'permissions' => 'production.view',
