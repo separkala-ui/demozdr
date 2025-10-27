@@ -176,7 +176,7 @@ class FormTemplateResource extends Resource
                 Tables\Actions\Action::make('preview')
                     ->label('پیش‌نمایش')
                     ->icon('heroicon-o-eye')
-                    ->url(fn (FormTemplate $record) => route('forms.preview', $record))
+                    ->url(fn (FormTemplate $record) => route('admin.forms.preview', $record))
                     ->openUrlInNewTab(),
             ])
             ->bulkActions([
