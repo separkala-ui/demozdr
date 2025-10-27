@@ -154,7 +154,7 @@
 <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
     <div class="flex items-center justify-between">
         <h3 class="text-sm font-semibold text-slate-700">{{ __('فعالیت‌های اخیر') }}</h3>
-        <a href="{{ route('admin.actionlog.index') }}" class="text-xs text-indigo-600 hover:text-indigo-800">
+        <a href="{{ route('admin.action-logs.index') }}" class="text-xs text-indigo-600 hover:text-indigo-800">
             {{ __('مشاهده همه') }} →
         </a>
     </div>
