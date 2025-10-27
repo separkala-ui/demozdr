@@ -328,6 +328,49 @@ class AdminMenuService
             ',
         ], __('More'));
 
+        // ========== عملیات و کنترل کیفیت ==========
+        $this->addMenuItem([
+            'label' => __('عملیات و کنترل کیفیت'),
+            'icon' => 'lucide:clipboard-check',
+            'id' => 'operations-control',
+            'priority' => 28,
+            'active' => request()->is('admin/inspection*') || request()->is('admin/quality*') || request()->is('admin/forms*'),
+            'children' => [
+                [
+                    'label' => __('فرم‌های عملیاتی'),
+                    'icon' => 'lucide:form-input',
+                    'route' => route('admin.dashboard'),
+                    'active' => Route::is('admin.operational-forms.*'),
+                    'priority' => 10,
+                    'permissions' => 'form.view',
+                ],
+                [
+                    'label' => __('بازرسی شعبه'),
+                    'icon' => 'lucide:search',
+                    'route' => route('admin.dashboard'),
+                    'active' => Route::is('admin.inspection.*'),
+                    'priority' => 20,
+                    'permissions' => 'inspection.view',
+                ],
+                [
+                    'label' => __('کنترل کیفیت'),
+                    'icon' => 'lucide:badge-check',
+                    'route' => route('admin.dashboard'),
+                    'active' => Route::is('admin.quality-control.*'),
+                    'priority' => 30,
+                    'permissions' => 'quality_control.view',
+                ],
+                [
+                    'label' => __('مهندسی تولید'),
+                    'icon' => 'lucide:cog',
+                    'route' => route('admin.dashboard'),
+                    'active' => Route::is('admin.production.*'),
+                    'priority' => 40,
+                    'permissions' => 'production.view',
+                ],
+            ],
+        ], __('Operations'));
+
         $this->groups = Hook::applyFilters(AdminFilterHook::ADMIN_MENU_GROUPS_BEFORE_SORTING, $this->groups);
 
         $this->sortMenuItemsByPriority();

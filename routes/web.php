@@ -155,6 +155,38 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     // Action Log Routes.
     Route::get('/action-logs', [ActionLogController::class, 'index'])->name('action-logs.index');
 
+    // ========== عملیات و کنترل کیفیت ==========
+    // Operational Forms Routes
+    Route::prefix('operational-forms')->name('operational-forms.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'store'])->name('store');
+    });
+
+    // Inspection Routes
+    Route::prefix('inspection')->name('inspection.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\InspectionController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\InspectionController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\InspectionController::class, 'store'])->name('store');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\InspectionController::class, 'show'])->name('show');
+    });
+
+    // Quality Control Routes
+    Route::prefix('quality-control')->name('quality-control.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\QualityControlController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\QualityControlController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\QualityControlController::class, 'store'])->name('store');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\QualityControlController::class, 'show'])->name('show');
+    });
+
+    // Production Routes
+    Route::prefix('production')->name('production.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ProductionController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\ProductionController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\ProductionController::class, 'store'])->name('store');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\ProductionController::class, 'show'])->name('show');
+    });
+
     // Posts/Pages Routes - Dynamic post types.
     Route::get('/posts/{postType?}', [PostController::class, 'index'])->name('posts.index');
     Route::get('/posts/{postType}/create', [PostController::class, 'create'])->name('posts.create');
