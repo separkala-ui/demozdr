@@ -54,9 +54,11 @@ class SMSSettingsManagement extends Component
             // Clear config cache
             \Artisan::call('config:clear');
 
-            toast_success('تنظیمات با موفقیت ذخیره شد');
+            session()->flash('success', 'تنظیمات با موفقیت ذخیره شد');
+            $this->dispatch('notify', type: 'success', message: 'تنظیمات با موفقیت ذخیره شد');
         } catch (\Exception $e) {
-            toast_error('خطا در ذخیره تنظیمات: ' . $e->getMessage());
+            session()->flash('error', 'خطا در ذخیره تنظیمات: ' . $e->getMessage());
+            $this->dispatch('notify', type: 'error', message: 'خطا در ذخیره تنظیمات: ' . $e->getMessage());
         }
     }
 
@@ -76,12 +78,15 @@ class SMSSettingsManagement extends Component
             $this->testResult = $result;
 
             if ($result['success']) {
-                toast_success('پیامک تستی با موفقیت ارسال شد (یا لاگ شد)');
+                session()->flash('success', 'پیامک تستی با موفقیت ارسال شد');
+                $this->dispatch('notify', type: 'success', message: 'پیامک تستی با موفقیت ارسال شد');
             } else {
-                toast_error('خطا در ارسال: ' . ($result['error'] ?? 'نامشخص'));
+                session()->flash('error', 'خطا در ارسال: ' . ($result['error'] ?? 'نامشخص'));
+                $this->dispatch('notify', type: 'error', message: 'خطا در ارسال: ' . ($result['error'] ?? 'نامشخص'));
             }
         } catch (\Exception $e) {
-            toast_error('خطا: ' . $e->getMessage());
+            session()->flash('error', 'خطا: ' . $e->getMessage());
+            $this->dispatch('notify', type: 'error', message: 'خطا: ' . $e->getMessage());
         }
     }
 
@@ -91,12 +96,15 @@ class SMSSettingsManagement extends Component
             $result = sms()->getCredit();
 
             if ($result['success']) {
-                toast_success('اعتبار: ' . number_format($result['credit']) . ' ریال');
+                session()->flash('success', 'اعتبار: ' . number_format($result['credit']) . ' ریال');
+                $this->dispatch('notify', type: 'success', message: 'اعتبار: ' . number_format($result['credit']) . ' ریال');
             } else {
-                toast_error('خطا: ' . ($result['error'] ?? 'نامشخص'));
+                session()->flash('error', 'خطا: ' . ($result['error'] ?? 'نامشخص'));
+                $this->dispatch('notify', type: 'error', message: 'خطا: ' . ($result['error'] ?? 'نامشخص'));
             }
         } catch (\Exception $e) {
-            toast_error('خطا: ' . $e->getMessage());
+            session()->flash('error', 'خطا: ' . $e->getMessage());
+            $this->dispatch('notify', type: 'error', message: 'خطا: ' . $e->getMessage());
         }
     }
 
