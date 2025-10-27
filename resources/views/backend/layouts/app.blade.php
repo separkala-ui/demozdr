@@ -13,6 +13,8 @@
     @include('backend.layouts.partials.theme-colors')
     @yield('before_vite_build')
 
+    <link rel="stylesheet" href="{{ asset('fonts/anjoman-font.css') }}">
+
     @livewireStyles
     @viteReactRefresh
     @vite(['resources/js/app.js', 'resources/css/app.css'], 'build')

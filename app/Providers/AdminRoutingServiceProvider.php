@@ -36,10 +36,8 @@ class AdminRoutingServiceProvider extends ServiceProvider
         $adminLoginRoute = config('settings.admin_login_route', 'admin/login');
 
         Route::middleware(['web', 'guest'])->group(function () use ($adminLoginRoute) {
-            // Dynamic login routes
+            // Dynamic login GET route only
             Route::get($adminLoginRoute, [LoginController::class, 'showLoginForm'])->name('admin.login');
-            Route::post($adminLoginRoute, [LoginController::class, 'login'])
-                ->middleware(['recaptcha:login', 'throttle:20,1'])->name('admin.login.submit');
 
             // Password reset routes (keeping these at standard locations)
             Route::prefix('admin')->name('admin.')->group(function () {
@@ -51,6 +49,10 @@ class AdminRoutingServiceProvider extends ServiceProvider
                     ->middleware(['recaptcha:forgot_password', 'throttle:20,1'])->name('password.email');
             });
         });
+
+        // POST Admin Login - without guest middleware to prevent infinite loop
+        Route::middleware(['web'])->post($adminLoginRoute, [LoginController::class, 'login'])
+            ->middleware(['recaptcha:login', 'throttle:20,1'])->name('admin.login.submit');
 
         // Admin logout route (always at the standard location)
         Route::middleware('web')->post('/admin/logout/submit', [LoginController::class, 'logout'])->name('admin.logout.submit');

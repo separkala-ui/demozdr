@@ -3,16 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\DynamicForms\FormReport;
 
 class QualityControlController extends Controller
 {
     public function index()
     {
-        $reports = FormReport::whereHas('template', function ($q) {
-            $q->where('category', 'quality_control');
-        })->paginate(15);
-        return view('admin.quality-control.index', compact('reports'));
+        return view('admin.quality-control.index');
     }
 
     public function create()
@@ -27,7 +23,8 @@ class QualityControlController extends Controller
 
     public function show($id)
     {
-        $report = FormReport::findOrFail($id);
-        return view('admin.quality-control.show', compact('report'));
+        // TODO: Fetch report from database when FormReport model is available
+        // $report = FormReport::findOrFail($id);
+        return view('admin.quality-control.show');
     }
 }

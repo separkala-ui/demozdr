@@ -1,13 +1,17 @@
 <div x-data="{ showAll: false }">
     <div>
         @foreach ($role->permissions->take(7) as $permission)
-            <span class="badge">{{ $permission->name }}</span>
+            <span class="badge badge-sm" title="{{ $permission->name }}">
+                {{ __("permissions.{$permission->name}") ?? $permission->name }}
+            </span>
         @endforeach
 
         <template x-if="showAll">
-            <div>
+            <div class="space-y-1">
                 @foreach ($role->permissions->skip(7) as $permission)
-                    <span class="badge">{{ $permission->name }}</span>
+                    <span class="badge badge-sm" title="{{ $permission->name }}">
+                        {{ __("permissions.{$permission->name}") ?? $permission->name }}
+                    </span>
                 @endforeach
             </div>
         </template>

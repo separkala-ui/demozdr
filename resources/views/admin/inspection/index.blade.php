@@ -1,6 +1,6 @@
-@extends('backend.layouts.master')
+@extends('backend.layouts.app')
 
-@section('content')
+@section('admin-content')
 <div class="container mx-auto p-6">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-900">{{ __('بازرسی شعب') }}</h1>
@@ -9,41 +9,17 @@
         </a>
     </div>
 
-    @if($reports->count())
-        <div class="bg-white rounded-lg shadow overflow-hidden">
-            <table class="w-full">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">{{ __('قالب') }}</th>
-                        <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">{{ __('شعبه') }}</th>
-                        <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">{{ __('بازرس') }}</th>
-                        <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">{{ __('وضعیت') }}</th>
-                        <th class="px-6 py-3 text-right text-sm font-medium text-gray-700">{{ __('عمل') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($reports as $report)
-                        <tr class="border-t hover:bg-gray-50">
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $report->template->title }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $report->ledger->branch_name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $report->reporter->full_name }}</td>
-                            <td class="px-6 py-4 text-sm">
-                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">{{ $report->status }}</span>
-                            </td>
-                            <td class="px-6 py-4 text-sm">
-                                <a href="{{ route('admin.inspection.show', $report->id) }}" class="text-blue-600 hover:underline">{{ __('مشاهده') }}</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+    <div class="bg-white rounded-lg shadow p-8">
+        <div class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('هنوز بازرسی ثبت نشده') }}</h3>
+            <p class="text-gray-500 mb-6">{{ __('برای ثبت بازرسی جدید بر روی دکمه بالا کلیک کنید') }}</p>
+            <a href="{{ route('admin.inspection.create') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">
+                {{ __('ثبت بازرسی اول') }}
+            </a>
         </div>
-
-        {{ $reports->links() }}
-    @else
-        <div class="bg-gray-50 rounded-lg p-8 text-center">
-            <p class="text-gray-500">{{ __('بازرسی یافت نشد') }}</p>
-        </div>
-    @endif
+    </div>
 </div>
 @endsection

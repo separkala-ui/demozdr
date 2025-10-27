@@ -87,16 +87,22 @@ class RoleDatatable extends Datatable
 
     public function renderNameColumn(Role $role): string
     {
+        $permissionsCount = (int) ($role->permissions_count ?? 0);
+        $permissionsText = __('Permissions');
+        if (!is_string($permissionsText)) {
+            $permissionsText = 'Permissions';
+        }
         return "
             <a href=\"" . route('admin.roles.edit', $role) . "\" class='text-primary hover:underline'>" . $role->name . "</a>
-            <p class='text-sm text-gray-500'>" . $role->permissions_count . " " . __('permissions') . "</p>
+            <p class='text-sm text-gray-500'>" . $permissionsCount . " " . $permissionsText . "</p>
         ";
     }
 
     public function renderUsersColumn(Role $role): string
     {
+        $usersCount = (int) ($role->users_count ?? 0);
         $url = route('admin.users.index', ['role' => $role->name]);
-        return '<a title="' . __('View Users') . '" href="' . $url . '" class="text-primary hover:underline">' . $role->users_count . '</a>';
+        return '<a title="' . __('View Users') . '" href="' . $url . '" class="text-primary hover:underline">' . $usersCount . '</a>';
     }
 
     public function renderPermissionsColumn(Role $role): View

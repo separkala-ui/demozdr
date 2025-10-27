@@ -1,6 +1,6 @@
-@extends('backend.layouts.master')
+@extends('backend.layouts.app')
 
-@section('content')
+@section('admin-content')
 <div class="container mx-auto p-6 max-w-2xl">
     <h1 class="text-3xl font-bold text-gray-900 mb-6">{{ __('ثبت بازرسی جدید') }}</h1>
 

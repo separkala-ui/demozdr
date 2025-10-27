@@ -27,10 +27,8 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('register', [UserRegisterController::class, 'register'])
         ->middleware(['recaptcha:registration', 'throttle:20,1']);
 
-    // Login Routes.
+    // Login Routes - GET only
     Route::get('login', [UserLoginController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [UserLoginController::class, 'login'])
-        ->middleware(['recaptcha:login', 'throttle:20,1']);
 
     // Password Reset Routes.
     Route::get('password/reset', [UserForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -46,6 +44,11 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('email/resend', [UserVerificationController::class, 'resend'])
         ->middleware('throttle:20,1')->name('verification.resend');
 });
+
+// POST Login Route - without guest middleware to allow authenticated users
+// This is intentionally outside the guest middleware group
+Route::post('login', [UserLoginController::class, 'login'])
+    ->middleware(['recaptcha:login', 'throttle:20,1'])->name('login');
 
 // User Logout Route.
 Route::post('logout', [UserLoginController::class, 'logout'])->name('logout');

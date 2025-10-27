@@ -31,7 +31,7 @@
                 <div class="flex items-center mb-2">
                     <input type="checkbox" id="group{{ $i }}Management" class="form-checkbox mr-2" @isset($role) {{ $roleService->roleHasPermissions($role, $roleService->getPermissionsByGroupName($group->name)) ? 'checked' : '' }} @endisset>
                     <label for="group{{ $i }}Management" class="capitalize text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {{ ucfirst($group->name) }}
+                        📁 {{ ucfirst($group->name) }}
                     </label>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-6 gap-4" data-group="group{{ $i }}Management">
@@ -42,8 +42,8 @@
                     <div>
                         <input type="checkbox" id="checkPermission{{ $permission->id }}" name="permissions[]" value="{{ $permission->name }}" class="form-checkbox mr-2"
                                 @isset($role) {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }} @endisset>
-                        <label for="checkPermission{{ $permission->id }}" class="capitalize text-sm text-gray-700 dark:text-gray-300">
-                            {{ $permission->name }}
+                        <label for="checkPermission{{ $permission->id }}" class="capitalize text-sm text-gray-700 dark:text-gray-300" title="{{ $permission->name }}">
+                            {{ __("permissions.{$permission->name}") ?? $permission->name }}
                         </label>
                     </div>
                     @php $i++; @endphp

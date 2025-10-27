@@ -199,12 +199,15 @@ class PermissionService
     public function getDatabasePermissionGroups(): Collection
     {
         $groups = Permission::select('group_name as name')
+            ->whereNotNull('group_name')
             ->groupBy('group_name')
             ->get();
 
         // Add the permissions to each group.
         foreach ($groups as $group) {
-            $group->setAttribute('permissions', $this->getPermissionModelsByGroup($group->name));
+            if ($group->name) {
+                $group->setAttribute('permissions', $this->getPermissionModelsByGroup($group->name));
+            }
         }
 
         return $groups;

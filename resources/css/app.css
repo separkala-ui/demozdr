@@ -31,3 +31,10 @@ layer(base);
 .app-container.loaded {
     opacity: 1;
 }
+
+/* Global RTL + font */
+html, body{
+  direction: rtl;
+  text-align: right;
+  font-family:'AnjomanMax','Tahoma',sans-serif !important;
+}

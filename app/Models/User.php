@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Traits\HasPermissions;
 
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
@@ -24,6 +25,7 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasFactory;
     use HasRoles;
+    use HasPermissions;
     use Notifiable;
     use QueryBuilderTrait;
 
@@ -143,7 +145,9 @@ class User extends Authenticatable
             return true;
         }
 
-        return parent::hasPermissionTo($permission, $guardName);
+        // Check permissions using the can() method from Laravel Gate
+        // which is supported by both HasRoles and HasPermissions traits
+        return $this->can($permission);
     }
 
     /**

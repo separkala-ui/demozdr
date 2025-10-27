@@ -1,0 +1,29 @@
+/* ANJOMAN MAX – fixed paths */
+
+@font-face{
+  font-family:'AnjomanMax';
+  src:url('/fonts/woff2/AnjomanMax-Regular.woff2') format('woff2'),
+      url('/fonts/woff/AnjomanMax-Regular.woff') format('woff');
+  font-weight:400; font-style:normal; font-display:swap;
+}
+
+@font-face{
+  font-family:'AnjomanMax';
+  src:url('/fonts/woff2/AnjomanMax-Medium.woff2') format('woff2'),
+      url('/fonts/woff/AnjomanMax-Medium.woff') format('woff');
+  font-weight:500; font-style:normal; font-display:swap;
+}
+
+@font-face{
+  font-family:'AnjomanMax';
+  src:url('/fonts/woff2/AnjomanMax-Bold.woff2') format('woff2'),
+      url('/fonts/woff/AnjomanMax-Bold.woff') format('woff');
+  font-weight:700; font-style:normal; font-display:swap;
+}
+
+@font-face{
+  font-family:'AnjomanMax';
+  src:url('/fonts/woff2/AnjomanMax-Black.woff2') format('woff2'),
+      url('/fonts/woff/AnjomanMax-Black.woff') format('woff');
+  font-weight:900; font-style:normal; font-display:swap;
+}
