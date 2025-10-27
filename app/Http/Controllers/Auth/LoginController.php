@@ -86,8 +86,11 @@ class LoginController extends Controller
             'roles' => $user->getRoleNames()->toArray(),
         ]);
 
+        // Refresh user to get fresh permissions
+        $user = $user->fresh();
+
         // Check if user has dashboard.view permission
-        if ($user->can('dashboard.view')) {
+        if ($user->hasPermissionTo('dashboard.view')) {
             Log::info('→ Redirecting to admin dashboard', [
                 'user_id' => $user->id,
                 'reason' => 'has dashboard.view permission',

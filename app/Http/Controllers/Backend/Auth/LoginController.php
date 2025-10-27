@@ -11,6 +11,7 @@ use App\Services\DemoAppService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends Controller
@@ -55,19 +56,43 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request): RedirectResponse|Response
     {
+        Log::info('🔐 Backend Login attempt', [
+            'email_or_username' => $request->email,
+        ]);
+
+        // Try email first
         if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+            $user = Auth::guard('web')->user();
+            Log::info('✅ Login successful via email', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'roles' => $user->getRoleNames()->toArray(),
+            ]);
+            
             $this->demoAppService->maybeSetDemoLocaleToEnByDefault();
             session()->flash('success', 'Successfully Logged in!');
 
             return redirect()->route('admin.dashboard');
         }
 
+        // Try username second
         if (Auth::guard('web')->attempt(['username' => $request->email, 'password' => $request->password], $request->remember)) {
+            $user = Auth::guard('web')->user();
+            Log::info('✅ Login successful via username', [
+                'user_id' => $user->id,
+                'username' => $user->username,
+                'roles' => $user->getRoleNames()->toArray(),
+            ]);
+            
             $this->demoAppService->maybeSetDemoLocaleToEnByDefault();
             session()->flash('success', 'Successfully Logged in!');
 
             return redirect()->route('admin.dashboard');
         }
+
+        Log::warning('❌ Login failed', [
+            'email_or_username' => $request->email,
+        ]);
 
         return $this->sendFailedLoginResponse($request);
     }

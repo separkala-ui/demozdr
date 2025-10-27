@@ -109,33 +109,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user has any of the given permissions.
-     *
-     * @param  array|string  $permissions
-     */
-    public function hasAnyPermission($permissions): bool
-    {
-        // Superadmin has all permissions
-        if ($this->hasRole('Superadmin')) {
-            return true;
-        }
-
-        if (empty($permissions)) {
-            return true;
-        }
-
-        $permissions = is_array($permissions) ? $permissions : [$permissions];
-
-        foreach ($permissions as $permission) {
-            if ($this->can($permission)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Override hasPermissionTo to give Superadmin all permissions
      */
     public function hasPermissionTo($permission, $guardName = null): bool
@@ -145,9 +118,36 @@ class User extends Authenticatable
             return true;
         }
 
-        // Check permissions using the can() method from Laravel Gate
-        // which is supported by both HasRoles and HasPermissions traits
-        return $this->can($permission);
+        // For regular users, check via Gate or Spatie
+        return $this->hasPermissionViaRole($permission, $guardName) || $this->hasDirectPermission($permission);
+    }
+
+    /**
+     * Check if user has permission via role
+     */
+    public function hasPermissionViaRole($permission, $guardName = null): bool
+    {
+        return $this->roles()
+            ->whereHas('permissions', function ($query) use ($permission, $guardName) {
+                $query->where('name', $permission);
+                if ($guardName) {
+                    $query->where('guard_name', $guardName);
+                }
+            })
+            ->exists();
+    }
+
+    /**
+     * Check if user has direct permission
+     */
+    public function hasDirectPermission($permission, $guardName = null): bool
+    {
+        return $this->permissions()
+            ->where('name', $permission)
+            ->when($guardName, function ($query) use ($guardName) {
+                return $query->where('guard_name', $guardName);
+            })
+            ->exists();
     }
 
     /**
