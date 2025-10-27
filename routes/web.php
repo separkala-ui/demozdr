@@ -156,15 +156,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('/action-logs', [ActionLogController::class, 'index'])->name('action-logs.index');
 
     // ========== عملیات و کنترل کیفیت ==========
-    // Operational Forms Routes
-    Route::middleware('can:form.view')->prefix('operational-forms')->name('operational-forms.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'index'])->name('index');
-        Route::middleware('can:form.create')->group(function () {
-            Route::get('/create', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'create'])->name('create');
-            Route::post('/', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'store'])->name('store');
-        });
-    });
-
     // Inspection Routes
     Route::middleware('can:inspection.view')->prefix('inspection')->name('inspection.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\InspectionController::class, 'index'])->name('index');
