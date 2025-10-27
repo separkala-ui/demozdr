@@ -18,7 +18,7 @@
         </div>
 
         {{-- Livewire Component --}}
-        <livewire:admin.s-m-s-settings-management />
+        <livewire:admin.sms-settings-management />
     </div>
 @endsection
 
