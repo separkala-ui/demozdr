@@ -191,6 +191,12 @@
                                     <i class="fas fa-eye text-indigo-500"></i>
                                     {{ __('مشاهده') }}
                                 </a>
+                                <button type="button"
+                                        wire:click="$dispatch('openBranchUsersModal', { ledgerId: {{ $ledgerItem->id }} })"
+                                        class="inline-flex items-center gap-1 rounded-md bg-sky-50 px-3 py-1 text-xs font-medium text-sky-600 hover:bg-sky-100 transition-colors hover:bg-sky-200">
+                                    <iconify-icon icon="lucide:users" class="text-sky-500"></iconify-icon>
+                                    {{ __('کاربران') }}
+                                </button>
                                 @can('petty_cash.ledger.edit')
                                     <a href="{{ route('admin.petty-cash.edit', $ledgerItem->id) }}"
                                        class="inline-flex items-center gap-1 rounded-md bg-yellow-50 px-3 py-1 text-xs font-medium text-yellow-600 hover:bg-yellow-100">
@@ -778,6 +784,9 @@
             </div>
         @endif
     </div>
+    
+    @livewire('admin.branch-users-manager')
+
 @if($analytics && ($analytics['summary']['transaction_count'] ?? 0) > 0)
     @push('scripts')
         <script>
