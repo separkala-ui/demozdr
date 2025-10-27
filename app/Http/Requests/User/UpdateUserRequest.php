@@ -39,6 +39,9 @@ class UpdateUserRequest extends FormRequest
             /** @example "jane.smith@example.com" */
             'email' => 'required|max:100|email|unique:users,email,' . $userId,
 
+            /** @example "09123456789" */
+            'mobile' => 'nullable|string|max:15',
+
             /** @example "janesmith456" */
             'username' => 'required|max:100|unique:users,username,' . $userId,
 

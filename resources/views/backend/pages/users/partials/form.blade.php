@@ -139,6 +139,28 @@
             </div>
             {!! Hook::applyFilters(UserFilterHook::USER_FORM_AFTER_EMAIL, '', $user) !!}
 
+            {{-- Mobile Phone Number --}}
+            <div>
+                <label for="mobile" class="form-label flex items-center gap-2">
+                    <iconify-icon icon="lucide:smartphone" class="text-indigo-600"></iconify-icon>
+                    <span>{{ __('شماره موبایل') }}</span>
+                </label>
+                <input 
+                    type="text" 
+                    name="mobile" 
+                    id="mobile"
+                    value="{{ old('mobile', $user?->mobile) }}"
+                    placeholder="09123456789"
+                    class="form-control"
+                    dir="ltr"
+                    maxlength="15"
+                >
+                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <iconify-icon icon="lucide:info" class="text-xs"></iconify-icon>
+                    <span>برای ارسال پیامک (اختیاری)</span>
+                </p>
+            </div>
+
             {{-- Password Fields --}}
             <div>
                 <x-inputs.password
