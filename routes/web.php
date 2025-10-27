@@ -231,6 +231,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::get('/providers', [App\Http\Controllers\Backend\AiContentController::class, 'getProviders'])->name('providers');
         Route::post('/generate-content', [App\Http\Controllers\Backend\AiContentController::class, 'generateContent'])->name('generate-content');
     });
+
+    // Dynamic Forms Routes (User Form Filling)
+    Route::middleware('can:form.view')->prefix('forms')->name('forms.')->group(function () {
+        Route::get('/{template}/fill', [\App\Http\Controllers\Admin\FormTemplateController::class, 'fillForm'])->name('fill');
+        Route::post('/{template}/submit', [\App\Http\Controllers\Admin\FormTemplateController::class, 'submitForm'])->name('submit');
+        Route::get('/success/{report}', [\App\Http\Controllers\Admin\FormTemplateController::class, 'success'])->name('success');
+        Route::get('/{template}/preview', [\App\Http\Controllers\Admin\FormTemplateController::class, 'preview'])->name('preview');
+    });
 });
 
 /**
@@ -243,5 +251,3 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['auth'
 });
 
 Route::get('/locale/{lang}', [LocaleController::class, 'switch'])->name('locale.switch');
-Route::get('/screenshot-login/{email}', [ScreenshotGeneratorLoginController::class, 'login'])->middleware('web')->name('screenshot.login');
-Route::get('/demo-preview', fn () => view('demo.preview'))->name('demo.preview');
