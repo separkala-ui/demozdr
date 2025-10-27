@@ -248,7 +248,7 @@ class IPPanelService
      */
     public function sendWelcomeSMS(string $mobile, string $name): array
     {
-        $patternCode = config('services.ippanel.patterns.welcome');
+        $patternCode = config('services.ippanel.patterns.welcome.code');
 
         if (empty($patternCode)) {
             // اگر پترن تعریف نشده، پیامک ساده ارسال کن
@@ -265,10 +265,10 @@ class IPPanelService
      */
     public function sendBranchCreatedSMS(string $mobile, string $branchName, string $managerName): array
     {
-        $patternCode = config('services.ippanel.patterns.branch_created');
+        $patternCode = config('services.ippanel.patterns.branch_created.code');
 
         if (empty($patternCode)) {
-            return $this->send($mobile, "سلام {$managerName} عزیز،\n\nشعبه {$branchName} با موفقیت ایجاد شد و شما به عنوان مسئول آن منصوب شدید.");
+            return $this->send($mobile, "سلام {$managerName} عزیز,\n\nشعبه {$branchName} با موفقیت ایجاد شد و شما به عنوان مسئول آن منصوب شدید.");
         }
 
         return $this->sendPattern($mobile, $patternCode, [
@@ -278,20 +278,42 @@ class IPPanelService
     }
 
     /**
+     * ارسال پیامک درخواست شارژ به مدیر مالی
+     */
+    public function sendChargeRequestSMS(string $managerName, string $branchName, string $amount, string $date): array
+    {
+        $mobile = config('services.ippanel.finance_manager_mobile');
+        if (empty($mobile)) {
+            Log::warning('Finance manager mobile number is not set. Cannot send charge request SMS.');
+            return ['success' => false, 'error' => 'Finance manager mobile not set'];
+        }
+
+        $patternCode = config('services.ippanel.patterns.charge_request.code');
+
+        if (empty($patternCode)) {
+            $message = "درخواست شارژ جدید:\n\n" .
+                "شعبه: {$branchName}\n" .
+                "درخواست دهنده: {$managerName}\n" .
+                "مبلغ: " . number_format((float) $amount) . " ریال\n" .
+                "تاریخ: {$date}";
+            return $this->send($mobile, $message);
+        }
+
+        return $this->sendPattern($mobile, $patternCode, [
+            'manager_name' => $managerName,
+            'branch_name' => $branchName,
+            'amount' => number_format((float) $amount),
+            'date' => $date,
+        ]);
+    }
+
+    /**
      * ارسال پیامک اطلاع‌رسانی عمومی
      */
     public function sendAnnouncementSMS(string $mobile, string $title, string $message): array
     {
-        $patternCode = config('services.ippanel.patterns.announcement');
-
-        if (empty($patternCode)) {
-            return $this->send($mobile, "{$title}\n\n{$message}");
-        }
-
-        return $this->sendPattern($mobile, $patternCode, [
-            'title' => $title,
-            'message' => $message,
-        ]);
+        // This pattern is no longer in the config, let's remove it or adapt it. For now, removing.
+        return $this->send($mobile, "{$title}\n\n{$message}");
     }
 
     /**
@@ -299,7 +321,7 @@ class IPPanelService
      */
     public function sendTransactionApprovedSMS(string $mobile, string $amount, string $reference): array
     {
-        $patternCode = config('services.ippanel.patterns.transaction_approved');
+        $patternCode = config('services.ippanel.patterns.transaction_approved.code');
 
         if (empty($patternCode)) {
             return $this->send($mobile, "تراکنش شماره {$reference} به مبلغ {$amount} ریال تایید شد.");
@@ -316,7 +338,7 @@ class IPPanelService
      */
     public function sendTransactionRejectedSMS(string $mobile, string $amount, string $reference, string $reason = ''): array
     {
-        $patternCode = config('services.ippanel.patterns.transaction_rejected');
+        $patternCode = config('services.ippanel.patterns.transaction_rejected.code');
 
         if (empty($patternCode)) {
             $message = "تراکنش شماره {$reference} به مبلغ {$amount} ریال رد شد.";
@@ -338,7 +360,7 @@ class IPPanelService
      */
     public function sendTransactionRevisionSMS(string $mobile, string $amount, string $reference, string $reason = ''): array
     {
-        $patternCode = config('services.ippanel.patterns.transaction_revision');
+        $patternCode = config('services.ippanel.patterns.transaction_revision.code');
 
         if (empty($patternCode)) {
             $message = "تراکنش شماره {$reference} به مبلغ {$amount} ریال برای بازبینی ارسال شد.";

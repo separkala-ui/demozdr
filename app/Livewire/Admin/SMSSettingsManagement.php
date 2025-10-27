@@ -15,6 +15,11 @@ class SMSSettingsManagement extends Component
     public $logOnly;
     public $apiKey;
     public $originator;
+    public $financeManagerMobile;
+
+    // Patterns
+    public $patterns = [];
+    public $allPatterns = [];
 
     // Test SMS
     public $testMobile = '';
@@ -29,6 +34,7 @@ class SMSSettingsManagement extends Component
 
     public function mount()
     {
+        $this->allPatterns = config('services.ippanel.patterns', []);
         $this->loadSettings();
     }
 
@@ -38,24 +44,41 @@ class SMSSettingsManagement extends Component
         $this->logOnly = config('services.ippanel.log_only', true);
         $this->apiKey = config('services.ippanel.api_key', '');
         $this->originator = config('services.ippanel.originator', '');
+        $this->financeManagerMobile = config('services.ippanel.finance_manager_mobile', '');
+
+        foreach ($this->allPatterns as $key => $pattern) {
+            $this->patterns[$key] = $pattern['code'];
+        }
     }
 
     public function saveSettings()
     {
         try {
-            // Update .env file
-            $this->updateEnvFile([
+            $envData = [
                 'IPPANEL_ENABLED' => $this->enabled ? 'true' : 'false',
                 'IPPANEL_LOG_ONLY' => $this->logOnly ? 'true' : 'false',
-                'IPPANEL_API_KEY' => $this->apiKey,
+                'IPPANEL_API_KEY' => "'{$this->apiKey}'",
                 'IPPANEL_ORIGINATOR' => $this->originator,
-            ]);
+                'FINANCE_MANAGER_MOBILE' => $this->financeManagerMobile,
+            ];
+
+            foreach ($this->patterns as $key => $code) {
+                $envKey = 'IPPANEL_PATTERN_' . strtoupper($key);
+                $envData[$envKey] = $code;
+            }
+
+            // Update .env file
+            $this->updateEnvFile($envData);
 
             // Clear config cache
             \Artisan::call('config:clear');
 
-            session()->flash('success', 'تنظیمات با موفقیت ذخیره شد');
-            $this->dispatch('notify', type: 'success', message: 'تنظیمات با موفقیت ذخیره شد');
+            session()->flash('success', 'تنظیمات با موفقیت ذخیره شد.');
+            $this->dispatch('notify', type: 'success', message: 'تنظیمات با موفقیت ذخیره شد.');
+            
+            // Reload settings to reflect changes immediately
+            $this->loadSettings();
+
         } catch (\Exception $e) {
             session()->flash('error', 'خطا در ذخیره تنظیمات: ' . $e->getMessage());
             $this->dispatch('notify', type: 'error', message: 'خطا در ذخیره تنظیمات: ' . $e->getMessage());
@@ -78,8 +101,8 @@ class SMSSettingsManagement extends Component
             $this->testResult = $result;
 
             if ($result['success']) {
-                session()->flash('success', 'پیامک تستی با موفقیت ارسال شد');
-                $this->dispatch('notify', type: 'success', message: 'پیامک تستی با موفقیت ارسال شد');
+                session()->flash('success', 'پیامک تستی با موفقیت ارسال شد (یا لاگ شد).');
+                $this->dispatch('notify', type: 'success', message: 'پیامک تستی با موفقیت ارسال شد (یا لاگ شد).');
             } else {
                 session()->flash('error', 'خطا در ارسال: ' . ($result['error'] ?? 'نامشخص'));
                 $this->dispatch('notify', type: 'error', message: 'خطا در ارسال: ' . ($result['error'] ?? 'نامشخص'));
@@ -96,11 +119,12 @@ class SMSSettingsManagement extends Component
             $result = sms()->getCredit();
 
             if ($result['success']) {
-                session()->flash('success', 'اعتبار: ' . number_format($result['credit']) . ' ریال');
-                $this->dispatch('notify', type: 'success', message: 'اعتبار: ' . number_format($result['credit']) . ' ریال');
+                $creditMessage = 'اعتبار: ' . number_format((float)($result['credit'] ?? 0)) . ' ریال';
+                session()->flash('success', $creditMessage);
+                $this->dispatch('notify', type: 'success', message: $creditMessage);
             } else {
-                session()->flash('error', 'خطا: ' . ($result['error'] ?? 'نامشخص'));
-                $this->dispatch('notify', type: 'error', message: 'خطا: ' . ($result['error'] ?? 'نامشخص'));
+                session()->flash('error', 'خطا در دریافت اعتبار: ' . ($result['error'] ?? 'نامشخص'));
+                $this->dispatch('notify', type: 'error', message: 'خطا در دریافت اعتبار: ' . ($result['error'] ?? 'نامشخص'));
             }
         } catch (\Exception $e) {
             session()->flash('error', 'خطا: ' . $e->getMessage());
@@ -117,14 +141,13 @@ class SMSSettingsManagement extends Component
             $content = File::get($logFile);
             $lines = explode("\n", $content);
 
-            // فیلتر فقط خطوط مربوط به SMS
             $smsLines = array_filter($lines, function ($line) {
                 return str_contains($line, '[SMS') || str_contains($line, 'SMS');
             });
 
             $this->logs = array_slice(array_reverse(array_values($smsLines)), 0, 50);
         } else {
-            $this->logs = ['فایل لاگ یافت نشد'];
+            $this->logs = ['فایل لاگ یافت نشد.'];
         }
     }
 
@@ -133,24 +156,18 @@ class SMSSettingsManagement extends Component
         $this->testResult = null;
     }
 
-    /**
-     * Update .env file
-     */
     private function updateEnvFile(array $data)
     {
         $envFile = base_path('.env');
         $envContent = File::get($envFile);
 
         foreach ($data as $key => $value) {
-            // اگر کلید وجود دارد، update کن
+            $value = is_string($value) && str_contains($value, ' ') ? '"' . $value . '"' : $value;
+            $key = strtoupper($key);
+
             if (preg_match("/^{$key}=/m", $envContent)) {
-                $envContent = preg_replace(
-                    "/^{$key}=.*/m",
-                    "{$key}={$value}",
-                    $envContent
-                );
+                $envContent = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $envContent);
             } else {
-                // اگر وجود ندارد، اضافه کن
                 $envContent .= "\n{$key}={$value}";
             }
         }

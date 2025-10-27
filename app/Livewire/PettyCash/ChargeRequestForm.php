@@ -201,6 +201,19 @@ class ChargeRequestForm extends Component
 
         $this->dispatch('petty-cash-transactions-refresh');
 
+        // Send SMS to Finance Manager
+        try {
+            sms()->sendChargeRequestSMS(
+                $user->full_name,
+                $this->ledger->branch_name,
+                (string) $validated['amount'],
+                verta()->now()->format('Y/n/j H:i')
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Charge Request SMS failed: ' . $e->getMessage());
+            // Do not block user for SMS failure
+        }
+
         session()->flash('success', __('درخواست شارژ با موفقیت ثبت شد و برای تایید مدیریت ارسال گردید.'));
     }
 
