@@ -48,15 +48,40 @@ return [
     'ippanel' => [
         'api_key' => env('IPPANEL_API_KEY', 'OWZjZTMwYTktYTc1Ni00YTg3LTg2NTYtYWM5NjliZTdiZGE0NDhkNzJjZGMxNmM5NGRmYmZhMWU3ZDkwNmE0MTJlOGE='),
         'originator' => env('IPPANEL_ORIGINATOR', '+985000...'), // شماره فرستنده
+        'finance_manager_mobile' => env('FINANCE_MANAGER_MOBILE', ''), // موبایل مدیر مالی برای دریافت اطلاعیه‌ها
 
         // کدهای پترن (Pattern Codes)
         'patterns' => [
-            'welcome' => env('IPPANEL_PATTERN_WELCOME', ''),
-            'branch_created' => env('IPPANEL_PATTERN_BRANCH_CREATED', ''),
-            'announcement' => env('IPPANEL_PATTERN_ANNOUNCEMENT', ''),
-            'transaction_approved' => env('IPPANEL_PATTERN_TRANSACTION_APPROVED', ''),
-            'transaction_rejected' => env('IPPANEL_PATTERN_TRANSACTION_REJECTED', ''),
-            'transaction_revision' => env('IPPANEL_PATTERN_TRANSACTION_REVISION', ''),
+            'welcome' => [
+                'code' => env('IPPANEL_PATTERN_WELCOME', ''),
+                'variables' => ['name'],
+                'description' => 'ارسال پیام خوشامدگویی هنگام ثبت نام کاربر جدید',
+            ],
+            'branch_created' => [
+                'code' => env('IPPANEL_PATTERN_BRANCH_CREATED', ''),
+                'variables' => ['manager_name', 'branch_name'],
+                'description' => 'اطلاع رسانی به مدیر شعبه هنگام ساخت شعبه جدید',
+            ],
+            'charge_request' => [
+                'code' => env('IPPANEL_PATTERN_CHARGE_REQUEST', ''),
+                'variables' => ['manager_name', 'branch_name', 'amount', 'date'],
+                'description' => 'ارسال درخواست شارژ به مدیر مالی',
+            ],
+            'transaction_approved' => [
+                'code' => env('IPPANEL_PATTERN_TRANSACTION_APPROVED', ''),
+                'variables' => ['reference', 'amount'],
+                'description' => 'اطلاع رسانی تایید تراکنش به کاربر',
+            ],
+            'transaction_rejected' => [
+                'code' => env('IPPANEL_PATTERN_TRANSACTION_REJECTED', ''),
+                'variables' => ['reference', 'amount', 'reason'],
+                'description' => 'اطلاع رسانی رد تراکنش به کاربر',
+            ],
+            'transaction_revision' => [
+                'code' => env('IPPANEL_PATTERN_TRANSACTION_REVISION', ''),
+                'variables' => ['reference', 'amount', 'reason'],
+                'description' => 'اطلاع رسانی درخواست بازبینی به کاربر',
+            ],
         ],
 
         // تنظیمات عمومی

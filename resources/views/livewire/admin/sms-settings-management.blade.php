@@ -109,6 +109,25 @@
                 </p>
             </div>
 
+            {{-- Finance Manager Mobile --}}
+            <div>
+                <label class="block text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                    <iconify-icon icon="lucide:user-check" class="text-indigo-600"></iconify-icon>
+                    <span>موبایل مدیر مالی</span>
+                </label>
+                <input 
+                    type="text" 
+                    wire:model="financeManagerMobile" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="0912..."
+                    dir="ltr"
+                >
+                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                    <iconify-icon icon="lucide:info"></iconify-icon>
+                    برای ارسال پیامک‌های مهم مانند درخواست شارژ
+                </p>
+            </div>
+
             {{-- Save Button --}}
             <div class="flex justify-end pt-4 border-t border-gray-200">
                 <button 
@@ -117,6 +136,48 @@
                 >
                     <iconify-icon icon="lucide:save" class="text-xl"></iconify-icon>
                     <span>ذخیره تنظیمات</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Pattern Management Card --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-gradient-to-r from-cyan-50 to-sky-50 px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <iconify-icon icon="lucide:clipboard-list" class="text-sky-600"></iconify-icon>
+                <span>مدیریت پترن‌های پیامک</span>
+            </h3>
+        </div>
+
+        <div class="p-6 space-y-6">
+            @foreach($allPatterns as $key => $pattern)
+                <div>
+                    <label for="pattern_{{ $key }}" class="block text-sm font-semibold text-gray-900 mb-2">
+                        {{ $pattern['description'] }}
+                    </label>
+                    <input 
+                        type="text" 
+                        id="pattern_{{ $key }}"
+                        wire:model="patterns.{{ $key }}" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 font-mono text-sm"
+                        placeholder="کد پترن..."
+                        dir="ltr"
+                    >
+                    <p class="text-xs text-gray-500 mt-1">
+                        متغیرها: <code class="bg-gray-100 px-1.5 py-0.5 rounded text-sky-700">{{ implode(', ', $pattern['variables']) }}</code>
+                    </p>
+                </div>
+            @endforeach
+
+            {{-- Save Button for Patterns (same as main save) --}}
+            <div class="flex justify-end pt-4 border-t border-gray-200">
+                <button 
+                    wire:click="saveSettings" 
+                    class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200"
+                >
+                    <iconify-icon icon="lucide:save" class="text-xl"></iconify-icon>
+                    <span>ذخیره همه تنظیمات</span>
                 </button>
             </div>
         </div>
