@@ -29,6 +29,6 @@ class OperationalFormsController extends Controller
 
         FormTemplate::create(array_merge($validated, ['created_by' => auth()->id()]));
 
-        return redirect()->route('admin.operational-forms.index')->with('success', 'فرم با موفقیت ایجاد شد.');
+        return redirect()->route('admin.operational-forms.index')->with('success', __('فرم با موفقیت ایجاد شد.'));
     }
 }

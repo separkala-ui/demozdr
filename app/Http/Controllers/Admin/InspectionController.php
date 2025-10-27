@@ -22,7 +22,7 @@ class InspectionController extends Controller
 
     public function store()
     {
-        return redirect()->route('admin.inspection.index')->with('success', 'بازرسی ثبت شد.');
+        return redirect()->route('admin.inspection.index')->with('success', __('بازرسی ثبت شد.'));
     }
 
     public function show($id)

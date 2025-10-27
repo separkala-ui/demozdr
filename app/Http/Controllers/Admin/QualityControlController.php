@@ -22,7 +22,7 @@ class QualityControlController extends Controller
 
     public function store()
     {
-        return redirect()->route('admin.quality-control.index')->with('success', 'کنترل کیفیت ثبت شد.');
+        return redirect()->route('admin.quality-control.index')->with('success', __('کنترل کیفیت ثبت شد.'));
     }
 
     public function show($id)

@@ -22,7 +22,7 @@ class ProductionController extends Controller
 
     public function store()
     {
-        return redirect()->route('admin.production.index')->with('success', 'درخواست تولید ثبت شد.');
+        return redirect()->route('admin.production.index')->with('success', __('درخواست تولید ثبت شد.'));
     }
 
     public function show($id)

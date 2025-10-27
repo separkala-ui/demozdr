@@ -157,33 +157,41 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
 
     // ========== عملیات و کنترل کیفیت ==========
     // Operational Forms Routes
-    Route::prefix('operational-forms')->name('operational-forms.')->group(function () {
+    Route::middleware('can:form.view')->prefix('operational-forms')->name('operational-forms.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'store'])->name('store');
+        Route::middleware('can:form.create')->group(function () {
+            Route::get('/create', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\OperationalFormsController::class, 'store'])->name('store');
+        });
     });
 
     // Inspection Routes
-    Route::prefix('inspection')->name('inspection.')->group(function () {
+    Route::middleware('can:inspection.view')->prefix('inspection')->name('inspection.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\InspectionController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Admin\InspectionController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\Admin\InspectionController::class, 'store'])->name('store');
+        Route::middleware('can:inspection.create')->group(function () {
+            Route::get('/create', [\App\Http\Controllers\Admin\InspectionController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\InspectionController::class, 'store'])->name('store');
+        });
         Route::get('/{id}', [\App\Http\Controllers\Admin\InspectionController::class, 'show'])->name('show');
     });
 
     // Quality Control Routes
-    Route::prefix('quality-control')->name('quality-control.')->group(function () {
+    Route::middleware('can:quality_control.view')->prefix('quality-control')->name('quality-control.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\QualityControlController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Admin\QualityControlController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\Admin\QualityControlController::class, 'store'])->name('store');
+        Route::middleware('can:quality_control.create')->group(function () {
+            Route::get('/create', [\App\Http\Controllers\Admin\QualityControlController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\QualityControlController::class, 'store'])->name('store');
+        });
         Route::get('/{id}', [\App\Http\Controllers\Admin\QualityControlController::class, 'show'])->name('show');
     });
 
     // Production Routes
-    Route::prefix('production')->name('production.')->group(function () {
+    Route::middleware('can:production.view')->prefix('production')->name('production.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\ProductionController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Admin\ProductionController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\Admin\ProductionController::class, 'store'])->name('store');
+        Route::middleware('can:production.create')->group(function () {
+            Route::get('/create', [\App\Http\Controllers\Admin\ProductionController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\ProductionController::class, 'store'])->name('store');
+        });
         Route::get('/{id}', [\App\Http\Controllers\Admin\ProductionController::class, 'show'])->name('show');
     });
 
