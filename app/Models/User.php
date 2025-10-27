@@ -4,27 +4,28 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\AuthorizationChecker;
 use App\Concerns\QueryBuilderTrait;
 use App\Notifications\AdminResetPasswordNotification;
-use App\Concerns\AuthorizationChecker;
 use App\Observers\UserObserver;
+use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 use Illuminate\Auth\Notifications\ResetPassword as DefaultResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Traits\HasPermissions;
 
 #[ObservedBy([UserObserver::class])]
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail, HasName
 {
     use AuthorizationChecker;
     use HasApiTokens;
     use HasFactory;
-    use HasRoles;
     use HasPermissions;
     use Notifiable;
     use QueryBuilderTrait;
@@ -232,5 +233,19 @@ class User extends Authenticatable
     public function getFullNameAttribute(): string
     {
         return trim($this->first_name . ' ' . $this->last_name);
+    }
+
+    public function getFilamentName(): string
+    {
+        return $this->full_name;
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'admin') {
+            return $this->isSuperAdmin();
+        }
+
+        return true;
     }
 }
