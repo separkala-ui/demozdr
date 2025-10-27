@@ -289,6 +289,11 @@
                         </div>
                     </div>
                 </form>
+
+                <!-- Branch Users Management Section -->
+                <div class="mt-6 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+                    @livewire('admin.branch-users-management', ['ledger' => $ledger], key('branch-users-'.$ledger->id))
+                </div>
             </div>
 
             <!-- Current Info Sidebar -->
