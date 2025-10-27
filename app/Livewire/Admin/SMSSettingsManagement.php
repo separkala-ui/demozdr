@@ -152,6 +152,6 @@ class SMSSettingsManagement extends Component
 
     public function render()
     {
-        return view('livewire.admin.s-m-s-settings-management');
+        return view('livewire.admin.sms-settings-management');
     }
 }
