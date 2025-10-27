@@ -29,6 +29,7 @@ class PettyCashLedger extends Model
         'iban',
         'card_number',
         'account_holder',
+        'manager_mobile',
     ];
 
     protected $casts = [
@@ -63,6 +64,24 @@ class PettyCashLedger extends Model
     public function assignedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
+    }
+
+    /**
+     * Get all users with access to this branch (many-to-many).
+     */
+    public function branchUsers()
+    {
+        return $this->hasMany(BranchUser::class, 'ledger_id');
+    }
+
+    /**
+     * Get all users with access to this branch through pivot table.
+     */
+    public function accessUsers()
+    {
+        return $this->belongsToMany(User::class, 'branch_users', 'ledger_id', 'user_id')
+            ->withPivot('access_type', 'is_active', 'permissions')
+            ->withTimestamps();
     }
 
     public function cycles(): HasMany

@@ -36,6 +36,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'mobile',
         'password',
         'username',
         'avatar_id',
@@ -141,6 +142,38 @@ class User extends Authenticatable
     public function branch(): BelongsTo
     {
         return $this->belongsTo(PettyCashLedger::class, 'branch_id');
+    }
+
+    /**
+     * Get all branches this user has access to (many-to-many).
+     */
+    public function branchUsers()
+    {
+        return $this->hasMany(BranchUser::class);
+    }
+
+    /**
+     * Get all branches (ledgers) this user has access to.
+     */
+    public function branches()
+    {
+        return $this->belongsToMany(Ledger::class, 'branch_users', 'user_id', 'ledger_id')
+            ->withPivot('access_type', 'is_active', 'permissions')
+            ->withTimestamps();
+    }
+
+    /**
+     * Check if user has access to a specific branch with a specific access type.
+     */
+    public function hasAccessToBranch(int $ledgerId, ?string $accessType = null): bool
+    {
+        $query = $this->branchUsers()->where('ledger_id', $ledgerId)->where('is_active', true);
+        
+        if ($accessType) {
+            $query->where('access_type', $accessType);
+        }
+        
+        return $query->exists();
     }
 
     /**
