@@ -19,6 +19,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Traits\HasRoles;
 
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements MustVerifyEmail, HasName
@@ -27,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasName
     use HasApiTokens;
     use HasFactory;
     use HasPermissions;
+    use HasRoles;
     use Notifiable;
     use QueryBuilderTrait;
 
