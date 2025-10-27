@@ -337,10 +337,18 @@ class AdminMenuService
             'active' => request()->is('admin/inspection*') || request()->is('admin/quality*') || request()->is('admin/production*') || request()->is('filament*'),
             'children' => [
                 [
+                    'label' => __('📊 داشبورد فرم‌ها'),
+                    'icon' => 'lucide:layout-dashboard',
+                    'route' => route('admin.forms.dashboard'),
+                    'active' => Route::is('admin.forms.dashboard'),
+                    'priority' => 5,
+                    'permissions' => 'form.view',
+                ],
+                [
                     'label' => __('مدیریت الگوهای فرم'),
                     'icon' => 'lucide:file-text',
-                    'route' => '/filament/form-templates',
-                    'active' => request()->is('filament/form-templates*'),
+                    'route' => route('admin.form-templates.index'),
+                    'active' => Route::is('admin.form-templates.index'),
                     'priority' => 10,
                     'permissions' => 'form.view',
                 ],

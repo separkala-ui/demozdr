@@ -156,6 +156,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('/action-logs', [ActionLogController::class, 'index'])->name('action-logs.index');
 
     // ========== عملیات و کنترل کیفیت ==========
+    // Form Templates Dashboard
+    Route::middleware('can:form.view')->get('/forms-dashboard', [\App\Http\Controllers\Admin\FormTemplateDashboardController::class, 'index'])->name('forms.dashboard');
+    
+    // Form Templates Management (Livewire)
+    Route::middleware('can:form.view')->get('/form-templates', function () {
+        return view('livewire.embed-form-manager');
+    })->name('form-templates.index');
     // Inspection Routes
     Route::middleware('can:inspection.view')->prefix('inspection')->name('inspection.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\InspectionController::class, 'index'])->name('index');
@@ -230,6 +237,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::get('/success/{report}', [\App\Http\Controllers\Admin\FormTemplateController::class, 'success'])->name('success');
         Route::get('/{template}/preview', [\App\Http\Controllers\Admin\FormTemplateController::class, 'preview'])->name('preview');
     });
+
+    // Livewire Form Template Manager (Integrated Dashboard)
+    Route::middleware('can:form.view')->get('/form-templates', function () {
+        return view('livewire.embed-form-manager');
+    })->name('form-templates.index');
 });
 
 /**
