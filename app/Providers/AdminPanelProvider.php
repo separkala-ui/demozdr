@@ -12,6 +12,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
+use Filament\Navigation\MenuItem;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -38,6 +39,17 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->widgets([
                 Widgets\AccountWidget::class,
+            ])
+            ->userMenuItems([
+                'dashboard' => MenuItem::make()
+                    ->label('داشبورد اصلی')
+                    ->url(fn (): string => route('admin.dashboard'))
+                    ->icon('heroicon-o-home'),
+                'horizon' => MenuItem::make()
+                    ->label('Horizon (Queue)')
+                    ->url(fn (): string => '/horizon/dashboard')
+                    ->icon('heroicon-o-bolt')
+                    ->visible(fn (): bool => auth()->user()?->hasRole('Superadmin') ?? false),
             ])
             ->middleware([
                 EncryptCookies::class,

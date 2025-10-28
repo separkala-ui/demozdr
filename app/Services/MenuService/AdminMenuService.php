@@ -347,8 +347,8 @@ class AdminMenuService
                 [
                     'label' => __('مدیریت الگوهای فرم'),
                     'icon' => 'lucide:file-text',
-                    'route' => route('admin.form-templates.index'),
-                    'active' => Route::is('admin.form-templates.index'),
+                    'route' => '/filament/form-templates',
+                    'active' => request()->is('filament/form-templates*'),
                     'priority' => 10,
                     'permissions' => 'form.view',
                 ],
