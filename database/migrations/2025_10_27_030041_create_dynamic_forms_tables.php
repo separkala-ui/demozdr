@@ -38,7 +38,7 @@ return new class extends Migration
         Schema::create('form_reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('template_id')->constrained('form_templates')->onDelete('cascade');
-            $table->foreignId('ledger_id')->constrained('petty_cash_ledgers')->onDelete('cascade');
+            $table->foreignId('ledger_id')->nullable()->constrained('petty_cash_ledgers')->onDelete('cascade');
             $table->foreignId('reporter_id')->constrained('users')->onDelete('cascade');
             $table->string('status')->default('in_progress');
             $table->timestamp('completed_at')->nullable();
