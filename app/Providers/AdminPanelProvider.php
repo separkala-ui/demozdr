@@ -13,6 +13,8 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use Filament\Navigation\MenuItem;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -47,10 +49,14 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-home'),
                 'horizon' => MenuItem::make()
                     ->label('Horizon (Queue)')
-                    ->url(fn (): string => '/horizon/dashboard')
+                    ->url(fn (): string => '/admin/horizon-welcome')
                     ->icon('heroicon-o-bolt')
                     ->visible(fn (): bool => auth()->user()?->hasRole('Superadmin') ?? false),
             ])
+            ->renderHook(
+                PanelsRenderHook::BODY_START,
+                fn (): string => Blade::render('@include(\'filament.components.dashboard-nav\')')
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
