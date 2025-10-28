@@ -242,6 +242,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::middleware('can:form.view')->get('/form-templates', function () {
         return view('livewire.embed-form-manager');
     })->name('form-templates.index');
+
+    // Horizon Welcome Page (فقط Superadmin)
+    Route::get('/horizon-welcome', function () {
+        return view('horizon-welcome');
+    })->middleware('role:Superadmin')->name('horizon.welcome');
 });
 
 /**

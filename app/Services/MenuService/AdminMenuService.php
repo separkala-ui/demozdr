@@ -211,6 +211,13 @@ class AdminMenuService
                     'priority' => 20,
                     'permissions' => 'pulse.view',
                 ],
+                [
+                    'label' => __('⚡ Horizon (Job Queue)'),
+                    'route' => route('admin.horizon.welcome'),
+                    'active' => request()->is('horizon*') || request()->is('admin/horizon-welcome'),
+                    'priority' => 30,
+                    'permissions' => 'role:Superadmin',
+                ],
             ],
         ], __('More'));
 
