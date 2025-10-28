@@ -11,7 +11,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('forms.submit', $template) }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.forms.submit', $template) }}" method="POST" class="space-y-6">
                 @csrf
 
                 @foreach($fields as $field)
@@ -103,7 +103,7 @@
                 @endforeach
 
                 <div class="flex justify-between pt-6 border-t">
-                    <a href="{{ route('forms.preview', $template) }}" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
+                    <a href="{{ route('admin.forms.preview', $template) }}" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
                         پیش‌نمایش
                     </a>
                     <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">

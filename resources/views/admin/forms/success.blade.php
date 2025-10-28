@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="flex gap-4 justify-center">
-                    <a href="{{ route('forms.preview', $report->template) }}" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    <a href="{{ route('admin.forms.preview', $report->template) }}" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                         دانلود نسخه PDF
                     </a>
                     <a href="{{ route('admin.dashboard') }}" class="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">

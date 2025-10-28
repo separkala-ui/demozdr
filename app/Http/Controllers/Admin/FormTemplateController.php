@@ -50,7 +50,7 @@ class FormTemplateController extends Controller
             }
         }
 
-        return redirect()->route('forms.success', $report)
+        return redirect()->route('admin.forms.success', $report)
             ->with('success', 'فرم با موفقیت ثبت شد');
     }
 
