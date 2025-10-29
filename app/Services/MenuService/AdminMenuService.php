@@ -223,7 +223,7 @@ class AdminMenuService
                     'route' => route('admin.database-backup.index'),
                     'active' => request()->is('admin/database-backup*'),
                     'priority' => 40,
-                    'permissions' => 'role:Superadmin',
+                    'role' => 'Superadmin',
                 ],
             ],
         ], __('More'));
