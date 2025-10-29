@@ -218,6 +218,13 @@ class AdminMenuService
                     'priority' => 30,
                     'permissions' => 'role:Superadmin',
                 ],
+                [
+                    'label' => __('💾 بک‌آپ دیتابیس'),
+                    'route' => route('admin.database-backup.index'),
+                    'active' => request()->is('admin/database-backup*'),
+                    'priority' => 40,
+                    'permissions' => 'role:Superadmin',
+                ],
             ],
         ], __('More'));
 

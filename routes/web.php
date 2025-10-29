@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\AlertSettingsController;
+use App\Http\Controllers\Admin\DatabaseBackupController;
 use App\Http\Controllers\Admin\SystemAnnouncementsController;
 use App\Http\Controllers\Backend\ActionLogController;
 use App\Http\Controllers\Backend\Auth\ScreenshotGeneratorLoginController;
@@ -247,6 +248,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('/horizon-welcome', function () {
         return view('horizon-welcome');
     })->middleware('role:Superadmin')->name('horizon.welcome');
+
+    // Database Backup Management (فقط Superadmin)
+    Route::middleware('role:Superadmin')->prefix('database-backup')->name('database-backup.')->group(function () {
+        Route::get('/', [DatabaseBackupController::class, 'index'])->name('index');
+        Route::post('/create', [DatabaseBackupController::class, 'create'])->name('create');
+        Route::get('/download/{filename}', [DatabaseBackupController::class, 'download'])->name('download');
+        Route::delete('/delete/{filename}', [DatabaseBackupController::class, 'delete'])->name('delete');
+        Route::post('/restore/{filename}', [DatabaseBackupController::class, 'restore'])->name('restore');
+        Route::post('/upload', [DatabaseBackupController::class, 'upload'])->name('upload');
+    });
 });
 
 /**
