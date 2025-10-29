@@ -58,7 +58,7 @@
                     @forelse($settings as $setting)
                         <tr class="hover:bg-slate-50 transition-colors">
                             <td class="px-6 py-4">
-                                <div>
+<div>
                                     <p class="font-medium text-slate-900">{{ $setting->title_fa }}</p>
                                     @if($setting->description_fa)
                                         <p class="mt-0.5 text-xs text-slate-500">{{ Str::limit($setting->description_fa, 60) }}</p>
