@@ -72,7 +72,7 @@ services:
     container_name: zdr_redis
     restart: unless-stopped
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "${REDIS_HOST_PORT:-6379}:6379"
     networks:
       - zdr
 
@@ -86,7 +86,7 @@ services:
       MYSQL_USER: ${DB_USERNAME:-zdr}
       MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
     ports:
-      - "${DB_PORT:-3306}:3306"
+      - "${DB_HOST_PORT:-3306}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:

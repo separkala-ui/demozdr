@@ -32,6 +32,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        app()->singleton('isDocker', function () {
+            if (file_exists(base_path('docker/.in-docker'))) {
+                return true;
+            }
+
+            return file_exists('/.dockerenv')
+                || (is_dir('/proc/1') && trim((string) @file_get_contents('/proc/1/cgroup')) !== ''
+                    && str_contains((string) @file_get_contents('/proc/1/cgroup'), 'docker'));
+        });
+
         // Handle "/" route redirection.
         if (
             ! $this->app->runningInConsole() &&

@@ -32,6 +32,10 @@
     {!! Hook::applyFilters(AdminFilterHook::ADMIN_HEAD, '') !!}
 </head>
 
+@php
+$isDocker = file_exists(base_path('docker/.in-docker'));
+@endphp
+
 <body x-data="{
     page: 'ecommerce',
     darkMode: false,
@@ -53,6 +57,13 @@ x-init="
 
     <!-- Page Wrapper with smooth fade-in -->
     <div class="app-container flex h-screen overflow-hidden">
+        @if($isDocker)
+            <div class="fixed bottom-4 right-3 z-50">
+                <span class="rounded-full bg-blue-600/90 text-white text-xs font-semibold px-3 py-1 shadow-lg">
+                    Docker
+                </span>
+            </div>
+        @endif
         @include('backend.layouts.partials.sidebar.logo')
 
         <!-- Content Area -->
