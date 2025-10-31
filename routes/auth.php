@@ -28,7 +28,7 @@ Route::group(['middleware' => 'guest'], function () {
         ->middleware(['recaptcha:registration', 'throttle:20,1']);
 
     // Login Routes - GET only
-    Route::get('login', [UserLoginController::class, 'showLoginForm'])->name('login');
+    Route::get('login', [UserLoginController::class, 'showLoginForm'])->name('login.form');
 
     // Password Reset Routes.
     Route::get('password/reset', [UserForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
