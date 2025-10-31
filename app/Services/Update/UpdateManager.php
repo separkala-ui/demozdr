@@ -32,13 +32,10 @@ class UpdateManager
 
     public function syncCurrentVersion(?string $version = null): string
     {
-        if (! $version) {
-            $version = $this->detectGitVersion() ?? 'unknown';
-        }
+        $prepared = $this->prepareVersionForStorage($version ?? $this->detectGitVersion() ?? 'unknown');
+        add_setting(self::CURRENT_VERSION_KEY, $prepared, true);
 
-        add_setting(self::CURRENT_VERSION_KEY, $version, true);
-
-        return $version;
+        return $prepared;
     }
 
     public function getUpdateStatus(bool $forceRefresh = false): array
@@ -64,12 +61,12 @@ class UpdateManager
             $current = $this->getCurrentVersion();
 
             $hasUpdate = $latest && ! empty($latest['version'])
-                ? ! hash_equals($this->normalizeHash($latest['version']), $this->normalizeHash($current))
+                ? $this->versionsDiffer($latest['version'], $current)
                 : false;
 
             if ($latest) {
                 add_setting(self::LAST_CHECK_AT_KEY, now()->toDateTimeString());
-                add_setting(self::LAST_REMOTE_VERSION_KEY, $latest['version']);
+                add_setting(self::LAST_REMOTE_VERSION_KEY, $this->prepareVersionForStorage($latest['version'] ?? ''));
             }
 
             return [
@@ -145,7 +142,6 @@ class UpdateManager
     protected function fetchFromGitHub(): ?array
     {
         $repo = config('update.repository.name');
-        $branch = config('update.repository.branch', 'main');
 
         if (! $repo) {
             return null;
@@ -157,26 +153,23 @@ class UpdateManager
             $request = $request->withToken($token);
         }
 
-        $response = $request->get("https://api.github.com/repos/{$repo}/commits/{$branch}");
+        if ($this->versionSource() === 'tag') {
+            $release = $this->fetchGithubRelease($request, $repo);
+            if ($release && ! empty($release['version'])) {
+                return $release;
+            }
 
-        if (! $response->successful()) {
-            return null;
+            $commit = $this->fetchGithubCommit($request, $repo) ?? [];
+            $versionFromFile = $this->fetchVersionFromFile($request, $repo, Arr::get($commit, 'commit'));
+            if ($versionFromFile) {
+                $commit['version'] = $versionFromFile;
+                $commit['tag'] = $versionFromFile;
+            }
+
+            return $commit ?: null;
         }
 
-        $data = $response->json();
-
-        if (! $data) {
-            return null;
-        }
-
-        return [
-            'version' => Arr::get($data, 'sha'),
-            'short_hash' => substr((string) Arr::get($data, 'sha'), 0, 7),
-            'published_at' => Arr::get($data, 'commit.author.date'),
-            'message' => (string) Arr::get($data, 'commit.message'),
-            'author' => Arr::get($data, 'commit.author.name'),
-            'url' => Arr::get($data, 'html_url'),
-        ];
+        return $this->fetchGithubCommit($request, $repo);
     }
 
     protected function fetchFromManifest(): ?array
@@ -205,8 +198,11 @@ class UpdateManager
             return null;
         }
 
+        $rawVersion = Arr::get($data, 'version');
+
         return [
-            'version' => Arr::get($data, 'version'),
+            'version' => $this->sanitizeVersion($rawVersion) ?? $rawVersion,
+            'tag' => Arr::get($data, 'tag', $rawVersion),
             'short_hash' => Arr::get($data, 'short_hash'),
             'published_at' => Arr::get($data, 'released_at'),
             'message' => Arr::get($data, 'message'),
@@ -216,6 +212,144 @@ class UpdateManager
     }
 
     protected function detectGitVersion(): ?string
+    {
+        if ($this->versionSource() === 'tag') {
+            $tag = $this->detectGitTag();
+            if ($tag) {
+                return $this->sanitizeVersion($tag);
+            }
+
+             $manifestVersion = $this->detectVersionFromFile();
+             if ($manifestVersion) {
+                 return $manifestVersion;
+             }
+        }
+
+        return $this->detectGitCommit();
+    }
+
+    protected function fetchGithubRelease($request, string $repo): ?array
+    {
+        $response = $request->get("https://api.github.com/repos/{$repo}/releases/latest");
+
+        if (! $response->successful()) {
+            return null;
+        }
+
+        $data = $response->json();
+        $tag = Arr::get($data, 'tag_name');
+
+        if (! $tag) {
+            return null;
+        }
+
+        $commitData = $this->fetchGithubCommit($request, $repo, $tag) ?? [];
+        $commitSha = Arr::get($commitData, 'commit') ?? Arr::get($commitData, 'version');
+
+        $version = $this->sanitizeVersion($tag);
+
+        if (! $version) {
+            $version = $this->fetchVersionFromFile($request, $repo, $tag);
+        }
+
+        return [
+            'version' => $version ?? $this->sanitizeVersion($tag),
+            'tag' => $tag,
+            'short_hash' => substr((string) $commitSha, 0, 7),
+            'commit' => $commitSha,
+            'published_at' => Arr::get($data, 'published_at') ?? Arr::get($commitData, 'published_at'),
+            'message' => Arr::get($data, 'name') ?: Arr::get($data, 'body') ?: Arr::get($commitData, 'message'),
+            'author' => Arr::get($data, 'author.login') ?? Arr::get($commitData, 'author'),
+            'url' => Arr::get($data, 'html_url'),
+        ];
+    }
+
+    protected function fetchGithubCommit($request, string $repo, ?string $ref = null): ?array
+    {
+        $ref = $ref ?? config('update.repository.branch', 'main');
+
+        $response = $request->get("https://api.github.com/repos/{$repo}/commits/{$ref}");
+
+        if (! $response->successful()) {
+            return null;
+        }
+
+        $data = $response->json();
+
+        if (! $data) {
+            return null;
+        }
+
+        return [
+            'version' => Arr::get($data, 'sha'),
+            'short_hash' => substr((string) Arr::get($data, 'sha'), 0, 7),
+            'commit' => Arr::get($data, 'sha'),
+            'published_at' => Arr::get($data, 'commit.author.date'),
+            'message' => (string) Arr::get($data, 'commit.message'),
+            'author' => Arr::get($data, 'commit.author.name'),
+            'url' => Arr::get($data, 'html_url'),
+        ];
+    }
+
+    protected function detectVersionFromFile(): ?string
+    {
+        $file = $this->versionFile();
+
+        if (! $file) {
+            return null;
+        }
+
+        $path = base_path($file);
+
+        if (! file_exists($path)) {
+            return null;
+        }
+
+        $contents = file_get_contents($path);
+
+        if ($contents === false) {
+            return null;
+        }
+
+        return $this->extractVersionFromContents($contents, $file);
+    }
+
+    protected function fetchVersionFromFile($request, string $repo, ?string $ref = null): ?string
+    {
+        $file = $this->versionFile();
+
+        if (! $file) {
+            return null;
+        }
+
+        $ref = $ref ?? config('update.repository.branch', 'main');
+        $url = "https://raw.githubusercontent.com/{$repo}/{$ref}/{$file}";
+
+        $response = $request->get($url);
+
+        if (! $response->successful()) {
+            return null;
+        }
+
+        return $this->extractVersionFromContents($response->body(), $file);
+    }
+
+    protected function extractVersionFromContents(string $contents, string $file): ?string
+    {
+        $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+        if ($extension === 'json') {
+            $data = json_decode($contents, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return null;
+            }
+
+            return $this->sanitizeVersion(Arr::get($data, 'version'));
+        }
+
+        return $this->sanitizeVersion($contents);
+    }
+    protected function detectGitCommit(): ?string
     {
         try {
             $process = Process::command(['git', 'rev-parse', 'HEAD'])
@@ -231,6 +365,76 @@ class UpdateManager
         }
 
         return null;
+    }
+
+    protected function detectGitTag(): ?string
+    {
+        try {
+            $process = Process::command(['git', 'describe', '--tags', '--abbrev=0'])
+                ->path(base_path())
+                ->timeout(15)
+                ->run();
+
+            if ($process->successful()) {
+                return trim($process->output());
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        return null;
+    }
+
+    protected function versionFile(): ?string
+    {
+        return config('update.version_file');
+    }
+
+    protected function versionSource(): string
+    {
+        return config('update.version_source', 'commit');
+    }
+
+    protected function sanitizeVersion(?string $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $value = trim((string) $value);
+
+        if ($this->versionSource() === 'tag') {
+            return ltrim($value, 'vV');
+        }
+
+        return $value;
+    }
+
+    protected function prepareVersionForStorage(?string $value): string
+    {
+        $value = $value ?? '';
+
+        if ($this->versionSource() === 'tag') {
+            return $this->sanitizeVersion($value) ?: 'unknown';
+        }
+
+        return $this->normalizeHash($value);
+    }
+
+    protected function versionsDiffer(?string $latest, ?string $current): bool
+    {
+        if ($this->versionSource() === 'tag') {
+            $latestVersion = $this->sanitizeVersion($latest);
+            $currentVersion = $this->sanitizeVersion($current);
+
+            if (! $latestVersion || ! $currentVersion) {
+                return $latestVersion !== $currentVersion;
+            }
+
+            return version_compare($latestVersion, $currentVersion, '>');
+        }
+
+        return ! hash_equals($this->normalizeHash($latest), $this->normalizeHash($current));
     }
 
     protected function normalizeHash(?string $value): string

@@ -44,7 +44,7 @@
             <div class="rounded-lg border border-stroke p-4 dark:border-dark-3">
                 <p class="text-xs text-dark-5 dark:text-dark-6">آخرین نسخه موجود</p>
                 <p class="mt-1 text-lg font-semibold text-dark dark:text-white">
-                    {{ $status['latest_details']['short_hash'] ?? \Illuminate\Support\Str::limit($status['latest_version'] ?? '—', 10, '') }}
+                    {{ $status['latest_details']['version'] ?? $status['latest_details']['tag'] ?? $status['latest_details']['short_hash'] ?? \Illuminate\Support\Str::limit($status['latest_version'] ?? '—', 10, '') }}
                 </p>
                 <p class="text-xs text-dark-5 dark:text-dark-6">
                     {{ $status['latest_details']['message'] ?? '—' }}

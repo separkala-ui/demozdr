@@ -84,6 +84,30 @@ sudo systemctl enable fail2ban
 
 ## 📦 نصب و پیکربندی
 
+### 🐳 استقرار سریع با Docker Compose
+
+> در صورتی که بخواهید بدون نصب دستی PHP/Node سرویس را اجرا کنید، از پیکربندی Docker استفاده کنید.
+
+1. فایل `.env.docker` را بر اساس `.env.docker.example` تکمیل کنید (خصوصاً `APP_KEY` و مشخصات پایگاه‌داده).
+2. دستورات زیر را اجرا کنید:
+   ```bash
+   docker compose build
+   docker compose up -d
+   docker compose exec app composer install --no-dev --prefer-dist
+   docker compose exec app npm install
+   docker compose exec app npm run build
+   docker compose exec app php artisan key:generate --force
+   docker compose exec app php artisan migrate --force
+   ```
+3. سرویس‌های موجود:
+   - `web` : وب‌سرور Nginx (پورت پیش‌فرض `8080`، قابل تغییر با متغیر `APP_PORT`).
+   - `app` : سرویس اصلی PHP-FPM که دستورات `composer`، `npm` و `artisan` در آن اجرا می‌شوند.
+   - `horizon` : پردازش صف‌ها و Horizon dashboard.
+   - `scheduler` : اجرای `php artisan schedule:work`.
+   - `redis` و `mysql` : سرویس‌های پشتیبان.
+
+> برای مشاهده‌ی لاگ هر سرویس می‌توانید از `docker compose logs -f web` یا `docker compose logs -f horizon` استفاده کنید.
+
 ### 1. آماده‌سازی مسیرها
 
 ```bash
@@ -644,4 +668,3 @@ jobs:
 **✅ استقرار کامل شد!**
 
 برای پشتیبانی: support@zdr.ir
-

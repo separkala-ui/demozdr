@@ -1,190 +1,100 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  # PHP-FPM Application
   app:
     build:
       context: .
-      dockerfile: docker/Dockerfile
-      args:
-        PHP_VERSION: 8.4
+      dockerfile: docker/php/Dockerfile
+    image: zdr-app:latest
     container_name: zdr_app
     restart: unless-stopped
-    working_dir: /var/www
     volumes:
-      - ./:/var/www
-      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
-    environment:
-      - APP_ENV=${APP_ENV:-local}
-      - APP_DEBUG=${APP_DEBUG:-true}
-      - DB_HOST=db
-      - DB_DATABASE=${DB_DATABASE:-zdr_database}
-      - DB_USERNAME=${DB_USERNAME:-zdr_user}
-      - DB_PASSWORD=${DB_PASSWORD:-zdr_password}
-      - REDIS_HOST=redis
-      - CACHE_DRIVER=redis
-      - SESSION_DRIVER=redis
-      - QUEUE_CONNECTION=redis
-    networks:
-      - zdr_network
+      - ./:/var/www/html
+    env_file:
+      - .env.docker
     depends_on:
-      - db
+      - mysql
       - redis
+    networks:
+      - zdr
 
-  # Nginx Web Server
-  nginx:
-    image: nginx:alpine
-    container_name: zdr_nginx
+  web:
+    image: nginx:1.25-alpine
+    container_name: zdr_web
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-80}:80"
-      - "${APP_SSL_PORT:-443}:443"
+      - "${APP_PORT:-8080}:80"
     volumes:
-      - ./:/var/www
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./storage/logs/nginx:/var/log/nginx
-    networks:
-      - zdr_network
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - app
-
-  # MySQL Database
-  db:
-    image: mariadb:10.11
-    container_name: zdr_db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-zdr_database}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
-      MYSQL_USER: ${DB_USERNAME:-zdr_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-zdr_password}
-      MYSQL_CHARACTER_SET_SERVER: utf8mb4
-      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
-    ports:
-      - "${DB_PORT:-3306}:3306"
-    volumes:
-      - zdr_dbdata:/var/lib/mysql
-      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf
     networks:
-      - zdr_network
-    command: --default-authentication-plugin=mysql_native_password
+      - zdr
 
-  # Redis Cache & Queue
+  horizon:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    image: zdr-app:latest
+    container_name: zdr_horizon
+    restart: unless-stopped
+    command: php artisan horizon
+    env_file:
+      - .env.docker
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - app
+      - redis
+    networks:
+      - zdr
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    image: zdr-app:latest
+    container_name: zdr_scheduler
+    restart: unless-stopped
+    command: php artisan schedule:work
+    env_file:
+      - .env.docker
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - app
+    networks:
+      - zdr
+
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     container_name: zdr_redis
     restart: unless-stopped
     ports:
       - "${REDIS_PORT:-6379}:6379"
-    volumes:
-      - zdr_redis:/data
     networks:
-      - zdr_network
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
+      - zdr
 
-  # Queue Worker
-  queue:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-      args:
-        PHP_VERSION: 8.4
-    container_name: zdr_queue
+  mysql:
+    image: mysql:8.0
+    container_name: zdr_mysql
     restart: unless-stopped
-    working_dir: /var/www
-    volumes:
-      - ./:/var/www
     environment:
-      - APP_ENV=${APP_ENV:-local}
-      - DB_HOST=db
-      - REDIS_HOST=redis
-      - QUEUE_CONNECTION=redis
-    networks:
-      - zdr_network
-    depends_on:
-      - app
-      - redis
-    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
-
-  # Scheduler (Cron)
-  scheduler:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-      args:
-        PHP_VERSION: 8.4
-    container_name: zdr_scheduler
-    restart: unless-stopped
-    working_dir: /var/www
-    volumes:
-      - ./:/var/www
-    environment:
-      - APP_ENV=${APP_ENV:-local}
-      - DB_HOST=db
-      - REDIS_HOST=redis
-    networks:
-      - zdr_network
-    depends_on:
-      - app
-    command: >
-      sh -c "while true; do
-        php artisan schedule:run --verbose --no-interaction &
-        sleep 60
-      done"
-
-  # Node.js for Development (optional)
-  node:
-    image: node:20-alpine
-    container_name: zdr_node
-    working_dir: /var/www
-    volumes:
-      - ./:/var/www
-    profiles:
-      - dev
-    networks:
-      - zdr_network
-    command: sh -c "npm install && npm run dev"
-
-  # phpMyAdmin (optional)
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: zdr_phpmyadmin
-    restart: unless-stopped
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_DATABASE:-zdr}
+      MYSQL_USER: ${DB_USERNAME:-zdr}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
     ports:
-      - "${PHPMYADMIN_PORT:-8080}:80"
-    environment:
-      PMA_HOST: db
-      PMA_USER: ${DB_USERNAME:-zdr_user}
-      PMA_PASSWORD: ${DB_PASSWORD:-zdr_password}
-      UPLOAD_LIMIT: 64M
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
-      - zdr_network
-    depends_on:
-      - db
-    profiles:
-      - tools
-
-  # Mailhog for Email Testing (optional)
-  mailhog:
-    image: mailhog/mailhog
-    container_name: zdr_mailhog
-    restart: unless-stopped
-    ports:
-      - "${MAILHOG_PORT:-8025}:8025"
-      - "${MAILHOG_SMTP_PORT:-1025}:1025"
-    networks:
-      - zdr_network
-    profiles:
-      - dev
-
-networks:
-  zdr_network:
-    driver: bridge
+      - zdr
 
 volumes:
-  zdr_dbdata:
-    driver: local
-  zdr_redis:
-    driver: local
+  mysql_data:
 
+networks:
+  zdr:
+    driver: bridge
