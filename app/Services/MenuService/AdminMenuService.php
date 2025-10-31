@@ -99,6 +99,8 @@ class AdminMenuService
 
     public function getMenu()
     {
+        $user = auth()->user();
+
         $this->addMenuItem([
             'label' => __('Dashboard'),
             'icon' => 'lucide:layout-dashboard',
@@ -130,8 +132,18 @@ class AdminMenuService
             'permissions' => 'module.view',
         ], __('More'));
 
+        if ($user && $user->hasRole(['Superadmin'])) {
+            $this->addMenuItem([
+                'label' => __('به‌روزرسانی سیستم'),
+                'icon' => 'lucide:refresh-ccw',
+                'route' => route('admin.system-updates.index'),
+                'active' => Route::is('admin.system-updates.index'),
+                'id' => 'system-updates',
+                'priority' => 20,
+            ], __('System'));
+        }
+
         $defaultLedgerId = null;
-        $user = auth()->user();
 
         if ($user?->branch_id) {
             $defaultLedgerId = $user->branch_id;

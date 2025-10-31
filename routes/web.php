@@ -250,6 +250,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     })->middleware('role:Superadmin')->name('horizon.welcome');
 
     // Database Backup Management (فقط Superadmin)
+    // System Update Dashboard (Superadmin only)
+    Route::middleware('role:Superadmin')->get('/system-updates', function () {
+        return view('backend.pages.updates.index');
+    })->name('system-updates.index');
+
     Route::middleware('role:Superadmin')->prefix('database-backup')->name('database-backup.')->group(function () {
         Route::get('/', [DatabaseBackupController::class, 'index'])->name('index');
         Route::post('/create', [DatabaseBackupController::class, 'create'])->name('create');

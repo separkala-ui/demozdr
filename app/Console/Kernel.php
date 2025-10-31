@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\SetupStorage::class,
         Commands\CreatePlaceholderImages::class,
         Commands\PettyCashArchive::class,
+        Commands\SyncCurrentVersion::class,
     ];
 
     /**
@@ -32,6 +33,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('petty-cash:archive --period=daily')->dailyAt('23:59');
         $schedule->command('petty-cash:archive --period=3days')->cron('59 23 */3 * *'); // Every 3 days at 23:59
         $schedule->command('petty-cash:archive --period=weekly')->weeklyOn(6, '23:59'); // Every Saturday at 23:59
+
+        // Sync git version to settings daily
+        $schedule->command('zdr:update:sync')->dailyAt('01:00');
     }
 
     /**
