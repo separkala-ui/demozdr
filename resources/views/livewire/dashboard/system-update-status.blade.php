@@ -65,7 +65,7 @@
                 @elseif($status['has_update'] ?? false)
                     <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-success px-3 py-1 text-xs font-semibold text-white">به‌روزرسانی موجود است</span>
                 @else
-                    <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-success px-3 py-1 text-xs font-semibold text-white">سیستم به‌روز است</span>
+                    <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success dark:text-success">سیستم به‌روز است</span>
                 @endif
             </div>
 
