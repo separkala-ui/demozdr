@@ -325,7 +325,13 @@ class UpdateManager
         $ref = $ref ?? config('update.repository.branch', 'main');
         $url = "https://raw.githubusercontent.com/{$repo}/{$ref}/{$file}";
 
-        $response = $request->get($url);
+        $http = Http::timeout(15);
+
+        if ($token = config('update.token')) {
+            $http = $http->withToken($token);
+        }
+
+        $response = $http->get($url);
 
         if (! $response->successful()) {
             return null;
