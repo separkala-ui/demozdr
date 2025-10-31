@@ -16,6 +16,7 @@ RUN apt-get update && \
         libxml2-dev \
         libssl-dev \
         libpq-dev \
+        default-mysql-client \
         cron \
         supervisor && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \

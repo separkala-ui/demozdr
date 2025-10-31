@@ -76,6 +76,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('/petty-cash/backups', [PettyCashController::class, 'backups'])->name('petty-cash.backups');
     Route::get('/petty-cash/backups/{filename}/download', [PettyCashController::class, 'downloadBackup'])->name('petty-cash.backup.download');
     Route::delete('/petty-cash/backups/{filename}', [PettyCashController::class, 'deleteBackup'])->name('petty-cash.backup.delete');
+    Route::post('/petty-cash/backups/database', [PettyCashController::class, 'createDatabaseBackup'])->name('petty-cash.backups.database.create');
+    Route::post('/petty-cash/backups/database/restore', [PettyCashController::class, 'restoreDatabaseBackup'])->name('petty-cash.backups.database.restore');
+    Route::post('/petty-cash/backups/database/{filename}/restore', [PettyCashController::class, 'restoreDatabaseBackupFromList'])->name('petty-cash.backups.database.restore-existing');
+    Route::get('/petty-cash/backups/database/{filename}/download', [PettyCashController::class, 'downloadDatabaseBackup'])->name('petty-cash.backups.database.download');
+    Route::delete('/petty-cash/backups/database/{filename}', [PettyCashController::class, 'deleteDatabaseBackup'])->name('petty-cash.backups.database.delete');
+    Route::post('/petty-cash/backups/database/{filename}/email', [PettyCashController::class, 'emailDatabaseBackup'])->name('petty-cash.backups.database.email');
     Route::post('/petty-cash/module-backup', [PettyCashController::class, 'downloadModulePackage'])->name('petty-cash.module-backup');
     Route::get('/petty-cash/archives', [PettyCashController::class, 'archivesIndex'])->name('petty-cash.archives.index');
     Route::get('/petty-cash/archives/{cycle}', [PettyCashController::class, 'showArchive'])

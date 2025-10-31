@@ -8,6 +8,7 @@ use App\Models\PettyCashCycle;
 use App\Models\PettyCashTransaction;
 use App\Models\User;
 use App\Services\PettyCash\PettyCashService;
+use App\Services\Backup\DatabaseBackupService;
 use App\Services\PettyCash\PettyCashArchiveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Hekmatinasser\Verta\Verta;
 use ZipArchive;
 use RecursiveDirectoryIterator;
@@ -22,7 +24,10 @@ use RecursiveIteratorIterator;
 
 class PettyCashController extends Controller
 {
-    public function __construct(private readonly PettyCashService $pettyCashService)
+    public function __construct(
+        private readonly PettyCashService $pettyCashService,
+        private readonly DatabaseBackupService $databaseBackupService,
+    )
     {
         $this->middleware(function ($request, $next) {
             // Only Superadmin and Admin can create ledgers
@@ -952,9 +957,142 @@ class PettyCashController extends Controller
             ]
         );
 
+        $databaseBackups = collect($this->databaseBackupService->list())->map(function ($file) {
+            return [
+                'name' => $file['name'],
+                'size' => $file['size'],
+                'size_formatted' => $this->formatFileSize($file['size']),
+                'created_at' => $file['created_at'],
+                'created_at_formatted' => verta($file['created_at'])->format('Y/m/d H:i'),
+            ];
+        });
+
         return $this->renderViewWithBreadcrumbs('backend.pages.petty-cash.backups', [
             'backupFiles' => $paginated,
+            'databaseBackups' => $databaseBackups,
+            'defaultBackupEmail' => config('backups.database.default_recipient'),
         ]);
+    }
+
+    public function createDatabaseBackup(Request $request)
+    {
+        $this->authorize('petty_cash.ledger.delete');
+
+        if (config('app.demo_mode', false)) {
+            return back()->with('error', __('تهیه بک‌آپ پایگاه داده در حالت دمو غیرفعال است.'));
+        }
+
+        $data = $request->validate([
+            'email' => ['nullable', 'email'],
+        ]);
+
+        try {
+            $metadata = $this->databaseBackupService->create($data['email'] ?? null);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->with('error', __('خطا در تهیه بک‌آپ پایگاه داده: :message', ['message' => $e->getMessage()]));
+        }
+
+        return back()->with('success', __('بک‌آپ پایگاه داده با موفقیت تهیه شد و به ایمیل ارسال گردید.'))->with('created_backup', $metadata['name'] ?? null);
+    }
+
+    public function downloadDatabaseBackup(string $filename)
+    {
+        $this->authorize('petty_cash.ledger.delete');
+
+        $path = $this->databaseBackupService->getFilePath($filename);
+
+        if (! file_exists($path)) {
+            abort(404, __('فایل بک‌آپ پایگاه داده یافت نشد.'));
+        }
+
+        return response()->download($path, $filename, [
+            'Content-Type' => $this->guessMimeByFilename($filename),
+        ]);
+    }
+
+    public function deleteDatabaseBackup(string $filename)
+    {
+        $this->authorize('petty_cash.ledger.delete');
+
+        try {
+            $this->databaseBackupService->delete($filename);
+        } catch (\Throwable $e) {
+            return back()->with('error', __('خطا در حذف بک‌آپ پایگاه داده: :message', ['message' => $e->getMessage()]));
+        }
+
+        return back()->with('success', __('فایل بک‌آپ پایگاه داده حذف شد.'));
+    }
+
+    public function emailDatabaseBackup(Request $request, string $filename)
+    {
+        $this->authorize('petty_cash.ledger.delete');
+
+        $data = $request->validate([
+            'email' => ['nullable', 'email'],
+        ]);
+
+        try {
+            $this->databaseBackupService->send($filename, $data['email'] ?? null);
+        } catch (\Throwable $e) {
+            return back()->with('error', __('خطا در ارسال بک‌آپ پایگاه داده: :message', ['message' => $e->getMessage()]));
+        }
+
+        return back()->with('success', __('فایل بک‌آپ به ایمیل ارسال شد.'));
+    }
+
+    public function restoreDatabaseBackup(Request $request)
+    {
+        $this->authorize('petty_cash.ledger.delete');
+
+        if (config('app.demo_mode', false)) {
+            return back()->with('error', __('بازیابی بک‌آپ پایگاه داده در حالت دمو غیرفعال است.'));
+        }
+
+        $data = $request->validate([
+            'backup_file' => ['required', 'file', 'mimetypes:application/gzip,application/x-gzip,application/sql,text/plain', 'max:102400'],
+        ]);
+
+        $path = $data['backup_file']->store('db-backups/temp');
+        $absolutePath = storage_path('app/' . $path);
+
+        try {
+            $this->databaseBackupService->restore($absolutePath);
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', __('بازیابی بک‌آپ پایگاه داده با خطا مواجه شد: :message', ['message' => $e->getMessage()]));
+        } finally {
+            if (file_exists($absolutePath)) {
+                @unlink($absolutePath);
+            }
+        }
+
+        return back()->with('success', __('پایگاه داده با موفقیت از فایل انتخاب شده بازیابی شد.'));
+    }
+
+    public function restoreDatabaseBackupFromList(string $filename)
+    {
+        $this->authorize('petty_cash.ledger.delete');
+
+        if (config('app.demo_mode', false)) {
+            return back()->with('error', __('بازیابی بک‌آپ پایگاه داده در حالت دمو غیرفعال است.'));
+        }
+
+        $path = $this->databaseBackupService->getFilePath($filename);
+
+        if (! file_exists($path)) {
+            return back()->with('error', __('فایل بک‌آپ پایگاه داده یافت نشد.'));
+        }
+
+        try {
+            $this->databaseBackupService->restore($path);
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', __('بازیابی بک‌آپ پایگاه داده با خطا مواجه شد: :message', ['message' => $e->getMessage()]));
+        }
+
+        return back()->with('success', __('پایگاه داده با موفقیت بازیابی شد.'));
     }
 
     public function downloadBackup($filename)
@@ -1198,6 +1336,11 @@ class PettyCashController extends Controller
         if ($group && function_exists('chgrp')) {
             @chgrp($path, $group);
         }
+    }
+
+    private function guessMimeByFilename(string $filename): string
+    {
+        return Str::endsWith($filename, '.gz') ? 'application/gzip' : 'application/sql';
     }
 
     public function archive(Request $request, PettyCashLedger $ledger)
