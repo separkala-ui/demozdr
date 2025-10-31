@@ -28,3 +28,6 @@ public/images/.DS_Store
 
 # Exclude release builds
 /releases
+
+# Laravel PsySH Interactive Shell
+storage/psysh/
