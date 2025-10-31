@@ -34,6 +34,12 @@
 
 @php
 $isDocker = app()->bound('isDocker') ? app('isDocker') : false;
+// Debug: بررسی وجود فایل .dockerenv
+if (!$isDocker && file_exists('/.dockerenv')) {
+    // اگر فایل وجود دارد ولی bound نیست، دوباره چک کن
+    app()->singleton('isDocker', fn() => true);
+    $isDocker = true;
+}
 @endphp
 
 <body x-data="{
@@ -58,8 +64,9 @@ x-init="
     <!-- Page Wrapper with smooth fade-in -->
     <div class="app-container flex h-screen overflow-hidden">
         @if($isDocker)
-            <div class="fixed bottom-4 right-3 z-50">
-                <span class="rounded-full bg-blue-600/90 text-white text-xs font-semibold px-3 py-1 shadow-lg">
+            <div class="fixed bottom-4 right-4 z-[9999] pointer-events-none">
+                <span class="inline-flex items-center rounded-full bg-blue-600/90 text-white text-xs font-semibold px-3 py-1.5 shadow-lg backdrop-blur-sm">
+                    <iconify-icon icon="lucide:container" class="mr-1 text-sm"></iconify-icon>
                     Docker
                 </span>
             </div>
