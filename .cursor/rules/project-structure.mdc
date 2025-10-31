@@ -1,0 +1,58 @@
+---
+alwaysApply: true
+description: Project structure and architecture guidelines for ZDR Laravel CMS
+---
+
+# Project Structure & Architecture
+
+## Project Overview
+This is **ZDR** - A Laravel CMS with Petty Cash Management, Smart Invoice AI, Dynamic Forms, and Content Management.
+
+**Tech Stack:**
+- PHP 8.4 + Laravel 12.35.1
+- Filament 3 (Admin Panel)
+- Livewire 3 (Interactive Components)
+- Tailwind CSS 4 + Alpine.js 3
+- Google Gemini AI (Smart Invoice)
+
+## Directory Structure
+
+### Core Directories
+- `app/Services/` - Business logic (Service Layer Pattern)
+- `app/Models/` - Eloquent models
+- `app/Http/Controllers/` - Request handlers (keep thin, delegate to services)
+- `app/Filament/` - Filament admin resources
+- `app/Livewire/` - Livewire components
+- `app/Policies/` - Authorization policies
+- `app/Observers/` - Model event observers
+- `modules/` - Custom modules (Laravel Modules package)
+
+### Important Files
+- [composer.json](mdc:composer.json) - PHP dependencies
+- [package.json](mdc:package.json) - Frontend dependencies
+- [Coding-Standard.md](mdc:Coding-Standard.md) - Coding guidelines
+- [CLAUDE.md](mdc:CLAUDE.md) - Laravel Boost guidelines
+- [pint.json](mdc:pint.json) - Code formatter config
+
+## Architecture Patterns
+
+### Service Layer Pattern
+- **Controllers are thin** - They handle HTTP, delegate to Services
+- **Business logic in Services** - Located in `app/Services/`
+- **Example:** `PettyCashService`, `SmartInvoiceService`, `UserService`
+
+### Authorization
+- Always use **Policies** for authorization checks
+- Use `$this->authorize()` in controllers
+- Check permissions before actions
+
+### Error Handling
+- Use **custom Exceptions** in `app/Exceptions/`
+- Don't use generic `Exception` class
+- Extend base Exception for specific errors
+
+## Key Conventions
+- Always use `declare(strict_types=1);` in PHP files
+- Use constructor property promotion
+- Explicit return types for all methods
+- Follow PSR-12 coding standards

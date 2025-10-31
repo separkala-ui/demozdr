@@ -1,0 +1,96 @@
+---
+globs: *.php
+description: PHP coding standards and conventions
+---
+
+# PHP Coding Standards
+
+## Strict Typing
+Always use strict typing at the top of every PHP file:
+```php
+<?php
+
+declare(strict_types=1);
+```
+
+## Type Declarations
+- **Always** use explicit return types for methods
+- **Always** use type hints for parameters
+- Use nullable types (`?Type`) when appropriate
+
+```php
+public function createTransaction(array $data): PettyCashTransaction
+{
+    // ...
+}
+```
+
+## Constructor Property Promotion
+Use PHP 8 constructor property promotion:
+```php
+public function __construct(
+    private readonly PettyCashService $pettyCashService
+) {}
+```
+
+## Naming Conventions
+- **Methods**: `camelCase` (e.g., `getUserData`, `createTransaction`)
+- **Variables**: `camelCase` (e.g., `$userData`, `$transaction`)
+- **Constants**: `UPPER_SNAKE_CASE` (e.g., `STATUS_APPROVED`)
+- **Classes**: `PascalCase` (e.g., `UserService`, `PettyCashController`)
+- **Services**: PascalCase with `Service` suffix (e.g., `PettyCashService`)
+
+## Code Clarity
+- Use **descriptive method names** - prefer long, clear names over short ones
+- Break complex logic into smaller, reusable methods
+- Prefer **self-documenting code** over excessive comments
+
+**Bad:**
+```php
+function add($taxonomy, $postTypes) { }
+```
+
+**Good:**
+```php
+function addTaxonomyToPostTypes(string $taxonomy, array $postTypes): void { }
+```
+
+## Error Handling
+- Use **custom Exception classes** in `app/Exceptions/`
+- Don't use generic `\Exception`
+- Create specific exceptions for different error types
+
+**Bad:**
+```php
+throw new \Exception('Error message');
+```
+
+**Good:**
+```php
+throw new SmartInvoiceException('Error message');
+```
+
+## Eloquent
+- Use **Eloquent Scopes** for reusable query constraints
+- Use **Model Attributes** for computed properties
+- Use **Eager Loading** to prevent N+1 queries
+
+```php
+// Scope
+public function scopeApproved($query) {
+    return $query->where('status', self::STATUS_APPROVED);
+}
+
+// Attribute
+protected function isCredit(): Attribute {
+    return Attribute::get(fn () => $this->type === self::TYPE_CHARGE);
+}
+
+// Eager Loading
+Post::with('author', 'category')->get();
+```
+
+## Performance
+- Use **Query Scopes** instead of direct `where()` when reusable
+- Use **eager loading** for relationships
+- Only use caching when you can ensure cache invalidation

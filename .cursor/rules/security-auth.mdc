@@ -1,0 +1,93 @@
+---
+globs: app/Http/**/*.php,app/Policies/**/*.php
+description: Security and authorization patterns
+---
+
+# Security & Authorization
+
+## Authorization Checks
+**Always** check authorization before performing actions:
+
+```php
+// In Controllers
+public function store(Request $request) {
+    $this->authorize('petty_cash.transaction.create');
+    // ... rest of code
+}
+```
+
+## Policies
+- Use **Policies** for model-based authorization
+- Policies in `app/Policies/`
+- Register in `AppServiceProvider`
+
+**Example:**
+```php
+// In Policy
+public function create(User $user): bool {
+    return $user->hasPermissionTo('petty_cash.transaction.create');
+}
+```
+
+## Permissions
+- Use **Spatie Permission** package
+- Check with `$user->can('permission.name')` or `hasPermissionTo()`
+- Role checks: `$user->hasRole('Admin')`
+
+## Input Validation
+- **Always** validate user input
+- Use **Form Request** classes (not in controller)
+- Sanitize data appropriately
+
+**Form Request:**
+```php
+class StoreTransactionRequest extends FormRequest {
+    public function authorize(): bool {
+        return $this->user()->can('petty_cash.transaction.create');
+    }
+    
+    public function rules(): array {
+        return [
+            'amount' => ['required', 'numeric', 'min:0'],
+            'type' => ['required', 'in:charge,expense,adjustment'],
+        ];
+    }
+}
+```
+
+## SQL Injection Prevention
+- **Always** use Eloquent ORM (never raw SQL with user input)
+- Use parameter binding for raw queries
+- Never concatenate user input into queries
+
+**Bad:**
+```php
+DB::select("SELECT * FROM users WHERE id = $id");
+```
+
+**Good:**
+```php
+User::find($id);
+// or
+DB::select("SELECT * FROM users WHERE id = ?", [$id]);
+```
+
+## XSS Prevention
+- Blade automatically escapes output: `{{ $variable }}`
+- Use `{!! $html !!}` only when you trust the content
+- Sanitize HTML if accepting user input
+
+## CSRF Protection
+- Laravel automatically handles CSRF for POST/PUT/DELETE
+- Include `@csrf` in forms
+- API routes use Sanctum tokens
+
+## Authentication
+- Use Laravel's built-in authentication
+- API: Use **Laravel Sanctum**
+- Check `auth` middleware on routes
+
+## Sensitive Data
+- Never commit `.env` file
+- Use `config()` for environment variables
+- Encrypt sensitive data in database when needed

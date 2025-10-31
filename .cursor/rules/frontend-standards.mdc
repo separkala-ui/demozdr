@@ -1,0 +1,88 @@
+---
+globs: *.blade.php,*.js,*.css,resources/**/*
+description: Frontend coding standards for Blade, JavaScript, and CSS
+---
+
+# Frontend Standards
+
+## Blade Templates
+- Blade files in `resources/views/`
+- Use `@extends` and `@section` for layouts
+- Use components for reusable UI elements
+- Use Livewire directives for interactive components
+
+**Layout Structure:**
+```blade
+@extends('layouts.app')
+
+@section('content')
+    <!-- Content -->
+@endsection
+```
+
+## Tailwind CSS
+- Use **Tailwind CSS 4** utility classes
+- Prefer utility classes over custom CSS
+- Check `resources/css/components.css` for reusable component classes
+- Use generic class names from components.css
+
+**Example:**
+```blade
+<div class="bg-white rounded-lg shadow p-4">
+    <button class="btn-primary">Submit</button>
+</div>
+```
+
+## Alpine.js
+- Use Alpine.js 3 for interactivity
+- Keep Alpine logic minimal and focused
+- Use `x-data`, `x-show`, `x-if` directives
+
+**Example:**
+```blade
+<div x-data="{ open: false }">
+    <button @click="open = !open">Toggle</button>
+    <div x-show="open">Content</div>
+</div>
+```
+
+## Livewire
+- Use Livewire 3 components for interactive parts
+- Components in `app/Livewire/`
+- Use `wire:model` for two-way binding
+- Use `wire:click` for actions
+
+**Example:**
+```blade
+<div>
+    <input type="text" wire:model="name">
+    <button wire:click="save">Save</button>
+</div>
+```
+
+## JavaScript
+- Use Alpine.js for most interactivity
+- Custom JS in `resources/js/`
+- Use Vite for bundling
+- ES6+ syntax preferred
+
+## RTL Support
+- System supports RTL (Right-to-Left) for Persian/Farsi
+- Use Tailwind RTL utilities when needed
+- Test in both LTR and RTL modes
+
+## Responsive Design
+- Always make UI responsive
+- Use Tailwind responsive breakpoints
+- Mobile-first approach
+
+**Breakpoints:**
+- `sm:` - 640px
+- `md:` - 768px
+- `lg:` - 1024px
+- `xl:` - 1280px
+
+## Assets
+- Build assets with `npm run build` (production)
+- Development: `npm run dev`
+- Vite config: [vite.config.js](mdc:vite.config.js)

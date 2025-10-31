@@ -1,0 +1,64 @@
+---
+globs: app/Services/**/*.php
+description: Service Layer pattern and business logic organization
+---
+
+# Service Layer Pattern
+
+## Service Organization
+- Business logic belongs in **Services** (`app/Services/`)
+- Services are single-responsibility classes
+- Controllers delegate to Services
+
+## Service Structure
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services\PettyCash;
+
+class PettyCashService {
+    public function __construct(
+        private readonly PettyCashLedger $ledger
+    ) {}
+    
+    public function createTransaction(array $data): PettyCashTransaction
+    {
+        // Business logic here
+        return $transaction;
+    }
+    
+    public function approveTransaction(int $id): void
+    {
+        // Approval logic
+    }
+}
+```
+
+## Dependency Injection
+- Use constructor injection for dependencies
+- Services can depend on other Services
+- Use interfaces when appropriate
+
+## Service Methods
+- Methods should be **focused** and **testable**
+- Return typed values (not arrays when possible)
+- Throw custom exceptions on errors
+
+## Naming
+- Service classes: `{Domain}Service` (e.g., `PettyCashService`)
+- Method names: descriptive verbs (e.g., `createTransaction`, `approveTransaction`)
+- Location: `app/Services/{Domain}/`
+
+## Key Services in Project
+- `PettyCashService` - Core petty cash logic
+- `SmartInvoiceService` - AI invoice extraction
+- `PettyCashArchiveService` - Archive management
+- `UserService` - User management
+- `ActionLogService` - Activity logging
+
+## Testing Services
+- Services should be easily testable
+- Mock dependencies in tests
+- Test business logic, not framework

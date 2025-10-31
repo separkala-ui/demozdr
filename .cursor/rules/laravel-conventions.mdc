@@ -1,0 +1,122 @@
+---
+globs: app/**/*.php,config/**/*.php,routes/**/*.php
+description: Laravel-specific conventions and patterns
+---
+
+# Laravel Conventions
+
+## Controllers
+- **Keep controllers thin** - Delegate business logic to Services
+- Always check authorization before actions
+- Use Form Request classes for validation (not in controller)
+
+**Structure:**
+```php
+public function store(StoreTransactionRequest $request): RedirectResponse
+{
+    $this->authorize('petty_cash.transaction.create');
+    
+    $transaction = $this->pettyCashService->createTransaction($request->validated());
+    
+    return redirect()->route('admin.petty-cash.show', $transaction);
+}
+```
+
+## Services
+- Business logic belongs in Services (`app/Services/`)
+- Services should be single-responsibility
+- Use Dependency Injection
+
+**Example:**
+```php
+namespace App\Services\PettyCash;
+
+class PettyCashService {
+    public function createTransaction(array $data): PettyCashTransaction
+    {
+        // Business logic here
+    }
+}
+```
+
+## Models
+- Use **Fillable** properties (never use `$guarded = []`)
+- Define relationships explicitly
+- Use **Casts** for type conversion
+- Use **Scopes** for reusable queries
+
+**Example:**
+```php
+protected $fillable = ['ledger_id', 'amount', 'type', 'status'];
+
+protected $casts = [
+    'amount' => 'decimal:2',
+    'transaction_date' => 'datetime',
+    'meta' => 'array',
+];
+
+public function ledger(): BelongsTo {
+    return $this->belongsTo(PettyCashLedger::class);
+}
+```
+
+## Form Requests
+- **Always** use Form Request classes for validation
+- Validation logic goes in `rules()` method
+- Authorization can be in `authorize()` method
+
+**Location:** `app/Http/Requests/`
+
+## Policies
+- Use Policies for authorization
+- Check `can()` or use `$this->authorize()` in controllers
+- Policies in `app/Policies/`
+
+**Usage:**
+```php
+$this->authorize('view', $ledger);
+// or
+if ($user->can('petty_cash.transaction.create')) { }
+```
+
+## Observers
+- Use Observers for model events
+- Observers in `app/Observers/`
+- Register in `AppServiceProvider`
+
+## Middleware
+- Create custom middleware in `app/Http/Middleware/`
+- Register in `bootstrap/app.php` or `Kernel`
+
+## Routes
+- Admin routes in `routes/web.php` with `admin.` prefix
+- API routes in `routes/api.php`
+- Use named routes
+- Group by middleware
+
+**Example:**
+```php
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], function () {
+    Route::resource('transactions', TransactionController::class);
+});
+```
+
+## Filament Resources
+- Filament resources in `app/Filament/Resources/`
+- Use Filament 3 conventions
+- Resources automatically handle CRUD
+
+## Livewire Components
+- Livewire components in `app/Livewire/`
+- Use Livewire 3 syntax
+- Keep components focused and reusable
+
+## Database
+- Migrations in `database/migrations/`
+- Use `snake_case` for table and column names
+- Seeders in `database/seeders/`
+
+## Validation
+- **Never validate in controllers** - use Form Requests
+- Validation rules in Request classes
+- Custom validation rules in `app/Rules/`
