@@ -33,7 +33,7 @@
 </head>
 
 @php
-$isDocker = file_exists(base_path('docker/.in-docker'));
+$isDocker = app()->bound('isDocker') ? app('isDocker') : false;
 @endphp
 
 <body x-data="{
