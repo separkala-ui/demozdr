@@ -47,6 +47,12 @@
         </div>
 
         <div class="flex gap-2 lg:justify-end items-center">
+            @if(app()->bound('isDocker') && app('isDocker'))
+                <span class="hidden sm:inline-flex items-center rounded-full bg-indigo-600/90 text-white text-xs font-semibold px-3 py-1 shadow-md backdrop-blur">
+                    <iconify-icon icon="lucide:container" class="mr-1 text-sm"></iconify-icon>
+                    Docker
+                </span>
+            @endif
             <x-dashboard-switcher />
             @livewire('petty-cash.notification-center')
             @include('backend.layouts.partials.header.right-menu')
