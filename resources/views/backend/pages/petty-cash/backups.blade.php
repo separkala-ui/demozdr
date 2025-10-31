@@ -1,5 +1,48 @@
 <x-layouts.backend-layout :breadcrumbs="$breadcrumbs">
     <div class="space-y-6">
+        @if(session('success'))
+            <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800 shadow-sm">
+                <div class="flex items-start gap-2">
+                    <i class="fas fa-check-circle mt-0.5"></i>
+                    <p>{{ session('success') }}</p>
+                </div>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 shadow-sm">
+                <div class="flex items-start gap-2">
+                    <i class="fas fa-exclamation-triangle mt-0.5"></i>
+                    <p>{{ session('error') }}</p>
+                </div>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 shadow-sm">
+                <div class="flex items-start gap-2">
+                    <i class="fas fa-info-circle mt-0.5"></i>
+                    <div>
+                        <p class="font-semibold mb-1">{{ __('خطا در ورودی‌ها:') }}</p>
+                        <ul class="list-disc space-y-1 ps-4">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if(session('created_backup'))
+            <div class="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800 shadow-sm">
+                <div class="flex items-start gap-2">
+                    <i class="fas fa-database mt-0.5"></i>
+                    <p>{{ __('فایل بک‌آپ :name با موفقیت ایجاد شد.', ['name' => session('created_backup')]) }}</p>
+                </div>
+            </div>
+        @endif
+
         <!-- Header -->
         <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -39,6 +82,9 @@
                         <input type="email" name="email" value="{{ old('email', $defaultBackupEmail) }}"
                                class="mt-1 w-full rounded-md border-slate-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                placeholder="example@email.com">
+                        @error('email')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
                         <p class="mt-1 text-xs text-slate-500">{{ __('در صورت خالی بودن، به ایمیل پیش‌فرض ارسال می‌شود.') }}</p>
                     </div>
                     <button type="submit"
@@ -55,6 +101,9 @@
                         <input type="file" name="backup_file"
                                class="mt-1 w-full rounded-md border-slate-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                accept=".sql,.sql.gz">
+                        @error('backup_file')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
                         <p class="mt-1 text-xs text-red-500">{{ __('هشدار: بازیابی باعث جایگزینی کامل اطلاعات پایگاه داده می‌شود. قبل از ادامه از اطلاعات فعلی بک‌آپ بگیرید.') }}</p>
                     </div>
                     <button type="submit"

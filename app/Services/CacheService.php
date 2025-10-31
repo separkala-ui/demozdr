@@ -54,6 +54,21 @@ class CacheService
         }
     }
 
+    public function clearConfigAndApplicationCache(): void
+    {
+        try {
+            $this->clearConfigCache();
+        } catch (\Throwable $th) {
+            $this->storeActionLog(ActionType::EXCEPTION, ['config_cache_error' => $th->getMessage()]);
+        }
+
+        try {
+            $this->clearApplicationCache();
+        } catch (\Throwable $th) {
+            $this->storeActionLog(ActionType::EXCEPTION, ['application_cache_error' => $th->getMessage()]);
+        }
+    }
+
     private function clearConfigCache(): void
     {
         Artisan::call('config:clear');

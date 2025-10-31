@@ -58,6 +58,16 @@ class SettingController extends Controller
                 'recaptcha_score_threshold',
                 'admin_login_route',
                 'disable_default_admin_redirect',
+                'mail_mailer',
+                'mail_host',
+                'mail_port',
+                'mail_username',
+                'mail_password',
+                'mail_encryption',
+                'mail_from_address',
+                'mail_from_name',
+                'mail_reply_to_address',
+                'mail_reply_to_name',
             ]);
             $fields = $request->except($restrictedFields);
         } else {
@@ -106,6 +116,8 @@ class SettingController extends Controller
         }
 
         $this->envWriter->batchWriteKeysToEnvFile($fields);
+
+        $this->cacheService->clearConfigAndApplicationCache();
 
         $this->storeActionLog(ActionType::UPDATED, [
             'settings' => $fields,

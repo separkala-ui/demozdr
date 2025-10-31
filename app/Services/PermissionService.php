@@ -64,6 +64,36 @@ class PermissionService
                 ],
             ],
             [
+                'group_name' => 'forms',
+                'permissions' => [
+                    'form.view',
+                    'form.create',
+                    'form.submit',
+                    'form.report.view',
+                ],
+            ],
+            [
+                'group_name' => 'inspection',
+                'permissions' => [
+                    'inspection.view',
+                    'inspection.create',
+                ],
+            ],
+            [
+                'group_name' => 'quality_control',
+                'permissions' => [
+                    'quality_control.view',
+                    'quality_control.create',
+                ],
+            ],
+            [
+                'group_name' => 'production',
+                'permissions' => [
+                    'production.view',
+                    'production.create',
+                ],
+            ],
+            [
                 'group_name' => 'profile',
                 'permissions' => [
                     'profile.view',

@@ -9,5 +9,10 @@ return [
         'compress' => env('DB_BACKUP_COMPRESS', true),
         'default_recipient' => env('DB_BACKUP_RECIPIENT'),
         'notify' => env('DB_BACKUP_NOTIFY', true),
+        'ignore_data_tables' => [
+            'pulse_aggregates',
+            'pulse_entries',
+            'pulse_values',
+        ],
     ],
 ];

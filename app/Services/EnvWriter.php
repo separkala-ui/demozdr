@@ -73,6 +73,16 @@ class EnvWriter
     {
         return Hook::applyFilters(CommonFilterHook::AVAILABLE_KEYS, [
             'app_name' => 'APP_NAME',
+            'mail_mailer' => 'MAIL_MAILER',
+            'mail_host' => 'MAIL_HOST',
+            'mail_port' => 'MAIL_PORT',
+            'mail_username' => 'MAIL_USERNAME',
+            'mail_password' => 'MAIL_PASSWORD',
+            'mail_encryption' => 'MAIL_ENCRYPTION',
+            'mail_from_address' => 'MAIL_FROM_ADDRESS',
+            'mail_from_name' => 'MAIL_FROM_NAME',
+            'mail_reply_to_address' => 'MAIL_REPLY_TO_ADDRESS',
+            'mail_reply_to_name' => 'MAIL_REPLY_TO_NAME',
         ]);
     }
 

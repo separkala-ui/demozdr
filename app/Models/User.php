@@ -8,6 +8,7 @@ use App\Concerns\AuthorizationChecker;
 use App\Concerns\QueryBuilderTrait;
 use App\Notifications\AdminResetPasswordNotification;
 use App\Observers\UserObserver;
+use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Auth\Notifications\ResetPassword as DefaultResetPassword;
@@ -22,7 +23,7 @@ use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
 #[ObservedBy([UserObserver::class])]
-class User extends Authenticatable implements MustVerifyEmail, HasName
+class User extends Authenticatable implements MustVerifyEmail, HasName, FilamentUser
 {
     use AuthorizationChecker;
     use HasApiTokens;
@@ -245,7 +246,20 @@ class User extends Authenticatable implements MustVerifyEmail, HasName
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
-            return $this->isSuperAdmin();
+            if ($this->isSuperAdmin()) {
+                return true;
+            }
+
+            $panelPermissions = [
+                'form.view',
+                'form.create',
+                'form.report.view',
+                'inspection.view',
+                'quality_control.view',
+                'production.view',
+            ];
+
+            return $this->hasAnyPermission($panelPermissions);
         }
 
         return true;

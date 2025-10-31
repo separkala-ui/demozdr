@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\CreatePlaceholderImages::class,
         Commands\PettyCashArchive::class,
         Commands\SyncCurrentVersion::class,
+        Commands\RunDailyBackup::class,
     ];
 
     /**
@@ -36,6 +37,11 @@ class Kernel extends ConsoleKernel
 
         // Sync git version to settings daily
         $schedule->command('zdr:update:sync')->dailyAt('01:00');
+
+        // Automatic database backup when recipient is defined
+        $schedule->command('app:daily-backup')->dailyAt('03:00')->when(function () {
+            return (bool) config('backups.database.default_recipient');
+        });
     }
 
     /**

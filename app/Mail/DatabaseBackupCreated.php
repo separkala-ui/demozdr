@@ -8,13 +8,23 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 
 class DatabaseBackupCreated extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public array $metadata)
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $backupData;
+
+    /**
+     * @param  array<string, mixed>  $metadata
+     */
+    public function __construct(array $metadata)
     {
+        $this->backupData = $metadata;
     }
 
     /**
@@ -32,12 +42,17 @@ class DatabaseBackupCreated extends Mailable
      */
     public function content(): Content
     {
+        $createdAt = $this->backupData['created_at'] ?? now();
+        if (is_string($createdAt)) {
+            $createdAt = Carbon::parse($createdAt);
+        }
+
         return new Content(
             markdown: 'emails.backups.database-created',
             with: [
-                'fileName' => $this->metadata['name'] ?? 'backup.sql',
-                'size' => $this->formatSize($this->metadata['size'] ?? 0),
-                'createdAt' => ($this->metadata['created_at'] ?? now())->format('Y-m-d H:i'),
+                'fileName' => $this->backupData['name'] ?? 'backup.sql',
+                'size' => $this->formatSize($this->backupData['size'] ?? 0),
+                'createdAt' => $createdAt,
             ],
         );
     }
@@ -49,14 +64,14 @@ class DatabaseBackupCreated extends Mailable
      */
     public function attachments(): array
     {
-        if (! isset($this->metadata['path']) || ! file_exists($this->metadata['path'])) {
+        if (! isset($this->backupData['path']) || ! file_exists($this->backupData['path'])) {
             return [];
         }
 
         return [
-            Attachment::fromPath($this->metadata['path'])
-                ->as($this->metadata['name'] ?? 'backup.sql')
-                ->withMime($this->metadata['mime'] ?? 'application/octet-stream'),
+            Attachment::fromPath($this->backupData['path'])
+                ->as($this->backupData['name'] ?? 'backup.sql')
+                ->withMime($this->backupData['mime'] ?? 'application/octet-stream'),
         ];
     }
 

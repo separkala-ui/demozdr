@@ -7,6 +7,7 @@ namespace App\Services\Backup;
 use App\Mail\DatabaseBackupCreated;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -58,6 +59,11 @@ class DatabaseBackupService
             }
         });
 
+        $tablesToStrip = array_filter($backupConfig['ignore_data_tables'] ?? []);
+        if (! empty($tablesToStrip) && file_exists($tempPath)) {
+            $this->stripTableData($tempPath, $tablesToStrip);
+        }
+
         if (! $process->isSuccessful()) {
             if (file_exists($tempPath)) {
                 @unlink($tempPath);
@@ -107,7 +113,15 @@ class DatabaseBackupService
 
         $recipient = $recipient ?: ($backupConfig['default_recipient'] ?? null);
         if ($recipient && ($backupConfig['notify'] ?? true)) {
-            Mail::to($recipient)->send(new DatabaseBackupCreated($metadata));
+            try {
+                Mail::to($recipient)->send(new DatabaseBackupCreated($metadata));
+            } catch (\Throwable $e) {
+                Log::warning('Database backup email failed', [
+                    'recipient' => $recipient,
+                    'file' => $finalName,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
         return $metadata;
@@ -165,7 +179,7 @@ class DatabaseBackupService
             'path' => $path,
             'size' => filesize($path),
             'mime' => $this->guessMime($path),
-                'created_at' => Carbon::createFromTimestamp(filemtime($path)),
+            'created_at' => Carbon::createFromTimestamp(filemtime($path)),
         ];
 
         Mail::to($recipient)->send(new DatabaseBackupCreated($metadata));
@@ -253,5 +267,66 @@ class DatabaseBackupService
             @chown($path, $owner ?: null);
             @chgrp($path, $group ?: null);
         }
+    }
+
+    /**
+     * Remove data inserts for tables that contain generated columns which break restores.
+     *
+     * @param  array<int, string>  $tables
+     */
+    protected function stripTableData(string $dumpPath, array $tables): void
+    {
+        if (! File::exists($dumpPath) || empty($tables)) {
+            return;
+        }
+
+        $tableLookup = [];
+        foreach ($tables as $table) {
+            $tableLookup[trim($table)] = true;
+        }
+
+        $tempPath = $dumpPath . '.tmp';
+        $readHandle = fopen($dumpPath, 'rb');
+        $writeHandle = fopen($tempPath, 'wb');
+
+        if (! $readHandle || ! $writeHandle) {
+            if ($readHandle) {
+                fclose($readHandle);
+            }
+            if ($writeHandle) {
+                fclose($writeHandle);
+            }
+
+            return;
+        }
+
+        $skipBlock = false;
+
+        while (($line = fgets($readHandle)) !== false) {
+            $trimmed = trim($line);
+
+            if ($skipBlock) {
+                if ($trimmed === 'UNLOCK TABLES;') {
+                    $skipBlock = false;
+                }
+                continue;
+            }
+
+            if (preg_match('/^LOCK TABLES `([^`]+)` WRITE;$/', $trimmed, $matches) && isset($tableLookup[$matches[1]])) {
+                $skipBlock = true;
+                continue;
+            }
+
+            if (preg_match('/^INSERT INTO `([^`]+)` /', $trimmed, $matches) && isset($tableLookup[$matches[1]])) {
+                continue;
+            }
+
+            fwrite($writeHandle, $line);
+        }
+
+        fclose($readHandle);
+        fclose($writeHandle);
+
+        File::move($tempPath, $dumpPath);
     }
 }

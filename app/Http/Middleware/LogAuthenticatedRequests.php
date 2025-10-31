@@ -28,10 +28,25 @@ class LogAuthenticatedRequests
                 'user_id' => Auth::id(),
                 'path' => $request->path(),
                 'method' => $request->method(),
-                'status' => $response->status() ?? 'unknown',
+                'status' => $this->resolveStatusCode($response),
             ]);
         }
 
         return $response;
+    }
+
+    protected function resolveStatusCode($response): int|string
+    {
+        if (is_object($response)) {
+            if (method_exists($response, 'status')) {
+                return $response->status();
+            }
+
+            if (method_exists($response, 'getStatusCode')) {
+                return $response->getStatusCode();
+            }
+        }
+
+        return 'unknown';
     }
 }
