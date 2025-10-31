@@ -63,14 +63,7 @@ x-init="
 
     <!-- Page Wrapper with smooth fade-in -->
     <div class="app-container flex h-screen overflow-hidden">
-        @if($isDocker)
-            <div class="fixed bottom-4 right-4 z-[9999] pointer-events-none">
-                <span class="inline-flex items-center rounded-full bg-blue-600/90 text-white text-xs font-semibold px-3 py-1.5 shadow-lg backdrop-blur-sm">
-                    <iconify-icon icon="lucide:container" class="mr-1 text-sm"></iconify-icon>
-                    Docker
-                </span>
-            </div>
-        @endif
+        {{-- Docker badge intentionally moved to header --}}
         @include('backend.layouts.partials.sidebar.logo')
 
         <!-- Content Area -->
